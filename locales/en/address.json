@@ -1,0 +1,21 @@
+{
+  "header": "Change address",
+  "fields": {
+    "postcode": {
+      "label": "Enter new postcode",
+      "errors": {
+        "required": "You must enter a postcode",
+        "format": "Enter a postcode in the correct format, like AA1 1AA"
+      }
+    },
+    "address": {
+      "label": "Select new address",
+      "errors": {
+        "required": "Select an address from the list"
+      }
+    }
+  },
+  "button": {
+    "find": "Find address"
+  }
+}

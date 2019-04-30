@@ -1,0 +1,20 @@
+{
+  "field_names":
+  {
+    "suffix": "Enter a suffix",
+    "nsp": "Enter new state pension amount"
+  },
+  "errors": {
+    "suffix": {
+      "format": "Suffix must be either A, B, C or D",
+      "required": "Enter the National Insurance suffix"
+    },
+    "nsp": {
+      "format": "Enter a new State Pension amount in the correct format, like 164.35",
+      "required": "Enter the new State Pension amount"
+    },
+    "protected_payment": {
+      "format": "Enter a protected payment amount in the correct format, like 0.99, 12.00 or 123.40"
+    }
+  }
+}

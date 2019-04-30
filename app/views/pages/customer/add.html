@@ -1,0 +1,478 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "select/macro.njk" import govukSelect %}
+{% from "input/macro.njk" import govukInput %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+{% from "error-message/macro.njk" import govukErrorMessage %}
+
+{% set attributes = {} %}
+{% if disabled %}
+  {% set attributes = { disabled: true } %}
+{% endif %}
+
+{% block pageTitle %} Add Customer {% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+
+
+        {% if globalError %}
+          {{ form.globalError(globalError) }}
+        {% endif %}
+
+        {% if globalSuccess %}
+          {{ form.globalSuccess(globalSuccess) }}
+        {% endif %}
+
+        <div class="govuk-grid-row js-hidden">
+          <div class="govuk-grid-column-full">
+            {{ form.globalError('Javascript must be enabled to use this service.') }}
+          </div>
+        </div>
+
+        <h1 class="govuk-heading-xl no-js">Add Customer</h1>
+      </div>
+  </div>
+
+  <form method="post" action="/customer/add" id="form__details" autocomplete="off">
+    <div class="govuk-grid-row no-js">
+      <div class="govuk-grid-column-one-half">
+
+        {% call govukFieldset({
+          legend: {
+            text: "Add Customer",
+            classes: "govuk-visually-hidden",
+            isPageHeading: false
+          }
+        }) %}
+
+          {{ govukSelect({
+            id: 'title',
+            name: 'title',
+            classes: 'govuk-!-width-one-half',
+            label: {
+              text: t("add:field_names.title"),
+              classes: 'govuk-label--s'
+            },
+            items: titles,
+            errorMessage: errors.title,
+            attributes: attributes
+          }) }}
+
+          {{ govukInput({
+            id: "firstName",
+            name: "firstName",
+            type: "text",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: t("add:field_names.firstname"),
+              classes: 'govuk-label--s'
+            },
+            value: details.firstName,
+            errorMessage: errors.firstName,
+            attributes: attributes
+          }) }}
+
+          {{ govukInput({
+            id: "surname",
+            name: "surname",
+            type: "text",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: t("add:field_names.surname"),
+              classes: 'govuk-label--s'
+            },
+            value: details.surname,
+            errorMessage: errors.surname,
+            attributes: attributes
+          }) }}
+
+          {{ govukInput({
+            id: "nino",
+            name: "nino",
+            type: "text",
+            classes: "govuk-!-width-one-half",
+            label: {
+              text: t("add:field_names.nino"),
+              classes: 'govuk-label--s'
+            },
+            value: details.nino,
+            errorMessage: errors.nino,
+            attributes: attributes
+          }) }}
+
+          {% set dobDayAttributes = { maxlength: '2' } %}
+          {% set dobMonthAttributes = { maxlength: '2' } %}
+          {% set dobYearAttributes = { maxlength: '4'} %}
+          {% if disabled %}
+            {% set dobDayAttributes = { maxlength: '2', disabled: true } %}
+            {% set dobMonthAttributes = { maxlength: '2', disabled: true } %}
+            {% set dobYearAttributes = { maxlength: '4', disabled: true } %}
+          {% endif %}
+          {{ govukDateInput({
+            id: "dob",
+            fieldset: {
+              legend: {
+                text: t("add:field_names.dob"),
+                isPageHeading: false,
+                classes: "govuk-label--s"
+              }
+            },
+            hint: {
+              text: "For example, 10 04 1953"
+            },
+            items: [{
+              label: 'Day',
+              id: "dob-day",
+              name: "dobDay",
+              value: details.dobDay,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobDay),
+              attributes: dobDayAttributes
+            }, {
+              label: 'Month',
+              id: "dob-month",
+              name: "dobMonth",
+              value: details.dobMonth,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobMonth),
+              attributes: dobMonthAttributes
+            }, {
+              label: 'Year',
+              id: "dob-year",
+              name: "dobYear",
+              value: details.dobYear,
+              classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dobYear),
+              attributes: dobYearAttributes
+            }],
+            errorMessage: errors.dob
+          }) }}
+
+          {{ govukRadios({
+            errorMessage: errors.dobV,
+            classes: "govuk-radios--inline",
+            name: "dobV",
+            fieldset: {
+              legend: {
+                text: t("add:field_names.dobV"),
+                isPageHeading: false,
+                classes: "govuk-label--s"
+              },
+              attributes: {
+                id: "dobV"
+              }
+            },
+            items: [{
+              id: "v",
+              value: t("add:field_names.dobV_details.options.v"),
+              text: t("add:field_names.dobV_details.options.v"),
+              checked: true if details.dobV == t("add:field_names.dobV_details.options.v") else false,
+              disabled: true if disabled else false
+            }, {
+              id: "nv",
+              value: t("add:field_names.dobV_details.options.nv"),
+              text: t("add:field_names.dobV_details.options.nv"),
+              checked: true if details.dobV == t("add:field_names.dobV_details.options.nv") else false,
+              disabled: true if disabled else false
+            }]
+          }) }}
+
+          {{ govukRadios({
+            errorMessage: errors.gender,
+            classes: "govuk-radios--inline",
+            name: "gender",
+            fieldset: {
+              legend: {
+                text: t("add:field_names.gender"),
+                isPageHeading: false,
+                classes: "govuk-label--s"
+              },
+              attributes: {
+                id: "gender"
+              }
+            },
+            items: [{
+              id: "male",
+              value: t("add:field_names.gender_male"),
+              text: t("add:field_names.gender_male"),
+              checked: true if details.gender == t("add:field_names.gender_male") else false,
+              disabled: true if disabled else false
+            }, {
+              id: "female",
+              value: t("add:field_names.gender_female"),
+              text: t("add:field_names.gender_female"),
+              checked: true if details.gender == t("add:field_names.gender_female") else false,
+              disabled: true if disabled else false
+            }]
+          }) }}
+        {% endcall %}
+
+        {{ govukInput({
+          id: "statePensionDate",
+          name: "statePensionDate",
+          type: "text",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: t("add:field_names.state_pension_date"),
+            classes: 'govuk-label--s'
+          },
+          value: details.statePensionDate,
+          errorMessage: errors.statePensionDate,
+          attributes: {
+            disabled: true
+          }
+        }) }}
+      </div>
+      <div class="govuk-grid-column-one-half">
+        {% call govukFieldset({
+          legend: {
+              text: "Address Details",
+              classes: "govuk-visually-hidden",
+              isPageHeading: false
+            }
+          }) %}
+
+          <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+            {{ govukRadios({
+              errorMessage: errors.address,
+              classes: "govuk-radios--inline",
+              name: "address",
+              fieldset: {
+                legend: {
+                  text: t("add:field_names.address_title"),
+                  isPageHeading: false,
+                  classes: "govuk-label--s"
+                },
+                attributes: {
+                  id: "address"
+                }
+              },
+              formGroup: {
+                classes: 'govuk-!-margin-bottom-2'
+              },
+              items: [{
+                id: "address-UK",
+                value: t("add:field_names.address_details.options.option_uk"),
+                text: t("add:field_names.address_details.options.option_uk"),
+                checked: true if details.address == t("add:field_names.address_details.options.option_uk") else false,
+                disabled: true if disabled else false,
+                attributes: {
+                  'data-aria-controls': 'conditional-address-UK'
+                }
+              }, {
+                id: "address-Overseas",
+                value: t("add:field_names.address_details.options.option_overseas"),
+                text: t("add:field_names.address_details.options.option_overseas"),
+                checked: true if details.address == t("add:field_names.address_details.options.option_overseas") else false,
+                disabled: true if disabled else false,
+                attributes: {
+                  'data-aria-controls': 'conditional-address-Overseas'
+                }
+              }]
+            }) }}
+
+            <div class="govuk-radios__conditional{% if details.address === 'Overseas' %} govuk-radios__conditional--hidden{% endif %} gysp-panel-inset" id="conditional-address-UK">
+              {{ govukInput({
+                id: "subBuildingName",
+                name: "subBuildingName",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.sub_building_name")
+                },
+                value: details.subBuildingName,
+                errorMessage: errors.subBuildingName,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-2'
+                },
+                attributes: attributes
+              }) }}
+
+              <div class="govuk-form-group govuk-!-margin-bottom-0 {% if errors.buildingNameAndNumber %} govuk-form-group--error dwp-form-group--error{% endif %}">
+                {% if errors.buildingNameAndNumber %}
+                  {{ govukErrorMessage({
+                    text: errors.buildingNameAndNumber.text,
+                    id: "buildingNameAndNumber-error"
+                  }) }}
+                {% endif %}
+
+                {{ govukInput({
+                  id: "buildingName",
+                  name: "buildingName",
+                  type: "text",
+                  classes: "govuk-!-width-one-half dwp-input",
+                  label: {
+                    text: t("add:field_names.address_details.uk.building_name")
+                  },
+                  value: details.buildingName,
+                  errorMessage: errors.buildingName,
+                  formGroup: {
+                    classes: 'govuk-!-margin-bottom-2'
+                  },
+                  attributes: attributes
+                }) }}
+
+                {{ govukInput({
+                  id: "buildingNumber",
+                  name: "buildingNumber",
+                  type: "text",
+                  classes: "govuk-!-width-one-half dwp-input",
+                  label: {
+                    text: t("add:field_names.address_details.uk.building_number")
+                  },
+                  value: details.buildingNumber,
+                  errorMessage: errors.buildingNumber,
+                  formGroup: {
+                    classes: 'govuk-!-margin-bottom-2'
+                  },
+                  attributes: attributes
+                }) }}
+              </div>
+
+              {{ govukInput({
+                id: "dependentThoroughfareName",
+                name: "dependentThoroughfareName",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.dependent_thoroughfare_name")
+                },
+                value: details.dependentThoroughfareName,
+                errorMessage: errors.dependentThoroughfareName,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-2'
+                },
+                attributes: attributes
+              }) }}
+
+              {{ govukInput({
+                id: "thoroughfareName",
+                name: "thoroughfareName",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.thoroughfare_name")
+                },
+                value: details.thoroughfareName,
+                errorMessage: errors.thoroughfareName,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-2'
+                },
+                attributes: attributes
+              }) }}
+
+              {{ govukInput({
+                id: "dependentLocality",
+                name: "dependentLocality",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.dependent_locality")
+                },
+                value: details.dependentLocality,
+                errorMessage: errors.dependentLocality,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-2'
+                },
+                attributes: attributes
+              }) }}
+
+              {{ govukInput({
+                id: "postTown",
+                name: "postTown",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.post_town")
+                },
+                value: details.postTown,
+                errorMessage: errors.postTown,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-2'
+                },
+                attributes: attributes
+              }) }}
+
+              {{ govukInput({
+                id: "postCode",
+                name: "postCode",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.uk.postcode")
+                },
+                value: details.postCode,
+                errorMessage: errors.postCode,
+                attributes: attributes
+              }) }}
+            </div>
+
+            <div class="govuk-radios__conditional{% if details.address !== 'Overseas' %} govuk-radios__conditional--hidden{% endif %} gysp-panel-inset" id="conditional-address-Overseas">
+              {% for i in range(1, 8) -%}
+                {{ govukInput({
+                  id: "addressLine"+i,
+                  name: "addressLine"+i,
+                  type: "text",
+                  classes: "govuk-!-width-one-half",
+                  label: {
+                    text: t("add:field_names.address_details.overseas.address_line", {number: i})
+                  },
+                  value: details['addressLine'+i],
+                  errorMessage: errors['addressLine'+i],
+                  formGroup: {
+                    classes: 'govuk-!-margin-bottom-2'
+                  },
+                  attributes: attributes
+                }) }}
+              {% endfor %}
+
+              {{ govukInput({
+                id: "country",
+                name: "country",
+                type: "text",
+                classes: "govuk-!-width-one-half",
+                label: {
+                  text: t("add:field_names.address_details.overseas.country")
+                },
+                value: details.country,
+                errorMessage: errors.country,
+                attributes: attributes
+              }) }}
+            </div>
+          </div>
+
+        {% endcall %}
+
+        {{ govukInput({
+          id: "inviteKey",
+          name: "inviteKey",
+          type: "text",
+          classes: "govuk-!-width-one-half",
+          label: {
+            text: "Invite Code",
+            classes: "govuk-label--s"
+          },
+          value: details.inviteKey,
+          attributes: {
+            disabled: true
+          }
+        }) }}
+
+        {% if details.inviteKey %}
+            {{ govukButton({
+              text: "Add new customer",
+              href: '/customer/add'
+            }) }}
+        {% else %}
+          {{ govukButton({
+            text: "Add customer"
+          }) }}
+        {% endif %}
+
+      </div>
+    </div>
+  </form>
+{% endblock %}

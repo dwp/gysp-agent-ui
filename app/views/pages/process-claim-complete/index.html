@@ -1,0 +1,20 @@
+{% extends 'helpers/layout.html' %}
+{% from "panel/macro.njk" import govukPanel %}
+
+{% block pageTitle %}Claim processed and letter created{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {{ govukPanel({
+            titleText: "Claim processed and letter created",
+            headingLevel: 1
+        }) }}
+
+        <p class="govuk-body"><a href="/process-claim">Process another claim</a></p>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{
+  "header": "Payment",
+  "bank_building_table": {
+    "caption": "Bank or building society account details",
+    "account_holder": "Account holder",
+    "account_number": "Account number",
+    "sort_code": "Sort code",
+    "roll_number": "Roll number"
+  },
+  "payment_table": {
+    "caption": "Payment details",
+    "payment_frequency": "Payment frequency",
+    "payment_amount": "Payment amount",
+    "first_payment": "First payment",
+    "last_payment": "Last payment",
+    "next_payment": "Next payment"
+  }
+}

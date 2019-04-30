@@ -1,0 +1,41 @@
+{
+  "field_names":
+  {
+    "fromDate": "From date",
+    "toDate": "To date",
+    "info_type": {
+      "options": {
+        "claim": "claims",
+        "letter": "letters",
+        "claimDetail": "claiminformation",
+        "citizenDetail": "citizeninformation",
+        "hmrcFeed": "hmrcfeed",
+        "claimFilter": "filterreason"
+      },
+      "label": {
+        "claim": "Claims",
+        "letter": "Letters",
+        "claimDetail": "Claim details",
+        "citizenDetail": "Citizen details",
+        "hmrcFeed": "HMRC feed",
+        "claimFilter": "Claim filter"
+      }
+    }
+  },
+  "errors": {
+    "generic": {
+      "required": "Please complete."
+    },
+    "fromDate": {
+      "required": "From date is required",
+      "format": "From date must be a valid date",
+      "after": "From date is after To date"
+    },
+    "toDate": {
+      "required": "To date is required",
+      "format": "To date must be a valid date",
+      "before": "To date is before From date",
+      "maximumPeriod": "Maximum search period is 28 days"
+    }
+  }
+}

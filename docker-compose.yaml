@@ -1,0 +1,22 @@
+version: "3"
+services:
+  redis:
+    image: redis
+    expose:
+      - 6379
+  agent_frontend:
+    build: ./
+    command: npm start
+    depends_on:
+      - redis
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "3002:3002"
+    environment:
+      REDIS_HOST: redis
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      CUSTOMERAPIGATEWAY: ${CUSTOMER_API_GATEWAY}
+      NODE_EXTRA_CA_CERTS: ${NODE_EXTRA_CA_CERTS}
+      WEB_APP: host.docker.internal

@@ -1,0 +1,40 @@
+.dwp-button {
+    margin: 0 15px 15px 0;
+
+    &--inline {
+        float: left;
+    }
+
+    &--secondary {
+        background-color: govuk-colour('grey-3');
+        color: govuk-colour('black');
+        box-shadow: 0 2px 0 govuk-colour('grey-2');
+
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: darken(govuk-colour('grey-3'), 10%);
+            color: govuk-colour('black');
+        }
+    }
+
+    &--tertiary {
+        background-color: govuk-colour('grey-1');
+        box-shadow: 0 $govuk-border-width-form-element 0 mix(govuk-colour('black'), govuk-colour('grey-1'), 50%);
+
+        &:hover,
+        &:focus {
+            background-color: mix(govuk-colour('black'), govuk-colour('grey-1'), 15%);
+        }
+    }
+
+    &--danger {
+        background-color: govuk-colour('red');
+        box-shadow: 0 $govuk-border-width-form-element 0 mix(govuk-colour('black'), govuk-colour('red'), 50%);
+
+        &:hover,
+        &:focus {
+            background-color: mix(govuk-colour('black'), govuk-colour('red'), 15%);
+        }
+    }
+}

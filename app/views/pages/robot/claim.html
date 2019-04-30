@@ -1,0 +1,86 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "button/macro.njk" import govukButton %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "input/macro.njk" import govukInput %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set attributes = {} %}
+{% if disabled %}
+  {% set attributes = { disabled: true } %}
+{% endif %}
+
+{% block pageTitle %} Next Claim {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if globalError %}
+          {{ form.globalError(globalError) }}
+        {% endif %}
+
+        {% if globalSuccess %}
+            {{ form.globalSuccess(globalSuccess) }}
+        {% endif %}
+
+        <div class="govuk-grid-row js-hidden">
+            <div class="govuk-grid-column-full">
+                {{ form.globalError('Javascript must be enabled to use this service.') }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="govuk-grid-row no-js">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post" action="/robot/next-claim" id="form__details" autocomplete="off">
+            {% call govukFieldset({
+                legend: {
+                    text: 'Next Claim',
+                    classes: "govuk-fieldset__legend--xl govuk-!-margin-bottom-7",
+                    isPageHeading: true
+                }
+            }) %}
+
+                {{ govukInput({
+                    id: "accessKey",
+                    name: "accessKey",
+                    type: "text",
+                    classes: "govuk-!-width-two-thirds",
+                    label: {
+                        text: t("robot:field_names.access_key")
+                    },
+                    value: details.accessKey,
+                    errorMessage: errors.accessKey,
+                    attributes: attributes
+                }) }}
+
+            {% endcall %}
+
+            {{ govukButton({
+                text: "Get Next Claim",
+                attributes: {
+                    id: "submit"
+                }
+            }) }}
+        </form>
+
+        {% if details.result %}
+            {{ govukTextarea({
+                name: "result",
+                id: "result",
+                label: {
+                    text: t("robot:field_names.result")
+                },
+                value: details.result,
+                attributes: {
+                    disabled: true
+                },
+                errorMessage: errors.result
+            }) }}
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

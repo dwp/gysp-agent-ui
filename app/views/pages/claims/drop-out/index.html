@@ -1,0 +1,29 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %} Fix claim drop outs {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Fix claim drop outs</h1>
+
+        {% if total > 0 %}
+            <p class="govuk-body">Total claim drop outs: {{ total }}</p>
+            {{ govukButton({
+                text: "Get a claim",
+                href: "/claims/drop-out/details",
+                attributes: {
+                    id: "get-a-claim-button"
+                }
+            }) }}
+        {% else %}
+            <p class="govuk-body">There are currently no drop outs to fix.</p>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

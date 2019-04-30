@@ -1,0 +1,36 @@
+{
+  "header": "Change bank or building society account",
+  "fields": {
+    "accountName": {
+      "label": "Enter a new account holder name",
+      "errors": {
+        "required": "Enter the account holder’s full name",
+        "format": "Name must start with a letter and not contain numbers",
+        "length": "Name must be 70 characters or less"
+      }
+    },
+    "accountNumber": {
+      "label": "Enter a new account number",
+      "errors": {
+        "required": "Enter an account number",
+        "format": "Account number must be 8 numbers",
+        "length": "Account number must be 8 numbers"
+      }
+    },
+    "sortCode": {
+      "label": "Enter a new sort code",
+      "errors": {
+        "required": "Enter a sort code",
+        "format": "Enter a sort code in the correct format, like 112233",
+        "length": "Sort code must be 6 numbers"
+      }
+    },
+    "referenceNumber": {
+      "label": "Enter a new roll number",
+      "errors": {
+        "format": "Enter a roll number in the correct format",
+        "length": "Roll number must be 18 characters or less"
+      }
+    }
+  }
+}

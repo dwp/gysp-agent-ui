@@ -1,0 +1,45 @@
+.gysp-panel-inset {
+    margin-top: 0;
+    padding-bottom: 0;
+}
+
+.gysp-removed-success-message {
+    display: inline-block;
+    margin: 0 15px 15px 0;
+    padding: .5263157895em .7894736842em .2631578947em;
+    line-height: 1.25;
+}
+
+.gysp-claims-drop-outs {
+    &__button-form {
+        display: inline;
+        @include govuk-media-query($from: tablet) {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: top;
+        }
+    }
+}
+
+.gysp-text-align-top {
+    vertical-align: top;
+}
+
+.gysp-table__cell--wrap {
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.gysp-toggle-content {
+    margin: 0;
+}
+
+.gysp-table__cell--first {
+    border-top: 1px solid $govuk-border-colour;
+}
+
+.gysp-payment-table {
+    .govuk-table__cell {
+        width: 50%;
+    }
+}

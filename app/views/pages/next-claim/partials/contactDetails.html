@@ -1,0 +1,17 @@
+<h3 class="govuk-heading-m">{{ details.contactDetailQ }}</h3>
+
+{% if details.contactDetail.homeTelephoneNumber %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.contactDetail.homeTelephoneNumberQ }}</strong><br />{{ details.contactDetail.homeTelephoneNumber }}</p>
+{% endif %}
+
+{% if details.contactDetail.mobileTelephoneNumber %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.contactDetail.mobileTelephoneNumberQ }}</strong><br />{{ details.contactDetail.mobileTelephoneNumber }}</p>
+{% endif %}
+
+{% if details.contactDetail.workTelephoneNumber %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.contactDetail.workTelephoneNumberQ }}</strong><br />{{ details.contactDetail.workTelephoneNumber }}</p>
+{% endif %}
+
+{% if details.contactDetail.email %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.contactDetail.emailQ }}</strong><br />{{ details.contactDetail.email }}</p>
+{% endif %}

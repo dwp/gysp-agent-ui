@@ -1,0 +1,85 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "input/macro.njk" import govukInput %}
+
+{% block pageTitle %}Enter suffix and amounts{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: "Back",
+      href: "/process-claim/detail"
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds ">
+      {% if globalError %}
+        {{ form.globalError(globalError) }}
+      {% endif %}
+
+      {% if globalSuccess %}
+          {{ form.globalSuccess(globalSuccess) }}
+      {% endif %}
+
+      <div class="govuk-grid-row js-hidden">
+          <div class="govuk-grid-column-full">
+              {{ form.globalError('Javascript must be enabled to use this service.') }}
+          </div>
+      </div>
+
+      <h1 class="govuk-heading-xl">Enter suffix and amounts</h1>
+
+      <form method="POST" action="/process-claim/enter-amounts" autocomplete="off" id="enterSuffixAndAmountsForm">
+        <div class="govuk-form-group">
+          {{ govukInput({
+              label: {
+                text: "Suffix"
+              },
+              classes: "govuk-input--width-2",
+              id: "suffix",
+              name: "suffix",
+              value: details.suffix,
+              errorMessage: errors.suffix
+          }) }}
+
+          {{ govukInput({
+              label: {
+                text: "New State Pension"
+              },
+              classes: "govuk-input--width-5",
+              id: "nsp",
+              name: "nsp",
+              value: details.nsp,
+              errorMessage: errors.nsp
+          }) }}
+
+          {{ govukInput({
+              label: {
+                text: "Protected payment"
+              },
+              classes: "govuk-input--width-5",
+              id: "protectedPayment",
+              name: "protectedPayment",
+              value: details.protectedPayment,
+              errorMessage: errors.protectedPayment
+          }) }}
+        </div>
+
+        <div>
+          {{ govukButton({
+              text: "Create payment schedule",
+              id: "submit"
+            }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

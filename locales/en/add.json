@@ -1,0 +1,153 @@
+{
+  "field_names":
+  {
+    "title": "Title",
+    "firstname": "First Name",
+    "surname": "Surname",
+    "nino": "National Insurance number",
+    "dob": "Date of birth",
+    "dobV": "Date of birth verification status",
+    "dobV_details": {
+      "options": {
+        "v": "V",
+        "nv": "NV"
+      }
+    },
+    "gender": "Gender",
+    "gender_male": "Male",
+    "gender_female": "Female",
+    "state_pension_date": "State Pension age",
+    "address_title": "Address",
+    "address_details": {
+      "options": {
+        "option_uk": "UK",
+        "option_overseas": "Overseas"
+      },
+      "uk": {
+        "sub_building_name": "Flat number",
+        "building_name": "Building name",
+        "building_number": "Building number",
+        "dependent_thoroughfare_name": "Sub street name",
+        "thoroughfare_name": "Main street name",
+        "dependent_locality": "Village",
+        "post_town": "Town",
+        "postcode": "Post code"
+      },
+      "overseas": {
+        "address_line": "Address Line __number__",
+        "country": "Country"
+      }
+    }
+  },
+  "errors": {
+    "generic": {
+      "required": "Please complete.",
+      "format": "Please enter only A-z, ' and ."
+    },
+    "state_pension_date": {
+      "date": "State Pension age can not be calculated. No customer record created"
+    },
+    "surname": {
+      "required": "Surname is required",
+      "format": "Surname must only contain A-z, ' and .",
+      "invalidStart": "Surname must start with A-Z",
+      "toShort": "Surname must be at least two characters",
+      "toLong": "Surname must be seventy characters or less"
+    },
+    "firstname": {
+      "required": "First name is required",
+      "format": "First name must only contain A-z, ' and .",
+      "invalidStart": "First name must start with A-Z",
+      "toLong": "First name must be seventy characters or less"
+    },
+    "nino": {
+      "required": "National Insurance number is required",
+      "format": "National Insurance number must be valid format"
+    },
+    "dob": {
+      "required": "Date of birth is required",
+      "format": "Date of birth must be a valid date"
+    },
+    "gender": {
+      "required": "Gender is required"
+    },
+    "subBuildingName": {
+      "required": "Flat number is required",
+      "toLong": "Building number must be thirty-five characters or less"
+    },
+    "buildingName": {
+      "required": "Building name is required",
+      "toLong": "Building name must be thirty-five characters or less"
+    },
+    "buildingNumber": {
+      "required": "Building number is required",
+      "toLong": "Building number must be thirty-five characters or less"
+    },
+    "buildingNameAndNumber": {
+      "required": "Building name or number is required"
+    },
+    "dependentThoroughfareName": {
+      "required": "Sub street name is required",
+      "toLong": "Sub street name must be thirty-five characters or less"
+    },
+    "thoroughfareName": {
+      "required": "Main street name is required",
+      "toLong": "Main street name must be thirty-five characters or less"
+    },
+    "dependentLocality": {
+      "required": "Village is required",
+      "toLong": "Village must be thirty-five characters or less"
+    },
+    "postTown": {
+      "required": "Town is required",
+      "toLong": "Town must be thirty-five characters or less"
+    },
+    "postcode": {
+      "required": "Post code is required",
+      "toLong": "Post code must eight characters or less"
+    },
+    "streetAddress": {
+      "required": "Street Address is required",
+      "toLong": "Street Address must be thirty-five characters or less",
+      "invalidAlphaNum": "Street Address Can only include A-z, 1-9 and spaces"
+    },
+    "locality": {
+      "required": "Locality is required",
+      "toLong": "Locality must be thirty-five characters or less",
+      "invalidAlphaNum": "Locality Can only include A-z, 1-9 and spaces"
+    },
+    "state": {
+      "valid": "State can only be ACT, NSW, NT, QLD, SA, TAS, VIC or WA"
+    },
+    "postcodeAU": {
+      "toLong": "Post code must four characters or less",
+      "number": "Post code can only be numeric"
+    },
+    "addressLine1": {
+      "required": "Address Line 1 is required",
+      "toLong": "Address Line 1 must be thirty-five characters or less"
+    },
+    "addressLine2": {
+      "toLong": "Address Line 2 must be thirty-five characters or less"
+    },
+    "addressLine3": {
+      "toLong": "Address Line 3 must be thirty-five characters or less"
+    },
+    "addressLine4": {
+      "toLong": "Address Line 4 must be thirty-five characters or less"
+    },
+    "addressLine5": {
+      "toLong": "Address Line 5 must be thirty-five characters or less"
+    },
+    "addressLine6": {
+      "toLong": "Address Line 6 must be thirty-five characters or less"
+    },
+    "addressLine7": {
+      "toLong": "Address Line 7 must be thirty-five characters or less"
+    },
+    "country": {
+      "required": "Country is required",
+      "toLong": "Country must be thirty-five characters or less"
+    }
+  }
+}

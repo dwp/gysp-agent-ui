@@ -1,0 +1,61 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %} Find someone {% endblock %}
+
+{% block content %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds ">
+      {% if globalError %}
+        {{ form.globalError(globalError) }}
+      {% endif %}
+
+      {% if globalSuccess %}
+          {{ form.globalSuccess(globalSuccess) }}
+      {% endif %}
+
+      <div class="govuk-grid-row js-hidden">
+          <div class="govuk-grid-column-full">
+              {{ form.globalError('Javascript must be enabled to use this service.') }}
+          </div>
+      </div>
+      <h1 class="govuk-heading-xl">Find someone</h1>
+
+      <form method="POST" action="/find-someone" autocomplete="off">
+        <div class="govuk-form-group">
+          {{ govukInput({
+              label: {
+                text: t("find-someone:field_names.nino")
+              },
+              classes: "govuk-input--width-20",
+              id: "nino",
+              name: "nino",
+              errorMessage: errors.nino,
+              value: details.nino
+            }) }}
+            <br>
+          {{ govukButton({
+            text: "Find",
+            id: "submit"
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    {% if details.result %}
+      <h3 class="govuk-heading-m govuk-!-margin-top-0">Result</h3>
+      <a href="changes-and-enquiries/overview" class="govuk-link govuk-!-font-size-24">{{ details.result.fullName }}</a>
+      <p id="gysp-citizen-nino" class="govuk-body govuk-!-font-size-24">{{details.result.nino}}</p>
+    {% elif details.noResult %}
+      <h3 class="govuk-heading-m govuk-!-margin-top-0">Result</h3>
+      <p class="govuk-body govuk-!-font-size-24">No results found</p>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}

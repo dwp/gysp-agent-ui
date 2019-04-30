@@ -1,0 +1,59 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("remove-contact-details:headerEmail") }} - Changes and enquiries{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: t("app:link.back"),
+      href: "/changes-and-enquiries/contact/" + type
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if globalError %}
+
+        {{ form.globalError(globalError) }}
+
+    {% endif %}
+
+    <form method="post" action="/changes-and-enquiries/contact/remove/{{ type }}" autocomplete="off">
+      {{ govukRadios({
+        classes: "govuk-radios--inline",
+        name: "removeContact",
+        fieldset: {
+          legend: {
+            text: t("remove-contact-details:fields.removeEmail.legend"),
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        items: [{
+          id: "removeContact-yes",
+          value: "yes",
+          text: t("remove-contact-details:fields.removeEmail.options.yes")
+        }, {
+          id: "removeContact-no",
+          value: "no",
+          text: t("remove-contact-details:fields.removeEmail.options.no")
+        }],
+        errorMessage: errors.removeContact
+      }) }}
+
+      {{ govukButton({
+        text: t("app:button.save")
+      }) }}
+    </form>
+  </div>
+</div>
+{% endblock %}

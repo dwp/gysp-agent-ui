@@ -1,0 +1,29 @@
+{% extends 'helpers/layout.html' %}
+{% from 'button/macro.njk' import govukButton %}
+
+{% block pageTitle %} Upload overseas claims {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Upload overseas claims</h1>
+
+        {% if total > 0 %}
+            <p class="govuk-body">Total claims to upload: {{ total }}</p>
+            {{ govukButton({
+                text: 'Get a claim',
+                href: '/claims/overseas/completed-claim/details',
+                attributes: {
+                    id: 'get-a-claim-button'
+                }
+            }) }}
+        {% else %}
+            <p class="govuk-body">There are currently no claims to upload</p>
+        {% endif %}
+
+    </div>
+</div>
+
+
+{% endblock %}

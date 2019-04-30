@@ -1,0 +1,24 @@
+{% macro keyDetailsBar(name, nino, status, dateOfBirth) %}
+	<section class="key-details-bar" role="contentinfo" aria-labelledby="key-details-label">
+		<div class="govuk-width-container">
+			<div class="key-details-bar__key-details">
+				<dl class="key-details-bar__top-block">
+					<dt class="govuk-visually-hidden" id="key-details-label">Citizen details</dt>
+					<dd class="key-details-bar__name">{{ name }}</dd>
+					<dd class="key-details-bar__nino">{{ nino }}</dd>
+					{% if status %}
+						<dd class="key-details-bar__status">{{ status }}</dd>
+					{% endif %}
+				</dl>
+
+				<div class="key-details-bar__bottom-block">
+					{% if dateOfBirth %}
+						{{ dateOfBirth }}
+					{% else %}
+						<a href="/find-someone" class="govuk-link dwp-key-details-link">Find someone</a>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</section>
+{% endmacro %}

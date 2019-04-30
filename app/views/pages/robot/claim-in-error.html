@@ -1,0 +1,94 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "button/macro.njk" import govukButton %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "input/macro.njk" import govukInput %}
+{% from "textarea/macro.njk" import govukTextarea %}
+
+{% set attributes = {} %}
+{% if disabled %}
+  {% set attributes = { disabled: true } %}
+{% endif %}
+
+{% block pageTitle %} Claim In Error {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if globalError %}
+          {{ form.globalError(globalError) }}
+        {% endif %}
+
+        {% if globalSuccess %}
+            {{ form.globalSuccess(globalSuccess) }}
+        {% endif %}
+
+        <div class="govuk-grid-row js-hidden">
+            <div class="govuk-grid-column-full">
+                {{ form.globalError('Javascript must be enabled to use this service.') }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="govuk-grid-row no-js">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post" action="/robot/claim-in-error" id="form__details" autocomplete="off">
+             {% call govukFieldset({
+                legend: {
+                    text: 'Claim In Error',
+                    classes: "govuk-fieldset__legend--xl govuk-!-margin-bottom-7",
+                    isPageHeading: true
+                }
+            }) %}
+
+                {{ govukInput({
+                    id: "accessKey",
+                    name: "accessKey",
+                    type: "text",
+                    classes: "govuk-!-width-two-thirds",
+                    label: {
+                        text: t("robot:field_names.access_key")
+                    },
+                    value: details.accessKey,
+                    errorMessage: errors.accessKey,
+                    attributes: attributes
+                }) }}
+
+                {{ govukInput({
+                    id: "inviteKey",
+                    name: "inviteKey",
+                    type: "text",
+                    classes: "govuk-!-width-two-thirds",
+                    label: {
+                        text: t("robot:field_names.invite_key")
+                    },
+                    value: details.inviteKey,
+                    errorMessage: errors.inviteKey,
+                    attributes: attributes
+                }) }}
+
+                {{ govukTextarea({
+                    name: "message",
+                    id: "message",
+                    label: {
+                        text: t("robot:field_names.message")
+                    },
+                    value: details.message,
+                    errorMessage: errors.message,
+                    attributes: attributes
+                }) }}
+
+            {% endcall %}
+
+            {{ govukButton({
+                text: "Save Claim in Error",
+                attributes: {
+                    id: "submit"
+                }
+            }) }}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

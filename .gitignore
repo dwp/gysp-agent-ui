@@ -1,0 +1,11 @@
+certs/*
+coverage/*
+node_modules/*
+public/*
+src/*
+config/application.yaml
+npm-debug.log
+.nyc_output/
+.DS_Store
+.env
+*.tar

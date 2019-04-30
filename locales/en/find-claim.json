@@ -1,0 +1,11 @@
+{
+  "field_names":
+  {
+    "search": "Enter National Insurance number or invitation code"
+  },
+  "errors": {
+    "search": {
+      "required": "National Insurance number or invitation code is required"
+    }
+  }
+}

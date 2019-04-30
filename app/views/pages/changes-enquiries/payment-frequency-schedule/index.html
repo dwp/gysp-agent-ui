@@ -1,0 +1,88 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% from 'button/macro.njk' import govukButton %}
+{% from 'table/macro.njk' import govukTable %}
+{% from 'back-link/macro.njk' import govukBackLink %}
+
+{% block pageTitle %}Update details in CPS Local - Changes and enquiries{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: 'Back',
+      href: '/changes-and-enquiries/payment/frequency'
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if messages.error %}
+      {{ form.globalError(messages.error) }}
+    {% endif %}
+    <h1 class="govuk-heading-l">Update details in CPS Local</h1>
+    {% if details %}
+      {{ govukTable({
+        caption: details.bankDetails.caption,
+        firstCellIsHeader: true,
+        classes: 'gysp-payment-table',
+        attributes: {
+          id: 'bank-details'
+        },
+        rows: details.bankDetails.rows
+      }) }}
+
+      {% if details.firstPayment %}
+        {{ govukTable({
+          caption: details.firstPayment.caption,
+          firstCellIsHeader: true,
+          classes: 'gysp-payment-table',
+          attributes: {
+            id: 'first-payement-details'
+          },
+          rows: details.firstPayment.rows
+        }) }}
+      {% endif %}
+
+      {% if details.secondPayment %}
+        {{ govukTable({
+          caption: details.secondPayment.caption,
+          firstCellIsHeader: true,
+          classes: 'gysp-payment-table',
+          attributes: {
+            id: 'second-payement-details'
+          },
+          rows: details.secondPayment.rows
+        }) }}
+      {% endif %}
+
+      {{ govukTable({
+          caption: details.regularPayment.caption,
+          firstCellIsHeader: true,
+          classes: 'gysp-payment-table',
+          attributes: {
+            id: 'regular-payement-details'
+          },
+          rows: details.regularPayment.rows
+        }) }}
+
+      <form method="post" action="/changes-and-enquiries/payment/frequency/schedule" id="form__create-letter" autocomplete="off">
+        {{ govukButton({
+          text: 'Create letter',
+          attributes: {
+            id: 'confirm'
+          }
+        }) }}
+      </form>
+    {% else %}
+      <h2>Sorry, no payment schedule found.</h2>
+    {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}

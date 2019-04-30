@@ -1,0 +1,73 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %} Find a Claim {% endblock %}
+
+{% block pageHeader %}
+  <header class="panel panel--background-colour">
+    <div class="govuk-width-container">
+      <div class="panel__inner">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-one-half">
+            <h1 class="govuk-heading-xl panel__heading">Find a Claim</h1>
+            <form method="POST" action="/find-claim" autocomplete="off">
+              {{ form.inputSearch('search', 'search', t("find-claim:field_names.search"), details.search) }}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-govuk-grid-column-two-thirds">
+      {% if globalError %}
+        {{ form.globalError(globalError) }}
+      {% endif %}
+
+      <div class="govuk-grid-row js-hidden">
+          <div class="govuk-govuk-grid-column-full">
+              {{ form.globalError('Javascript must be enabled to use this service.') }}
+          </div>
+      </div>
+    </div>
+  </div>
+  {% if details.result %}
+    <h3 class="govuk-heading-m govuk-!-margin-bottom-8">Result</h3>
+    <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ details.result.fullName }}</h2>
+    <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ details.result.identifier }}</h2>
+    <p class="govuk-body">Claim received {{ makeDateReadable(details.result.claimReceivedDate) }}</p>
+    <form method="post" action="/find-claim/pdf" id="form-pdf-{{ details.result.inviteKey }}" autocomplete="off">
+      <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
+      {{ govukButton({
+        text: "Get PDF",
+        classes: 'dwp-button dwp-button--secondary dwp-button--inline',
+        attributes: {
+          id: "submit"
+        }
+      }) }}
+    </form>
+    <form method="post" action="/find-claim/update" id="form-details-status-{{ details.result.inviteKey }}" autocomplete="off">
+      <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
+      <input type="hidden" name="search" value="{{ details.search }}" />
+      {% if details.result.disableRemoveQueueButton %}
+        <div class="govuk-body gysp-removed-success-message">Removed from queue</div>
+      {% else %}
+        {{ govukButton({
+          text: "Remove from queue",
+          classes: 'dwp-button dwp-button--inline',
+          attributes: {
+            id: "submit-status-" + details.result.inviteKey
+          }
+        }) }}
+      {% endif %}
+    </form>
+  {% elif details.noResult %}
+    <h3 class="govuk-heading-m">Result</h3>
+    <p class="govuk-body">No claim found</p>
+  {% endif %}
+{% endblock %}

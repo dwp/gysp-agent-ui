@@ -1,0 +1,17 @@
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.livedAbroadQ }}</strong><br />{{ details.livedAbroad }}</p>
+
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.livedPeriodsAbroadQ }}</strong></p>
+
+{% for period in details.livedPeriodsAbroad %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ period.countryQ }}</strong><br />{{ period.country }}</p>
+
+    {% if period.countryStatusQ %}
+        <h4 class="govuk-heading-s">{{ period.countryStatusQ }}</h4>
+    {% endif %}
+    {% if period.fromDateQ %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ period.fromDateQ }}</strong><br />{{ period.fromDate.month }} {{ period.fromDate.year }}</p>
+    {% endif %}
+    {% if period.toDateQ %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ period.toDateQ }}</strong><br />{{ period.toDate.month }} {{ period.toDate.year }}</p>
+    {% endif %}
+{% endfor %}

@@ -1,0 +1,29 @@
+<h4 class="govuk-heading-s">{{ details.customerDetail.correspondenceAddressQ }}</h4>
+
+{% if details.customerDetail.correspondenceAddress.subBuildingName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.subBuildingNameQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.subBuildingName }}</p>
+{% endif %}
+
+{% if details.customerDetail.correspondenceAddress.buildingName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.buildingNameQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.buildingName }}</p>
+{% endif %}
+
+{% if details.customerDetail.correspondenceAddress.buildingNumber %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.buildingNumberQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.buildingNumber }}</p>
+{% endif %}
+
+{% if details.customerDetail.correspondenceAddress.dependentThoroughfareName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.dependentThoroughfareNameQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.dependentThoroughfareName }}</p>
+{% endif %}
+
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.thoroughfareNameQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.thoroughfareName }}</p>
+
+{% if details.customerDetail.correspondenceAddress.dependentLocality %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.dependentLocalityQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.dependentLocality }}</p>
+{% endif %}
+
+{% if details.customerDetail.correspondenceAddress.postTown %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.postTownQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.postTown }}</p>
+{% endif %}
+
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.correspondenceAddress.postCodeQ }}</strong><br />{{ details.customerDetail.correspondenceAddress.postCode }}</p>

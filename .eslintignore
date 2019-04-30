@@ -1,0 +1,4 @@
+app/assets/javascripts/*
+coverage/*
+public/*
+node_modules/*

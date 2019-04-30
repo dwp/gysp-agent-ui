@@ -1,0 +1,78 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% import 'helpers/global-navigation.html' as globalNavigation %}
+
+{% block pageTitle %}{{ t('payment:header') }} - Changes and enquiries{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+          <h1 class="govuk-visually-hidden">Changes and enquiries - {{ t('payment:header') }}</h1>
+          {% if details %}
+            <table id="bank-building-table" class="govuk-table">
+              <caption class="govuk-table__caption govuk-heading-l">{{ t('payment:bank_building_table.caption') }}</caption>
+              <tbody class="govuk-table__body">
+                <tr>
+                  <td class="govuk-table__cell govuk-table__cell--numeric" colspan="2"><a href="/changes-and-enquiries/payment/account" class="govuk-link">Change<span class="govuk-visually-hidden"> bank or building society account details</span></a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell gysp-table__cell--first" scope="row">{{ t('payment:bank_building_table.account_holder') }}</td>
+                  <td class="govuk-table__cell gysp-table__cell--first">{{ details.accountHolder }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.account_number') }}</td>
+                  <td class="govuk-table__cell">{{ details.accountNumber }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.sort_code') }}</td>
+                  <td class="govuk-table__cell">{{ details.sortCode }}</td>
+                </tr>
+                {% if details.referenceNumber %}
+                  <tr class="govuk-table__row">
+                    <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.roll_number') }}</td>
+                    <td class="govuk-table__cell">{{ details.referenceNumber  }}</td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+
+            <table id="payment-details-table" class="govuk-table">
+              <caption class="govuk-table__caption govuk-heading-l">{{ t('payment:payment_table.caption') }}</caption>
+              <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell gysp-table__cell--first gysp-text-align-top" scope="row">{{ t('payment:payment_table.payment_frequency') }}</td>
+                  <td class="govuk-table__cell gysp-table__cell--first">
+                    {% if details.frequency == 1 %}
+                      Weekly
+                    {% else %}
+                      Every {{ details.frequency }} {{ details.frequencyPeriod }}
+                    {% endif %}
+                  </td>
+                  <td class="govuk-table__cell gysp-table__cell--first govuk-table__cell--numeric">
+                    <a href="/changes-and-enquiries/payment/frequency" class="govuk-link">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+                  </td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentOne.label }}</td>
+                  <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
+                  <td class="govuk-table__cell">{{ paymentSummary.paymentOne.amount }}</td>
+                </tr>
+                <tr class="govuk-table__row">
+                  <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentTwo.label }}</td>
+                  <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
+                  <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.amount }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p class="govuk-body"><a href="/changes-and-enquiries/payment/schedule" class="govuk-link">See payment schedule</a></p>
+          {% else %}
+            <p class="govuk-body">Sorry, no payment details found.</p>
+          {% endif %}
+        </div>
+</div>
+
+
+{% endblock %}

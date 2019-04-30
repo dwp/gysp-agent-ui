@@ -1,0 +1,82 @@
+{
+  "header": {
+    "add": "Add __TYPE__ phone number",
+    "change": "Change __TYPE__ phone number"
+  },
+  "fields": {
+    "home_phone_number": {
+      "add": {
+        "label": "Enter home phone number",
+        "errors": {
+          "required": "Enter a home phone number",
+          "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
+          "length": "Phone number must be 70 characters or less"
+        }
+      },
+      "change": {
+        "label": "Enter new home phone number",
+        "errors": {
+          "required": "Enter a new home phone number",
+          "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
+          "length": "Phone number must be 70 characters or less"
+        }
+      }
+    },
+    "work_phone_number": {
+      "add": {
+        "label": "Enter work phone number",
+        "errors": {
+          "required": "Enter a work phone number",
+          "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
+          "length": "Phone number must be 70 characters or less"
+        }
+      },
+      "change": {
+        "label": "Enter new work phone number",
+        "errors": {
+          "required": "Enter a new work phone number",
+          "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
+          "length": "Phone number must be 70 characters or less"
+        }
+      }
+    },
+    "mobile_phone_number": {
+      "add": {
+        "label": "Enter mobile phone number",
+        "errors": {
+          "required": "Enter a mobile phone number",
+          "format": "Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982",
+          "length": "Mobile phone number must be 70 characters or less"
+        }
+      },
+      "change": {
+        "label": "Enter new mobile phone number",
+        "errors": {
+          "required": "Enter a new mobile phone number",
+          "format": "Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982",
+          "length": "Mobile phone number must be 70 characters or less"
+        }
+      }
+    },
+    "email": {
+      "add": {
+        "header": "Add email address",
+        "label": "Enter email address",
+        "errors": {
+          "required": "Enter an email address",
+          "format": "Enter an email address in the correct format, like name@example.com",
+          "length": "Email address must be 100 characters or less"
+        }
+      },
+      "change": {
+        "header": "Change email address",
+        "label": "Enter new email address",
+        "errors": {
+          "required": "Enter a new email address",
+          "format": "Enter an email address in the correct format, like name@example.com",
+          "length": "Email address must be 100 characters or less"
+        }
+      }
+    }
+  }
+}

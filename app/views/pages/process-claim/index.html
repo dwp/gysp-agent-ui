@@ -1,0 +1,33 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Process a claim{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if messages.error %}
+            {{ form.globalError(messages.error) }}
+        {% endif %}
+        <h1 class="govuk-heading-xl">Process a claim</h1>
+
+        {% if total > 0 %}
+            <p class="govuk-body">Total claims today: {{ total }}</p>
+            {{ govukButton({
+                text: 'Get a claim',
+                href: '/process-claim/detail',
+                attributes: {
+                    id: 'get-a-claim-button'
+                }
+            }) }}
+            <p class="govuk-body"><a href="/process-claim/all-claims-to-bau" class="govuk-link" id="send-all-to-bau">Send all available claims to BAU</a></p>
+        {% else %}
+            <p class="govuk-body">There are no claims available to process</p>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

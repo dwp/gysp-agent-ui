@@ -1,0 +1,29 @@
+<h4 class="govuk-heading-s">{{ details.customerDetail.residentialAddressQ }}</h4>
+
+{% if details.customerDetail.residentialAddress.subBuildingName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.subBuildingNameQ }}</strong><br />{{ details.customerDetail.residentialAddress.subBuildingName }}</p>
+{% endif %}
+
+{% if details.customerDetail.residentialAddress.buildingName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.buildingNameQ }}</strong><br />{{ details.customerDetail.residentialAddress.buildingName }}</p>
+{% endif %}
+
+{% if details.customerDetail.residentialAddress.buildingNumber %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.buildingNumberQ }}</strong><br />{{ details.customerDetail.residentialAddress.buildingNumber }}</p>
+{% endif %}
+
+{% if details.customerDetail.residentialAddress.dependentThoroughfareName %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.dependentThoroughfareNameQ }}</strong><br />{{ details.customerDetail.residentialAddress.dependentThoroughfareName }}</p>
+{% endif %}
+
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.thoroughfareNameQ }}</strong><br />{{ details.customerDetail.residentialAddress.thoroughfareName }}</p>
+
+{% if details.customerDetail.residentialAddress.dependentLocality %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.dependentLocalityQ }}</strong><br />{{ details.customerDetail.residentialAddress.dependentLocality }}</p>
+{% endif %}
+
+{% if details.customerDetail.residentialAddress.postTown %}
+    <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.postTownQ }}</strong><br />{{ details.customerDetail.residentialAddress.postTown }}</p>
+{% endif %}
+
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.residentialAddress.postCodeQ }}</strong><br />{{ details.customerDetail.residentialAddress.postCode }}</p>

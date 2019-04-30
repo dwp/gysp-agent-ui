@@ -1,0 +1,110 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "table/macro.njk" import govukTable %}
+{% from "button/macro.njk" import govukButton %}
+{% from "inset-text/macro.njk" import govukInsetText %}
+
+
+{% block pageTitle %}Fix claim drop outs{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        {% if returnedStatus and returnedStatus.status == 'failed' %}
+              {{ form.globalError('Unable to update ' + returnedStatus.inviteKey) }}
+        {% endif %}
+        <h1 class="govuk-heading-xl">Fix claim drop outs</h1>
+
+              {% if details %}
+
+                 {{ govukTable({
+                    attributes: {
+                      id: "claims-drop-outs"
+                    },
+                    head: [
+                      { text: "Reason" },
+                      { text: "Claim from date" },
+                      { text: "NI number" },
+                      { text: "Surname" },
+                      { text: "Invitation code" }
+                    ],
+                    rows: [
+                      [
+                        { text: details.reason },
+                        { text: details.claimDate },
+                        { text: details.niNumber },
+                        { text: details.surname },
+                        { text: details.invitationCode }
+                      ]
+                    ]
+                  }) }}
+
+                <div class="gysp-claims-drop-outs__buttons-container">
+                    <div class="gysp-claims-drop-outs__button-form">
+                      <form method="post" action="/claims/drop-out/details" id="form-details-{{ details.invitationCode }}" autocomplete="off">
+                        <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
+                        {{ govukButton({
+                          text: "Get claim form",
+                          classes: "dwp-button--tertiary",
+                          attributes: {
+                            id: "get-claim-form-submit"
+                          }
+                        }) }}
+                      </form>
+                    </div>
+                    <div class="gysp-claims-drop-outs__button-form">
+                      <form method="post" action="/claims/drop-out/details/update-status" id="form-details-{{ details.invitationCode }}" autocomplete="off">
+                        <input type="hidden" name="status" value="queue" />
+                        <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
+                        {{ govukButton({
+                          text: "Return to queue",
+                          classes: "dwp-button--danger",
+                          attributes: {
+                            id: "return-to-queue-submit"
+                          }
+                        }) }}
+                      </form>
+                    </div>
+                    <div class="gysp-claims-drop-outs__button-form">
+                      {{ govukButton({
+                        href: "#",
+                        text: "Drop out fixed",
+                        classes: "toggle-content govuk-!-margin-bottom-4",
+                        attributes: {
+                          id: "fix-drop-out",
+                          "data-target": "fix-drop-out-form"
+                        }
+                      }) }}
+
+                      {% set fixedDropOutHtml %}
+                        <p class="govuk-body">Have you fixed this drop out?</p>
+                        <form method="post" action="/claims/drop-out/details/update-status" id="form-fix-drop-out" autocomplete="off">
+                          <input type="hidden" name="status" value="fixed" />
+                          <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
+                          {{ govukButton({
+                            text: "Yes",
+                            classes: "govuk-!-margin-bottom-0",
+                            attributes: {
+                              id: "drop-out-fixed-submit"
+                            }
+                          }) }}
+                        </form>
+                      {% endset -%}
+
+                      {{ govukInsetText({
+                        html: fixedDropOutHtml,
+                        id: "fix-drop-out-form",
+                        classes: "gysp-toggle-content js-hidden"
+                      }) }}
+                    </div>
+                </div>
+               {% else %}
+               <p class="govuk-body">Sorry, no claim drop out found.</p>
+              {% endif %}
+
+            </div>
+</div>
+
+
+{% endblock %}

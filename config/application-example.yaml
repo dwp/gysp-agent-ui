@@ -1,0 +1,33 @@
+env: local
+secret:
+application:
+  port: 8100
+  session:
+      store: redis
+      name: sessionID
+      secret:
+      timeout: 1800000
+      securecookies: false
+  urls:
+      agentGateway:
+      apiKey:
+      batchApiKey:
+      awardApiKey :
+      addressLookupApiKey:
+      paymentApiKey:
+      host:
+  robot:
+    key: thisIsAKeyForARobot
+  logs:
+      level: error
+      path: logs
+      size: 10240k
+      backups: 10
+      rotate: daily
+  redis:
+      host: localhost
+      port: 6379
+      prefix: spa
+      password:
+  kong:
+      enabled: false

@@ -1,0 +1,35 @@
+.panel {
+    margin-top: -10px;
+    margin-bottom: 20px;
+
+    &__heading {
+        color: govuk-colour('white');
+    }
+
+    &--background-colour {
+        background: $govuk-brand-colour;
+        color: govuk-colour('white');
+    }
+
+    &--border {
+        padding: 0 .78947em;
+        border-top-width: 0;
+        border-right-width: 0;
+        border-bottom-width: 0;
+        border-left-width: 5px;
+        border-style: solid;
+        border-color: govuk-colours('grey-2');
+
+        .button {
+            margin-bottom: 0;
+        }
+    }
+
+    &__inner {
+        padding: 15px 0;
+
+        @include govuk-media-query($from: tablet) {
+            padding: 30px 0;
+        }
+    }
+}

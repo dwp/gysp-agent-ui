@@ -1,0 +1,43 @@
+<p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.maritalStatusQ }}</strong><br />{{ details.maritalStatus }}</p>
+
+{% if details.partnerDetail  %}
+    {% if details.partnerDetail.aboutYourPartnerQ  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.aboutYourPartnerQ }}</strong></p>
+    {% endif %}
+
+    {% if details.partnerDetail.civilPartnershipDate  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.civilPartnershipDateQ }}</strong><br />{{ details.partnerDetail.civilPartnershipDate }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.widowedDate  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.widowedDateQ }}</strong><br />{{ details.partnerDetail.widowedDate }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.marriageDate  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.marriageDateQ }}</strong><br />{{ details.partnerDetail.marriageDate }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.divorcedDate  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.divorcedDateQ }}</strong><br />{{ details.partnerDetail.divorcedDate }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.dissolvedDate  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.dissolvedDateQ }}</strong><br />{{ details.partnerDetail.dissolvedDate }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.firstName  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.firstNameQ }}</strong><br />{{ details.partnerDetail.firstName }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.surname  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.surnameQ }}</strong><br />{{ details.partnerDetail.surname }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.allOtherNames  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.allOtherNamesQ }}</strong><br />{{ details.partnerDetail.allOtherNames }}</p>
+    {% endif %}
+
+    {% if details.partnerDetail.dob  %}
+        <p class="govuk-body"><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.partnerDetail.dobQ }}</strong><br />{{ details.partnerDetail.dob }}</p>
+    {% endif %}
+{% endif %}

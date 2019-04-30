@@ -1,0 +1,119 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %} Next Claim {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if globalError %}
+          {{ form.globalError(globalError) }}
+        {% endif %}
+
+        {% if globalSuccess %}
+            {{ form.globalSuccess(globalSuccess) }}
+        {% endif %}
+
+        <div class="js-hidden">
+            {{ form.globalError('Javascript must be enabled to use this service.') }}
+        </div>
+    </div>
+</div>
+{% call govukFieldset({
+    legend: {
+        text: "Next Claim",
+        classes: "govuk-fieldset__legend--xl govuk-!-margin-bottom-9",
+        isPageHeading: true
+    }
+}) %}
+ {% endcall %}
+{% if details %}
+    <div class="govuk-grid-row no-js">
+        <div class="govuk-grid-column-full">
+            <form method="post" action="/claims/next-claim/download" id="form-details-status-{{ details.inviteKey }}" autocomplete="off">
+                <input type="hidden" name="encodedPdf" value="{{ encodedPdf }}" />
+                <input type="hidden" name="filename" value="{{ details.pdfFilename }}" />
+                {{ govukButton({
+                    text: "Download PDF",
+                    id: "submit",
+                    attributes: {
+                        id: "submit-status-" + details.inviteKey
+                    }
+                }) }}
+            </form>
+
+            <h2 class="heading-large">Claim Details</h2>
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">Date claim created</strong><br />{{ details.createdDate }}</p>
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.inviteKeyQ }}</strong><br />{{ details.inviteKey }}</p>
+
+            <h3 class="heading-medium">Customer Details</h3>
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.titleQ }}</strong><br />{{ details.customerDetail.title }}</p>
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.firstNameQ }}</strong><br />{{ details.customerDetail.firstName }}</p>
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.surnameQ }}</strong><br />{{ details.customerDetail.surname }}</p>
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.ninoQ }}</strong><br />{{ details.customerDetail.nino }}</p>
+            {% if details.customerDetail.dob %}
+                <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.dobQ }}</strong><br />{{ details.customerDetail.dob }}</p>
+            {% endif %}
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.genderQ }}</strong><br />{{ details.customerDetail.gender }}</p>
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.customerDetail.statePensionDateQ }}</strong><br />{{ details.customerDetail.statePensionDate }}</p>
+
+            {% include "./partials/residentialAddress.html" %}
+
+            {% include "./partials/correspondenceAddress.html" %}
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">Date customer created</strong><br />{{ details.customerDetail.createdDate }}</p>
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.confirmedAddressQ }}</strong><br />{{ details.confirmedAddress }}</p>
+
+            {% include "./partials/livedAbroad.html" %}
+
+            {% include "./partials/workedAbroad.html" %}
+
+            {% include "./partials/maritalStatus.html" %}
+
+            {% include "./partials/contactDetails.html" %}
+
+            <h3 class="heading-medium">{{ details.accountDetailQ }}</h3>
+            <h4 class="heading-small">{{ details.accountDetail.paymentMethodQ }}</h4>
+
+            {% if details.accountDetail.bankDetail %}
+                {% include "./partials/bankDetails.html" %}
+            {% endif %}
+
+            {% if details.accountDetail.buildingSocietyDetail %}
+                {% include "./partials/buildingSocietyDetails.html" %}
+            {% endif %}
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.declarationQ }}</strong><br />{{ details.declaration }}</p>
+
+            <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.dobVerificationQ }}</strong><br />{{ details.dobVerification }}</p>
+
+            {% if details.reCalculatedSpaDate %}
+                <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.reCalculatedSpaDateQ }}</strong><br />{{ details.reCalculatedSpaDate }}</p>
+            {% endif %}
+
+            {% if details.userAssertedDob %}
+                <p><strong class="govuk-!-font-size-19 govuk-!-font-weight-bold">{{ details.userAssertedDobQ }}</strong><br />{{ details.userAssertedDob }}</p>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+<form method="post" action="/claims/next-claim" id="form__next-claim" autocomplete="off">
+    <div class="govuk-grid-row no-js">
+        <div class="govuk-grid-column-full">
+            {{ govukButton({
+                text: "Get Next Claim",
+                id: "submit"
+            }) }}
+        </div>
+    </div>
+</form>
+
+{% endblock %}

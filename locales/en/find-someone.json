@@ -1,0 +1,12 @@
+{
+  "field_names":
+  {
+    "nino": "Enter a National Insurance number"
+  },
+  "errors": {
+    "nino": {
+      "format": "Enter a National Insurance number in the correct format, like QQ123456C",
+      "required": "Enter a National Insurance number"
+    }
+  }
+}

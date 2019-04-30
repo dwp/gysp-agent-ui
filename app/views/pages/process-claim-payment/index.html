@@ -1,0 +1,75 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% from 'button/macro.njk' import govukButton %}
+{% from 'table/macro.njk' import govukTable %}
+{% from 'back-link/macro.njk' import govukBackLink %}
+
+{% block pageTitle %}Put State Pension into payment{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: 'Back',
+      href: '/process-claim/enter-amounts'
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% if globalError %}
+      {{ form.globalError(globalError) }}
+    {% endif %}
+    <h1 class="govuk-heading-xl">Put State Pension into payment</h1>
+    {% if details %}
+      {{ govukTable({
+        caption: details.bankDetails.caption,
+        firstCellIsHeader: true,
+        classes: 'gysp-payment-table',
+        attributes: {
+          id: 'bank-details'
+        },
+        rows: details.bankDetails.rows
+      }) }}
+
+      {% if details.firstPayment %}
+        {{ govukTable({
+          caption: details.firstPayment.caption,
+          firstCellIsHeader: true,
+          classes: 'gysp-payment-table',
+          attributes: {
+            id: 'first-payement-details'
+          },
+          rows: details.firstPayment.rows
+        }) }}
+      {% endif %}
+
+      {{ govukTable({
+          caption: details.regularPayment.caption,
+          firstCellIsHeader: true,
+          classes: 'gysp-payment-table',
+          attributes: {
+            id: 'regular-payement-details'
+          },
+          rows: details.regularPayment.rows
+        }) }}
+      <form method="post" action="/process-claim/payment" id="form__create-letter" autocomplete="off">
+        {{ govukButton({
+          text: 'Create letter',
+          attributes: {
+            id: 'create-letter'
+          }
+        }) }}
+      </form>
+      <p class="govuk-body"><a href="/process-claim/claim-to-bau" class="govuk-link" id="send-all-to-bau">Send claim to BAU</a></p>
+    {% else %}
+      <h2>Sorry, no payment breakdown found.</h2>
+    {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}

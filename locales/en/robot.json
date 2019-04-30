@@ -1,0 +1,20 @@
+{
+  "field_names":
+  {
+    "result": "Result",
+    "invite_key": "Invite Key",
+    "message": "Message",
+    "access_key": "Access Key"
+  },
+  "errors": {
+    "invite_key": {
+      "required": "Invite key is required"
+    },
+    "message": {
+      "required": "Message is required"
+    },
+    "access_key": {
+      "required": "Access key is required"
+    }
+  }
+}

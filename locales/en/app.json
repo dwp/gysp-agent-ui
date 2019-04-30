@@ -1,0 +1,9 @@
+{
+  "service_name": "DWP",
+  "button": {
+    "save": "Save"
+  },
+  "link": {
+    "back": "Back"
+  }
+}

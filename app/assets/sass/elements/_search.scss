@@ -1,0 +1,71 @@
+.search {
+    position: relative;
+
+    &--element {
+        display: table-cell;
+        position: relative;
+        vertical-align: top;
+    }
+
+    &__wrapper {
+        display: table;
+        width: 100%;
+        margin-top: 5px;
+        background: govuk-colour('white');
+    }
+
+    &__label {
+        color: govuk-colour('white');
+    }
+
+    &__submit-wrapper {
+        width: 1%;
+    }
+
+    &__input {
+        box-sizing: border-box;
+        width: 100%;
+        height: 40px;
+        padding: 6px;
+        border: 0;
+        background: govuk-colour('white');
+        font-size: 16px;
+        line-height: 1.75;
+        z-index: 1;
+
+        &:focus {
+            outline-offset: unset;
+        }
+
+        @media (min-width: 641px) {
+            font-size: 19px;
+            line-height: 1.4736842105;
+        }
+    }
+
+    &__submit {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        background-color: govuk-colour('black');
+        background-position: 7px 50%;
+        background-repeat: no-repeat;
+        color: govuk-colour('white');
+        text-indent: -5000px;
+        cursor: pointer;
+        z-index: 0;
+    }
+}
+
+.icon-search {
+    background-color: govuk-colour('black');
+    background-image: url('/assets/images/icons/icon-search.png');
+
+    @include govuk-device-pixel-ratio($ratio: 2) {
+        background-image: url('/assets/images/icons/icon-search-2x.png');
+        background-size: 100%;
+    }
+}

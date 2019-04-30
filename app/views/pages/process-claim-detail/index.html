@@ -1,0 +1,48 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from 'button/macro.njk' import govukButton %}
+{% from 'table/macro.njk' import govukTable %}
+{% from 'back-link/macro.njk' import govukBackLink %}
+
+{% block pageTitle %}Check claim{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-xl">Check claim</h1>
+    {% if details %}
+      {{ govukTable({
+        attributes: {
+          id: 'claim-detail'
+        },
+        head: [{
+          text: 'National Insurance number'
+        }, {
+          text: 'Name'
+        }, {
+          text: 'Date of birth'
+        }],
+        rows: [
+          [{text: details.nino},
+          {text: details.name},
+          {text: details.dob}]
+        ]
+      }) }}
+
+      {{ govukButton({
+        text: 'Continue with claim',
+        href: '/process-claim/enter-amounts',
+        attributes: {
+            id: 'continue-claim-button'
+        }
+      }) }}
+      <p class="govuk-body"><a href="/process-claim/claim-to-bau" class="govuk-link" id="send-to-bau">Send claim to BAU</a></p>
+    {% else %}
+      <p class="govuk-body">There are no claims available to process</p>
+    {% endif %}
+  </div>
+</div>
+
+
+{% endblock %}

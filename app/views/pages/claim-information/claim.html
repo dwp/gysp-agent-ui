@@ -1,0 +1,176 @@
+{% extends 'helpers/layout.html' %}
+{% import 'helpers/form.html' as form %}
+{% from "fieldset/macro.njk" import govukFieldset %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %} Claim Information {% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if globalError %}
+          {{ form.globalError(globalError) }}
+        {% endif %}
+
+        {% if globalSuccess %}
+            {{ form.globalSuccess(globalSuccess) }}
+        {% endif %}
+
+        <div class="govuk-grid-row js-hidden">
+            <div class="govuk-grid-column-full">
+                {{ form.globalError('Javascript must be enabled to use this service.') }}
+            </div>
+        </div>
+    </div>
+</div>
+<form method="post" action="/claim-information" id="form__claim-information" autocomplete="off">
+    <div class="govuk-grid-row no-js">
+        <div class="govuk-grid-column-full">
+
+            {% call govukFieldset({
+                legend: {
+                    text: "Claim Information",
+                    classes: "govuk-fieldset__legend--xl govuk-!-margin-bottom-9",
+                    isPageHeading: true
+                }
+            }) %}
+                <div class="form-group {% if errors.maximumPeriod %} govuk-form-group--error{% endif %}">
+                    {% if errors.maximumPeriod %}
+                    <span id="maximumPeriod-form" class="govuk-error-message">{{ errors.maximumPeriod }}</span>
+                    {% endif %}
+
+                    {{ govukDateInput({
+                        id: "fromDate",
+                        fieldset: {
+                            legend: {
+                                text: t("claim-information:field_names.fromDate"),
+                                isPageHeading: false,
+                                classes: "govuk-label--s"
+                            }
+                        },
+                        hint: {
+                            text: "For example, 01 01 2018"
+                        },
+                        items: [{
+                            label: 'Day',
+                            id: "fromDate-day",
+                            name: "fromDateDay",
+                            value: details.fromDateDay,
+                            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.fromDateDay),
+                            attributes: { maxlength: '2' }
+                        }, {
+                            label: 'Month',
+                            id: "fromDate-month",
+                            name: "fromDateMonth",
+                            value: details.fromDateMonth,
+                            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.fromDateMonth),
+                            attributes: { maxlength: '2' }
+                        }, {
+                            label: 'Year',
+                            id: "fromDate-year",
+                            name: "fromDateYear",
+                            value: details.fromDateYear,
+                            classes: "govuk-input--width-4" + (" govuk-input--error" if errors.fromDateYear),
+                            attributes: { maxlength: '4' }
+                        }],
+                        errorMessage: errors.fromDate
+                    }) }}
+
+                    {{ govukDateInput({
+                        id: "toDate",
+                        fieldset: {
+                            legend: {
+                                text: t("claim-information:field_names.toDate"),
+                                isPageHeading: false,
+                                classes: "govuk-label--s"
+                            }
+                        },
+                        hint: {
+                            text: "For example, 10 01 2018"
+                        },
+                        items: [{
+                            label: 'Day',
+                            id: "toDate-day",
+                            name: "toDateDay",
+                            value: details.toDateDay,
+                            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.toDateDay),
+                            attributes: { maxlength: '2' }
+                        }, {
+                            label: 'Month',
+                            id: "toDate-month",
+                            name: "toDateMonth",
+                            value: details.toDateMonth,
+                            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.toDateMonth),
+                            attributes: { maxlength: '2' }
+                        }, {
+                            label: 'Year',
+                            id: "toDate-year",
+                            name: "toDateYear",
+                            value: details.toDateYear,
+                            classes: "govuk-input--width-4" + (" govuk-input--error" if errors.toDateYear),
+                            attributes: { maxlength: '4' }
+                        }],
+                        errorMessage: errors.toDate
+                    }) }}
+
+                </div>
+
+                {{ govukRadios({
+                    idPrefix: "type",
+                    name: "type",
+                    fieldset: {
+                        legend: {
+                        text: "Information type",
+                        isPageHeading: false,
+                        classes: "govuk-label--s"
+                        }
+                    },
+                    items: [{
+                        id: "type-claim",
+                        value: t("claim-information:field_names.info_type.options.claim"),
+                        text: t("claim-information:field_names.info_type.label.claim"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.claim") else false
+                    }, {
+                        id: "type-letter",
+                        value: t("claim-information:field_names.info_type.options.letter"),
+                        text: t("claim-information:field_names.info_type.label.letter"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.letter") else false
+                    }, {
+                        id: "type-claimDetail",
+                        value: t("claim-information:field_names.info_type.options.claimDetail"),
+                        text: t("claim-information:field_names.info_type.label.claimDetail"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.claimDetail") else false
+                    }, {
+                        id: "type-citizenDetail",
+                        value: t("claim-information:field_names.info_type.options.citizenDetail"),
+                        text: t("claim-information:field_names.info_type.label.citizenDetail"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.citizenDetail") else false
+                    }, {
+                        id: "type-hmrcFeed",
+                        value: t("claim-information:field_names.info_type.options.hmrcFeed"),
+                        text: t("claim-information:field_names.info_type.label.hmrcFeed"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.lhmrcFeedetter") else false
+                    }, {
+                        id: "type-claimFilter",
+                        value: t("claim-information:field_names.info_type.options.claimFilter"),
+                        text: t("claim-information:field_names.info_type.label.claimFilter"),
+                        checked: true if details.type == t("claim-information:field_names.info_type.options.claimFilter") else false
+                    }],
+                    errorMessage: errors.type
+                }) }}
+
+                {{ govukButton({
+                    text: "Download Claim Information",
+                    attributes: {
+                        id: "submit"
+                    }
+                }) }}
+            {% endcall %}
+        </div>
+    </div>
+</form>
+
+{% endblock %}

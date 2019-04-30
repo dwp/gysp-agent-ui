@@ -1,0 +1,14 @@
+{
+  "report": true,
+  "lines": 12,
+	"statements": 12,
+	"functions": 12,
+	"functions": 12,
+  "reporter": [
+    "lcov",
+    "cobertura",
+    "text"
+  ],
+  "check-coverage": true,
+  "report-dir": "./coverage"
+}
