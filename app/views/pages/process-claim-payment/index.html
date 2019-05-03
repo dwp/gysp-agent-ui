@@ -4,6 +4,7 @@
 {% from 'button/macro.njk' import govukButton %}
 {% from 'table/macro.njk' import govukTable %}
 {% from 'back-link/macro.njk' import govukBackLink %}
+{% from "error-summary/macro.njk" import govukErrorSummary %}
 
 {% block pageTitle %}Put State Pension into payment{% endblock %}
 
@@ -21,7 +22,12 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     {% if globalError %}
-      {{ form.globalError(globalError) }}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: [{
+          text: globalError
+        }]
+      }) }}
     {% endif %}
     <h1 class="govuk-heading-xl">Put State Pension into payment</h1>
     {% if details %}

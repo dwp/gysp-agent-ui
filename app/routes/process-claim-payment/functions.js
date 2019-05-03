@@ -7,7 +7,7 @@ const deleteSession = require('../../../lib/deleteSession');
 const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
 
 const noStausCodeErrorMessage = 'Error - could not create letter.';
-const error500Message = 'Error - there has been an internal sever error, try again.';
+const error500Message = 'Try again or send claim to BAU';
 const backendErrorMessage = 'Error - connection refused.';
 
 function getPaymentErrorHandler(err, req, res) {

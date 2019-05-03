@@ -25,12 +25,13 @@ function build() {
     'locales/**',
     'logs',
     '*.js',
+    '!app/assets/**',
     '!gulpfile.js/**',
     '!start.js',
     '!awsPrivateIp.js',
     '!gulpfile.js',
     '!gulp-package.js',
-    '!config/application.yaml',
+    '!config/*.yaml',
     '!node_modules/gulp*{,/**/*}',
   ], { base: './' })
     .pipe(rename((path) => { // eslint-disable-line no-shadow

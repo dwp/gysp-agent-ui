@@ -22,7 +22,7 @@ const awardPaymentUri = '/api/award/paymentbreakdown';
 const awardCreateScheduleUri = '/api/award/createschedule';
 
 const errorMessage = {
-  status500: 'Error - there has been an internal sever error, try again.',
+  status500: 'Try again or send claim to BAU',
   statusOther: 'Error - connection refused.',
   statusNone: 'Error - could not create letter.',
 };
