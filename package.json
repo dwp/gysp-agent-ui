@@ -14,6 +14,7 @@
     "version": "./postversion.sh",
     "build": "gulp generateAssets",
     "package": "gulp --gulpfile ./gulp-package.js",
+    "release": "npm install && npm test && npm run build && npm prune --production && npm run package && npm install",
     "prestart": "npm install",
     "start": "node start",
     "lint": "eslint .",
