@@ -37,7 +37,7 @@
     "express-flash": "0.0.2",
     "express-session": "1.16.1",
     "govuk-frontend": "2.11.0",
-    "gulp": "4.0.1",
+    "gulp": "4.0.2",
     "gulp-clean-css": "3.9.4",
     "gulp-concat": "2.6.1",
     "gulp-nodemon": "2.4.2",
