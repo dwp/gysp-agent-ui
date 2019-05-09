@@ -10,11 +10,11 @@ application:
       securecookies: false
   urls:
       agentGateway: http://example.com/api
-      apiKey: thisIsASecret
-      batchApiKey: thisIsASecret
-      awardApiKey : thisIsASecret
-      addressLookupApiKey: thisIsASecret
-      paymentApiKey: thisIsASecret
+      apiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+      batchApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+      awardApiKey : U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+      addressLookupApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+      paymentApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
       host: host
   robot:
     key: thisIsAKeyForARobot
