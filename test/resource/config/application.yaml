@@ -17,7 +17,7 @@ application:
       paymentApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
       host: host
   robot:
-    key: thisIsAKeyForARobot
+    key: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
   logs:
       level: error
       path: logs
