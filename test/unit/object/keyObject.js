@@ -7,12 +7,15 @@ const validDetails = {
 };
 
 const agentRefObject = {
-  username: 'fake@fake.com',
+  cis: {
+    surname: 'User',
+    givenname: 'Test',
+  },
 };
 
 const validJson = {
   surname: 'Bloggs',
-  agentRef: 'fake@fake.com',
+  agentRef: 'Test User',
 };
 
 describe('Key object formatter', () => {

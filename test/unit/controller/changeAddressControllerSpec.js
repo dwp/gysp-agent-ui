@@ -20,7 +20,7 @@ const validSelectRequest = { session: { awardDetails: claimData.validClaim(), ad
 const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
-const validSelectPostRequest = { user: { username: 'testuser' }, session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '10091853817' } };
+const validSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '10091853817' } };
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '' } };
 
 const notFoundResponse = {
@@ -42,7 +42,7 @@ const updateErrorMessages = {
   500: 'Error - could not save data.',
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'testuser' } };
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const postcodeLookupApiUri = '/addresses?postcode=W1J7NT';
 const awardDetailsUpdateApiUri = '/api/award/updateaddressdetails';

@@ -21,16 +21,16 @@ const accountChangeResponse = {
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
-const validBankPostRequest = { user: { username: 'testuser' }, session: { awardDetails: claimData.validClaim() }, body: { accountName: 'Derek Trotter', accountNumber: '12345678', sortCode: '112233' } };
+const validBankPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim() }, body: { accountName: 'Derek Trotter', accountNumber: '12345678', sortCode: '112233' } };
 const validBuildingSocietyPostRequest = {
-  user: { username: 'testuser' },
+  user: { cis: { surname: 'User', givenname: 'Test' } },
   session: { awardDetails: claimData.validClaim() },
   body: {
     accountName: 'Derek Trotter', accountNumber: '87654321', sortCode: '445566', referenceNumber: '2863547',
   },
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'testuser' } };
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const paymentDetailsUpdateApiUri = '/api/award/payee';
 

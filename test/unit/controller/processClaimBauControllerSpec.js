@@ -30,7 +30,12 @@ const flashMock = (type, message) => {
 
 const validAllBAURequest = {
   flash: flashMock,
-  user: { username: 'test@test.com' },
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
+  },
 };
 
 const validSingleBAURequest = {
@@ -40,12 +45,22 @@ const validSingleBAURequest = {
       claimDetail: { inviteKey: 'BLOGGS1234' },
     },
   },
-  user: { username: 'test@test.com' },
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
+  },
 };
 
 const invalidSingleBAURequest = {
   session: {},
-  user: { username: 'test@test.com' },
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
+  },
 };
 
 describe('Process claim send to BAU controller', () => {

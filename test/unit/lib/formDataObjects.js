@@ -79,13 +79,13 @@ module.exports = {
           },
         },
       },
-      user: { username: 'test@test.com' },
+      user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
   invalidProcessClaimPaymentRequest() {
     return {
       session: {},
-      user: { username: 'test@test.com' },
+      user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
   validProcessClaimPaymentFormattedObject() {

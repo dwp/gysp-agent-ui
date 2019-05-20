@@ -108,34 +108,34 @@ const emailRemoveViewData = {
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };
 const validHomePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' },
 };
 const emptyWorkPostRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '' } };
 const validWorkPostRequest = {
-  user: { username: 'testuser' }, params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' },
 };
 const emptyMobilePostRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '' } };
 const validMobilePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' },
 };
 
 const emptyHomeRemovePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: '' } };
 const validYesHomeRemovePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' },
 };
 const validNoHomeRemovePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'no' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'no' },
 };
 
 const emptyEmailRemovePostRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: '' } };
 const validYesEmailRemovePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' },
 };
 const validNoEmailRemovePostRequest = {
-  user: { username: 'testuser' }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'no' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'no' },
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'testuser' } };
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const contactDetailsUpdateUri = '/api/award/updatecontactdetails';
 
@@ -475,7 +475,7 @@ describe('Change circumstances contact controller ', () => {
     });
 
     it('should return a redirect to change when answer is no and API returns 200 state', () => {
-      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri, { reqheaders: { agentRef: 'testuser' } }).reply(httpStatus.OK, {});
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri, { reqheaders: { agentRef: 'Test User' } }).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validNoHomeRemovePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact/home');
