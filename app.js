@@ -195,7 +195,6 @@ app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./ap
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-payment/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-complete/routes'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim/enter-amounts/routes.js'));
 
 // 404 catch
 app.use((req, res, next) => {
