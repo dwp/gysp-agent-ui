@@ -39,7 +39,10 @@ const detailsNoAddressLine2to7 = {
 };
 
 const agentRefObject = {
-  username: 'test@test.com',
+  cis: {
+    surname: 'User',
+    givenname: 'Test',
+  },
 };
 
 const validJson = {
@@ -50,7 +53,7 @@ const validJson = {
   dobVerification: 'V',
   gender: 'Male',
   nino: 'AA370773A',
-  agentRef: 'test@test.com',
+  agentRef: 'Test User',
   overseasAddress: {
     line1: 'Address Line 1',
     country: 'Country 1',
@@ -71,7 +74,7 @@ const validJsonNoAddressLine2to7 = {
   dobVerification: 'V',
   gender: 'Male',
   nino: 'AA370773A',
-  agentRef: 'test@test.com',
+  agentRef: 'Test User',
   overseasAddress: {
     line1: 'Address Line 1',
     country: 'Country 1',

@@ -44,7 +44,7 @@ const paymentScheduleRequest = {
 };
 
 const paymentSchedulePostRequest = {
-  user: { username: 'testuser' },
+  user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
     awardDetails: claimData.validClaim(),
     frequencyChangeSchedule: paymentData.validSchedule(),
@@ -55,7 +55,7 @@ const paymentSchedulePostRequest = {
   flash: flashMock,
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'testuser' } };
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const getChangePaymentFrequencyApiUri = '/api/award/frequencychangecalc';
 const putChangePaymentFrequencyApiUri = '/api/award/frequencychangeupdate';

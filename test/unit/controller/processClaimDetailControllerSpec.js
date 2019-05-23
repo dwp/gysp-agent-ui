@@ -30,7 +30,7 @@ const awardDetailViewDetails = {
   dob: '15/01/1953',
 };
 
-const validRequest = { session: {}, user: { username: 'test@test.com' } };
+const validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
 
 describe('Process claim detail controller', () => {
   describe('getProcessClaimDetailsCache function (GET /process-claim/detail)', () => {

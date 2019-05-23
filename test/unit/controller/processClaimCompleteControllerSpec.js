@@ -16,7 +16,17 @@ const { assert } = chai;
 
 const responseHelper = require('../../../test/lib/responseHelper');
 
-const validRequest = { session: { processClaim: { userHasCompleted: true } }, user: { username: 'test@test.com' } };
+const validRequest = {
+  session: {
+    processClaim: { userHasCompleted: true },
+  },
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
+  },
+};
 
 describe('Process claim controller', () => {
   describe('getProcessClaim function (GET /process-claim/complete)', () => {

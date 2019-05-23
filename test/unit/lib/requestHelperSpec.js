@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const requestHelper = require('../../../lib/requestHelper');
 
-const agentRefObject = { username: 'test@test.com' };
+const agentRefObject = { cis: { surname: 'User', givenname: 'Test' } };
 
 describe('Request helper ', () => {
   describe('requestClaimPDF  ', () => {
@@ -14,7 +14,7 @@ describe('Request helper ', () => {
       assert.isString(pdfCall.headers['X-B3-TraceId']);
       assert.isString(pdfCall.headers['X-B3-SpanId']);
       assert.equal(pdfCall.headers['Content-Type'], 'application/pdf');
-      assert.equal(pdfCall.headers.agentRef, 'test@test.com');
+      assert.equal(pdfCall.headers.agentRef, 'Test User');
     });
   });
   describe('generatePostCall  ', () => {

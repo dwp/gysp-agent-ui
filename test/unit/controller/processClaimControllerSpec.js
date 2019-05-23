@@ -20,8 +20,8 @@ const awardTotalUri = '/api/award/count/daily-awards';
 
 const awardTotalResponse = 50;
 
-const validRequest = { session: {}, user: { username: 'test@test.com' } };
-const validWithDetailRequest = { session: { processClaim: { foo: 'bar' } }, user: { username: 'test@test.com' } };
+const validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
+const validWithDetailRequest = { session: { processClaim: { foo: 'bar' } }, user: { cis: { surname: 'User', givenname: 'Test' } } };
 
 describe('Process claim controller', () => {
   describe('getProcessClaim function (GET /process-claim)', () => {

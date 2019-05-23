@@ -43,7 +43,10 @@ const detailsNoPostTownUK = JSON.parse(JSON.stringify(detailsUK));
 detailsNoPostTownUK.postTown = '';
 
 const agentRefObject = {
-  username: 'test@test.com',
+  cis: {
+    surname: 'User',
+    givenname: 'Test',
+  },
 };
 
 const validJson = {
@@ -55,7 +58,7 @@ const validJson = {
   gender: 'Male',
   nino: 'AA370773A',
   inviteKey: 'BLOG1234',
-  agentRef: 'test@test.com',
+  agentRef: 'Test User',
   residentialAddress: {
     thoroughfareName: 'Thoroughfare Name',
     postCode: 'Post Code',
