@@ -116,12 +116,16 @@ module.exports = {
     contact.contactDetail.email = null;
     return contact;
   },
-  validViewData() {
+  validPersonalDetailsViewData() {
     return {
       fullName: 'Joe Bloggs',
       nino: 'AA 37 07 73 A',
       dob: '09 November 1953',
       statePensionDate: '09 November 2018',
+    };
+  },
+  validContactDetailsViewData() {
+    return {
       address: [
         'Sub Building Name, Building Name',
         'Building Number Dependent Thoroughfare Name',

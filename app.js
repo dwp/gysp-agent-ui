@@ -160,7 +160,7 @@ app.use((req, res, next) => {
 });
 
 app.use(require('./lib/middleware/processClaim')(log));
-app.use(require('./lib/middleware/changesEnquiries')(log));
+app.use(require('./lib/middleware/changesEnquiries')());
 app.use(require('./lib/kongAuth'));
 
 // Route information

@@ -6,9 +6,10 @@ const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const contactDetailsObject = require('../../../../lib/contactDetailsObject');
 const removeContactDetailsObject = require('../../../../lib/removeContactDetailsObject');
+const contactDetailsOverview = require('../../../../lib/contactDetailsOverview');
 
 const contactDetailsUpdateUri = 'api/award/updatecontactdetails';
-const activeGlobalNavigationSection = 'overview';
+const activeGlobalNavigationSection = 'contact';
 
 function isAddOrChange(details, type) {
   const telephone = new RegExp('^(?:home|mobile|work)$');
@@ -31,7 +32,8 @@ function isAddOrChange(details, type) {
 function globalErrorMessage(error) {
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     return 'Error - connection refused.';
-  } if (error.statusCode === httpStatus.NOT_FOUND) {
+  }
+  if (error.statusCode === httpStatus.NOT_FOUND) {
     return 'Error - award not found.';
   }
   return 'Error - could not save data.';
@@ -49,6 +51,22 @@ function contactDetailsRemoveView(type) {
     return 'pages/changes-enquiries/contact/remove-email';
   }
   return 'pages/changes-enquiries/contact/remove';
+}
+
+function getContactDetails(req, res) {
+  const award = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
+  request(award)
+    .then((body) => {
+      req.session.awardDetails = body;
+      req.session.awardDetails.status = 'RECEIVING STATE PENSION';
+      const details = contactDetailsOverview.formatter(body);
+      const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
+      res.render('pages/changes-enquiries/contact/overview', { details, keyDetails, activeGlobalNavigationSection });
+    }).catch((err) => {
+      const traceID = requestHelper.getTraceID(err);
+      requestHelper.loggingHelper(err, 'cannot get contact details', traceID, res.locals.logger);
+      res.render('pages/error', { status: '- Cannot get contact details.' });
+    });
 }
 
 function getChangeContactDetails(req, res) {
@@ -79,7 +97,7 @@ function postChangeContactDetails(req, res) {
     const contactDetails = contactDetailsObject.formatter(req.body, req.session.awardDetails, type);
     const putContactDetailCall = requestHelper.generatePutCall(res.locals.agentGateway + contactDetailsUpdateUri, contactDetails, 'batch', req.user);
     request(putContactDetailCall).then(() => {
-      res.redirect('/changes-and-enquiries/overview');
+      res.redirect('/changes-and-enquiries/contact');
     }).catch((err) => {
       postChangeContactDetailsErrorHandler(err, req, res, type, addOrChange, keyDetails);
     });
@@ -121,7 +139,7 @@ function postRemoveContactDetails(req, res) {
         req.user,
       );
       request(putContactDetailCall).then(() => {
-        res.redirect('/changes-and-enquiries/overview');
+        res.redirect('/changes-and-enquiries/contact');
       }).catch((err) => {
         postRemoveContactDetailsErrorHandler(err, req, res, type, keyDetails);
       });
@@ -136,6 +154,7 @@ function postRemoveContactDetails(req, res) {
   }
 }
 
+module.exports.getContactDetails = getContactDetails;
 module.exports.getChangeContactDetails = getChangeContactDetails;
 module.exports.postChangeContactDetails = postChangeContactDetails;
 module.exports.getRemoveContactDetails = getRemoveContactDetails;

@@ -12,6 +12,8 @@ const claimData = require('../../lib/claimData');
 let testPromise;
 let genericResponse = {};
 
+const contactDetailsRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
+
 const homePhoneAddRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaimContactNull('home') } };
 const homePhoneAddResponse = {
   type: 'home',
@@ -19,7 +21,7 @@ const homePhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 const homePhoneChangeRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
 const homePhoneChangeResponse = {
@@ -28,7 +30,7 @@ const homePhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const workPhoneAddRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaimContactNull('work') } };
@@ -38,7 +40,7 @@ const workPhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 const workPhoneChangeRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() } };
 const workPhoneChangeResponse = {
@@ -47,7 +49,7 @@ const workPhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const mobilePhoneAddRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaimContactNull('mobile') } };
@@ -57,7 +59,7 @@ const mobilePhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 const mobilePhoneChangeRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() } };
 const mobilePhoneChangeResponse = {
@@ -66,7 +68,7 @@ const mobilePhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const emailAddRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaimContactNull('email') } };
@@ -76,7 +78,7 @@ const emailAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 const emailChangeRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
 const emailChangeResponse = {
@@ -85,7 +87,7 @@ const emailChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const homePhoneRemoveRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
@@ -94,7 +96,7 @@ const homePhoneRemoveViewData = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const emailRemoveRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
@@ -103,7 +105,7 @@ const emailRemoveViewData = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'overview',
+  activeGlobalNavigationSection: 'contact',
 };
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };
@@ -137,6 +139,7 @@ const validNoEmailRemovePostRequest = {
 
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
+const contactDetailsUri = '/api/award';
 const contactDetailsUpdateUri = '/api/award/updatecontactdetails';
 
 const errorMessages = {
@@ -168,6 +171,25 @@ describe('Change circumstances contact controller ', () => {
   });
   afterEach(() => {
     nock.cleanAll();
+  });
+
+  describe('getContactDetails function (GET /changes-enquiries/contact)', () => {
+    it('should return view name and view data when called exists on API', () => {
+      nock('http://test-url/').get(`${contactDetailsUri}/${contactDetailsRequest.session.searchedNino}`).reply(200, claimData.validClaim());
+      changeContactDetailsController.getContactDetails(contactDetailsRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/overview');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validContactDetailsViewData()));
+      });
+    });
+
+    it('should return error view name when API returns a 404 response', () => {
+      nock('http://test-url/').get(`${contactDetailsUri}/${contactDetailsRequest.session.searchedNino}`).reply(404, {});
+      changeContactDetailsController.getContactDetails(contactDetailsRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/error');
+      });
+    });
   });
 
   describe(' getChangeContactDetails function (GET /changes-and-enquiries/contact/home)', () => {
@@ -229,7 +251,7 @@ describe('Change circumstances contact controller ', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validHomePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });
@@ -293,7 +315,7 @@ describe('Change circumstances contact controller ', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validWorkPostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });
@@ -357,7 +379,7 @@ describe('Change circumstances contact controller ', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });
@@ -421,7 +443,7 @@ describe('Change circumstances contact controller ', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });
@@ -482,11 +504,11 @@ describe('Change circumstances contact controller ', () => {
       });
     });
 
-    it('should return a redirect to overview when answer is yes and API returns 200 state', () => {
+    it('should return a redirect to contact when answer is yes and API returns 200 state', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validYesHomeRemovePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });
@@ -547,11 +569,11 @@ describe('Change circumstances contact controller ', () => {
       });
     });
 
-    it('should return a redirect to overview when answer is yes and API returns 200 state', () => {
+    it('should return a redirect to contact when answer is yes and API returns 200 state', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validYesEmailRemovePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });

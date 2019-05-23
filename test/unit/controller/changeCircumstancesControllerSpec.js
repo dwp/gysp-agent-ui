@@ -49,7 +49,7 @@ describe('Change circumstances controller ', () => {
       changeCircumstancesController.getOverview(ninoRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/overview');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validPersonalDetailsViewData()));
       });
     });
 

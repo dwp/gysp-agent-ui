@@ -3,6 +3,7 @@ const express = require('express');
 const router = new express.Router();
 const functions = require('./functions');
 
+router.get('/contact', functions.getContactDetails);
 router.get('/contact/:type(home|work|mobile|email)', functions.getChangeContactDetails);
 router.post('/contact/:type(home|work|mobile|email)', functions.postChangeContactDetails);
 router.get('/contact/remove/:type(home|work|mobile|email)', functions.getRemoveContactDetails);
