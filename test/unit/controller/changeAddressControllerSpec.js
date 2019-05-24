@@ -226,7 +226,7 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(validSelectPostRequest.session.addressLookup, undefined);
         assert.equal(validSelectPostRequest.session.postcode, undefined);
-        assert.equal(genericResponse.address, '/changes-and-enquiries/overview');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
   });

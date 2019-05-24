@@ -22,11 +22,14 @@ function getPostcodeLookup(req, res) {
 function postcodeLookupGlobalErrorMessage(error) {
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     return 'Error - connection refused.';
-  } if (error.statusCode === httpStatus.NOT_FOUND) {
+  }
+  if (error.statusCode === httpStatus.NOT_FOUND) {
     return 'No address found with that postcode';
-  } if (error.statusCode === httpStatus.UNAUTHORIZED) {
+  }
+  if (error.statusCode === httpStatus.UNAUTHORIZED) {
     return 'Error - connection refused.';
-  } if (error.statusCode === httpStatus.FORBIDDEN) {
+  }
+  if (error.statusCode === httpStatus.FORBIDDEN) {
     return 'Error - connection refused.';
   }
   return 'No address found with that postcode';
@@ -87,7 +90,8 @@ function getSelectAddress(req, res) {
 function selectAddressGlobalErrorMessage(error) {
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     return 'Error - connection refused.';
-  } if (error.statusCode === httpStatus.NOT_FOUND) {
+  }
+  if (error.statusCode === httpStatus.NOT_FOUND) {
     return 'Error - award not found.';
   }
   return 'Error - could not save data.';
@@ -115,7 +119,7 @@ function postSelectAddress(req, res) {
     );
     request(putAddressDetailCall).then(() => {
       deleteSession.deleteChangeAddress(req);
-      res.redirect('/changes-and-enquiries/overview');
+      res.redirect('/changes-and-enquiries/contact');
     }).catch((err) => {
       postSelectAddressErrorHandler(err, req, res, keyDetails);
     });
