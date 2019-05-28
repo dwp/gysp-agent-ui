@@ -1,17 +1,18 @@
 {% extends 'helpers/layout.html' %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% from 'helpers/form.html' import globalError as error %}
+{% from 'helpers/global-navigation.html' import globalNavigation %}
 {% from 'helpers/key-details.html' import keyDetailsSection %}
 {% from 'helpers/secondary-navigation.html' import secondaryNavigation %}
 
 {% block globalNavigation %}
-    {{ globalNavigation.globalNavigation(activeGlobalNavigationSection) }}
+    {{ globalNavigation(activeGlobalNavigationSection) }}
 {% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             {% if globalError %}
-                {{ form.globalError(globalError) }}
+                {{ error(globalError) }}
             {% endif %}
             {% if keyDetails %}
                 {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
