@@ -1,7 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from "back-link/macro.njk" import govukBackLink %}
 {% from "radios/macro.njk" import govukRadios %}
 {% from "button/macro.njk" import govukButton %}
@@ -17,56 +14,45 @@
   </div>
 {% endblock %}
 
-{% block content %}
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t("payment-frequency:header") }}</h1>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% if globalError %}
+  <form method="post" action="/changes-and-enquiries/payment/frequency" autocomplete="off">
+    {{ govukRadios({
+      classes: "govuk-radios",
+      name: "frequency",
+      fieldset: {
+        legend: {
+          text: t("payment-frequency:fields.frequency.legend"),
+          classes: "govuk-!-margin-bottom-4"
+        }
+      },
+      items: [{
+        id: "frequency-week-1",
+        value: "1W",
+        text: t("payment-frequency:fields.frequency.options.one_week"),
+        checked: selectedPaymentFrequency('1W', awardDetails.paymentFrequency, inputFrequency)
+      }, {
+        id: "frequency-week-2",
+        value: "2W",
+        text: t("payment-frequency:fields.frequency.options.two_week"),
+        checked: selectedPaymentFrequency('2W', awardDetails.paymentFrequency, inputFrequency)
+      }, {
+        id: "frequency-week-4",
+        value: "4W",
+        text: t("payment-frequency:fields.frequency.options.four_week"),
+        checked: selectedPaymentFrequency('4W', awardDetails.paymentFrequency, inputFrequency)
+      }, {
+        id: "frequency-week-13",
+        value: "13W",
+        text: t("payment-frequency:fields.frequency.options.thirteen_week"),
+        checked: selectedPaymentFrequency('13W', awardDetails.paymentFrequency, inputFrequency)
+      }],
+      errorMessage: errors.frequency
+    }) }}
 
-        {{ form.globalError(globalError) }}
-
-    {% endif %}
-
-    <h1 class="govuk-heading-l">{{ t("payment-frequency:header") }}</h1>
-
-    <form method="post" action="/changes-and-enquiries/payment/frequency" autocomplete="off">
-      {{ govukRadios({
-        classes: "govuk-radios",
-        name: "frequency",
-        fieldset: {
-          legend: {
-            text: t("payment-frequency:fields.frequency.legend"),
-            classes: "govuk-!-margin-bottom-4"
-          }
-        },
-        items: [{
-          id: "frequency-week-1",
-          value: "1W",
-          text: t("payment-frequency:fields.frequency.options.one_week"),
-          checked: selectedPaymentFrequency('1W', awardDetails.paymentFrequency, inputFrequency)
-        }, {
-          id: "frequency-week-2",
-          value: "2W",
-          text: t("payment-frequency:fields.frequency.options.two_week"),
-          checked: selectedPaymentFrequency('2W', awardDetails.paymentFrequency, inputFrequency)
-        }, {
-          id: "frequency-week-4",
-          value: "4W",
-          text: t("payment-frequency:fields.frequency.options.four_week"),
-          checked: selectedPaymentFrequency('4W', awardDetails.paymentFrequency, inputFrequency)
-        }, {
-          id: "frequency-week-13",
-          value: "13W",
-          text: t("payment-frequency:fields.frequency.options.thirteen_week"),
-          checked: selectedPaymentFrequency('13W', awardDetails.paymentFrequency, inputFrequency)
-        }],
-        errorMessage: errors.frequency
-      }) }}
-
-      {{ govukButton({
-        text: t("payment-frequency:button")
-      }) }}
-    </form>
-  </div>
-</div>
+    {{ govukButton({
+      text: t("payment-frequency:button")
+    }) }}
+  </form>
 {% endblock %}

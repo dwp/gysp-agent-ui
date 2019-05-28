@@ -3,10 +3,12 @@ const httpStatus = require('http-status-codes');
 
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const paymentObject = require('../../../../lib/objects/processClaimPaymentObject');
 const freqencyScheduleObject = require('../../../../lib/objects/freqencyScheduleObject');
 
-const activeGlobalNavigationSection = 'payment';
+const activeSecondaryNavigationSection = 'payment';
+const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const getChangePaymentFrequencyApiUri = 'api/award/frequencychangecalc';
 const putChangePaymentFrequencyApiUri = 'api/award/frequencychangeupdate';
@@ -38,14 +40,14 @@ function getPaymentScheduleRequest(req, res, err) {
         res.render('pages/changes-enquiries/payment-frequency-schedule/index', {
           keyDetails,
           details,
-          activeGlobalNavigationSection,
+          secondaryNavigationList,
           globalError: err.message,
         });
       } else {
         res.render('pages/changes-enquiries/payment-frequency-schedule/index', {
           keyDetails,
           details,
-          activeGlobalNavigationSection,
+          secondaryNavigationList,
         });
       }
     }).catch((error) => {

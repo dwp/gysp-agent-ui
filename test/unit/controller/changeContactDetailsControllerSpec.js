@@ -8,6 +8,7 @@ const changeContactDetailsController = require('../../../app/routes/changes-enqu
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
@@ -21,7 +22,7 @@ const homePhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const homePhoneChangeRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
 const homePhoneChangeResponse = {
@@ -30,7 +31,7 @@ const homePhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const workPhoneAddRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaimContactNull('work') } };
@@ -40,7 +41,7 @@ const workPhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const workPhoneChangeRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() } };
 const workPhoneChangeResponse = {
@@ -49,7 +50,7 @@ const workPhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const mobilePhoneAddRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaimContactNull('mobile') } };
@@ -59,7 +60,7 @@ const mobilePhoneAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const mobilePhoneChangeRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() } };
 const mobilePhoneChangeResponse = {
@@ -68,7 +69,7 @@ const mobilePhoneChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emailAddRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaimContactNull('email') } };
@@ -78,7 +79,7 @@ const emailAddResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const emailChangeRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
 const emailChangeResponse = {
@@ -87,7 +88,7 @@ const emailChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const homePhoneRemoveRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
@@ -96,7 +97,7 @@ const homePhoneRemoveViewData = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emailRemoveRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
@@ -105,7 +106,7 @@ const emailRemoveViewData = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'contact',
+  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };

@@ -13,7 +13,7 @@
 
 {% block header %}
   <header role="banner" id="global-header" class="govuk-header dwp-global-header with-proposition">
-    <div class="govuk-header__container govuk-width-container">
+    <div class="govuk-header__container govuk-width-container dwp-header__container">
         <div class="govuk-header__content">
             <nav id="proposition-menu">
                 <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
@@ -25,15 +25,11 @@
 
 {% block main %}
   {% block keyDetailsBar %}
-    {% if keyDetails %}
+    {% if keyDetailsBar %}
       {{ keyDetailsBar.keyDetailsBar(keyDetails.fullName, keyDetails.nino, keyDetails.status, keyDetails.dateOfBirth) }}
     {% endif %}
   {% endblock %}
-  {% block globalNavigation %}
-    {% if activeGlobalNavigationSection %}
-      {{ globalNavigation.globalNavigation(activeGlobalNavigationSection) }}
-    {% endif %}
-  {% endblock %}
+  {% block globalNavigation %}{% endblock %}
   {% block pageHeader %}{% endblock %}
   {% block backLink %}{% endblock %}
   <main id="content" class="govuk-main-wrapper" role="main">

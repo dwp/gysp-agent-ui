@@ -1,3 +1,5 @@
+{%- from "tag/macro.njk" import govukTag -%}
+
 {% macro keyDetailsBar(name, nino, status, dateOfBirth) %}
 	<section class="key-details-bar" role="contentinfo" aria-labelledby="key-details-label">
 		<div class="govuk-width-container">
@@ -20,5 +22,18 @@
 				</div>
 			</div>
 		</div>
+	</section>
+{% endmacro %}
+
+{% macro keyDetailsSection(name, nino, status) %}
+	<section class="key-details-section" role="contentinfo" aria-labelledby="key-details-label">
+		<h2 class="govuk-heading-xl govuk-!-margin-bottom-1 key-details-section__name">{{ name }}</h2>
+		<span class="govuk-caption-xl govuk-!-margin-bottom-6 key-details-section__nino">{{ nino }}</span>
+		{% if status %}
+			{{ govukTag({
+				text: status,
+				classes: 'govuk-!-margin-bottom-9 key-details-section__status'
+			}) }}
+		{% endif %}
 	</section>
 {% endmacro %}

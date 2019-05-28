@@ -3,7 +3,11 @@ const httpStatus = require('http-status-codes');
 
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const paymentObject = require('../../../../lib/objects/processClaimPaymentObject');
+
+const activeSecondaryNavigationSection = 'payment';
+const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function getPaymentErrorHandler(err, req, res) {
   const traceID = requestHelper.getTraceID(err);
@@ -27,9 +31,11 @@ function getPaymentScheduleRequest(req, res, err) {
       const details = paymentObject.formatter(body);
       const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       if (err) {
-        res.render('pages/changes-enquiries/payment-schedule/index', { keyDetails, details, globalError: err.message });
+        res.render('pages/changes-enquiries/payment-schedule/index', {
+          keyDetails, details, globalError: err.message, secondaryNavigationList,
+        });
       } else {
-        res.render('pages/changes-enquiries/payment-schedule/index', { keyDetails, details });
+        res.render('pages/changes-enquiries/payment-schedule/index', { keyDetails, details, secondaryNavigationList });
       }
     }).catch((error) => {
       getPaymentErrorHandler(error, req, res);

@@ -1,7 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from "input/macro.njk" import govukInput %}
 {% from "button/macro.njk" import govukButton %}
 {% from "back-link/macro.njk" import govukBackLink %}
@@ -17,84 +14,72 @@
   </div>
 {% endblock %}
 
-{% block content %}
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t('account:header') }}</h1>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+  <form method="post" action="/changes-and-enquiries/payment/account" autocomplete="off">
+    {{ govukInput({
+      id: "accountName",
+      name: "accountName",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("account:fields.accountName.label"),
+        attributes: {
+          id: "accountName-label"
+        }
+      },
+      value: details.accountName,
+      errorMessage: errors.accountName
+    }) }}
 
-    {% if globalError %}
-        {{ form.globalError(globalError) }}
-    {% endif %}
+    {{ govukInput({
+      id: "accountNumber",
+      name: "accountNumber",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("account:fields.accountNumber.label"),
+        attributes: {
+          id: "accountNumber-label"
+        }
+      },
+      value: details.accountNumber,
+      errorMessage: errors.accountNumber
+    }) }}
 
-    <h1 class="govuk-heading-l">{{ t('account:header') }}</h1>
+    {{ govukInput({
+      id: "sortCode",
+      name: "sortCode",
+      type: "text",
+      classes: "govuk-!-width-one-third",
+      label: {
+        text: t("account:fields.sortCode.label"),
+        attributes: {
+          id: "sortCode-label"
+        }
+      },
+      value: details.sortCode,
+      errorMessage: errors.sortCode
+    }) }}
 
-    <form method="post" action="/changes-and-enquiries/payment/account" autocomplete="off">
-      {{ govukInput({
-        id: "accountName",
-        name: "accountName",
-        type: "text",
-        classes: "govuk-!-width-two-thirds",
-        label: {
-          text: t("account:fields.accountName.label"),
-          attributes: {
-            id: "accountName-label"
-          }
-        },
-        value: details.accountName,
-        errorMessage: errors.accountName
-      }) }}
+    {{ govukInput({
+      id: "referenceNumber",
+      name: "referenceNumber",
+      type: "text",
+      classes: "govuk-!-width-one-third",
+      label: {
+        text: t("account:fields.referenceNumber.label"),
+        attributes: {
+          id: "referenceNumber-label"
+        }
+      },
+      value: details.referenceNumber,
+      errorMessage: errors.referenceNumber
+    }) }}
 
-      {{ govukInput({
-        id: "accountNumber",
-        name: "accountNumber",
-        type: "text",
-        classes: "govuk-!-width-two-thirds",
-        label: {
-          text: t("account:fields.accountNumber.label"),
-          attributes: {
-            id: "accountNumber-label"
-          }
-        },
-        value: details.accountNumber,
-        errorMessage: errors.accountNumber
-      }) }}
-
-      {{ govukInput({
-        id: "sortCode",
-        name: "sortCode",
-        type: "text",
-        classes: "govuk-!-width-one-third",
-        label: {
-          text: t("account:fields.sortCode.label"),
-          attributes: {
-            id: "sortCode-label"
-          }
-        },
-        value: details.sortCode,
-        errorMessage: errors.sortCode
-      }) }}
-
-      {{ govukInput({
-        id: "referenceNumber",
-        name: "referenceNumber",
-        type: "text",
-        classes: "govuk-!-width-one-third",
-        label: {
-          text: t("account:fields.referenceNumber.label"),
-          attributes: {
-            id: "referenceNumber-label"
-          }
-        },
-        value: details.referenceNumber,
-        errorMessage: errors.referenceNumber
-      }) }}
-
-      {{ govukButton({
-        text: t("app:button.save")
-      }) }}
-    </form>
-  </div>
-</div>
-
-
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
 {% endblock %}

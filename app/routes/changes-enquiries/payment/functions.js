@@ -1,11 +1,13 @@
 const request = require('request-promise');
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 
 const changeCircumstancesPaymentObject = require('../../../../lib/objects/changeCircumstancesPaymentObject');
 const changeCircumstancesPaymentSummaryObject = require('../../../../lib/objects/changeCircumstancesPaymentSummaryObject');
 
-const activeGlobalNavigationSection = 'payment';
+const activeSecondaryNavigationSection = 'payment';
+const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function requestAwardService(res, req) {
   return new Promise((resolve, reject) => {
@@ -56,7 +58,10 @@ async function getPaymentOverview(req, res) {
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(response[1]);
       const keyDetails = keyDetailsHelper.formatter(awardDetails);
       res.render('pages/changes-enquiries/payment/index', {
-        details, paymentSummary, keyDetails, activeGlobalNavigationSection,
+        details,
+        paymentSummary,
+        keyDetails,
+        secondaryNavigationList,
       });
     } catch (err) {
       const traceID = requestHelper.getTraceID(err);

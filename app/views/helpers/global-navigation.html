@@ -1,13 +1,9 @@
 {% macro globalNavigation(activeGlobalNavigationSection) %}
-	{% if activeGlobalNavigationSection %}
 	<nav class="navigation-global">
 		<div class="govuk-width-container">
 			<ul>
-				<li><a href='/changes-and-enquiries/personal'{{ ' class=active aria-current=page' if activeGlobalNavigationSection | lower  === 'personal' }}>Personal</a></li>
-				<li><a href='/changes-and-enquiries/contact'{{ ' class=active aria-current=page' if activeGlobalNavigationSection | lower  === 'contact' }}>Contact</a></li>
-				<li><a href='/changes-and-enquiries/payment'{{ ' class=active aria-current=page' if activeGlobalNavigationSection | lower  === 'payment' }}>Payment</a></li>
+				<li><a href='/find-someone'{{ ' class=active aria-current=page' if activeGlobalNavigationSection | lower  === 'find-someone' }}>Find someone</a></li>
 			</ul>
 		</div>
 	</nav>
-	{% endif %}
 {% endmacro %}

@@ -8,6 +8,7 @@ const changeAccountDetailsController = require('../../../app/routes/changes-enqu
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
@@ -17,7 +18,7 @@ const accountChangeResponse = {
   keyDetails: {
     fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
   },
-  activeGlobalNavigationSection: 'payment',
+  secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };

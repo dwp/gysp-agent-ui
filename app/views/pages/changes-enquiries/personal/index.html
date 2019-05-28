@@ -1,42 +1,34 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 
 {% block pageTitle %}Personal details - Changes and enquiries{% endblock %}
 
-{% block content %}
+{% block innerContent %}
 
-<div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-          <h1 class="govuk-visually-hidden">Changes and enquiries - Personal details</h1>
-          {% if details %}
-            <table id="personal-details-table" class="govuk-table">
-              <caption class="govuk-table__caption govuk-heading-l">Personal details</caption>
-              <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell gysp-table__cell--first"scope="row">Full name</td>
-                  <td class="govuk-table__cell gysp-table__cell--first">{{ details.fullName }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"scope="row">National Insurance number</td>
-                  <td class="govuk-table__cell">{{ details.nino }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"scope="row">Date of birth</td>
-                  <td class="govuk-table__cell">{{ details.dob }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <td class="govuk-table__cell"scope="row">State Pension date</td>
-                  <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
-                </tr>
-              </tbody>
-            </table>
-          {% else %}
-            <p class="govuk-body">Sorry, no personal details found.</p>
-          {% endif %}
-        </div>
-</div>
-
+  <h1 class="govuk-visually-hidden">Changes and enquiries - Personal details</h1>
+  {% if details %}
+    <table id="personal-details-table" class="govuk-table">
+      <caption class="govuk-table__caption govuk-heading-l">Personal details</caption>
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell gysp-table__cell--first"scope="row">Full name</td>
+          <td class="govuk-table__cell gysp-table__cell--first">{{ details.fullName }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"scope="row">National Insurance number</td>
+          <td class="govuk-table__cell">{{ details.nino }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"scope="row">Date of birth</td>
+          <td class="govuk-table__cell">{{ details.dob }}</td>
+        </tr>
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell"scope="row">State Pension date</td>
+          <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  {% else %}
+    <p class="govuk-body">Sorry, no personal details found.</p>
+  {% endif %}
 
 {% endblock %}

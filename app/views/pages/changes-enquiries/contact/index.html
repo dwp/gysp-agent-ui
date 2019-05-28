@@ -1,7 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from "input/macro.njk" import govukInput %}
 {% from "button/macro.njk" import govukButton %}
 {% from "back-link/macro.njk" import govukBackLink %}
@@ -18,16 +15,7 @@
   </div>
 {% endblock %}
 
-{% block content %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% if globalError %}
-
-        {{ form.globalError(globalError) }}
-
-    {% endif %}
-
+{% block innerContent %}
     <form method="post" action="/changes-and-enquiries/contact/{{ type }}" autocomplete="off">
       {% call govukFieldset({
         legend: {
@@ -57,6 +45,4 @@
         text: t("app:button.save")
       }) }}
     </form>
-  </div>
-</div>
 {% endblock %}

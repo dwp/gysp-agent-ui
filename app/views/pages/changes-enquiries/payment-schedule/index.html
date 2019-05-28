@@ -1,6 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from 'button/macro.njk' import govukButton %}
 {% from 'table/macro.njk' import govukTable %}
 {% from 'back-link/macro.njk' import govukBackLink %}
@@ -16,13 +14,8 @@
   </div>
 {% endblock %}
 
-{% block content %}
+{% block innerContent %}
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% if globalError %}
-      {{ form.globalError(globalError) }}
-    {% endif %}
     <h1 class="govuk-heading-l">Payment schedule</h1>
     {% if details %}
       {{ govukTable({
@@ -59,8 +52,5 @@
     {% else %}
       <h2>Sorry, no payment schedule found.</h2>
     {% endif %}
-  </div>
-</div>
-
 
 {% endblock %}
