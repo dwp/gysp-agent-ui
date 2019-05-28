@@ -4,21 +4,27 @@ const httpStatus = require('http-status-codes');
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const accountDetailsObject = require('../../../../lib/objects/accountDetailsObject');
 
-const activeGlobalNavigationSection = 'payment';
+const activeSecondaryNavigationSection = 'payment';
+const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const paymentDetailsUpdateApiUri = 'api/award/payee';
 
 function getChangeBankBuildingAccountDetails(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
-  res.render('pages/changes-enquiries/account/index', { keyDetails, activeGlobalNavigationSection });
+  res.render('pages/changes-enquiries/account/index', {
+    keyDetails,
+    secondaryNavigationList,
+  });
 }
 
 function globalErrorMessage(error) {
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     return 'Error - connection refused.';
-  } if (error.statusCode === httpStatus.NOT_FOUND) {
+  }
+  if (error.statusCode === httpStatus.NOT_FOUND) {
     return 'Error - payment schedule not found.';
   }
   return 'Error - could not save data.';
@@ -28,7 +34,10 @@ function postChangeBankBuildingAccountDetailsErrorHandler(error, req, res, keyDe
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, paymentDetailsUpdateApiUri, traceID, res.locals.logger);
   res.render('pages/changes-enquiries/account/index', {
-    keyDetails, activeGlobalNavigationSection, details: req.body, globalError: globalErrorMessage(error),
+    keyDetails,
+    secondaryNavigationList,
+    details: req.body,
+    globalError: globalErrorMessage(error),
   });
 }
 
@@ -50,7 +59,10 @@ function postChangeBankBuildingAccountDetails(req, res) {
     });
   } else {
     res.render('pages/changes-enquiries/account/index', {
-      keyDetails, activeGlobalNavigationSection, details: req.body, errors,
+      keyDetails,
+      secondaryNavigationList,
+      details: req.body,
+      errors,
     });
   }
 }

@@ -1,7 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from "back-link/macro.njk" import govukBackLink %}
 {% from "radios/macro.njk" import govukRadios %}
 {% from "button/macro.njk" import govukButton %}
@@ -17,16 +14,7 @@
   </div>
 {% endblock %}
 
-{% block content %}
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% if globalError %}
-
-        {{ form.globalError(globalError) }}
-
-    {% endif %}
-
+{% block innerContent %}
     <form method="post" action="/changes-and-enquiries/contact/remove/{{ type }}" autocomplete="off">
       {{ govukRadios({
         classes: "govuk-radios--inline",
@@ -54,6 +42,4 @@
         text: t("app:button.save")
       }) }}
     </form>
-  </div>
-</div>
 {% endblock %}

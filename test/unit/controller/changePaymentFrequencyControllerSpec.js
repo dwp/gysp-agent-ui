@@ -5,6 +5,7 @@ const controller = require('../../../app/routes/changes-enquiries/payment-freque
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 const paymentData = require('../../lib/paymentData');
+const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
@@ -21,7 +22,7 @@ const changePaymentFrequencyViewData = {
   },
   awardDetails: changePaymentFrequencyGetRequest.session.awardDetails,
   inputFrequency: false,
-  activeGlobalNavigationSection: 'payment',
+  secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim(), paymentDetails: paymentData.validSchedule() }, body: {} };

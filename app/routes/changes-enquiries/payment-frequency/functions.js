@@ -1,8 +1,10 @@
 const formValidator = require('../../../../lib/formValidator');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const dataStore = require('../../../../lib/dataStore');
 
-const activeGlobalNavigationSection = 'payment';
+const activeSecondaryNavigationSection = 'payment';
+const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function selectedPaymentFrequency(value, currentFrequency, inputFrequency) {
   if (inputFrequency !== false) {
@@ -29,7 +31,7 @@ function getChangePaymentFrequency(req, res) {
     keyDetails,
     awardDetails,
     inputFrequency,
-    activeGlobalNavigationSection,
+    secondaryNavigationList,
     selectedPaymentFrequency,
   });
 }
@@ -58,7 +60,7 @@ function postChangePaymentFrequency(req, res) {
     res.render('pages/changes-enquiries/payment-frequency/index', {
       keyDetails,
       awardDetails,
-      activeGlobalNavigationSection,
+      secondaryNavigationList,
       selectedPaymentFrequency,
       details,
       errors,

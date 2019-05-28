@@ -1,7 +1,4 @@
-{% extends 'helpers/layout.html' %}
-{% import 'helpers/form.html' as form %}
-{% import 'helpers/key-details-bar.html' as keyDetailsBar %}
-{% import 'helpers/global-navigation.html' as globalNavigation %}
+{% extends 'pages/changes-enquiries/layout.html' %}
 {% from "select/macro.njk" import govukSelect %}
 {% from "button/macro.njk" import govukButton %}
 {% from "back-link/macro.njk" import govukBackLink %}
@@ -18,35 +15,25 @@
   </div>
 {% endblock %}
 
-{% block content %}
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t("address:header") }}</h1>
+  <h2 class="govuk-heading-s">Postcode <br>
+  {{ postCodeDetails.postcode }} <a href="/changes-and-enquiries/address" class="govuk-link">Change</a></h2>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    {% if globalError %}
-        {{ form.globalError(globalError) }}
-    {% endif %}
+  <form method="post" action="/changes-and-enquiries/address/select" autocomplete="off">
+    {{ govukSelect({
+      label: {
+        text: t("address:fields.address.label")
+      },
+      id: "address",
+      name: "address",
+      value: details.address,
+      items: addressList,
+      errorMessage: errors.address
+    }) }}
 
-    <h1 class="govuk-heading-l">{{ t("address:header") }}</h1>
-
-    <h2 class="govuk-heading-s">Postcode <br>
-    {{ postCodeDetails.postcode }} <a href="/changes-and-enquiries/address" class="govuk-link">Change</a></h2>
-
-    <form method="post" action="/changes-and-enquiries/address/select" autocomplete="off">
-      {{ govukSelect({
-        label: {
-          text: t("address:fields.address.label")
-        },
-        id: "address",
-        name: "address",
-        value: details.address,
-        items: addressList,
-        errorMessage: errors.address
-      }) }}
-
-      {{ govukButton({
-        text: t("app:button.save")
-      }) }}
-    </form>
-  </div>
-</div>
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
 {% endblock %}
