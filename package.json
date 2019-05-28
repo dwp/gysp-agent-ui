@@ -24,7 +24,8 @@
     "security:audit": "npm audit || true",
     "security:snyk": "snyk test || true",
     "security:outdated": "npm outdated || true",
-    "compliance-tests": "npm run lint"
+    "compliance-tests": "npm run lint",
+    "run-ci": "npm run compliance-tests && npm run compliance-tests && npm run test && npm run test-coverage"
   },
   "dependencies": {
     "body-parser": "1.19.0",
