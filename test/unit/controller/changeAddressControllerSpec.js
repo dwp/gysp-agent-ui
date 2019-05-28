@@ -220,7 +220,7 @@ describe('Change address controller ', () => {
       });
     });
 
-    it('should return a redirect to overview and clear relevant session data when API returns 200', () => {
+    it('should return a redirect to contact and clear relevant session data when API returns 200', () => {
       nock('http://test-url/', reqHeaders).put(awardDetailsUpdateApiUri).reply(httpStatus.OK, {});
       addressController.postSelectAddress(validSelectPostRequest, genericResponse);
       return testPromise.then(() => {

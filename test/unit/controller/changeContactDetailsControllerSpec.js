@@ -148,7 +148,7 @@ const errorMessages = {
   500: 'Error - could not save data.',
 };
 
-describe('Change circumstances contact controller ', () => {
+describe('Change circumstances contact controller', () => {
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {

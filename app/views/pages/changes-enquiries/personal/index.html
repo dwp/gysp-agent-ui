@@ -3,13 +3,13 @@
 {% import 'helpers/key-details-bar.html' as keyDetailsBar %}
 {% import 'helpers/global-navigation.html' as globalNavigation %}
 
-{% block pageTitle %}Overview - Changes and enquiries{% endblock %}
+{% block pageTitle %}Personal details - Changes and enquiries{% endblock %}
 
 {% block content %}
 
 <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-          <h1 class="govuk-visually-hidden">Changes and enquiries - Overview</h1>
+          <h1 class="govuk-visually-hidden">Changes and enquiries - Personal details</h1>
           {% if details %}
             <table id="personal-details-table" class="govuk-table">
               <caption class="govuk-table__caption govuk-heading-l">Personal details</caption>
@@ -33,7 +33,7 @@
               </tbody>
             </table>
           {% else %}
-            <p class="govuk-body">Sorry, no overview details found.</p>
+            <p class="govuk-body">Sorry, no personal details found.</p>
           {% endif %}
         </div>
 </div>
