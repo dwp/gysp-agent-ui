@@ -6,13 +6,12 @@
 
 {% block pageTitle %}{{ t("address:header")}} - Changes and enquiries{% endblock %}
 
-{% block backLink %}
-  <div class="govuk-width-container">
-    {{ govukBackLink({
-      text: t("app:link.back"),
-      href: "/changes-and-enquiries/contact"
-    }) }}
-  </div>
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/contact",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
 {% endblock %}
 
 {% block innerContent %}

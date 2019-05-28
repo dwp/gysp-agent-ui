@@ -5,13 +5,12 @@
 
 {% block pageTitle %}Payment schedule - Changes and enquiries{% endblock %}
 
-{% block backLink %}
-  <div class="govuk-width-container">
-    {{ govukBackLink({
-      text: 'Back',
-      href: '/changes-and-enquiries/payment'
-    }) }}
-  </div>
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: 'Back',
+    href: '/changes-and-enquiries/payment',
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
 {% endblock %}
 
 {% block innerContent %}

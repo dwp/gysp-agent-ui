@@ -5,13 +5,12 @@
 
 {% block pageTitle %}{{ t("remove-contact-details:header") }} - Changes and enquiries{% endblock %}
 
-{% block backLink %}
-  <div class="govuk-width-container">
-    {{ govukBackLink({
-      text: t("app:link.back"),
-      href: "/changes-and-enquiries/contact/" + type
-    }) }}
-  </div>
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/contact/" + type,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
 {% endblock %}
 
 {% block innerContent %}
