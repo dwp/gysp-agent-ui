@@ -35,7 +35,7 @@ function getPaymentScheduleRequest(req, res, err) {
     .then((body) => {
       req.session.frequencyChangeSchedule = body;
       const details = paymentObject.formatter(body);
-      const keyDetails = keyDetailsHelper.formatterDob(req.session.awardDetails, req.session.awardDetails.dob);
+      const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       if (err) {
         res.render('pages/changes-enquiries/payment-frequency-schedule/index', {
           keyDetails,
