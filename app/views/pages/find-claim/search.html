@@ -41,31 +41,33 @@
     <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ details.result.fullName }}</h2>
     <h2 class="govuk-heading-l govuk-!-margin-bottom-2">{{ details.result.identifier }}</h2>
     <p class="govuk-body">Claim received {{ makeDateReadable(details.result.claimReceivedDate) }}</p>
-    <form method="post" action="/find-claim/pdf" id="form-pdf-{{ details.result.inviteKey }}" autocomplete="off">
-      <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
-      {{ govukButton({
-        text: "Get PDF",
-        classes: 'dwp-button dwp-button--secondary dwp-button--inline',
-        attributes: {
-          id: "submit"
-        }
-      }) }}
-    </form>
-    <form method="post" action="/find-claim/update" id="form-details-status-{{ details.result.inviteKey }}" autocomplete="off">
-      <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
-      <input type="hidden" name="search" value="{{ details.search }}" />
-      {% if details.result.disableRemoveQueueButton %}
-        <div class="govuk-body gysp-removed-success-message">Removed from queue</div>
-      {% else %}
+    <div class="govuk-form-group">
+      <form method="post" action="/find-claim/pdf" id="form-pdf-{{ details.result.inviteKey }}" autocomplete="off">
+        <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
         {{ govukButton({
-          text: "Remove from queue",
-          classes: 'dwp-button dwp-button--inline',
+          text: "Get PDF",
+          classes: 'dwp-button dwp-button--secondary dwp-button--inline',
           attributes: {
-            id: "submit-status-" + details.result.inviteKey
+            id: "submit"
           }
         }) }}
-      {% endif %}
-    </form>
+      </form>
+      <form method="post" action="/find-claim/update" id="form-details-status-{{ details.result.inviteKey }}" autocomplete="off">
+        <input type="hidden" name="inviteKey" value="{{ details.result.inviteKey }}" />
+        <input type="hidden" name="search" value="{{ details.search }}" />
+        {% if details.result.disableRemoveQueueButton %}
+          <div class="govuk-body gysp-removed-success-message">Removed from queue</div>
+        {% else %}
+          {{ govukButton({
+            text: "Remove from queue",
+            classes: 'dwp-button dwp-button--inline',
+            attributes: {
+              id: "submit-status-" + details.result.inviteKey
+            }
+          }) }}
+        {% endif %}
+      </form>
+    </div>
   {% elif details.noResult %}
     <h3 class="govuk-heading-m">Result</h3>
     <p class="govuk-body">No claim found</p>
