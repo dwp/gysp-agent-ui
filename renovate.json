@@ -1,0 +1,14 @@
+{
+   "packageRules":[
+      {
+         "packageNames":[
+            "aws-sdk",
+            "snyk"
+         ],
+         "schedule":[
+            "after 8am on monday"
+         ],
+         "automerge": true
+      }
+   ]
+}
