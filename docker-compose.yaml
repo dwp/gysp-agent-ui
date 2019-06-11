@@ -1,7 +1,7 @@
 version: "3"
 services:
   redis:
-    image: redis@sha256:e549a30b3c31e6305b973e0d9113a3d38d60566708137af9ed7cbdce5650c5cc
+    image: redis@sha256:be28fbec647fe889e913614df9e7c08948afe3012b08f1c9fee3d2b0e9b1d1c3
     expose:
       - 6379
   agent_frontend:
