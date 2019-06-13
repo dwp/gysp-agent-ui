@@ -43,3 +43,32 @@
         width: 50%;
     }
 }
+
+.gysp-secondary-text-colour {
+    color: $govuk-secondary-text-colour;
+}
+
+.gysp-status {
+    &::before {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        margin-bottom: -2px;
+        padding: 0 2px 0 0;
+        background-repeat: no-repeat;
+        background-size: 15px 15px;
+        content: '';
+        @include govuk-media-query($from: tablet) {
+            width: 17px;
+            height: 17px;
+            padding: 0 4px 0 0;
+            background-size: 17px 17px;
+        }
+    }
+
+    &--active {
+        &::before {
+            background-image: url('/assets/images/icons/icon-verified.svg');
+        }
+    }
+}
