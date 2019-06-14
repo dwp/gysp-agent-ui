@@ -165,7 +165,7 @@ describe('Change circumstances payment controller ', () => {
       });
     });
 
-    it('should return not return error view name when all api\'s return 200 but recent payments returns a 500 response', () => {
+    it('should return error view name when all api\'s return 200 but recent payments returns a 500 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
       nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(500, {});

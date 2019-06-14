@@ -51,8 +51,10 @@ function requestRecentPayments(res, req) {
     request(paymentServiceCall).then((response) => {
       if (response.statusCode === httpStatus.NOT_FOUND) {
         resolve(null);
+      } else if (response.statusCode === httpStatus.OK) {
+        resolve(response.body);
       } else {
-        resolve(response.body.recentPayments);
+        throw response;
       }
     }).catch((err) => {
       reject(err);
@@ -67,7 +69,7 @@ async function getPaymentOverview(req, res) {
     }
 
     try {
-      const [awardDetails, paymentDetails, recentPayments] = await Promise.all([
+      const [awardDetails, paymentDetails, recentPaymentsDetails] = await Promise.all([
         requestAwardService(res, req),
         requestPaymentSummary(res, req),
         requestRecentPayments(res, req),
@@ -78,7 +80,7 @@ async function getPaymentOverview(req, res) {
       const keyDetails = keyDetailsHelper.formatter(awardDetails);
       const details = changeCircumstancesPaymentObject.formatter(awardDetails);
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(paymentDetails);
-      const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPayments);
+      const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPaymentsDetails);
       res.render('pages/changes-enquiries/payment/index', {
         details,
         paymentSummary,
