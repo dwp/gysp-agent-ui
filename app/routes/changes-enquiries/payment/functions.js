@@ -52,7 +52,7 @@ function requestRecentPayments(res, req) {
       if (response.statusCode === httpStatus.NOT_FOUND) {
         resolve(null);
       } else {
-        resolve(response.body);
+        resolve(response.body.recentPayments);
       }
     }).catch((err) => {
       reject(err);
