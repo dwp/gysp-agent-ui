@@ -1,3 +1,18 @@
+<a name="5.10.0"></a>
+# [5.10.0](https://github.com/dwp/gysp-agent-ui/compare/v5.9.0...v5.10.0) (2019-06-19)
+
+
+### Bug Fixes
+
+* **find-claim:** add form group to buttons for bottom margin ([b1f718d](https://github.com/dwp/gysp-agent-ui/commit/b1f718d))
+
+
+### Features
+
+* **recent-payments:** recent payment table ([fe7a48b](https://github.com/dwp/gysp-agent-ui/commit/fe7a48b))
+
+
+
 <a name="5.9.0"></a>
 # [5.9.0](https://github.com/dwp/gysp-agent-ui/compare/v5.8.0...v5.9.0) (2019-06-05)
 
