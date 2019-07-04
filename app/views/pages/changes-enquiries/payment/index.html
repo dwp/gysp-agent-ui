@@ -10,7 +10,7 @@
       <caption class="govuk-table__caption govuk-heading-m">{{ t('payment:bank_building_table.caption') }}</caption>
       <tbody class="govuk-table__body">
         <tr>
-          <td class="govuk-table__cell govuk-table__cell--numeric" colspan="2"><a href="/changes-and-enquiries/payment/account" class="govuk-link">Change<span class="govuk-visually-hidden"> bank or building society account details</span></a></td>
+          <td class="govuk-table__cell govuk-table__cell--numeric" colspan="2"><a href="/changes-and-enquiries/payment/account" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> bank or building society account details</span></a></td>
         </tr>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell gysp-table__cell--first" scope="row">{{ t('payment:bank_building_table.account_holder') }}</td>
@@ -55,7 +55,7 @@
               {% endif %}
             </td>
             <td class="govuk-table__cell gysp-table__cell--first govuk-table__cell--numeric">
-              <a href="/changes-and-enquiries/payment/frequency" class="govuk-link">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+              <a href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
             </td>
           </tr>
           <tr class="govuk-table__row">
@@ -83,7 +83,7 @@
           rows: recentPaymentsTable.rows
         }) }}
       {% endif %}
-      <p class="govuk-body"><a href="/changes-and-enquiries/payment/schedule" class="govuk-link">See payment schedule</a></p>
+      <p class="govuk-body"><a href="/changes-and-enquiries/payment/schedule" class="govuk-link govuk-link--no-visited-state">See payment schedule</a></p>
     </div>
   </div>
 {% endblock %}

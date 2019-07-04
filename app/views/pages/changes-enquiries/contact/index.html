@@ -38,7 +38,7 @@
       {% endcall %}
 
       {% if addOrChange == 'change' %}
-        <p class="govuk-body"><a href="/changes-and-enquiries/contact/remove/{{ type }}" id="typePhoneNumberRemove" class="govuk-link">Remove {{ type }} phone number</a></p>
+        <p class="govuk-body"><a href="/changes-and-enquiries/contact/remove/{{ type }}" id="typePhoneNumberRemove" class="govuk-link govuk-link--no-visited-state">Remove {{ type }} phone number</a></p>
       {% endif %}
       {{ govukButton({
         text: t("app:button.save")

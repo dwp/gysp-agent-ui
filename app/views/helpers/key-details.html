@@ -31,8 +31,8 @@
 		<span class="govuk-caption-xl govuk-!-margin-bottom-6 key-details-section__nino">{{ nino }}</span>
 		{% if status %}
 			{{ govukTag({
-				text: status,
-				classes: 'govuk-!-margin-bottom-9 key-details-section__status'
+				text: status.text,
+				classes: 'govuk-!-margin-bottom-9 key-details-section__status key-details-section__status--' + status.class
 			}) }}
 		{% endif %}
 	</section>

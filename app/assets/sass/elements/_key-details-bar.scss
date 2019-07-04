@@ -105,6 +105,12 @@ $white-transparent: rgba(255, 255, 255, .3);
   }
 }
 
+.key-details-section {
+  &__status--dead {
+    background-color: govuk-colour('black');
+  }
+}
+
 .dwp-key-details-link {
   color: govuk-colour('white');
 

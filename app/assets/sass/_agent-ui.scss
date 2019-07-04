@@ -71,4 +71,10 @@
             background-image: url('/assets/images/icons/icon-verified.svg');
         }
     }
+
+    &--inactive {
+        &::before {
+            background-image: url('/assets/images/icons/icon-not-verified.svg');
+        }
+    }
 }

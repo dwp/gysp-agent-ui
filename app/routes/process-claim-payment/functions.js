@@ -30,7 +30,7 @@ function getPayment(req, res, err) {
   request(claim)
     .then((body) => {
       const details = paymentObject.formatter(body);
-      const keyDetails = keyDetailsHelper.formatter(req.session.processClaim.claimDetail);
+      const keyDetails = keyDetailsHelper.formatter(req.session.processClaim.claimDetail, false);
       if (err) {
         res.render('pages/process-claim-payment/index', { keyDetails, details, globalError: err.message });
       } else {

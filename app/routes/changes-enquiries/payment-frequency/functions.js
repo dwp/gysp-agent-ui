@@ -20,7 +20,7 @@ function selectedPaymentFrequency(value, currentFrequency, inputFrequency) {
 }
 
 function getChangePaymentFrequency(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
+  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails, false);
   const { awardDetails } = req.session;
   let inputFrequency = false;
   if (req.session['payment-frequency'] && req.session['payment-frequency'].frequency) {

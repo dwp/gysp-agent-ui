@@ -20,7 +20,7 @@ const homePhoneAddResponse = {
   type: 'home',
   addOrChange: 'add',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -29,7 +29,7 @@ const homePhoneChangeResponse = {
   type: 'home',
   addOrChange: 'change',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -39,7 +39,7 @@ const workPhoneAddResponse = {
   type: 'work',
   addOrChange: 'add',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -48,7 +48,7 @@ const workPhoneChangeResponse = {
   type: 'work',
   addOrChange: 'change',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -58,7 +58,7 @@ const mobilePhoneAddResponse = {
   type: 'mobile',
   addOrChange: 'add',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -67,7 +67,7 @@ const mobilePhoneChangeResponse = {
   type: 'mobile',
   addOrChange: 'change',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -77,7 +77,7 @@ const emailAddResponse = {
   type: 'email',
   addOrChange: 'add',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -86,7 +86,7 @@ const emailChangeResponse = {
   type: 'email',
   addOrChange: 'change',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -95,7 +95,7 @@ const homePhoneRemoveRequest = { params: { type: 'home' }, session: { awardDetai
 const homePhoneRemoveViewData = {
   type: 'home',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
@@ -104,7 +104,7 @@ const emailRemoveRequest = { params: { type: 'email' }, session: { awardDetails:
 const emailRemoveViewData = {
   type: 'email',
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };

@@ -545,4 +545,64 @@ describe('Form validation', () => {
       assert.equal(Object.keys(errors).length, 0);
     });
   });
+
+  describe('dateOfDeath validator', () => {
+    it('should return no error when valid data is supplied - V', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+      });
+      assert.equal(Object.keys(errors).length, 0);
+    });
+
+    it('should return no error when valid data is supplied - NV', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+      });
+      assert.equal(Object.keys(errors).length, 0);
+    });
+
+    it('should return all errors when empty', () => {
+      const errors = validator.dateOfDeathValidation({ });
+      assert.equal(Object.keys(errors).length, 5);
+    });
+
+    it('should return all errors when blank', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '', dateMonth: '', dateDay: '', verification: '',
+      });
+      assert.equal(Object.keys(errors).length, 5);
+    });
+
+    it('should return error when date in the future', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2099', dateMonth: '01', dateDay: '01', verification: 'V',
+      });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.future');
+    });
+
+    it('should return error when month is invalid', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2018', dateMonth: '20', dateDay: '01', verification: 'V',
+      });
+      assert.equal(Object.keys(errors).length, 2);
+      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.format');
+    });
+
+    it('should return error when day is invalid', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2018', dateMonth: '01', dateDay: '40', verification: 'V',
+      });
+      assert.equal(Object.keys(errors).length, 2);
+      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.format');
+    });
+
+    it('should return error when verification is invalid', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: '2018', dateMonth: '01', dateDay: '01', verification: 'bob',
+      });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.verification.text, 'date-of-death:fields.verification.errors.required');
+    });
+  });
 });

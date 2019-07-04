@@ -10,23 +10,34 @@
       <caption class="govuk-table__caption govuk-heading-l">Personal details</caption>
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell gysp-table__cell--first"scope="row">Full name</td>
-          <td class="govuk-table__cell gysp-table__cell--first">{{ details.fullName }}</td>
+          <td class="govuk-table__cell gysp-table__cell--first" scope="row">Full name</td>
+          <td class="govuk-table__cell gysp-table__cell--first" colspan="2">{{ details.fullName }}</td>
         </tr>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell"scope="row">National Insurance number</td>
-          <td class="govuk-table__cell">{{ details.nino }}</td>
+          <td class="govuk-table__cell" scope="row">National Insurance number</td>
+          <td class="govuk-table__cell" colspan="2">{{ details.nino }}</td>
         </tr>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell"scope="row">Date of birth</td>
-          <td class="govuk-table__cell">{{ details.dob }}</td>
+          <td class="govuk-table__cell" scope="row">Date of birth</td>
+          <td class="govuk-table__cell" colspan="2">{{ details.dob }}</td>
         </tr>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell"scope="row">State Pension date</td>
-          <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
+          <td class="govuk-table__cell" colspan="2">{{ details.statePensionDate }}</td>
         </tr>
+        {% if details.dateOfDeath %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"scope="row">Date of death</td>
+            <td class="govuk-table__cell">{{ details.dateOfDeath }}</td>
+            <td class="govuk-table__cell">{{ details.dateOfDeathVerification | safe }}</td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
+
+    {% if not details.dateOfDeath %}
+      <p class="govuk-body"><a href="/changes-and-enquiries/personal/death" class="govuk-link govuk-link--no-visited-state">Add a date of death</a></p>
+    {% endif %}
   {% else %}
     <p class="govuk-body">Sorry, no personal details found.</p>
   {% endif %}

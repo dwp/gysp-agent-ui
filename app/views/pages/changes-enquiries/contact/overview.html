@@ -18,7 +18,7 @@
           {% endfor %}
           </td>
           <td class="govuk-table__cell govuk-table__cell--numeric gysp-table__cell--first">
-            <a href="/changes-and-enquiries/address" id="changeAddress" class="govuk-link">
+            <a href="/changes-and-enquiries/address" id="changeAddress" class="govuk-link govuk-link--no-visited-state">
               Change<span class="govuk-visually-hidden"> address</span>
             </a>
           </td>
@@ -27,7 +27,7 @@
           <td class="govuk-table__cell"scope="row">Home phone number</td>
           <td class="govuk-table__cell">{{ details.homeTelephoneNumber }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/home" id="changeHomePhoneNumber" class="govuk-link">
+            <a href="/changes-and-enquiries/contact/home" id="changeHomePhoneNumber" class="govuk-link govuk-link--no-visited-state">
               {{ "Change" if details.homeTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> home phone number</span>
             </a>
           </td>
@@ -36,7 +36,7 @@
           <td class="govuk-table__cell" scope="row">Work phone number</td>
           <td class="govuk-table__cell">{{ details.workTelephoneNumber }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/work" id="changeWorkPhoneNumber" class="govuk-link">
+            <a href="/changes-and-enquiries/contact/work" id="changeWorkPhoneNumber" class="govuk-link govuk-link--no-visited-state">
               {{ "Change" if details.workTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> work phone number</span>
             </a>
           </td>
@@ -45,7 +45,7 @@
           <td class="govuk-table__cell" scope="row">Mobile phone number</td>
           <td class="govuk-table__cell">{{ details.mobileTelephoneNumber }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/mobile" id="changeMobilePhoneNumber" class="govuk-link">
+            <a href="/changes-and-enquiries/contact/mobile" id="changeMobilePhoneNumber" class="govuk-link govuk-link--no-visited-state">
               {{ "Change" if details.mobileTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> mobile phone number</span>
             </a>
           </td>
@@ -54,7 +54,7 @@
           <td class="govuk-table__cell" scope="row">Email address</td>
           <td class="govuk-table__cell gysp-table__cell--wrap">{{ details.email }}</td>
           <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/email" id="changeEmail" class="govuk-link">
+            <a href="/changes-and-enquiries/contact/email" id="changeEmail" class="govuk-link govuk-link--no-visited-state">
               {{ "Change" if details.email else "Add" }}<span class="govuk-visually-hidden"> email</span>
             </a>
           </td>

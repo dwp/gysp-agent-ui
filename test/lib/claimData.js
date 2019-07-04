@@ -2,6 +2,16 @@ module.exports = {
   validClaim() {
     return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
   },
+  validClaimWithDeathVerified() {
+    const base = Object.assign({}, this.validBase());
+    base.awardStatus = 'DEAD';
+    return Object.assign({}, base, this.validDeathVerified(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
+  },
+  validClaimWithDeathNotVerified() {
+    const base = Object.assign({}, this.validBase());
+    base.awardStatus = 'DEADNOTVERIFIED';
+    return Object.assign({}, base, this.validDeathNotVerified(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
+  },
   validClaimContactNull(type) {
     if (type === 'home') {
       return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContactHomeNull());
@@ -34,6 +44,19 @@ module.exports = {
       dob: '1953-11-09T12:27:48.795Z',
       nino: 'AA370773A',
       paymentFrequency: '4W',
+      awardStatus: 'INPAYMENT',
+    };
+  },
+  validDeathVerified() {
+    return {
+      dateOfDeath: '2019-01-01T00:00:00.000Z',
+      dateOfDeathVerification: 'V',
+    };
+  },
+  validDeathNotVerified() {
+    return {
+      dateOfDeath: '2019-01-01T00:00:00.000Z',
+      dateOfDeathVerification: 'NV',
     };
   },
   validAccountDetails() {
@@ -120,8 +143,28 @@ module.exports = {
     return {
       fullName: 'Joe Bloggs',
       nino: 'AA 37 07 73 A',
-      dob: '09 November 1953',
-      statePensionDate: '09 November 2018',
+      dob: '9 November 1953',
+      statePensionDate: '9 November 2018',
+    };
+  },
+  validClaimWithDeathVerifiedData() {
+    return {
+      fullName: 'Joe Bloggs',
+      nino: 'AA 37 07 73 A',
+      dob: '9 November 1953',
+      statePensionDate: '9 November 2018',
+      dateOfDeath: '1 January 2019',
+      dateOfDeathVerification: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Verified</span>',
+    };
+  },
+  validClaimWithDeathNotVerifiedData() {
+    return {
+      fullName: 'Joe Bloggs',
+      nino: 'AA 37 07 73 A',
+      dob: '9 November 1953',
+      statePensionDate: '9 November 2018',
+      dateOfDeath: '1 January 2019',
+      dateOfDeathVerification: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">Not verified</span>',
     };
   },
   validContactDetailsViewData() {

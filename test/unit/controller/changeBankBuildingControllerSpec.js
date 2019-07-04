@@ -16,7 +16,7 @@ let genericResponse = {};
 const accountChangeRequest = { session: { awardDetails: claimData.validClaim() } };
 const accountChangeResponse = {
   keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
   },
   secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
 };

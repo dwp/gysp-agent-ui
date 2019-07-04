@@ -13,7 +13,6 @@ function getPersonalDetails(req, res) {
   request(award)
     .then((body) => {
       req.session.awardDetails = body;
-      req.session.awardDetails.status = 'RECEIVING STATE PENSION';
       const details = changeCircumstancesOverview.formatter(body);
       const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       res.render('pages/changes-enquiries/personal/index', { details, keyDetails, secondaryNavigationList });

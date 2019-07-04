@@ -8,6 +8,27 @@ const controller = require('../../../app/routes/changes-enquiries/personal/funct
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 
+const keyDetails = {
+  fullName: 'Joe Bloggs',
+  nino: 'AA 37 07 73 A',
+  status: { text: 'RECEIVING STATE PENSION', class: 'active' },
+  dateOfBirth: null,
+};
+
+const keyDetailsDead = {
+  fullName: 'Joe Bloggs',
+  nino: 'AA 37 07 73 A',
+  status: { text: 'DEAD', class: 'dead' },
+  dateOfBirth: null,
+};
+
+const keyDetailsDeadNotVerified = {
+  fullName: 'Joe Bloggs',
+  nino: 'AA 37 07 73 A',
+  status: { text: 'DEAD - NOT VERIFIED', class: 'dead' },
+  dateOfBirth: null,
+};
+
 let testPromise;
 let genericResponse = {};
 const ninoRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
@@ -43,6 +64,27 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validPersonalDetailsViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
+      });
+    });
+
+    it('should return view name and dead view data when called nino exists in session and exists on API', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(200, claimData.validClaimWithDeathVerified());
+      controller.getPersonalDetails(ninoRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathVerifiedData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDead));
+      });
+    });
+
+    it('should return view name and dead not verified view data when called nino exists in session and exists on API', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(200, claimData.validClaimWithDeathNotVerified());
+      controller.getPersonalDetails(ninoRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathNotVerifiedData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
       });
     });
 

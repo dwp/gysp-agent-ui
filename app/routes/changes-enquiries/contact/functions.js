@@ -61,7 +61,6 @@ function getContactDetails(req, res) {
   request(award)
     .then((body) => {
       req.session.awardDetails = body;
-      req.session.awardDetails.status = 'RECEIVING STATE PENSION';
       const details = contactDetailsOverview.formatter(body);
       const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       res.render('pages/changes-enquiries/contact/overview', { details, keyDetails, secondaryNavigationList });
