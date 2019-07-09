@@ -14,6 +14,9 @@
             {% if globalError %}
                 {{ error(globalError) }}
             {% endif %}
+            {% if messages.error %}
+                {{ error(messages.error) }}
+            {% endif %}
             {% if keyDetails %}
                 {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
             {% endif %}

@@ -29,6 +29,7 @@ module.exports = {
   },
   validScheduleFormatterResponse(frequency, nino) {
     const object = JSON.parse(JSON.stringify(this.validScheduleApiResponse()));
+    delete object.bankDetails;
     object.paymentFrequency = frequency;
     object.nino = nino;
     return object;
