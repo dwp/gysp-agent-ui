@@ -1,0 +1,16 @@
+{
+  "header": "Is the date of death __DATE__?",
+  "fields": {
+    "verify": {
+      "legend": "Is the date of death __DATE__?",
+      "options": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "errors": {
+        "required": "Select whether the date of death is correct"
+      }
+    }
+  },
+  "button": "Continue"
+}

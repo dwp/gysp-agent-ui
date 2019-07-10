@@ -15,6 +15,8 @@ module.exports = {
       'account',
       'payment-frequency',
       'date-of-death',
+      'verify-date-of-death',
+      'verified-date-of-death',
     ],
     defaultNs: 'app',
   },
