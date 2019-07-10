@@ -154,7 +154,7 @@ module.exports = {
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
       dateOfDeath: '1 January 2019',
-      dateOfDeathVerification: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Verified</span>',
+      dateOfDeathVerification: 'Verified',
     };
   },
   validClaimWithDeathNotVerifiedData() {
@@ -164,7 +164,7 @@ module.exports = {
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
       dateOfDeath: '1 January 2019',
-      dateOfDeathVerification: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">Not verified</span>',
+      dateOfDeathVerification: 'Not verified',
     };
   },
   validContactDetailsViewData() {

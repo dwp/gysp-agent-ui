@@ -1,35 +1,51 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
+{% from "warning-text/macro.njk" import govukWarningText %}
 
 {% block pageTitle %}Personal details - Changes and enquiries{% endblock %}
 
 {% block innerContent %}
 
-  <h1 class="govuk-visually-hidden">Changes and enquiries - Personal details</h1>
+  <h1 class="govuk-heading-m">Personal details</h1>
   {% if details %}
+
+    {% if details.dateOfDeathVerification == 'Not verified' %}
+      {{ govukWarningText({
+        html: 'Date of death awaiting verification<br /><a href="/changes-and-enquiries/personal/death/verify" class="govuk-link govuk-link--no-visited-state">Verify date of death</a>',
+        iconFallbackText: "Warning"
+      }) }}
+    {% endif %}
     <table id="personal-details-table" class="govuk-table">
-      <caption class="govuk-table__caption govuk-heading-l">Personal details</caption>
+      <caption class="govuk-table__caption govuk-heading-l govuk-visually-hidden">Personal details</caption>
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
           <td class="govuk-table__cell gysp-table__cell--first" scope="row">Full name</td>
-          <td class="govuk-table__cell gysp-table__cell--first" colspan="2">{{ details.fullName }}</td>
+          <td class="govuk-table__cell gysp-table__cell--first">{{ details.fullName }}</td>
+          <td class="govuk-table__cell gysp-table__cell--first">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell" scope="row">National Insurance number</td>
-          <td class="govuk-table__cell" colspan="2">{{ details.nino }}</td>
+          <td class="govuk-table__cell">{{ details.nino }}</td>
+          <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell" scope="row">Date of birth</td>
-          <td class="govuk-table__cell" colspan="2">{{ details.dob }}</td>
+          <td class="govuk-table__cell">{{ details.dob }}</td>
+          <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
           <td class="govuk-table__cell"scope="row">State Pension date</td>
-          <td class="govuk-table__cell" colspan="2">{{ details.statePensionDate }}</td>
+          <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
+          <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         {% if details.dateOfDeath %}
           <tr class="govuk-table__row">
             <td class="govuk-table__cell"scope="row">Date of death</td>
             <td class="govuk-table__cell">{{ details.dateOfDeath }}</td>
-            <td class="govuk-table__cell">{{ details.dateOfDeathVerification | safe }}</td>
+            <td class="govuk-table__cell">
+              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if details.dateOfDeathVerification == 'Verified' else 'inactive' }}">
+                {{ details.dateOfDeathVerification }}
+              </span>
+            </td>
           </tr>
         {% endif %}
       </tbody>

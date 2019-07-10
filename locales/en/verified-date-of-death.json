@@ -1,0 +1,26 @@
+{
+  "header": "Enter date of death",
+  "fields": {
+    "date": {
+      "legend": "Enter date of death",
+      "items": {
+        "day": {
+          "label": "Day"
+        },
+        "month": {
+          "label": "Month"
+        },
+        "year": {
+          "label": "Year"
+        }
+      },
+      "errors": {
+        "required": "Enter a date of death",
+        "incomplete": "Date of death must include a day, month and year",
+        "format": "Enter a real date of death, like 12 2 2019",
+        "future": "Date of death must be today or in the past"
+      }
+    }
+  },
+  "button": "Verify"
+}

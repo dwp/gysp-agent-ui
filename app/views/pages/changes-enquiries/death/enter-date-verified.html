@@ -1,0 +1,58 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("verified-date-of-death:header") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/personal/death/verify",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/personal/death/verified-date" autocomplete="off">
+
+    {{ govukDateInput({
+      id: "date",
+      fieldset: {
+        legend: {
+          text: t("verified-date-of-death:fields.date.legend"),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [{
+        label: t("verified-date-of-death:fields.date.items.day.label"),
+        id: "date-day",
+        name: "dateDay",
+        value: details.dateDay,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateDay),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("verified-date-of-death:fields.date.items.month.label"),
+        id: "date-month",
+        name: "dateMonth",
+        value: details.dateMonth,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateMonth),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("verified-date-of-death:fields.date.items.year.label"),
+        id: "date-year",
+        name: "dateYear",
+        value: details.dateYear,
+        classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dateYear),
+        attributes: { maxlength: '4' }
+      }],
+      errorMessage: errors.date
+    }) }}
+
+    {{ govukButton({
+      text: t("verified-date-of-death:button")
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "back-link/macro.njk" import govukBackLink %}
+{% from "date-input/macro.njk" import govukDateInput %}
+{% from "radios/macro.njk" import govukRadios %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("verify-date-of-death:header", {'DATE': longDate(details.dateOfDeath)}) }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/personal",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/personal/death/verify" autocomplete="off">
+
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "verify",
+      fieldset: {
+        legend: {
+          text: t("verify-date-of-death:fields.verify.legend", {'DATE': longDate(details.dateOfDeath)}),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [{
+        id: "verify-yes",
+        value: "yes",
+        text: t("verify-date-of-death:fields.verify.options.yes"),
+        checked: true if details.verify == 'yes' else false
+      }, {
+        id: "verify-no",
+        value: "no",
+        text: t("verify-date-of-death:fields.verify.options.no"),
+        checked: true if details.verify == 'no' else false
+      }],
+      errorMessage: errors.verify
+    }) }}
+
+    {{ govukButton({
+      text: t("verify-date-of-death:button")
+    }) }}
+  </form>
+{% endblock %}
