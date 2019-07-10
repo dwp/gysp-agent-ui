@@ -73,12 +73,11 @@ function postAddDateDeath(req, res) {
 function getVerifyDeath(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
-
   res.render('pages/changes-enquiries/death/verify-date', {
     keyDetails,
     awardDetails,
     secondaryNavigationList,
-    longDate: dateHelper.longDate,
+    dateOfDeath: dateHelper.longDate(awardDetails.dateOfDeath),
   });
 }
 
@@ -88,7 +87,7 @@ function postVerifyDeathErrorHandler(error, req, res, keyDetails) {
   res.render('pages/changes-enquiries/death/verify-date', {
     keyDetails,
     secondaryNavigationList,
-    longDate: dateHelper.longDate,
+    dateOfDeath: dateHelper.longDate(req.session.awardDetails.dateOfDeath),
     details: req.body,
     globalError: globalErrorMessage(error),
   });
@@ -115,7 +114,7 @@ function postVerifyDeath(req, res) {
     res.render('pages/changes-enquiries/death/verify-date', {
       keyDetails,
       secondaryNavigationList,
-      longDate: dateHelper.longDate,
+      dateOfDeath: dateHelper.longDate(awardDetails.dateOfDeath),
       details,
       errors,
     });

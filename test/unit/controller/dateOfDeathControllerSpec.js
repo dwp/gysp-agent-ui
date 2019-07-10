@@ -29,6 +29,15 @@ const verifyDeathResponse = {
   },
   awardDetails: claimData.validClaimWithDeathNotVerified(),
   secondaryNavigationList: navigationData.validNavigationPersonalSelected(),
+  dateOfDeath: '1 January 2019',
+};
+
+const verifiedResponse = {
+  keyDetails: {
+    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'DEAD - NOT VERIFIED', class: 'dead' }, dateOfBirth: null,
+  },
+  awardDetails: claimData.validClaimWithDeathNotVerified(),
+  secondaryNavigationList: navigationData.validNavigationPersonalSelected(),
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
@@ -172,7 +181,7 @@ describe('Change circumstances date of death controller ', () => {
     });
   });
 
-  describe(' getAddDateDeath function (GET /changes-and-enquiries/personal/death/verify)', () => {
+  describe(' getVerifyDeath function (GET /changes-and-enquiries/personal/death/verify)', () => {
     it('should display form when requested', (done) => {
       controller.getVerifyDeath(verifyDeathRequest, genericResponse);
       assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(verifyDeathResponse));
@@ -240,7 +249,7 @@ describe('Change circumstances date of death controller ', () => {
   describe(' getAddVerifedDeath function (GET /changes-and-enquiries/personal/death/verified-date)', () => {
     it('should display form when requested', (done) => {
       controller.getAddVerifedDeath(verifyDeathRequest, genericResponse);
-      assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(verifyDeathResponse));
+      assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(verifiedResponse));
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
       done();
     });

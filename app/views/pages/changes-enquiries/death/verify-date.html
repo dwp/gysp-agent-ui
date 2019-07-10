@@ -4,7 +4,7 @@
 {% from "radios/macro.njk" import govukRadios %}
 {% from "button/macro.njk" import govukButton %}
 
-{% block pageTitle %}{{ t("verify-date-of-death:header", {'DATE': longDate(details.dateOfDeath)}) }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t("verify-date-of-death:header", {'DATE': dateOfDeath}) }} - Changes and enquiries{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -22,7 +22,7 @@
       name: "verify",
       fieldset: {
         legend: {
-          text: t("verify-date-of-death:fields.verify.legend", {'DATE': longDate(details.dateOfDeath)}),
+          text: t("verify-date-of-death:fields.verify.legend", {'DATE': dateOfDeath}),
           isPageHeading: true,
           classes: "govuk-fieldset__legend--l"
         }
