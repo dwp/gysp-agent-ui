@@ -1,0 +1,28 @@
+{% extends 'helpers/layout.html' %}
+{% from "button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Review an award{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">Review an award</h1>
+
+        {% if total > 0 %}
+            <p class="govuk-body">Awards to be reviewed: {{ total }}</p>
+            {{ govukButton({
+                text: 'Review',
+                href: '#',
+                attributes: {
+                    id: 'award-review'
+                }
+            }) }}
+        {% else %}
+            <p class="govuk-body">There are no awards available to review</p>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}

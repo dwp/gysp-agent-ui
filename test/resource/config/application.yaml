@@ -10,14 +10,15 @@ application:
       securecookies: false
   urls:
       agentGateway: http://example.com/api
-      apiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
-      batchApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
-      awardApiKey : U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
-      addressLookupApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
-      paymentApiKey: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+      apiKey:
+      batchApiKey:
+      awardApiKey :
+      addressLookupApiKey:
+      paymentApiKey:
+      hmrcCalculationApiKey:
       host: host
   robot:
-    key: U2FsdGVkX1+4PfQWxvxWovXkwGkw8zDfVCsUpP1J0gmegC+bIGKV7SjHygSmYupm
+    key:
   logs:
       level: error
       path: logs
