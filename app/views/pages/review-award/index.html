@@ -1,7 +1,18 @@
 {% extends 'helpers/layout.html' %}
 {% from "button/macro.njk" import govukButton %}
+{% from 'back-link/macro.njk' import govukBackLink %}
 
 {% block pageTitle %}Review an award{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: 'Back',
+      href: '/',
+      classes: 'govuk-!-margin-bottom-0'
+    }) }}
+  </div>
+{% endblock %}
 
 {% block content %}
 
