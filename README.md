@@ -62,7 +62,7 @@ Configuration is now done via the yaml.js file in the config folder. There is an
 
 #### Requirements
 
-* Node.JS 10.15.1+
+* Node.JS 10.16.0+
 * npm v6.4.1+
 * Aws credentials setup locally
 
