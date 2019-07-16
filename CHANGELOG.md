@@ -1,3 +1,15 @@
+<a name="5.11.0"></a>
+# [5.11.0](https://github.com/dwp/gysp-agent-ui/compare/v5.10.0...v5.11.0) (2019-07-16)
+
+
+### Features
+
+* **award-review:** total awards to review ([945dd3e](https://github.com/dwp/gysp-agent-ui/commit/945dd3e))
+* **death:** enter date of death ([830ceb1](https://github.com/dwp/gysp-agent-ui/commit/830ceb1))
+* **death:** verify date of death ([b9cbd26](https://github.com/dwp/gysp-agent-ui/commit/b9cbd26))
+
+
+
 <a name="5.10.0"></a>
 # [5.10.0](https://github.com/dwp/gysp-agent-ui/compare/v5.9.0...v5.10.0) (2019-06-19)
 
