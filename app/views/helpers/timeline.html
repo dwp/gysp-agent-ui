@@ -1,0 +1,17 @@
+{% macro timeline(t, details) %}
+	<h2 class="heading-medium">{{ t(details.header) }}</h2>
+	{% if details.list %}
+		<ol class="dwp-timeline">
+			{% for item in details.list %}
+				<li class="dwp-timeline__entry">
+					<h3 class="dwp-timeline__title govuk-!-margin-0">{{ t(item.title) }}</h3>
+					<p class="dwp-timeline__info govuk-body">
+						<span class="dwp-timeline__date">{{ item.date }}</span>
+					</p>
+				</li>
+			{% endfor %}
+		</ol>
+	{% else %}
+		<p class="govuk-body">{{ t(details.empty) }}</p>
+	{% endif %}
+{% endmacro %}

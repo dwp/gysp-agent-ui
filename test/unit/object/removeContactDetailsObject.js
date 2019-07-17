@@ -16,6 +16,9 @@ const validHomeJson = {
   workTelephoneNumber: '000000000000',
   mobileTelephoneNumber: '000000000000',
   nino: 'AA370773A',
+  eventCategory: 'CONTACT',
+  eventType: 'DELETE',
+  eventName: 'contact-details:timeline.home_phone_number.removed',
 };
 
 const validWorkJson = {
@@ -23,6 +26,9 @@ const validWorkJson = {
   workTelephoneNumber: null,
   mobileTelephoneNumber: '000000000000',
   nino: 'AA370773A',
+  eventCategory: 'CONTACT',
+  eventType: 'DELETE',
+  eventName: 'contact-details:timeline.work_phone_number.removed',
 };
 
 const validMobileJson = {
@@ -30,6 +36,9 @@ const validMobileJson = {
   workTelephoneNumber: '000000000000',
   mobileTelephoneNumber: null,
   nino: 'AA370773A',
+  eventCategory: 'CONTACT',
+  eventType: 'DELETE',
+  eventName: 'contact-details:timeline.mobile_phone_number.removed',
 };
 
 const invalidPhoneDetailsJson = {

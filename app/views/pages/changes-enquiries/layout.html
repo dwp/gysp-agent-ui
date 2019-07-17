@@ -3,6 +3,7 @@
 {% from 'helpers/global-navigation.html' import globalNavigation %}
 {% from 'helpers/key-details.html' import keyDetailsSection %}
 {% from 'helpers/secondary-navigation.html' import secondaryNavigation %}
+{% from 'helpers/timeline.html' import timeline %}
 
 {% block globalNavigation %}
     {{ globalNavigation(activeGlobalNavigationSection) }}
@@ -23,6 +24,9 @@
             {{ secondaryNavigation(secondaryNavigationList) }}
             {% block sectionBackLink %}{% endblock %}
             {% block innerContent %} {% endblock %}
+        </div>
+        <div class="govuk-grid-column-one-third">
+            {{ timeline(t, timelineDetails) }}
         </div>
     </div>
     {% block outerContent %} {% endblock %}
