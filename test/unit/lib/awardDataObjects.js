@@ -32,6 +32,9 @@ module.exports = {
     delete object.bankDetails;
     object.paymentFrequency = frequency;
     object.nino = nino;
+    object.eventCategory = 'PAYMENT';
+    object.eventType = 'CHANGE';
+    object.eventName = 'payment:timeline.payment_frequency.changed';
     return object;
   },
 };

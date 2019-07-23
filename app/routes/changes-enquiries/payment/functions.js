@@ -3,6 +3,7 @@ const httpStatus = require('http-status-codes');
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
+const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 
 const changeCircumstancesPaymentObject = require('../../../../lib/objects/changeCircumstancesPaymentObject');
 const changeCircumstancesPaymentSummaryObject = require('../../../../lib/objects/changeCircumstancesPaymentSummaryObject');
@@ -76,8 +77,8 @@ async function getPaymentOverview(req, res) {
       ]);
 
       req.session.awardDetails = awardDetails;
-      awardDetails.status = 'RECEIVING STATE PENSION';
       const keyDetails = keyDetailsHelper.formatter(awardDetails);
+      const timelineDetails = await timelineHelper.getTimeline(req, res, 'PAYMENT');
       const details = changeCircumstancesPaymentObject.formatter(awardDetails);
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(paymentDetails);
       const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPaymentsDetails);
@@ -87,6 +88,7 @@ async function getPaymentOverview(req, res) {
         keyDetails,
         recentPaymentsTable,
         secondaryNavigationList,
+        timelineDetails,
       });
     } catch (err) {
       const traceID = requestHelper.getTraceID(err);
