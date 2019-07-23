@@ -24,13 +24,20 @@ module.exports = {
     }
     return false;
   },
+  validAddressEventChangeTimeline() {
+    return {
+      eventCategory: 'CONTACT',
+      eventType: 'CHANGE',
+      eventName: 'address:timeline.address.changed',
+    };
+  },
   validClaimAllAddressNotNull() {
     const { nino } = this.validBase();
-    return Object.assign({}, this.validUkAddressNotNull(), { nino });
+    return Object.assign({}, this.validUkAddressNotNull(), { nino }, this.validAddressEventChangeTimeline());
   },
   validClaimAllAddressNull() {
     const { nino } = this.validBase();
-    return Object.assign({}, this.validUkAddressNull(), { nino });
+    return Object.assign({}, this.validUkAddressNull(), { nino }, this.validAddressEventChangeTimeline());
   },
   validBase() {
     return {

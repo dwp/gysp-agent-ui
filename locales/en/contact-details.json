@@ -78,5 +78,29 @@
         }
       }
     }
+  },
+  "timeline": {
+    "header": "Contact changes",
+    "empty": "No changes made",
+    "home_phone_number": {
+      "added": "Home number added",
+      "changed": "Home number changed",
+      "removed": "Home number removed"
+    },
+    "work_phone_number": {
+      "added": "Work number added",
+      "changed": "Work number changed",
+      "removed": "Work number removed"
+    },
+    "mobile_phone_number": {
+      "added": "Mobile number added",
+      "changed": "Mobile number changed",
+      "removed": "Mobile number removed"
+    },
+    "email": {
+      "added": "Email address added",
+      "changed": "Email address changed",
+      "removed": "Email address removed"
+    }
   }
 }

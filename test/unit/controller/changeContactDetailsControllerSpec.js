@@ -538,7 +538,7 @@ describe('Change circumstances contact controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove-email');
       });
     });
 
@@ -548,7 +548,7 @@ describe('Change circumstances contact controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[404]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove-email');
       });
     });
 
@@ -558,7 +558,7 @@ describe('Change circumstances contact controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/remove-email');
       });
     });
 

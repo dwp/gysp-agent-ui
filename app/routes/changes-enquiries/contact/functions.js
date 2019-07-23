@@ -5,6 +5,7 @@ const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
+const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 const contactDetailsObject = require('../../../../lib/contactDetailsObject');
 const removeContactDetailsObject = require('../../../../lib/removeContactDetailsObject');
 const contactDetailsOverview = require('../../../../lib/contactDetailsOverview');
@@ -59,11 +60,14 @@ function contactDetailsRemoveView(type) {
 function getContactDetails(req, res) {
   const award = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
   request(award)
-    .then((body) => {
+    .then(async (body) => {
       req.session.awardDetails = body;
       const details = contactDetailsOverview.formatter(body);
       const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
-      res.render('pages/changes-enquiries/contact/overview', { details, keyDetails, secondaryNavigationList });
+      const timelineDetails = await timelineHelper.getTimeline(req, res, 'CONTACT');
+      res.render('pages/changes-enquiries/contact/overview', {
+        details, keyDetails, secondaryNavigationList, timelineDetails,
+      });
     }).catch((err) => {
       const traceID = requestHelper.getTraceID(err);
       requestHelper.loggingHelper(err, 'cannot get contact details', traceID, res.locals.logger);
@@ -138,7 +142,8 @@ function getRemoveContactDetails(req, res) {
 function postRemoveContactDetailsErrorHandler(error, req, res, type, keyDetails) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, contactDetailsUpdateUri, traceID, res.locals.logger);
-  res.render('pages/changes-enquiries/contact/remove', {
+  const viewPath = contactDetailsRemoveView(type);
+  res.render(viewPath, {
     type,
     keyDetails,
     secondaryNavigationList,

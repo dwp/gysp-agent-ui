@@ -17,5 +17,12 @@
   },
   "button": {
     "find": "Find address"
+  },
+  "timeline": {
+    "header": "Contact changes",
+    "empty": "No changes made",
+    "address": {
+      "changed": "Address changed"
+    }
   }
 }
