@@ -14,5 +14,15 @@
     "first_payment": "First payment",
     "last_payment": "Last payment",
     "next_payment": "Next payment"
+  },
+  "timeline": {
+    "header": "Payment changes",
+    "empty": "No changes made",
+    "banking_details": {
+      "changed": "Banking details changed"
+    },
+    "payment_frequency": {
+      "changed": "Frequency changed"
+    }
   }
 }

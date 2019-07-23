@@ -5,29 +5,60 @@ const object = require('../../../lib/objects/accountDetailsObject');
 
 const numericSortCode = { accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233' };
 const numericSortCodeResponse = {
-  accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', nino: 'AA370773A',
+  accountName: 'Mr Joe Bloggs',
+  accountNumber: '12345678',
+  sortCode: '112233',
+  nino: 'AA370773A',
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.banking_details.changed',
 };
 
 const numericHyphenedSortCode = { accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '11-22-33' };
 const numericHyphenedSortCodeResponse = {
-  accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', nino: 'AA370773A',
+  accountName: 'Mr Joe Bloggs',
+  accountNumber: '12345678',
+  sortCode: '112233',
+  nino: 'AA370773A',
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.banking_details.changed',
 };
 
 const numericSpacesSortCode = { accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '11 22 33' };
 const numericSpacesSortCodeResponse = {
-  accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', nino: 'AA370773A',
+  accountName: 'Mr Joe Bloggs',
+  accountNumber: '12345678',
+  sortCode: '112233',
+  nino: 'AA370773A',
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.banking_details.changed',
 };
 
 const numericHyphenedSpacesSortCode = { accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '  11-22-33  ' };
 const numericHyphenedSpacesSortCodeResponse = {
-  accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', nino: 'AA370773A',
+  accountName: 'Mr Joe Bloggs',
+  accountNumber: '12345678',
+  sortCode: '112233',
+  nino: 'AA370773A',
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.banking_details.changed',
 };
 
 const referenceNumber = {
   accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', referenceNumber: '1234567',
 };
 const referenceNumberResponse = {
-  accountName: 'Mr Joe Bloggs', accountNumber: '12345678', sortCode: '112233', nino: 'AA370773A', referenceNumber: '1234567',
+  accountName: 'Mr Joe Bloggs',
+  accountNumber: '12345678',
+  sortCode: '112233',
+  nino: 'AA370773A',
+  referenceNumber: '1234567',
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.banking_details.changed',
 };
 
 describe('accountDetailsObject object', () => {
