@@ -25,9 +25,11 @@
             {% block sectionBackLink %}{% endblock %}
             {% block innerContent %} {% endblock %}
         </div>
-        <div class="govuk-grid-column-one-third">
-            {{ timeline(t, timelineDetails) }}
-        </div>
+        {% if timelineDetails %}
+            <div class="govuk-grid-column-one-third">
+                {{ timeline(t, timelineDetails) }}
+            </div>
+        {% endif %}
     </div>
     {% block outerContent %} {% endblock %}
 {% endblock %}
