@@ -16,7 +16,8 @@ const page = 0;
 
 const validRequest = { session: { awardDetails: claimData.validClaim() } };
 
-const auditApiUri = '/api/audit/BLOG123456/category';
+const auditApiUri = '/api/event';
+const itemId = 'BLOG123456';
 const contactCategory = 'CONTACT';
 const paymentCategory = 'PAYMENT';
 const fakeCategory = 'FAKE';
@@ -84,7 +85,9 @@ describe('timeline helper', () => {
   });
   describe('contact', () => {
     it('should return formatted timeline with list', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${contactCategory}`).query({ page, limit }).reply(httpStatus.OK, validResponse);
+      nock('http://test-url/').get(auditApiUri).query({
+        itemId, category: contactCategory, page, limit,
+      }).reply(httpStatus.OK, validResponse);
       const response = await helper.getTimeline(validRequest, genericResponse, contactCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validContactJson));
     });
@@ -102,7 +105,9 @@ describe('timeline helper', () => {
     });
 
     it('should return formatted timeline with no list when response is 400', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${fakeCategory}`).query({ page, limit }).reply(httpStatus.BAD_REQUEST, {});
+      nock('http://test-url/').get(auditApiUri).query({
+        itemId, category: fakeCategory, page, limit,
+      }).reply(httpStatus.BAD_REQUEST, {});
       const response = await helper.getTimeline(validRequest, genericResponse, fakeCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(invalidJson));
       assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get FAKE timeline');
@@ -110,7 +115,9 @@ describe('timeline helper', () => {
   });
   describe('payment', () => {
     it('should return formatted timeline with list', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${paymentCategory}`).query({ page, limit }).reply(httpStatus.OK, validPaymentResponse);
+      nock('http://test-url/').get(auditApiUri).query({
+        itemId, category: paymentCategory, page, limit,
+      }).reply(httpStatus.OK, validPaymentResponse);
       const response = await helper.getTimeline(validRequest, genericResponse, paymentCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validPaymentJson));
     });
@@ -128,7 +135,9 @@ describe('timeline helper', () => {
     });
 
     it('should return formatted timeline with no list when response is 400', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${fakeCategory}`).query({ page, limit }).reply(httpStatus.BAD_REQUEST, {});
+      nock('http://test-url/').get(`${auditApiUri}`).query({
+        itemId, category: fakeCategory, page, limit,
+      }).reply(httpStatus.BAD_REQUEST, {});
       const response = await helper.getTimeline(validRequest, genericResponse, fakeCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(invalidJson));
       assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get FAKE timeline');
