@@ -12,6 +12,10 @@
 			{% endfor %}
 		</ol>
 	{% else %}
-		<p class="govuk-body">{{ t(details.empty) }}</p>
+		<ol class="dwp-timeline">
+			<li class="dwp-timeline__entry">
+				<h3 class="dwp-timeline__title govuk-!-margin-0">{{ t(details.empty) }}</h3>
+			</li>
+		</ol>
 	{% endif %}
 {% endmacro %}
