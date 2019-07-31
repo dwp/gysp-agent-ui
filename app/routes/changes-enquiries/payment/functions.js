@@ -29,13 +29,19 @@ function requestAwardService(res, req) {
 
 function requestPaymentSummary(res, req) {
   return new Promise((resolve, reject) => {
-    const paymentServiceCall = requestHelper.generateGetCall(
+    const paymentServiceCall = requestHelper.generateGetCallWithFullResponse(
       `${res.locals.agentGateway}api/payment/paymentsummary/${req.session.searchedNino}`,
       {},
       'payment',
     );
     request(paymentServiceCall).then((response) => {
-      resolve(response);
+      if (response.statusCode === httpStatus.NOT_FOUND) {
+        resolve(null);
+      } else if (response.statusCode === httpStatus.OK) {
+        resolve(response.body);
+      } else {
+        throw response;
+      }
     }).catch((err) => {
       reject(err);
     });

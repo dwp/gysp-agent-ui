@@ -135,13 +135,16 @@ describe('Change circumstances payment controller ', () => {
       });
     });
 
-    it('should return error view name when payment details API returns 200 response but payment summary returns a 404 response', () => {
+    it('should return view name when payment details API returns 200 response but payment summary returns a 404 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
       nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(404, {});
-      nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validPaidAndSent());
+      nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validAllPaid());
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.viewName, 'pages/error');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(paymentViewDataWithReference));
+        assert.equal(JSON.stringify(genericResponse.data.paymentSummary), JSON.stringify(false));
+        assert.equal(JSON.stringify(genericResponse.data.recentPaymentsTable), JSON.stringify(recentPaymentTableViewDataAllPaid));
       });
     });
 
