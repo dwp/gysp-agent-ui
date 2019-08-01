@@ -7,6 +7,12 @@ module.exports = {
     json.firstPaymentPaid = false;
     return json;
   },
+  validFirstPaymentPaidWithoutNextAmount() {
+    const json = JSON.parse(JSON.stringify(this.validBase()));
+    json.nextAmount = null;
+    json.nextCreditDate = null;
+    return json;
+  },
   validBase() {
     return {
       firstLastAmount: '203.57',
