@@ -62,12 +62,14 @@
               <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
               <td class="govuk-table__cell">{{ paymentSummary.paymentOne.amount }}</td>
             </tr>
-            <tr class="govuk-table__row">
-              <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentTwo.label }}</td>
-              <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
-              <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.amount }}</td>
-            </tr>
-          </tbody>
+            {% if paymentSummary.paymentTwo %}
+              <tr class="govuk-table__row">
+                <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentTwo.label }}</td>
+                <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
+                <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.amount }}</td>
+              </tr>
+            {% endif %}
+            </tbody>
         </table>
       {% else %}
         <h2 class="govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">{{ t('payment:payment_table.caption') }}</h2>
