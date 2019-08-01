@@ -1,4 +1,4 @@
-const assert = require('assert');
+const { assert } = require('chai');
 
 const paymentSummaryObject = require('../../../lib/objects/changeCircumstancesPaymentSummaryObject');
 
@@ -31,6 +31,11 @@ const paymentSummaryViewDataFirstPaymentNotPaid = {
 };
 
 describe('Payment summary object formatter', () => {
+  it('should return false when object is null', (done) => {
+    assert.isFalse(paymentSummaryObject.formatter(null));
+    done();
+  });
+
   it('should return valid json when object is with first payment paid', (done) => {
     const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentPaid());
     assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentPaid));
