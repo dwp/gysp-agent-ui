@@ -11,10 +11,14 @@ module.exports = {
     return {
       recentPayments: [
         {
+          startDate: '2019-03-11T12:49:37.815Z',
+          endDate: '2019-04-11T12:49:37.815Z',
           creditDate: '2019-04-11T12:49:37.815Z',
           paymentAmount: '203.57',
           status: 'SENT',
         }, {
+          startDate: '2019-02-11T12:49:37.815Z',
+          endDate: '2019-03-11T12:49:37.815Z',
           creditDate: '2019-03-11T12:49:37.815Z',
           paymentAmount: '203.57',
           status: 'PAID',

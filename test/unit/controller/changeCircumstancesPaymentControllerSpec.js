@@ -46,18 +46,32 @@ const paymentSummaryViewDataFirstPaymentNotPaid = {
 };
 
 const recentPaymentTableViewDataSentAndPaid = {
-  caption: 'Recent payments',
+  caption: 'Payment history',
+  head: [
+    { text: 'From' },
+    { text: 'To' },
+    { text: 'Payment date' },
+    { text: 'Amount' },
+    { text: 'Status' },
+  ],
   rows: [
-    [{ text: '11 April 2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Sent</span>', classes: 'gysp-table__cell--first' }],
-    [{ text: '11 March 2019' }, { text: '£203.57' }, { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Paid</span>' }],
+    [{ text: '11/03/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { text: 'Sent', classes: 'gysp-table__cell--first' }],
+    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }],
   ],
 };
 
 const recentPaymentTableViewDataAllPaid = {
-  caption: 'Recent payments',
+  caption: 'Payment history',
+  head: [
+    { text: 'From' },
+    { text: 'To' },
+    { text: 'Payment date' },
+    { text: 'Amount' },
+    { text: 'Status' },
+  ],
   rows: [
-    [{ text: '11 April 2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Paid</span>', classes: 'gysp-table__cell--first' }],
-    [{ text: '11 March 2019' }, { text: '£203.57' }, { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Paid</span>' }],
+    [{ text: '11/03/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { text: 'Paid', classes: 'gysp-table__cell--first' }],
+    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }],
   ],
 };
 
