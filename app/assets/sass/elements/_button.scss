@@ -6,25 +6,25 @@
     }
 
     &--secondary {
-        background-color: govuk-colour('grey-3');
+        background-color: govuk-colour('light-grey');
         color: govuk-colour('black');
-        box-shadow: 0 2px 0 govuk-colour('grey-2');
+        box-shadow: 0 2px 0 govuk-colour('mid-grey');
 
         &:hover,
         &:active,
         &:focus {
-            background-color: darken(govuk-colour('grey-3'), 10%);
+            background-color: darken(govuk-colour('light-grey'), 10%);
             color: govuk-colour('black');
         }
     }
 
     &--tertiary {
-        background-color: govuk-colour('grey-1');
-        box-shadow: 0 $govuk-border-width-form-element 0 mix(govuk-colour('black'), govuk-colour('grey-1'), 50%);
+        background-color: govuk-colour('dark-grey');
+        box-shadow: 0 $govuk-border-width-form-element 0 mix(govuk-colour('black'), govuk-colour('dark-grey'), 50%);
 
         &:hover,
         &:focus {
-            background-color: mix(govuk-colour('black'), govuk-colour('grey-1'), 15%);
+            background-color: mix(govuk-colour('black'), govuk-colour('dark-grey'), 15%);
         }
     }
 

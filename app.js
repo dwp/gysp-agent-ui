@@ -32,7 +32,6 @@ if (config === 'error') {
 nunjucks.configure([
   'app/views',
   'node_modules/govuk-frontend/',
-  'node_modules/govuk-frontend/components/',
 ], { autoescape: true, express: app, noCache: templateCache });
 
 // Compression of assets
@@ -44,12 +43,9 @@ app.disable('x-powered-by');
 // Middleware to serve static assets
 app.set('view engine', 'html');
 app.use('/assets', express.static('./public'));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend')));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/assets'), { maxage: 86400000 }));
-app.use(favicon('./public/images/favicon.ico'));
-
-// Design system assets
-app.use('/assets', express.static('./node_modules/govuk-frontend/assets'));
+app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
+app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: 86400000 }));
+app.use(favicon('./node_modules/govuk-frontend/govuk/assets/images/favicon.ico'));
 
 // Disable Etag for pages
 app.disable('etag');
