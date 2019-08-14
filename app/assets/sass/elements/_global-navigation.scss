@@ -7,7 +7,7 @@
 .navigation-global {
   position: relative;
   margin-top: -10px;
-  background: govuk-colour('grey-3');
+  background: govuk-colour('light-grey');
 
   ul {
     @include govuk-clearfix;
@@ -42,7 +42,7 @@
     }
 
     &:hover {
-      background: govuk-colour('grey-4');
+      background: govuk-colour('light-grey');
       text-decoration: underline;
     }
   }

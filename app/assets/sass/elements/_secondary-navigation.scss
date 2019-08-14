@@ -2,7 +2,7 @@
 .navigation-secondary {
   max-width: 960px;
   margin: auto;
-  border-bottom: 1px solid govuk-colour('grey-3');
+  border-bottom: 1px solid govuk-colour('light-grey');
 
   ul {
     // @extend %contain-floats;
@@ -45,7 +45,7 @@
     }
 
     &:hover {
-      background: govuk-colour('grey-4');
+      background: govuk-colour('light-grey');
       text-decoration: underline;
     }
   }

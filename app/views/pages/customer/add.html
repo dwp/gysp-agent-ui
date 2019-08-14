@@ -1,13 +1,13 @@
 {% extends 'helpers/layout.html' %}
 {% import 'helpers/form.html' as form %}
-{% from "error-summary/macro.njk" import govukErrorSummary %}
-{% from "fieldset/macro.njk" import govukFieldset %}
-{% from "select/macro.njk" import govukSelect %}
-{% from "input/macro.njk" import govukInput %}
-{% from "date-input/macro.njk" import govukDateInput %}
-{% from "radios/macro.njk" import govukRadios %}
-{% from "button/macro.njk" import govukButton %}
-{% from "error-message/macro.njk" import govukErrorMessage %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
 
 {% set attributes = {} %}
 {% if disabled %}
