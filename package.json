@@ -17,7 +17,7 @@
     "release": "npm install && npm test && npm run build && npm prune --production && npm run package && npm install",
     "prestart": "npm install",
     "start": "node start",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test": "CONFIG_LOCATION='./test/resource/' mocha test/unit/**/**",
     "test-coverage": "CONFIG_LOCATION='./test/resource/' BANK_FEATURE=false nyc mocha --reporter=mocha test/unit --recursive ",
     "security-tests": "npm run security:outdated && npm run security:audit",
