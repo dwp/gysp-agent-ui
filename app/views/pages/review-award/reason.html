@@ -1,0 +1,29 @@
+{% extends 'helpers/layout.html' %}
+{% from 'helpers/key-details.html' import keyDetailsSection %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}Review an award reason{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if keyDetails %}
+            {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
+        {% endif %}
+
+        <p class="govuk-body govuk-!-font-weight-bold">Reason the award needs to be reviewed</p>
+        <p class="govuk-body govuk-!-margin-bottom-7">{{ details.reasonForChange }}</p>
+
+        {{ govukButton({
+            text: 'Continue',
+            href: '#',
+            attributes: {
+                id: 'reason-continue'
+            }
+        }) }}
+    </div>
+</div>
+
+
+{% endblock %}
