@@ -1,10 +1,21 @@
 const request = require('request-promise');
 const requestHelper = require('../../../lib/requestHelper');
+const deleteSession = require('../../../lib/deleteSession');
 const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
 const dataStore = require('../../../lib/dataStore');
 const reviewAwardReasonObject = require('../../../lib/objects/reviewAwardReasonObject');
 
+async function cacheRetriveAndStore(req, key, apiCall) {
+  if (dataStore.get(req, key)) {
+    return dataStore.get(req, key);
+  }
+  const data = await apiCall();
+  dataStore.save(req, key, data);
+  return data;
+}
+
 function getReviewAward(req, res) {
+  deleteSession.deleteReviewAward(req);
   const reviewAwards = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/count/srb-review`, {}, 'hmrc-calculation');
   request(reviewAwards)
     .then((body) => {
@@ -18,14 +29,17 @@ function getReviewAward(req, res) {
 }
 
 async function getReviewReason(req, res) {
-  const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation');
   try {
-    const reviewAward = await request(reviewAwardCall);
-    const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${reviewAward.nino}`, {}, 'batch');
-    const award = await request(awardCall);
+    const reviewAward = await cacheRetriveAndStore(req, 'review-award', () => {
+      const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation');
+      return request(reviewAwardCall);
+    });
+
+    const award = await cacheRetriveAndStore(req, 'award', () => {
+      const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${reviewAward.nino}`, {}, 'batch');
+      return request(awardCall);
+    });
     const keyDetails = keyDetailsHelper.formatter(award);
-    dataStore.save(req, 'reviewAward', reviewAward);
-    dataStore.save(req, 'award', award);
     const details = reviewAwardReasonObject.formatter(reviewAward);
     res.render('pages/review-award/reason', {
       keyDetails,

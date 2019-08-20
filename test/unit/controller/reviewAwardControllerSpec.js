@@ -32,7 +32,7 @@ const validNextSrb = {
   totalAmount: 300.0,
 };
 
-const validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
+let validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
 
 describe('Review award controller', () => {
   describe('getReviewAward function (GET /review-award)', () => {
@@ -70,23 +70,17 @@ describe('Review award controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
 
-    it('should return view with reason when receive 200 response from both api\'s', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
-      nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(200, claimData.validClaim());
-      await controller.getReviewReason(validRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/review-award/reason');
-      assert.deepEqual(genericResponse.data.details, { reasonForChange: 'Change in cont/credit position' });
-      assert.deepEqual(validRequest.session.reviewAward, validNextSrb);
-      assert.deepEqual(validRequest.session.award, claimData.validClaim());
+    beforeEach(() => {
+      validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
     });
 
-    it('should return view with reason when receive 500 response from award api but 200 from award review', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
+    it('should return view with reason when receive 500 response from award api and 500 from award review', async () => {
+      nock('http://test-url/').get(awardReviewUri).reply(500, {});
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(500, {});
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.data.status, '- There are no awards to review.');
-      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/AA370773A');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/hmrccalc/next-srb');
     });
 
     it('should return view with reason when receive 200 response from award api but 500 from award review', async () => {
@@ -98,13 +92,23 @@ describe('Review award controller', () => {
       assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/hmrccalc/next-srb');
     });
 
-    it('should return view with reason when receive 500 response from award api but 500 from award review', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(500, {});
+    it('should return view with reason when receive 500 response from award api but 200 from award review', async () => {
+      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(500, {});
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.data.status, '- There are no awards to review.');
-      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/hmrccalc/next-srb');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/AA370773A');
+    });
+
+    it('should return view with reason when receive 200 response from both api\'s', async () => {
+      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
+      nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(200, claimData.validClaim());
+      await controller.getReviewReason(validRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/review-award/reason');
+      assert.deepEqual(genericResponse.data.details, { reasonForChange: 'Change in cont/credit position' });
+      assert.deepEqual(validRequest.session['review-award'], validNextSrb);
+      assert.deepEqual(validRequest.session.award, claimData.validClaim());
     });
   });
 });
