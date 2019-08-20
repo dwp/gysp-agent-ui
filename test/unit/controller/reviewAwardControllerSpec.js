@@ -34,6 +34,8 @@ const validNextSrb = {
 
 let validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
 
+const invalidRequest = { session: { }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+
 describe('Review award controller', () => {
   describe('getReviewAward function (GET /review-award)', () => {
     genericResponse = responseHelper.genericResponse();
@@ -109,6 +111,26 @@ describe('Review award controller', () => {
       assert.deepEqual(genericResponse.data.details, { reasonForChange: 'Change in cont/credit position' });
       assert.deepEqual(validRequest.session['review-award'], validNextSrb);
       assert.deepEqual(validRequest.session.award, claimData.validClaim());
+    });
+  });
+
+  describe('getNewAward function (GET /review-award/new-award)', () => {
+    genericResponse = responseHelper.genericResponse();
+    genericResponse.locals = responseHelper.localResponse(genericResponse);
+
+    beforeEach(() => {
+      validRequest = { session: { 'review-award': validNextSrb, award: claimData.validClaim() }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+    });
+
+    it('should return view with new award when all session data present', () => {
+      controller.getNewAward(validRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/review-award/new-award');
+    });
+
+    it('should return error view when the session is invalid', () => {
+      controller.getNewAward(invalidRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- Issue getting award to review.');
     });
   });
 });

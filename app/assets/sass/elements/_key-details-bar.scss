@@ -119,3 +119,32 @@ $white-transparent: rgba(255, 255, 255, .3);
     color: govuk-colour('white');
   }
 }
+
+.key-details-slim-section {
+  margin-top: -10px;
+  @include govuk-responsive-margin(1, 'bottom');
+  border-bottom: 3px solid govuk-colour('light-grey');
+
+  &__name,
+  &__nino {
+    @include govuk-responsive-margin(1, 'bottom');
+    display: inline-block;
+  }
+
+  &__name {
+    @include govuk-responsive-margin(3, 'right');
+    display: inline-block;
+  }
+
+  &__status {
+    @include govuk-media-query($from: tablet) {
+      float: right;
+    }
+  }
+
+  &__state-pension-date {
+    @include govuk-responsive-margin(1, 'top');
+    @include govuk-responsive-margin(3, 'bottom');
+    color: govuk-colour('dark-grey');
+  }
+}

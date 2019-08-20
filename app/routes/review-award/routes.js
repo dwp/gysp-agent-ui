@@ -5,5 +5,6 @@ const functions = require('./functions');
 
 router.get('/', functions.getReviewAward);
 router.get('/reason', functions.getReviewReason);
+router.get('/new-award', functions.getNewAward);
 
 module.exports = router;
