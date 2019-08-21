@@ -1,0 +1,44 @@
+{% extends 'helpers/layout.html' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from 'helpers/key-details.html' import keyDetailsSlimSection %}
+
+{% block pageTitle %}New award{% endblock %}
+
+{% block content %}
+{% if keyDetails %}
+    {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, entitlementDate) }}
+{% endif %}
+
+{{ govukBackLink({
+    text: 'Back',
+    href: '/review-award/reason',
+    classes: 'govuk-!-margin-bottom-8'
+}) }}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">New award</h1>
+
+        {{ govukSummaryList({
+            rows: details.summaryOne
+        }) }}
+
+        {{ govukSummaryList({
+            rows: details.summaryTwo
+        }) }}
+
+        {{ govukButton({
+            text: 'Continue',
+            href: '#',
+            attributes: {
+                id: 'award-review'
+            }
+        }) }}
+
+    </div>
+</div>
+
+
+{% endblock %}

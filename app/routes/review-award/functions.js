@@ -14,6 +14,8 @@ async function cacheRetriveAndStore(req, key, apiCall) {
   return data;
 }
 
+const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAwardObject');
+
 function getReviewAward(req, res) {
   deleteSession.deleteReviewAward(req);
   const reviewAwards = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/count/srb-review`, {}, 'hmrc-calculation');
@@ -53,5 +55,21 @@ async function getReviewReason(req, res) {
   }
 }
 
+function getNewAward(req, res) {
+  try {
+    const reviewAward = dataStore.get(req, 'review-award');
+    const award = dataStore.get(req, 'award');
+    const keyDetails = keyDetailsHelper.formatter(award);
+    const details = reviewAwardNewAwardObject.formatter(reviewAward);
+    const entitlementDate = reviewAwardNewAwardObject.entitlementDateFormatter(reviewAward);
+    res.render('pages/review-award/new-award', {
+      keyDetails, details, reviewAward, entitlementDate,
+    });
+  } catch (err) {
+    res.render('pages/error', { status: '- Issue getting award to review.' });
+  }
+}
+
 module.exports.getReviewAward = getReviewAward;
 module.exports.getReviewReason = getReviewReason;
+module.exports.getNewAward = getNewAward;
