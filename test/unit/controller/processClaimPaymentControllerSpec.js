@@ -42,16 +42,16 @@ describe('Process claim payment controller', () => {
 
     it('should return view with data when a 200 reponse from the API is received', () => {
       nock('http://test-url/').get(`${awardPaymentUri}/${validRequest.session.processClaim.claimDetail.inviteKey}`)
-        .reply(200, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(200, dataObjects.validPaymentApiResponse());
       controller.getProcessClaimPayment(validRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/process-claim-payment/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validProcessClaimPaymentFormattedObject()));
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
       });
     });
 
     it('should return error view when no invite key exists in the session', () => {
-      controller.getProcessClaimPayment(dataObjects.invalidProcessClaimPaymentRequest(), genericResponse);
+      controller.getProcessClaimPayment(dataObjects.invalidSessionPaymentRequest(), genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.currentStatus, httpStatus.INTERNAL_SERVER_ERROR);
         assert.equal(genericResponse.viewName, 'pages/error');
@@ -95,7 +95,7 @@ describe('Process claim payment controller', () => {
     it('should return view with error when API returns 500 state', () => {
       nock('http://test-url/').post(awardCreateScheduleUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
       nock('http://test-url/').get(`${awardPaymentUri}/${validPostRequest.session.processClaim.claimDetail.inviteKey}`)
-        .reply(httpStatus.OK, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(httpStatus.OK, dataObjects.validPaymentApiResponse());
       controller.postProcessClaimPayment(validPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.status500);
@@ -106,7 +106,7 @@ describe('Process claim payment controller', () => {
     it('should return view with error when API returns at status code that is not 200 or 500', () => {
       nock('http://test-url/').post(awardCreateScheduleUri).reply(httpStatus.BAD_GATEWAY, {});
       nock('http://test-url/').get(`${awardPaymentUri}/${validPostRequest.session.processClaim.claimDetail.inviteKey}`)
-        .reply(httpStatus.OK, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(httpStatus.OK, dataObjects.validPaymentApiResponse());
       controller.postProcessClaimPayment(validPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.statusOther);
@@ -116,7 +116,7 @@ describe('Process claim payment controller', () => {
     it('should return view with error when API returns no status code.', () => {
       nock('http://test-url/').post(awardCreateScheduleUri);
       nock('http://test-url/').get(`${awardPaymentUri}/${validPostRequest.session.processClaim.claimDetail.inviteKey}`)
-        .reply(httpStatus.OK, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(httpStatus.OK, dataObjects.validPaymentApiResponse());
       controller.postProcessClaimPayment(validPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.statusNone);

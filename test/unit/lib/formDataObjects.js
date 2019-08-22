@@ -1,5 +1,7 @@
+const claimData = require('../../lib/claimData');
+
 module.exports = {
-  validProcessClaimPaymentApiResponse() {
+  validPaymentApiResponse() {
     return {
       bankDetails: {
         accountHolder: 'Mr Joe Bloggs',
@@ -27,38 +29,38 @@ module.exports = {
       },
     };
   },
-  validProcessClaimPaymentApiResponseWithoutReferenceNumber() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseWithoutReferenceNumber() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     delete object.bankDetails.referenceNumber;
     return object;
   },
-  validProcessClaimPaymentApiResponseWithoutFirstPaymentProtectedPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseWithoutFirstPaymentProtectedPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     delete object.firstPayment.paymentCalculation.protectedPaymentAmount;
     return object;
   },
-  validProcessClaimPaymentApiResponseFirstPaymentProtectedPaymentZero() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseFirstPaymentProtectedPaymentZero() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     object.firstPayment.paymentCalculation.protectedPaymentAmount = '0.00';
     return object;
   },
-  validProcessClaimPaymentApiResponseWithoutRegularPaymentProtectedPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseWithoutRegularPaymentProtectedPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     delete object.regularPayment.paymentCalculation.protectedPaymentAmount;
     return object;
   },
-  validProcessClaimPaymentApiResponseRegularPaymentProtectedPaymentZero() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseRegularPaymentProtectedPaymentZero() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     object.regularPayment.paymentCalculation.protectedPaymentAmount = '0.00';
     return object;
   },
-  validProcessClaimPaymentApiResponseWithoutFirstPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseWithoutFirstPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     delete object.firstPayment;
     return object;
   },
-  validProcessClaimPaymentApiResponseWithFirstSecondRegularPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentApiResponse()));
+  validPaymentApiResponseWithFirstSecondRegularPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     object.adjustedPayment = {
       endDate: '2018-12-31T09:43:11.315Z',
       paymentCalculation: {
@@ -82,13 +84,29 @@ module.exports = {
       user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
-  invalidProcessClaimPaymentRequest() {
+  invalidSessionPaymentRequest() {
     return {
       session: {},
       user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
-  validProcessClaimPaymentFormattedObject() {
+  validReviewAwardPaymentScheduleRequest() {
+    return {
+      session: {
+        award: claimData.validClaim(),
+        'review-award': {
+          nino: 'AA370773A',
+          reasonForChange: 'REVISION OF ENTITLEMENT DUE TO CHANGE IN CONT/CREDIT POSITION',
+          entitlementDate: '2018-11-09T12:27:48.795Z',
+          newStatePensionAmount: 100.0,
+          protectedPaymentAmount: 200.0,
+          totalAmount: 300.0,
+        },
+      },
+      user: { cis: { surname: 'User', givenname: 'Test' } },
+    };
+  },
+  validPaymentFormattedObject() {
     return {
       bankDetails: {
         caption: 'Bank details',
@@ -117,31 +135,31 @@ module.exports = {
       },
     };
   },
-  validProcessClaimPaymentFormattedObjectWithoutReferenceNumber() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentFormattedObject()));
+  validPaymentFormattedObjectWithoutReferenceNumber() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     object.bankDetails.rows.splice(3, 1);
     return object;
   },
-  validProcessClaimPaymentFormattedObjectWithoutFirstPaymentProtectedPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentFormattedObject()));
+  validPaymentFormattedObjectWithoutFirstPaymentProtectedPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     const [protectedPayment0] = object.firstPayment.rows[1][1].html.split('<br />');
     object.firstPayment.rows[1][1].html = protectedPayment0;
     return object;
   },
-  validProcessClaimPaymentFormattedObjectWithoutRegularPaymentProtectedPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentFormattedObject()));
+  validPaymentFormattedObjectWithoutRegularPaymentProtectedPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     const [protectedPayment0] = object.regularPayment.rows[1][1].html.split('<br />');
     object.regularPayment.rows[1][1].html = protectedPayment0;
     return object;
   },
-  validProcessClaimPaymentFormattedObjectWithoutFirstPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentFormattedObject()));
+  validPaymentFormattedObjectWithoutFirstPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     delete object.firstPayment;
     object.regularPayment.caption = 'First and regular payment';
     return object;
   },
-  validProcessClaimPaymentFormattedObjectWithFirstSecondRegularPayment() {
-    const object = JSON.parse(JSON.stringify(this.validProcessClaimPaymentFormattedObject()));
+  validPaymentFormattedObjectWithFirstSecondRegularPayment() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     object.secondPayment = {
       caption: 'Second payment',
       rows: [

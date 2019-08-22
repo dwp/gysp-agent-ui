@@ -37,16 +37,16 @@ describe('Payment schedule controller', () => {
 
     it('should return view with data when a 200 reponse from the API is received', () => {
       nock('http://test-url/').get(`${paymentScheduleUri}/${paymentScheduleRequest.session.searchedNino}`)
-        .reply(200, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(200, dataObjects.validPaymentApiResponse());
       controller.getPaymentSchedule(paymentScheduleRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-schedule/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validProcessClaimPaymentFormattedObject()));
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
       });
     });
 
     it('should return error view when no invite key exists in the session', () => {
-      controller.getPaymentSchedule(dataObjects.invalidProcessClaimPaymentRequest(), genericResponse);
+      controller.getPaymentSchedule(dataObjects.invalidSessionPaymentRequest(), genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.currentStatus, httpStatus.INTERNAL_SERVER_ERROR);
         assert.equal(genericResponse.viewName, 'pages/error');

@@ -75,11 +75,11 @@ describe('Change payment frequency schedule controller', () => {
     it('should return view with data when a 200 reponse from the API is received', () => {
       nock('http://test-url/').get(getChangePaymentFrequencyApiUri)
         .query({ frequency: paymentScheduleRequest.session['payment-frequency'].frequency, nino: paymentScheduleRequest.session.searchedNino })
-        .reply(200, dataObjects.validProcessClaimPaymentApiResponse());
+        .reply(200, dataObjects.validPaymentApiResponse());
       controller.getChangePaymentFrequency(paymentScheduleRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-frequency-schedule/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validProcessClaimPaymentFormattedObject()));
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
       });
     });
 
