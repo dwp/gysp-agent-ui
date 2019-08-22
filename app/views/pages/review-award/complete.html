@@ -1,0 +1,25 @@
+{% extends 'helpers/layout.html' %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from 'helpers/key-details.html' import keyDetailsSection %}
+
+{% block pageTitle %}Review an award complete{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {{ govukPanel({
+            titleText: "State Pension award updated and letter sent",
+            headingLevel: 1,
+            classes: "govuk-!-margin-bottom-6"
+        }) }}
+
+        {% if keyDetails %}
+            {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
+        {% endif %}
+
+        <p class="govuk-body"><a href="/review-award">Process another award</a></p>
+    </div>
+</div>
+
+{% endblock %}

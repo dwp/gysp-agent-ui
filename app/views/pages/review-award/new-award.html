@@ -7,9 +7,13 @@
 {% block pageTitle %}New award{% endblock %}
 
 {% block content %}
-{% if keyDetails %}
-    {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, entitlementDate) }}
-{% endif %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if keyDetails %}
+            {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, entitlementDate) }}
+        {% endif %}
+    </div>
+</div>
 
 {{ govukBackLink({
     text: 'Back',
@@ -31,7 +35,7 @@
 
         {{ govukButton({
             text: 'Continue',
-            href: '#',
+            href: '/review-award/schedule',
             attributes: {
                 id: 'award-review'
             }
