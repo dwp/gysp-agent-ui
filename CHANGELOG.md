@@ -1,3 +1,15 @@
+<a name="5.13.0"></a>
+# [5.13.0](https://github.com/dwp/gysp-agent-ui/compare/v5.12.0...v5.13.0) (2019-08-27)
+
+
+### Features
+
+* **new-award:** screen to show new award to review ([eac9fe1](https://github.com/dwp/gysp-agent-ui/commit/eac9fe1))
+* **review-award:** payment breakdown and complete ([b2b1a52](https://github.com/dwp/gysp-agent-ui/commit/b2b1a52))
+* **review-award:** review an award reason ([f8de485](https://github.com/dwp/gysp-agent-ui/commit/f8de485))
+
+
+
 <a name="5.12.0"></a>
 # [5.12.0](https://github.com/dwp/gysp-agent-ui/compare/v5.11.0...v5.12.0) (2019-08-13)
 
