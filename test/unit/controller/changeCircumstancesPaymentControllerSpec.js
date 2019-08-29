@@ -53,10 +53,11 @@ const recentPaymentTableViewDataSentAndPaid = {
     { text: 'Payment date' },
     { text: 'Amount' },
     { text: 'Status' },
+    { text: '' },
   ],
   rows: [
-    [{ text: '11/03/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { text: 'Sent', classes: 'gysp-table__cell--first' }],
-    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }],
+    [{ text: '11/03/2019' }, { text: '11/04/2019' }, { text: '11/04/2019' }, { text: '£203.57' }, { text: 'Sent' }, { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
+    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
   ],
 };
 
@@ -68,10 +69,11 @@ const recentPaymentTableViewDataAllPaid = {
     { text: 'Payment date' },
     { text: 'Amount' },
     { text: 'Status' },
+    { text: '' },
   ],
   rows: [
-    [{ text: '11/03/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '11/04/2019', classes: 'gysp-table__cell--first' }, { text: '£203.57', classes: 'gysp-table__cell--first' }, { text: 'Paid', classes: 'gysp-table__cell--first' }],
-    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }],
+    [{ text: '11/03/2019' }, { text: '11/04/2019' }, { text: '11/04/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
+    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
   ],
 };
 
@@ -117,9 +119,11 @@ describe('Change circumstances payment controller ', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
       nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validPaidAndSent());
+      paymentRequest.session['payment-frequency'] = '4W';
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment/index');
+        assert.isUndefined(paymentRequest.session['payment-frequency']);
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(paymentViewDataWithReference));
         assert.equal(JSON.stringify(genericResponse.data.paymentSummary), JSON.stringify(paymentSummaryViewDataFirstPaymentPaid));
         assert.equal(JSON.stringify(genericResponse.data.recentPaymentsTable), JSON.stringify(recentPaymentTableViewDataSentAndPaid));

@@ -188,6 +188,7 @@ app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), requi
 app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-frequency/routes'));
 app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-frequency-schedule/routes'));
 app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/death/routes'));
+app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-history/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-detail/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));

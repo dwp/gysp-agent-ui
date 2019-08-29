@@ -1,0 +1,11 @@
+{
+  "header": "Payment details",
+  "h2": "Account the payment was sent to",
+  "summary-keys": {
+    "status": "Status",
+    "account-holder": "Account holder",
+    "account-number": "Account number",
+    "sort-code": "Sort code",
+    "roll-number": "Roll number"
+  }
+}
