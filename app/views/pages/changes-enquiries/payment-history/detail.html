@@ -1,0 +1,44 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block pageTitle %}{{ t("payment-detail:header") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/payment",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-m">{{ t("payment-detail:header") }}</h1>
+  {{ govukSummaryList({
+    rows: [
+      { key: { text: t("payment-detail:summary-keys.status"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.status } }
+    ]
+  }) }}
+
+  <h2 class="govuk-heading-m">{{ t("payment-detail:h2") }}</h2>
+
+  {% if paymentDetail.rollNumber %}
+    {{ govukSummaryList({
+      rows: [
+        { key: { text: t("payment-detail:summary-keys.account-holder"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.accountHolder } },
+        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.accountNumber } },
+        { key: { text: t("payment-detail:summary-keys.sort-code"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.sortCode } },
+        { key: { text: t("payment-detail:summary-keys.roll-number"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.rollNumber } }
+      ]
+    }) }}
+  {% else %}
+    {{ govukSummaryList({
+      rows: [
+        { key: { text: t("payment-detail:summary-keys.account-holder"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.accountHolder } },
+        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.accountNumber } },
+        { key: { text: t("payment-detail:summary-keys.sort-code"), classes: 'govuk-!-width-one-half' }, value: { text: paymentDetail.sortCode } }
+      ]
+    }) }}
+  {% endif %}
+
+{% endblock %}

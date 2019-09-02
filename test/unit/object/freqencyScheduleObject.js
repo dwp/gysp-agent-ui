@@ -1,15 +1,26 @@
-const assert = require('assert');
+const { assert } = require('chai');
 
-const object = require('../../../lib/objects/freqencyScheduleObject');
-const dataObjects = require('../lib/awardDataObjects');
+const object = require('../../../lib/objects/paymentHistoryDetailViewObject');
 
-const nino = 'AA370773A';
-const frequency = '1W';
+const detail = {
+  status: 'SENT',
+  accountName: 'Mr R H Smith',
+  accountNumber: '98765432',
+  sortCode: '400500',
+};
 
-describe('frequency schedule object formatter', () => {
-  it('should return valid json when object is called with full object, nino and freqency', (done) => {
-    const json = object.formatter(dataObjects.validScheduleApiResponse(), frequency, nino);
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validScheduleFormatterResponse(frequency, nino)));
-    done();
+const detailFormatted = {
+  status: 'Sent',
+  accountHolder: 'Mr R H Smith',
+  accountNumber: '98765432',
+  sortCode: '40 05 00',
+};
+
+describe('payment history detail object formatter', () => {
+  it('should return false when detail is undefined', () => {
+    assert.isFalse(object.formatter(undefined));
+  });
+  it('should return valid json when object is called with unformatted object', () => {
+    assert.deepEqual(object.formatter(detail), detailFormatted);
   });
 });

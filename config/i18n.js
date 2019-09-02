@@ -14,6 +14,7 @@ module.exports = {
       'payment',
       'account',
       'payment-frequency',
+      'payment-detail',
       'personal',
       'date-of-death',
       'verify-date-of-death',
