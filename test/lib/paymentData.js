@@ -1,9 +1,9 @@
 module.exports = {
   validSchedule(frequency) {
-    return Object.assign({}, this.validBase(frequency));
+    return { ...this.validBase(frequency) };
   },
   validScheduleWithReferenceNumber() {
-    return Object.assign({}, this.validBase(), this.referenceNumber());
+    return { ...this.validBase(), ...this.referenceNumber() };
   },
   referenceNumber() {
     return {

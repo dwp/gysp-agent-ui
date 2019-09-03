@@ -1,15 +1,15 @@
 module.exports = {
   multipleAddresses() {
-    return Object.assign({}, this.addressBase());
+    return { ...this.addressBase() };
   },
   multipleAddressesNoneEmpty() {
-    return Object.assign({}, this.addressBaseNonEmpty());
+    return { ...this.addressBaseNonEmpty() };
   },
   multipleAddressesAllEmpty() {
-    return Object.assign({}, this.addressBaseAllEmpty());
+    return { ...this.addressBaseAllEmpty() };
   },
   singleAddress() {
-    const address = Object.assign({}, this.addressBase().addressResults[0]);
+    const address = { ...this.addressBase().addressResults[0] };
     return { addressResults: [address] };
   },
   multipleAddressesList() {

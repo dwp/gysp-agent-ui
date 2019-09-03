@@ -1,26 +1,32 @@
 module.exports = {
   validClaim() {
-    return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+    };
   },
   validClaimWithDeathVerified() {
-    const base = Object.assign({}, this.validBase());
+    const base = { ...this.validBase() };
     base.awardStatus = 'DEAD';
-    return Object.assign({}, base, this.validDeathVerified(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
+    return {
+      ...base, ...this.validDeathVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+    };
   },
   validClaimWithDeathNotVerified() {
-    const base = Object.assign({}, this.validBase());
+    const base = { ...this.validBase() };
     base.awardStatus = 'DEADNOTVERIFIED';
-    return Object.assign({}, base, this.validDeathNotVerified(), this.validUkAddress(), this.validContact(), this.validAccountDetails());
+    return {
+      ...base, ...this.validDeathNotVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+    };
   },
   validClaimContactNull(type) {
     if (type === 'home') {
-      return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContactHomeNull());
+      return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactHomeNull() };
     } if (type === 'work') {
-      return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContactWorkNull());
+      return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactWorkNull() };
     } if (type === 'mobile') {
-      return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContactMobileNull());
+      return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactMobileNull() };
     } if (type === 'email') {
-      return Object.assign({}, this.validBase(), this.validUkAddress(), this.validContactEmailNull());
+      return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactEmailNull() };
     }
     return false;
   },
@@ -33,11 +39,11 @@ module.exports = {
   },
   validClaimAllAddressNotNull() {
     const { nino } = this.validBase();
-    return Object.assign({}, this.validUkAddressNotNull(), { nino }, this.validAddressEventChangeTimeline());
+    return { ...this.validUkAddressNotNull(), nino, ...this.validAddressEventChangeTimeline() };
   },
   validClaimAllAddressNull() {
     const { nino } = this.validBase();
-    return Object.assign({}, this.validUkAddressNull(), { nino }, this.validAddressEventChangeTimeline());
+    return { ...this.validUkAddressNull(), nino, ...this.validAddressEventChangeTimeline() };
   },
   validBase() {
     return {
@@ -127,22 +133,22 @@ module.exports = {
     };
   },
   validContactHomeNull() {
-    const contact = Object.assign({}, this.validContact());
+    const contact = { ...this.validContact() };
     contact.contactDetail.homeTelephoneNumber = null;
     return contact;
   },
   validContactWorkNull() {
-    const contact = Object.assign({}, this.validContact());
+    const contact = { ...this.validContact() };
     contact.contactDetail.workTelephoneNumber = null;
     return contact;
   },
   validContactMobileNull() {
-    const contact = Object.assign({}, this.validContact());
+    const contact = { ...this.validContact() };
     contact.contactDetail.mobileTelephoneNumber = null;
     return contact;
   },
   validContactEmailNull() {
-    const contact = Object.assign({}, this.validContact());
+    const contact = { ...this.validContact() };
     contact.contactDetail.email = null;
     return contact;
   },
@@ -199,7 +205,7 @@ module.exports = {
     };
   },
   validAddressWithThoroughfare() {
-    return Object.assign({}, this.validUkAddress().residentialAddress);
+    return { ...this.validUkAddress().residentialAddress };
   },
   validAddressWithThoroughfareResult() {
     return [
@@ -212,7 +218,7 @@ module.exports = {
     ];
   },
   validAddressWithoutThoroughfare() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.thoroughfareName = null;
     return address;
   },
@@ -225,7 +231,7 @@ module.exports = {
     ];
   },
   validAddressSubBuildingNamebuildingName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.buildingNumber = null;
     address.dependentLocality = null;
     address.dependentThoroughfareName = null;
@@ -240,7 +246,7 @@ module.exports = {
     ];
   },
   validAddressSubBuildingName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.buildingName = null;
     address.buildingNumber = null;
     address.dependentLocality = null;
@@ -256,7 +262,7 @@ module.exports = {
     ];
   },
   validAddressBuildingName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingNumber = null;
     address.dependentLocality = null;
@@ -272,7 +278,7 @@ module.exports = {
     ];
   },
   validAddressBuildingNameBuildingNumberDependentLocality() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.dependentThoroughfareName = null;
     address.thoroughfareName = null;
@@ -287,7 +293,7 @@ module.exports = {
     ];
   },
   validAddressBuildingNumberDependentLocality() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingName = null;
     address.dependentThoroughfareName = null;
@@ -302,7 +308,7 @@ module.exports = {
     ];
   },
   validAddressDependentLocality() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingName = null;
     address.buildingNumber = null;
@@ -318,7 +324,7 @@ module.exports = {
     ];
   },
   validAddressBuildingNumber() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingName = null;
     address.dependentLocality = null;
@@ -334,7 +340,7 @@ module.exports = {
     ];
   },
   validAddressSubBuildingNamebBuildingNameBuildingNumberThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.dependentLocality = null;
     address.dependentThoroughfareName = null;
     return address;
@@ -348,7 +354,7 @@ module.exports = {
     ];
   },
   validAddressSubBuildingNamebBuildingNameThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.buildingNumber = null;
     address.dependentLocality = null;
     address.dependentThoroughfareName = null;
@@ -363,7 +369,7 @@ module.exports = {
     ];
   },
   validAddressSubBuildingNamebThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.buildingNumber = null;
     address.buildingName = null;
     address.dependentLocality = null;
@@ -379,7 +385,7 @@ module.exports = {
     ];
   },
   validAddressBuildingNameThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingNumber = null;
     address.dependentThoroughfareName = null;
@@ -395,7 +401,7 @@ module.exports = {
     ];
   },
   validAddressDependentThoroughfareNameBuildingNumberThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.buildingName = null;
     address.subBuildingName = null;
     return address;
@@ -410,7 +416,7 @@ module.exports = {
     ];
   },
   validAddressBuildingNumberThoroughfareName() {
-    const address = Object.assign({}, this.validUkAddress().residentialAddress);
+    const address = { ...this.validUkAddress().residentialAddress };
     address.subBuildingName = null;
     address.buildingName = null;
     address.dependentThoroughfareName = null;

@@ -20,7 +20,7 @@ function toUpperCase(value) {
 }
 
 function formatTitleOptions(titles, details) {
-  const titleList = titles.map(title => ({
+  const titleList = titles.map((title) => ({
     value: title,
     text: title,
     selected: !!(details !== undefined && title === details.title),
