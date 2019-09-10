@@ -1,3 +1,13 @@
+<a name="5.14.0"></a>
+# [5.14.0](https://github.com/dwp/gysp-agent-ui/compare/v5.13.0...v5.14.0) (2019-09-10)
+
+
+### Features
+
+* **payment-detail:** view payment details by payment id ([cd489f3](https://github.com/dwp/gysp-agent-ui/commit/cd489f3))
+
+
+
 <a name="5.13.0"></a>
 # [5.13.0](https://github.com/dwp/gysp-agent-ui/compare/v5.12.0...v5.13.0) (2019-08-27)
 
@@ -20,6 +30,7 @@
 * **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
 * **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
 * **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
+* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **personal:** add timeline feature to personal page ([953ecaa](https://github.com/dwp/gysp-agent-ui/commit/953ecaa))
 * **timeline:** contact timeline ([39d09f6](https://github.com/dwp/gysp-agent-ui/commit/39d09f6))
 
