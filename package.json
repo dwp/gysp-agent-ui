@@ -7,7 +7,7 @@
     "url": "git@github.com:dwp/gysp-agent-ui.git"
   },
   "engines": {
-    "node": "10.16.0",
+    "node": "10.16.3",
     "npm": "6.10.2"
   },
   "scripts": {
