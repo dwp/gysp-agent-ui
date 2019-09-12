@@ -3,6 +3,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
+const redis = require('redis');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const i18n = require('i18next');
@@ -85,12 +86,16 @@ if (config.application.session.securecookies === true) {
 }
 
 if (config.application.session.store === 'redis') {
-  const { redis } = config.application;
-  redis.host = process.env.REDIS_HOST || '127.0.0.1';
-  redis.password = encyption.decrypt(redis.password, config.secret);
   const RedisStore = connectRedis(session);
-
-  sessionConfig.store = new RedisStore(redis);
+  const redisConfig = config.application.redis;
+  redisConfig.host = process.env.REDIS_HOST || '127.0.0.1';
+  redisConfig.password = encyption.decrypt(redisConfig.password, config.secret);
+  const client = redis.createClient(redisConfig);
+  client.unref();
+  client.on('error', (err) => {
+    log.error(`Redis error: ${err}`);
+  });
+  sessionConfig.store = new RedisStore({ client });
 }
 
 app.use(session(sessionConfig));
