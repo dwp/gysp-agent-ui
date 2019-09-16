@@ -38,10 +38,6 @@ describe('process claim middleware', () => {
         log.level = 'info';
         log.message = message;
       },
-      error: (message) => {
-        log.level = 'error';
-        log.message = message;
-      },
     };
     nextResult = undefined;
     expressNext = () => {
@@ -75,7 +71,7 @@ describe('process claim middleware', () => {
 
   it('should redirect back to complete when session is complete but try and access other page', () => {
     processClaim(log)(complete, genericResponse, expressNext);
-    assert.equal(log.level, 'error');
+    assert.equal(log.level, 'info');
     assert.equal(log.message, 'user has already processed claim');
     assert.equal(genericResponse.address, '/process-claim/complete');
   });
@@ -92,7 +88,7 @@ describe('process claim middleware', () => {
 
   it('should redirect back to start of section when hostname or path does not match', () => {
     processClaim(log)(somethingElse, genericResponse, expressNext);
-    assert.equal(log.level, 'error');
+    assert.equal(log.level, 'info');
     assert.equal(log.message, 'Security redirect - user agent failed to match - GET /process-claim/payment');
     assert.equal(genericResponse.address, '/process-claim');
   });
