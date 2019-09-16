@@ -13,7 +13,7 @@ async function getPaymentHistoryDetail(req, res) {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const { id } = req.params;
-    const detail = await dataStore.cacheRetriveAndStore(req, `payment-history-${id}`, () => {
+    const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
       const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/payment/${id}`, {}, 'payment');
       return request(reviewAwardCall);
     });

@@ -3,6 +3,7 @@ const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
+const deleteSession = require('../../../../lib/deleteSession');
 
 const changeCircumstancesOverview = require('../../../../lib/changeCircumstancesOverview');
 
@@ -10,6 +11,7 @@ const activeSecondaryNavigationSection = 'personal';
 const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function getPersonalDetails(req, res) {
+  deleteSession.deleteChangesEnquiries(req);
   const award = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
   request(award)
     .then(async (body) => {
