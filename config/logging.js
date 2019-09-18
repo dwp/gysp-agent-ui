@@ -12,7 +12,7 @@ function returnLogger(logType, config) {
     maxsize: config.size,
     maxFiles: config.backups,
     rotate: config.rotate,
-    level: config.logLevel,
+    level: config.level,
     name: logType,
   };
 

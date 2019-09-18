@@ -22,13 +22,6 @@ const log = require('./config/logging')('agent-ui', config.application.logs);
 
 const templateCache = true;
 
-if (config === 'error') {
-  if (config.application.env !== 'production') {
-    console.log('Config error - file not loaded'); // eslint-disable-line no-console
-  }
-  log.error('Config error - file not loaded');
-}
-
 // Template setup for nunjucks
 nunjucks.configure([
   'app/views',
