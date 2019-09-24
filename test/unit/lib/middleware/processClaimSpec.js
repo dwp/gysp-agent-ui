@@ -27,6 +27,9 @@ const continuePath = {
 const somethingElse = {
   url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: { processClaim: { claimDetail: true }, destroy }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: '', method: 'GET',
 };
+const continueRefererAllBau = {
+  url: 'http://localhost:3002/process-claim/all-claims-to-bau', path: '/process-claim/all-claims-to-bau', session: { }, headers: { referer: 'http://localhost:3002/process-claim' }, hostname: 'localhost',
+};
 
 describe('process claim middleware', () => {
   beforeEach(() => {
@@ -91,5 +94,10 @@ describe('process claim middleware', () => {
     assert.equal(log.level, 'info');
     assert.equal(log.message, 'Security redirect - user agent failed to match - GET /process-claim/payment');
     assert.equal(genericResponse.address, '/process-claim');
+  });
+
+  it('should continue with app when referer matches with hostname and path is /process-claim/all-claims-to-bau', () => {
+    processClaim(log)(continueRefererAllBau, genericResponse, expressNext);
+    assert.equal(nextResult, 'called');
   });
 });
