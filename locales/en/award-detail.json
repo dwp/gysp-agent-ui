@@ -1,0 +1,10 @@
+{
+  "header": "Current State Pension award",
+  "summary-keys": {
+    "total": "Total",
+    "new-state-pension": "New State Pension",
+    "protected-payment": "Protected payment",
+    "extra-state-pension": "Extra State Pension",
+    "inherited-extra-state-pension": "Inherited extra State Pension"
+  }
+}

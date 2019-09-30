@@ -1,7 +1,7 @@
 module.exports = {
   validClaim() {
     return {
-      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validCurrentAmountDetails(),
     };
   },
   validClaimWithDeathVerified() {
@@ -79,6 +79,17 @@ module.exports = {
         accountNumber: '12345678',
         sortCode: '112233',
         referenceNumber: '231231232',
+      },
+    };
+  },
+  validCurrentAmountDetails() {
+    return {
+      currentAmounts: {
+        totalAmount: 110.0,
+        weeklyStatePensionAmount: 100.0,
+        weeklyProtectedPaymentAmount: 10.0,
+        weeklyExtraStatePensionAmount: 0.0,
+        weeklyInheritedExtraStatePensionAmount: 0.0,
       },
     };
   },
@@ -194,6 +205,15 @@ module.exports = {
       mobileTelephoneNumber: '1111111111',
       workTelephoneNumber: '2222222222',
       email: 'a@b.com',
+    };
+  },
+  validAwardDetailsViewData() {
+    return {
+      totalAmount: '110.00',
+      weeklyStatePensionAmount: '100.00',
+      weeklyProtectedPaymentAmount: '10.00',
+      weeklyExtraStatePensionAmount: '0.00',
+      weeklyInheritedExtraStatePensionAmount: '0.00',
     };
   },
   validSearchViewData() {
