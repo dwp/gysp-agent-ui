@@ -3,6 +3,7 @@ module.exports = {
     namespaces: [
       'app',
       'add',
+      'award-detail',
       'robot',
       'contact-details',
       'claim-information',

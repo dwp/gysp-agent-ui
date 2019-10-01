@@ -177,16 +177,7 @@ app.use('/robot', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes
 app.use('/claim-information', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/claim-information/routes.js'));
 app.use('/find-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-claim/routes.js'));
 app.use('/find-someone', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-someone/routes.js'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/personal/routes.js'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/contact/routes.js'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/address/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/account/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-schedule/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-frequency/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-frequency-schedule/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/death/routes'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/payment-history/routes'));
+app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/routes.js'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-detail/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));
