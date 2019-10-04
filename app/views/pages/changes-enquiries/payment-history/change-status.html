@@ -1,0 +1,44 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("payment-status:fields." + statusDetail.changeType + ".legend") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/payment-history/" + statusDetail.id,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/payment-history/{{ statusDetail.id }}/status-update" autocomplete="off">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "statusUpdate",
+      fieldset: {
+        legend: {
+          text: t("payment-status:fields." + statusDetail.changeType + ".legend"),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [{
+        id: "status-yes",
+        value: "yes",
+        text: t("payment-status:fields." + statusDetail.changeType + ".options.yes")
+      }, {
+        id: "status-no",
+        value: "no",
+        text: t("payment-status:fields." + statusDetail.changeType + ".options.no")
+      }],
+      errorMessage: errors.statusUpdate
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.confirm")
+    }) }}
+  </form>
+{% endblock %}

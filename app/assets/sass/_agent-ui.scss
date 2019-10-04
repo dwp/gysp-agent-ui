@@ -78,3 +78,24 @@
         }
     }
 }
+
+.payment-details-summary {
+    .govuk-summary-list {
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 40%;
+            }
+            &:last-child {
+                @include govuk-media-query($from: tablet) {
+                    width: 70%;
+                }
+            }
+        }
+
+        &__actions {
+            @include govuk-media-query($from: tablet) {
+                width: 30%;
+            }
+        }
+    }
+}

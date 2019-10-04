@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "returned": {
+      "legend": "Has this payment been returned?",
+      "options": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "errors": {
+        "required": "Select 'yes' if you are trying to recall this payment"
+      }
+    }
+  }
+}
