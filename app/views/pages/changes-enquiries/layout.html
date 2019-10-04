@@ -21,7 +21,9 @@
             {% if keyDetails %}
                 {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
             {% endif %}
-            {{ secondaryNavigation(secondaryNavigationList) }}
+            {% if secondaryNavigationList %}
+                {{ secondaryNavigation(secondaryNavigationList) }}
+            {% endif %}
             {% block sectionBackLink %}{% endblock %}
             {% block innerContent %} {% endblock %}
         </div>
