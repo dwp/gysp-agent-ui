@@ -26,11 +26,11 @@ const detailFormatted = {
       value: { classes: 'govuk-!-font-weight-bold', text: '£100.00' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.period' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
       value: { html: '30/07/2019 to<br />27/08/2019' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.status' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
       value: { text: 'Sent' },
     },
   ],
