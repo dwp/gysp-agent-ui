@@ -1,3 +1,14 @@
+<a name="5.15.0"></a>
+# [5.15.0](https://github.com/dwp/gysp-agent-ui/compare/v5.14.1...v5.15.0) (2019-10-10)
+
+
+### Features
+
+* **award:** current state pension award page ([b8b08d1](https://github.com/dwp/gysp-agent-ui/commit/b8b08d1))
+* **payment-status:** ability to update status from  paid to not paid ([5c692ec](https://github.com/dwp/gysp-agent-ui/commit/5c692ec))
+
+
+
 <a name="5.14.1"></a>
 ## [5.14.1](https://github.com/dwp/gysp-agent-ui/compare/v5.14.0...v5.14.1) (2019-09-24)
 
