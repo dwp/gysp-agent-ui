@@ -38,8 +38,16 @@ For other config options see `config` folder for various env settings.
 
 ### Running
 
+Install npm dependencies within docker container
+
 ```
-docker-compose up
+make install
+```
+
+The run the following command:
+
+```
+make up
 ```
 
 This will now be available at `http://localhost:3002`.

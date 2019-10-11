@@ -10,6 +10,7 @@ services:
     depends_on:
       - redis
     volumes:
+      - nodemodules:/usr/src/app/node_modules
       - ./:/usr/src/app
     ports:
       - "3002:3002"
@@ -20,3 +21,6 @@ services:
       CUSTOMERAPIGATEWAY: ${CUSTOMER_API_GATEWAY}
       NODE_EXTRA_CA_CERTS: ${NODE_EXTRA_CA_CERTS}
       WEB_APP: host.docker.internal
+volumes:
+  nodemodules:
+    external: true
