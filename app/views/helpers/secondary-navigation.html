@@ -1,8 +1,8 @@
 {% macro secondaryNavigation(itemList) %}
-    <nav class="navigation-secondary govuk-!-margin-bottom-6">
+    <nav class="navigation-secondary govuk-!-margin-bottom-6" aria-label="Secondary navigation">
         <ul>
             {% for item in itemList %}
-                <li><a href="{{ item.href }}"{{ ' class=active aria-current=section' if item.selected }}>{{ item.text }}</a></li>
+                <li><a href="{{ item.href }}"{{ ' class=active aria-current=page' if item.selected }}>{{ item.text }}</a></li>
             {% endfor %}
         </ul>
     </nav>

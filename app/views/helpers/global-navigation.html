@@ -1,5 +1,5 @@
 {% macro globalNavigation(activeGlobalNavigationSection) %}
-	<nav class="navigation-global">
+	<nav class="navigation-global" aria-label="Globel navigation">
 		<div class="govuk-width-container">
 			<ul>
 				<li><a href='/find-someone'{{ ' class=active aria-current=page' if activeGlobalNavigationSection | lower  === 'find-someone' }}>Find someone</a></li>
