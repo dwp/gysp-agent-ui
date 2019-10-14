@@ -10,9 +10,8 @@
     "sort-code": "Sort code",
     "roll-number": "Roll number",
     "statusLink": {
-      "notpaid": {
-        "text": "Change to 'not paid'",
-        "visuallyHiddenText": "status"
+      "returned": {
+        "text": "Mark as returned"
       }
     }
   }
