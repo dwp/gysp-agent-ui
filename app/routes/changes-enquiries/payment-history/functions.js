@@ -6,6 +6,7 @@ const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavi
 const dataStore = require('../../../../lib/dataStore');
 const paymentHistoryDetailViewObject = require('../../../../lib/objects/paymentHistoryDetailViewObject');
 const paymentStatusUpdate = require('../../../../lib/objects/paymentStatusUpdate');
+const paymentReturnStatusObject = require('../../../../lib/objects/paymentReturnStatusObject');
 const paymentUpdateStatusObject = require('../../../../lib/objects/paymentUpdateStatusObject');
 const awardUpdateStatusObject = require('../../../../lib/objects/awardUpdateStatusObject');
 const formValidator = require('../../../../lib/formValidator');
@@ -16,8 +17,12 @@ const activeSecondaryNavigationSection = 'payment';
 const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const returnPaymentApi = 'api/payment/return-payment';
+const paymentUpdateStatusApi = 'api/payment/update-status';
 const awardStatusUpdateApi = 'api/award/update-status';
 const maxDaysAllowedToChangePaidStaus = 14;
+
+// Payment and award statues
+const [PAID, SENT, PAYMENTS_STOPPED] = ['PAID', 'SENT', 'PAYMENTSSTOPPED'];
 
 async function paymentDetail(req, res, id) {
   const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
@@ -28,7 +33,10 @@ async function paymentDetail(req, res, id) {
 }
 
 function isAllowedToUpdate(status, creditDate) {
-  if (status === 'PAID' && dateHelper.daysBetweenNowDate(creditDate) <= maxDaysAllowedToChangePaidStaus) {
+  if (status === PAID && dateHelper.daysBetweenNowDate(creditDate) <= maxDaysAllowedToChangePaidStaus) {
+    return true;
+  }
+  if (status === SENT) {
     return true;
   }
   return false;
@@ -80,7 +88,8 @@ async function getStatusUpdate(req, res) {
 
 function postStatusUpdateErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
-  requestHelper.loggingHelper(error, returnPaymentApi, traceID, res.locals.logger);
+  const pathUri = requestHelper.getPath(error);
+  requestHelper.loggingHelper(error, pathUri, traceID, res.locals.logger);
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     req.flash('error', 'Error - connection refused.');
   } else if (error.statusCode === httpStatus.NOT_FOUND) {
@@ -88,6 +97,25 @@ function postStatusUpdateErrorHandler(error, req, res) {
   } else {
     req.flash('error', 'Error - could not save data.');
   }
+}
+
+function statusUpdateCalls(req, res, id, status) {
+  const { inviteKey } = dataStore.get(req, 'awardDetails');
+  let putPaymentStatusCall = null;
+  let putAwardStatusCall = null;
+  if (status === PAID) {
+    const paymentUpdateStatusObjectFormatted = paymentReturnStatusObject.formatter(id, inviteKey);
+    const awardUpdateStatusObjectFormatted = awardUpdateStatusObject.formatter(PAYMENTS_STOPPED, inviteKey);
+    putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + returnPaymentApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
+    putAwardStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + awardStatusUpdateApi, awardUpdateStatusObjectFormatted, 'award', req.user);
+  } else {
+    const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, status);
+    putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + paymentUpdateStatusApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
+  }
+  return {
+    putPaymentStatusCall,
+    putAwardStatusCall,
+  };
 }
 
 async function postStatusUpdate(req, res) {
@@ -98,14 +126,12 @@ async function postStatusUpdate(req, res) {
   const errors = formValidator.updatePaymentStatus(input, statusDetail);
   if (Object.keys(errors).length === 0) {
     if (input.statusUpdate === 'yes') {
-      const { inviteKey } = dataStore.get(req, 'awardDetails');
-      const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, inviteKey);
-      const awardUpdateStatusObjectFormatted = awardUpdateStatusObject.formatter('PAYMENTSSTOPPED', inviteKey);
-      const putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + returnPaymentApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
-      const putAwardStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + awardStatusUpdateApi, awardUpdateStatusObjectFormatted, 'award', req.user);
+      const { putPaymentStatusCall, putAwardStatusCall } = statusUpdateCalls(req, res, id, detail.status);
       try {
         await request(putPaymentStatusCall);
-        await request(putAwardStatusCall);
+        if (putAwardStatusCall) {
+          await request(putAwardStatusCall);
+        }
         deleteSession.deletePaymentDetail(req, id);
         res.redirect('/changes-and-enquiries/payment');
       } catch (err) {
