@@ -13,20 +13,20 @@
           <td class="govuk-table__cell govuk-table__cell--numeric" colspan="2"><a href="/changes-and-enquiries/payment/account" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> bank or building society account details</span></a></td>
         </tr>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell gysp-table__cell--first" scope="row">{{ t('payment:bank_building_table.account_holder') }}</td>
+          <th class="govuk-table__cell gysp-table__cell--first govuk-!-font-weight-regular" scope="row">{{ t('payment:bank_building_table.account_holder') }}</th>
           <td class="govuk-table__cell gysp-table__cell--first">{{ details.accountHolder }}</td>
         </tr>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.account_number') }}</td>
+          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">{{ t('payment:bank_building_table.account_number') }}</th>
           <td class="govuk-table__cell">{{ details.accountNumber }}</td>
         </tr>
         <tr class="govuk-table__row">
-          <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.sort_code') }}</td>
+          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">{{ t('payment:bank_building_table.sort_code') }}</th>
           <td class="govuk-table__cell">{{ details.sortCode }}</td>
         </tr>
         {% if details.referenceNumber %}
           <tr class="govuk-table__row">
-            <td class="govuk-table__cell" scope="row">{{ t('payment:bank_building_table.roll_number') }}</td>
+            <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">{{ t('payment:bank_building_table.roll_number') }}</th>
             <td class="govuk-table__cell">{{ details.referenceNumber  }}</td>
           </tr>
         {% endif %}
@@ -45,7 +45,7 @@
           <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">{{ t('payment:payment_table.caption') }}</caption>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell gysp-table__cell--first gysp-text-align-top" scope="row">{{ t('payment:payment_table.payment_frequency') }}</td>
+              <th class="govuk-table__cell gysp-table__cell--first gysp-text-align-top govuk-!-font-weight-regular" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
               <td class="govuk-table__cell gysp-table__cell--first">
                 {% if details.frequency == 1 %}
                   Weekly
@@ -58,13 +58,13 @@
               </td>
             </tr>
             <tr class="govuk-table__row">
-              <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentOne.label }}</td>
+              <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">{{ paymentSummary.paymentOne.label }}</th>
               <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
               <td class="govuk-table__cell">{{ paymentSummary.paymentOne.amount }}</td>
             </tr>
             {% if paymentSummary.paymentTwo %}
               <tr class="govuk-table__row">
-                <td class="govuk-table__cell" scope="row">{{ paymentSummary.paymentTwo.label }}</td>
+                <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">{{ paymentSummary.paymentTwo.label }}</th>
                 <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
                 <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.amount }}</td>
               </tr>
