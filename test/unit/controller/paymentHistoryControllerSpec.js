@@ -22,7 +22,8 @@ const responseHelper = require('../../../test/lib/responseHelper');
 const claimData = require('../../lib/claimData');
 
 const paymentUri = '/api/payment';
-const updateStatusUri = '/api/payment/update-status';
+const returnPaymentUri = '/api/payment/return-payment';
+const awardStatusUpdateApi = '/api/award/update-status';
 
 const flash = {
   type: '',
@@ -298,17 +299,18 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/change-status');
     });
 
-    it('should return redirect when status update is yes and receive 200 response from API', async () => {
+    it('should return redirect when status update is yes and receive 200 response from payment and award API', async () => {
       nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
-      nock('http://test-url/').put(updateStatusUri).reply(httpStatus.OK);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.OK);
+      nock('http://test-url/').put(awardStatusUpdateApi).reply(httpStatus.OK);
       await controller.postStatusUpdate(yesPostRequest, genericResponse);
       assert.isUndefined(yesPostRequest.session['payment-history']['123']);
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
     });
 
-    it('should return redirect with flash data view when status update is yes but receive 500 response from API', async () => {
+    it('should return redirect with flash data view when status update is yes but receive 500 response from the payment API', async () => {
       nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
-      nock('http://test-url/').put(updateStatusUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
       yesPostRequest.flash = flashMock;
       await controller.postStatusUpdate(yesPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
@@ -316,9 +318,9 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
     });
 
-    it('should return redirect with flash data view when status update is yes but receive 400 response from API', async () => {
+    it('should return redirect with flash data view when status update is yes but receive 400 response from the payment API', async () => {
       nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
-      nock('http://test-url/').put(updateStatusUri).reply(httpStatus.BAD_REQUEST);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.BAD_REQUEST);
       yesPostRequest.flash = flashMock;
       await controller.postStatusUpdate(yesPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
@@ -326,13 +328,46 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
     });
 
-    it('should return redirect with flash data view when status update is yes but receive 404 response from API', async () => {
+    it('should return redirect with flash data view when status update is yes but receive 404 response from the payment API', async () => {
       nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
-      nock('http://test-url/').put(updateStatusUri).reply(httpStatus.NOT_FOUND);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.NOT_FOUND);
       yesPostRequest.flash = flashMock;
       await controller.postStatusUpdate(yesPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, 'Error - payment schedule not found.');
+      assert.equal(flash.message, 'Error - not found.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
+    });
+
+    it('should return redirect with flash data view when status update is yes but receive 500 response from the award API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.OK);
+      nock('http://test-url/').put(awardStatusUpdateApi).reply(httpStatus.INTERNAL_SERVER_ERROR);
+      yesPostRequest.flash = flashMock;
+      await controller.postStatusUpdate(yesPostRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - could not save data.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
+    });
+
+    it('should return redirect with flash data view when status update is yes but receive 400 response from the award API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.OK);
+      nock('http://test-url/').put(awardStatusUpdateApi).reply(httpStatus.BAD_REQUEST);
+      yesPostRequest.flash = flashMock;
+      await controller.postStatusUpdate(yesPostRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - connection refused.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
+    });
+
+    it('should return redirect with flash data view when status update is yes but receive 404 response from the award API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailPaid);
+      nock('http://test-url/').put(returnPaymentUri).reply(httpStatus.OK);
+      nock('http://test-url/').put(awardStatusUpdateApi).reply(httpStatus.NOT_FOUND);
+      yesPostRequest.flash = flashMock;
+      await controller.postStatusUpdate(yesPostRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - not found.');
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/status-update');
     });
   });
