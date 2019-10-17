@@ -25,6 +25,7 @@ module.exports = {
         },
         startDate: '2019-01-01T09:43:11.315Z',
       },
+      status: 'SENT',
     };
   },
   validScheduleFormatterResponse(frequency, nino) {
