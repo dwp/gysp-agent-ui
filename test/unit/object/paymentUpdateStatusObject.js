@@ -3,15 +3,15 @@ const assert = require('assert');
 const object = require('../../../lib/objects/paymentUpdateStatusObject');
 
 const id = 123;
-const inviteKey = 'TES12345678';
+const sentStatus = 'SENT';
 
-const detailsResult = {
+const detailsWithSentStatusResult = {
   id,
-  inviteKey,
+  status: 'RECALLING',
 };
 
 describe('payment status update object formatter', () => {
-  it('should return valid json when object is called ', () => {
-    assert.deepEqual(object.formatter(id, inviteKey), detailsResult);
+  it('should return valid json when object is called with SENT status', () => {
+    assert.deepEqual(object.formatter(id, sentStatus), detailsWithSentStatusResult);
   });
 });

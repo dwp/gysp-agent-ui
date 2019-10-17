@@ -12,6 +12,9 @@
     "statusLink": {
       "returned": {
         "text": "Mark as returned"
+      },
+      "recall": {
+        "text": "Recall payment"
       }
     }
   }

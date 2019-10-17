@@ -32,6 +32,14 @@ const detailFormatted = {
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
       value: { text: 'Sent' },
+      actions: {
+        items: [
+          {
+            href: '/changes-and-enquiries/payment-history/123/status-update',
+            text: 'payment-detail:summary-keys.statusLink.recall.text',
+          },
+        ],
+      },
     },
   ],
   id: 123,
