@@ -8,6 +8,7 @@ const inviteKey = 'TES12345678';
 const detailsResult = {
   id,
   inviteKey,
+  eventName: 'payment-detail:timeline.returned',
 };
 
 describe('payment status update object formatter', () => {
