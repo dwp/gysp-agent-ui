@@ -23,7 +23,7 @@ const awardStatusUpdateApi = 'api/award/update-status';
 const maxDaysAllowedToChangePaidStaus = 14;
 
 // Payment and award statues
-const [PAID, SENT, PAYMENTS_STOPPED] = ['PAID', 'SENT', 'PAYMENTSSTOPPED'];
+const [PAID, SENT, PAYMENTS_STOPPED, RECALLING] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING'];
 
 async function paymentDetail(req, res, id) {
   const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
@@ -38,6 +38,9 @@ function isAllowedToUpdate(status, creditDate) {
     return true;
   }
   if (status === SENT) {
+    return true;
+  }
+  if (status === RECALLING) {
     return true;
   }
   return false;
@@ -104,6 +107,7 @@ function postStatusUpdateErrorHandler(error, req, res) {
 
 function statusUpdateCalls(req, res, id, status) {
   const { inviteKey } = dataStore.get(req, 'awardDetails');
+  const { statusUpdate } = req.body;
   let putPaymentStatusCall = null;
   let putAwardStatusCall = null;
   if (status === PAID) {
@@ -112,7 +116,7 @@ function statusUpdateCalls(req, res, id, status) {
     putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + returnPaymentApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
     putAwardStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + awardStatusUpdateApi, awardUpdateStatusObjectFormatted, 'award', req.user);
   } else {
-    const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, status);
+    const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, status, statusUpdate);
     putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + paymentUpdateStatusApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
   }
   return {
@@ -128,7 +132,7 @@ async function postStatusUpdate(req, res) {
   const statusDetail = paymentStatusUpdate.formatter(detail, id);
   const errors = formValidator.updatePaymentStatus(input, statusDetail);
   if (Object.keys(errors).length === 0) {
-    if (input.statusUpdate === 'yes') {
+    if (input.statusUpdate === 'yes' || detail.status === RECALLING) {
       const { putPaymentStatusCall, putAwardStatusCall } = statusUpdateCalls(req, res, id, detail.status);
       try {
         await request(putPaymentStatusCall);

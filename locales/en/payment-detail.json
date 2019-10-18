@@ -15,6 +15,9 @@
       },
       "recall": {
         "text": "Recall payment"
+      },
+      "recalling": {
+        "text": "Update"
       }
     }
   },
