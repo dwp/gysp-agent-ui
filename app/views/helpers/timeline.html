@@ -14,7 +14,11 @@
 	{% else %}
 		<ol class="dwp-timeline">
 			<li class="dwp-timeline__entry">
-				<h3 class="dwp-timeline__title govuk-!-margin-0">{{ t(details.empty) }}</h3>
+				{% if details.unavailable %}
+					<h3 class="dwp-timeline__title dwp-timeline__title--muted govuk-!-margin-0">{{ t(details.unavailable) }}</h3>
+				{% else %}
+					<h3 class="dwp-timeline__title govuk-!-margin-0">{{ t(details.empty) }}</h3>
+				{% endif %}
 			</li>
 		</ol>
 	{% endif %}
