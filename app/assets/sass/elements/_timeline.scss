@@ -23,6 +23,10 @@
   .dwp-timeline__title {
     display: block;
     font-weight: 700;
+
+    &--muted {
+      color: $govuk-secondary-text-colour;
+    }
   }
 
   .dwp-timeline__author,

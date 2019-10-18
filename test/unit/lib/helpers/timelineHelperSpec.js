@@ -17,9 +17,12 @@ const page = 0;
 const validRequest = { session: { awardDetails: claimData.validClaim() } };
 
 const auditApiUri = '/api/event';
+const auditSearchApiUri = '/api/event/search';
 const itemId = 'BLOG123456';
+const subId = '1234';
 const contactCategory = 'CONTACT';
 const paymentCategory = 'PAYMENT';
+const paymentDetailCategory = 'PAYMENTDETAIL';
 const fakeCategory = 'FAKE';
 
 const validResponse = [
@@ -43,6 +46,11 @@ const validContactJson = {
   empty: 'contact-details:timeline.empty',
 };
 
+const validPaymentDetailResponse = [
+  { eventName: 'SENT', eventDate: '2019-07-22T13:26:37.172+0000' },
+  { eventName: 'RETURNED', eventDate: '2019-07-22T13:26:37.172+0000' },
+];
+
 const validContactNoListJson = {
   list: null,
   header: 'contact-details:timeline.header',
@@ -58,10 +66,31 @@ const validPaymentJson = {
   empty: 'payment:timeline.empty',
 };
 
+const validPaymentDetailJson = {
+  list: [
+    { date: '22 July 2019', title: 'Sent' },
+    { date: '22 July 2019', title: 'Returned' },
+  ],
+  header: 'payment-status:timeline.header',
+  empty: 'payment-status:timeline.empty',
+};
+
 const validPaymentNoListJson = {
   list: null,
   header: 'payment:timeline.header',
   empty: 'payment:timeline.empty',
+};
+
+const validPaymentDetailNoListJson = {
+  list: null,
+  header: 'payment-status:timeline.header',
+  empty: 'payment-status:timeline.empty',
+};
+
+const timelineUnavailableJson = {
+  list: null,
+  header: 'payment-status:timeline.header',
+  unavailable: 'timeline.unavailable',
 };
 
 const invalidJson = {
@@ -93,13 +122,17 @@ describe('timeline helper', () => {
     });
 
     it('should return formatted timeline with no list', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${contactCategory}`).query({ page, limit }).reply(httpStatus.OK, {});
+      nock('http://test-url/').get(auditApiUri).query({
+        itemId, category: contactCategory, page, limit,
+      }).reply(httpStatus.OK, {});
       const response = await helper.getTimeline(validRequest, genericResponse, contactCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validContactNoListJson));
     });
 
     it('should return formatted timeline with no list when response is 404', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${contactCategory}`).query({ page, limit }).reply(httpStatus.NOT_FOUND, validResponse);
+      nock('http://test-url/').get(auditApiUri).query({
+        itemId, category: contactCategory, page, limit,
+      }).reply(httpStatus.NOT_FOUND);
       const response = await helper.getTimeline(validRequest, genericResponse, contactCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validContactNoListJson));
     });
@@ -123,13 +156,17 @@ describe('timeline helper', () => {
     });
 
     it('should return formatted timeline with no list', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${paymentCategory}`).query({ page, limit }).reply(httpStatus.OK, {});
+      nock('http://test-url/').get(`${auditApiUri}`).query({
+        itemId, category: paymentCategory, page, limit,
+      }).reply(httpStatus.OK, {});
       const response = await helper.getTimeline(validRequest, genericResponse, paymentCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validPaymentNoListJson));
     });
 
     it('should return formatted timeline with no list when response is 404', async () => {
-      nock('http://test-url/').get(`${auditApiUri}/${paymentCategory}`).query({ page, limit }).reply(httpStatus.NOT_FOUND, validPaymentResponse);
+      nock('http://test-url/').get(`${auditApiUri}`).query({
+        itemId, category: paymentCategory, page, limit,
+      }).reply(httpStatus.NOT_FOUND);
       const response = await helper.getTimeline(validRequest, genericResponse, paymentCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(validPaymentNoListJson));
     });
@@ -141,6 +178,40 @@ describe('timeline helper', () => {
       const response = await helper.getTimeline(validRequest, genericResponse, fakeCategory);
       assert.equal(JSON.stringify(response), JSON.stringify(invalidJson));
       assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get FAKE timeline');
+    });
+  });
+  describe('payment details', () => {
+    it('should return formatted timeline with list', async () => {
+      nock('http://test-url/').get(auditSearchApiUri).query({
+        subId, category: paymentDetailCategory, page, limit,
+      }).reply(httpStatus.OK, validPaymentDetailResponse);
+      const response = await helper.getTimeline(validRequest, genericResponse, paymentDetailCategory, subId);
+      assert.equal(JSON.stringify(response), JSON.stringify(validPaymentDetailJson));
+    });
+
+    it('should return formatted timeline with no list', async () => {
+      nock('http://test-url/').get(auditSearchApiUri).query({
+        subId, category: paymentDetailCategory, page, limit,
+      }).reply(httpStatus.OK, {});
+      const response = await helper.getTimeline(validRequest, genericResponse, paymentDetailCategory, subId);
+      assert.equal(JSON.stringify(response), JSON.stringify(validPaymentDetailNoListJson));
+    });
+
+    it('should return formatted timeline with no list when response is 404', async () => {
+      nock('http://test-url/').get(auditSearchApiUri).query({
+        subId, category: paymentDetailCategory, page, limit,
+      }).reply(httpStatus.NOT_FOUND);
+      const response = await helper.getTimeline(validRequest, genericResponse, paymentDetailCategory, subId);
+      assert.equal(JSON.stringify(response), JSON.stringify(validPaymentDetailNoListJson));
+    });
+
+    it('should return formatted timeline with no list when response is 400', async () => {
+      nock('http://test-url/').get(`${auditSearchApiUri}`).query({
+        subId, category: paymentDetailCategory, page, limit,
+      }).reply(httpStatus.BAD_REQUEST, {});
+      const response = await helper.getTimeline(validRequest, genericResponse, paymentDetailCategory, subId);
+      assert.equal(JSON.stringify(response), JSON.stringify(timelineUnavailableJson));
+      assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get PAYMENTDETAIL timeline');
     });
   });
 });

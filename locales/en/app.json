@@ -6,5 +6,8 @@
   },
   "link": {
     "back": "Back"
+  },
+  "timeline": {
+    "unavailable": "Unable to load changes"
   }
 }

@@ -20,5 +20,10 @@
         "required": "Select 'yes' if you are trying to recall this payment"
       }
     }
+  },
+  "timeline": {
+    "header": "Status changes",
+    "empty": "No changes made",
+    "returned": "Payment returned - payments stopped"
   }
 }

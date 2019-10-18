@@ -12,6 +12,7 @@ const awardUpdateStatusObject = require('../../../../lib/objects/awardUpdateStat
 const formValidator = require('../../../../lib/formValidator');
 const deleteSession = require('../../../../lib/deleteSession');
 const dateHelper = require('../../../../lib/dateHelper');
+const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 
 const activeSecondaryNavigationSection = 'payment';
 const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
@@ -49,10 +50,12 @@ async function getPaymentHistoryDetail(req, res) {
     const { id } = req.params;
     const detail = await paymentDetail(req, res, id);
     const paymentHistoryDetail = paymentHistoryDetailViewObject.formatter(detail, id);
+    const timelineDetails = await timelineHelper.getTimeline(req, res, 'PAYMENTDETAIL', id);
     res.render('pages/changes-enquiries/payment-history/detail', {
       keyDetails,
       secondaryNavigationList,
       paymentHistoryDetail,
+      timelineDetails,
     });
   } catch (err) {
     const traceID = requestHelper.getTraceID(err);
