@@ -49,6 +49,9 @@ const validContactJson = {
 const validPaymentDetailResponse = [
   { eventName: 'SENT', eventDate: '2019-07-22T13:26:37.172+0000' },
   { eventName: 'RETURNED', eventDate: '2019-07-22T13:26:37.172+0000' },
+  { eventName: 'RECALLING', eventDate: '2019-07-22T13:26:37.172+0000' },
+  { eventName: 'RECALLED', eventDate: '2019-07-22T13:26:37.172+0000' },
+  { eventName: 'PAID', eventDate: '2019-07-22T13:26:37.172+0000' },
 ];
 
 const validContactNoListJson = {
@@ -70,6 +73,9 @@ const validPaymentDetailJson = {
   list: [
     { date: '22 July 2019', title: 'Sent' },
     { date: '22 July 2019', title: 'Returned' },
+    { date: '22 July 2019', title: 'Recalling' },
+    { date: '22 July 2019', title: 'Recalled' },
+    { date: '22 July 2019', title: 'Paid' },
   ],
   header: 'payment-status:timeline.header',
   empty: 'payment-status:timeline.empty',

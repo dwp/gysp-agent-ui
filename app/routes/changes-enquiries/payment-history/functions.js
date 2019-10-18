@@ -116,7 +116,7 @@ function statusUpdateCalls(req, res, id, status) {
     putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + returnPaymentApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
     putAwardStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + awardStatusUpdateApi, awardUpdateStatusObjectFormatted, 'award', req.user);
   } else {
-    const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, status, statusUpdate);
+    const paymentUpdateStatusObjectFormatted = paymentUpdateStatusObject.formatter(id, status, statusUpdate, inviteKey);
     putPaymentStatusCall = requestHelper.generatePutCall(res.locals.agentGateway + paymentUpdateStatusApi, paymentUpdateStatusObjectFormatted, 'payment', req.user);
   }
   return {
