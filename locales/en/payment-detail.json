@@ -22,6 +22,9 @@
     }
   },
   "timeline": {
-    "returned": "Payment returned - payments stopped"
+    "returned": "Payment returned - payments stopped",
+    "recalling": "Recalling payment",
+    "recalled-successful": "Recall successful",
+    "recalled-unsuccessful": "Recall unsuccessful"
   }
 }
