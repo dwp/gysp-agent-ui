@@ -1,3 +1,21 @@
+<a name="5.16.0"></a>
+# [5.16.0](https://github.com/dwp/gysp-agent-ui/compare/v5.15.0...v5.16.0) (2019-10-22)
+
+
+### Bug Fixes
+
+* **a11y:** fixed some a11y issues ([e07c550](https://github.com/dwp/gysp-agent-ui/commit/e07c550))
+
+
+### Features
+
+* **payment-status:** ability to set the payment status as recalling ([d796898](https://github.com/dwp/gysp-agent-ui/commit/d796898))
+* **payment-status:** status update RECALLING to RECALLED or PAID ([d04c4fb](https://github.com/dwp/gysp-agent-ui/commit/d04c4fb))
+* **timeline:** payment detail timeline for returned status ([58db641](https://github.com/dwp/gysp-agent-ui/commit/58db641))
+* **timeline:** update status timeline for recalling, recall ([af644ca](https://github.com/dwp/gysp-agent-ui/commit/af644ca))
+
+
+
 <a name="5.15.0"></a>
 # [5.15.0](https://github.com/dwp/gysp-agent-ui/compare/v5.14.1...v5.15.0) (2019-10-10)
 
