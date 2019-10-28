@@ -72,7 +72,7 @@
     "chai-as-promised": "7.1.1",
     "conventional-changelog-cli": "2.0.25",
     "del": "5.1.0",
-    "eslint": "6.5.1",
+    "eslint": "6.6.0",
     "html5shiv": "3.7.3",
     "husky": "3.0.9",
     "jquery": "3.4.1",
