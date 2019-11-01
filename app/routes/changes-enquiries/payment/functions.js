@@ -4,6 +4,7 @@ const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
+const dataStore = require('../../../../lib/dataStore');
 
 const changeCircumstancesPaymentObject = require('../../../../lib/objects/changeCircumstancesPaymentObject');
 const changeCircumstancesPaymentSummaryObject = require('../../../../lib/objects/changeCircumstancesPaymentSummaryObject');
@@ -69,6 +70,17 @@ function requestRecentPayments(res, req) {
   });
 }
 
+function countPaymentsByStatus(payments, status) {
+  if (payments && payments.recentPayments) {
+    const filtered = payments.recentPayments.filter((payment) => payment.status === status);
+    if (filtered) {
+      return filtered.length;
+    }
+    return 0;
+  }
+  return 0;
+}
+
 async function getPaymentOverview(req, res) {
   if (req.session.searchedNino) {
     if (req.session['payment-frequency']) {
@@ -88,6 +100,8 @@ async function getPaymentOverview(req, res) {
       const details = changeCircumstancesPaymentObject.formatter(awardDetails);
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(paymentDetails);
       const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPaymentsDetails);
+      const numberOfReturnedPayments = countPaymentsByStatus(recentPaymentsDetails, 'RETURNED');
+      dataStore.save(req, 'number-returned-payments', numberOfReturnedPayments);
       res.render('pages/changes-enquiries/payment/index', {
         details,
         paymentSummary,

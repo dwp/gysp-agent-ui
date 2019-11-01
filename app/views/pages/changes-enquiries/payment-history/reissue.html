@@ -1,0 +1,31 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("reissue-payment:header") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/payment-history/" + id,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/payment-history/{{ id }}/reissue" autocomplete="off">
+    <h1 class="govuk-heading-l">{{ t("reissue-payment:header") }}</h1>
+    <h2 class="govuk-heading-m">{{ t("reissue-payment:payment-details.header") }}</h2>
+    {{ govukSummaryList({
+      rows: details.paymentDetailsSummaryRows
+    }) }}
+    <h2 class="govuk-heading-m">{{ t("reissue-payment:account-details.header") }}</h2>
+    {{ govukSummaryList({
+      rows: details.accountDetailsSummaryRows
+    }) }}
+    {{ govukButton({
+      text: t("app:button.confirm")
+    }) }}
+  </form>
+{% endblock %}

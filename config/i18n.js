@@ -19,6 +19,7 @@ module.exports = {
       'payment-status',
       'personal',
       'date-of-death',
+      'reissue-payment',
       'verify-date-of-death',
       'verified-date-of-death',
     ],

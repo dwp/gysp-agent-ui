@@ -18,6 +18,9 @@
       },
       "recalling": {
         "text": "Update"
+      },
+      "reissue": {
+        "text": "Reissue payment"
       }
     }
   },
@@ -25,6 +28,7 @@
     "returned": "Payment returned - payments stopped",
     "recalling": "Recalling payment",
     "recalled-successful": "Recall successful",
-    "recalled-unsuccessful": "Recall unsuccessful"
+    "recalled-unsuccessful": "Recall unsuccessful",
+    "reissueing": "Payments started again"
   }
 }

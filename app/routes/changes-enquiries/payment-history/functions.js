@@ -14,16 +14,20 @@ const deleteSession = require('../../../../lib/deleteSession');
 const dateHelper = require('../../../../lib/dateHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 
+const reissuePaymentViewObject = require('../../../../lib/objects/view/reissuePaymentObject');
+const reissuePaymentApiObject = require('../../../../lib/objects/api/reissuePaymentObject');
+
 const activeSecondaryNavigationSection = 'payment';
 const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const returnPaymentApi = 'api/payment/return-payment';
+const reissuePaymentApi = 'api/payment/reissue-payment';
 const paymentUpdateStatusApi = 'api/payment/update-status';
 const awardStatusUpdateApi = 'api/award/update-status';
 const maxDaysAllowedToChangePaidStaus = 14;
 
 // Payment and award statues
-const [PAID, SENT, PAYMENTS_STOPPED, RECALLING] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING'];
+const [PAID, SENT, PAYMENTS_STOPPED, RECALLING, RETURNED, INPAYMENT] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING', 'RETURNED', 'INPAYMENT'];
 
 async function paymentDetail(req, res, id) {
   const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
@@ -125,6 +129,13 @@ function statusUpdateCalls(req, res, id, status) {
   };
 }
 
+function startPayments(req, res) {
+  const { inviteKey } = dataStore.get(req, 'awardDetails');
+  const startPaymentsObject = awardUpdateStatusObject.formatter(INPAYMENT, inviteKey);
+  const startPaymentsCall = requestHelper.generatePutCall(res.locals.agentGateway + awardStatusUpdateApi, startPaymentsObject, 'award', req.user);
+  return request(startPaymentsCall);
+}
+
 async function postStatusUpdate(req, res) {
   const { id } = req.params;
   const input = req.body;
@@ -159,6 +170,84 @@ async function postStatusUpdate(req, res) {
   }
 }
 
+function isAllowedToBeReissued(status) {
+  if (status === RETURNED) {
+    return true;
+  }
+  return false;
+}
+
+async function getReissuePayment(req, res) {
+  const { id } = req.params;
+  try {
+    const awardDetails = dataStore.get(req, 'awardDetails');
+    const keyDetails = keyDetailsHelper.formatter(awardDetails);
+    const detail = await paymentDetail(req, res, id);
+    if (!isAllowedToBeReissued(detail.status)) {
+      req.flash('error', 'Error - this payment cannot be reissued.');
+      res.redirect(`/changes-and-enquiries/payment-history/${id}`);
+    } else {
+      const details = reissuePaymentViewObject.formatter(detail, awardDetails);
+      res.render('pages/changes-enquiries/payment-history/reissue', {
+        keyDetails,
+        details,
+        id,
+      });
+    }
+  } catch (err) {
+    const traceID = requestHelper.getTraceID(err);
+    const getPath = requestHelper.getPath(err);
+    requestHelper.loggingHelper(err, getPath, traceID, res.locals.logger);
+    res.render('pages/error', { status: '- There are no payment details.' });
+  }
+}
+
+function postReissuePaymentErrorHandler(error, req, res) {
+  const traceID = requestHelper.getTraceID(error);
+  const pathUri = requestHelper.getPath(error);
+  requestHelper.loggingHelper(error, pathUri, traceID, res.locals.logger);
+  if (error.statusCode === httpStatus.BAD_REQUEST) {
+    req.flash('error', 'Error - connection refused.');
+  } else if (error.statusCode === httpStatus.NOT_FOUND) {
+    req.flash('error', 'Error - not found.');
+  } else {
+    req.flash('error', 'Error - could not save data.');
+  }
+}
+
+async function postReissuePayment(req, res) {
+  try {
+    const { id } = req.params;
+    const detail = await paymentDetail(req, res, id);
+    if (!isAllowedToBeReissued(detail.status)) {
+      req.flash('error', 'Error - this payment cannot be reissued.');
+      res.redirect(`/changes-and-enquiries/payment-history/${id}`);
+    } else {
+      const awardDetails = dataStore.get(req, 'awardDetails');
+      const reissuePaymentApiObjectFormatted = reissuePaymentApiObject.formatter(id, awardDetails);
+      const putReissueCall = requestHelper.generatePutCall(res.locals.agentGateway + reissuePaymentApi, reissuePaymentApiObjectFormatted, 'payment', req.user);
+      try {
+        await request(putReissueCall);
+        if (dataStore.get(req, 'number-returned-payments') <= 1) {
+          await startPayments(req, res);
+        }
+        deleteSession.deletePaymentDetail(req, id);
+        res.redirect('/changes-and-enquiries/payment');
+      } catch (err) {
+        postReissuePaymentErrorHandler(err, req, res);
+        res.redirect(`/changes-and-enquiries/payment-history/${id}/reissue`);
+      }
+    }
+  } catch (err) {
+    const traceID = requestHelper.getTraceID(err);
+    const getPath = requestHelper.getPath(err);
+    requestHelper.loggingHelper(err, getPath, traceID, res.locals.logger);
+    res.render('pages/error', { status: '- There are no payment details.' });
+  }
+}
+
 module.exports.getPaymentHistoryDetail = getPaymentHistoryDetail;
 module.exports.getStatusUpdate = getStatusUpdate;
 module.exports.postStatusUpdate = postStatusUpdate;
+module.exports.getReissuePayment = getReissuePayment;
+module.exports.postReissuePayment = postReissuePayment;
