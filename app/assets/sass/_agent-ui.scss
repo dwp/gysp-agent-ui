@@ -100,3 +100,11 @@
         }
     }
 }
+
+.gysp-bank-building-table {
+    @include govuk-media-query($from: tablet) {
+        &__heading {
+            width: 44.99%;
+        }
+    }
+}
