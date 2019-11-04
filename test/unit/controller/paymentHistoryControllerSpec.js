@@ -23,6 +23,7 @@ const claimData = require('../../lib/claimData');
 
 const paymentUri = '/api/payment';
 const returnPaymentUri = '/api/payment/return-payment';
+const reissuePaymentApi = '/api/payment/reissue-payment';
 const paymentUpdateStatusApi = '/api/payment/update-status';
 const awardStatusUpdateApi = '/api/award/update-status';
 
@@ -33,18 +34,6 @@ const flash = {
 const flashMock = (type, message) => {
   flash.type = type;
   flash.message = message;
-};
-
-const paymentDetailReturned = {
-  status: 'RETURNED',
-  accountName: 'Mr R H Smith',
-  accountNumber: '98765432',
-  sortCode: '400500',
-  referenceNumber: null,
-  totalAmount: 100,
-  startDate: '2019-07-30T00:00:00.000+0000',
-  endDate: '2019-08-27T00:00:00.000+0000',
-  creditDate: creditDate5DaysAgo,
 };
 
 const paymentDetail = {
@@ -132,8 +121,7 @@ const paymentDetailWithReferenceNumberFormatted = {
 
 const paymentDetailWithReferenceNumberFormattedNotPaid = JSON.parse(JSON.stringify(paymentDetailWithReferenceNumberFormatted));
 
-const paymentDetailPaid = {
-  status: 'PAID',
+const baseResponse = {
   accountName: 'Mr R H Smith',
   accountNumber: '98765432',
   sortCode: '400500',
@@ -141,32 +129,11 @@ const paymentDetailPaid = {
   totalAmount: 100,
   startDate: '2019-07-30T23:00:00.000+0000',
   endDate: '2019-08-27T23:00:00.000+0000',
-  creditDate: creditDate5DaysAgo,
 };
-
-const paymentDetailSent = {
-  status: 'SENT',
-  accountName: 'Mr R H Smith',
-  accountNumber: '98765432',
-  sortCode: '400500',
-  referenceNumber: null,
-  totalAmount: 100,
-  startDate: '2019-07-30T23:00:00.000+0000',
-  endDate: '2019-08-27T23:00:00.000+0000',
-  creditDate: creditDate5DaysAgo,
-};
-
-const paymentDetailRecalling = {
-  status: 'RECALLING',
-  accountName: 'Mr R H Smith',
-  accountNumber: '98765432',
-  sortCode: '400500',
-  referenceNumber: null,
-  totalAmount: 100,
-  startDate: '2019-07-30T23:00:00.000+0000',
-  endDate: '2019-08-27T23:00:00.000+0000',
-  creditDate: creditDate5DaysAgo,
-};
+const paymentDetailPaid = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'PAID', creditDate: creditDate5DaysAgo });
+const paymentDetailSent = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'SENT', creditDate: creditDate5DaysAgo });
+const paymentDetailRecalling = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'RECALLING', creditDate: creditDate5DaysAgo });
+const paymentDetailReturned = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'RETURNED', creditDate: creditDate5DaysAgo });
 
 const paymentDetailPaidFormattedAfter14Days = {
   status: 'Paid',
@@ -195,6 +162,55 @@ const paymentDetailPaidFormatted = {
   changeType: 'returned',
 };
 
+const reissuePaymentDetailsFormatted = {
+  accountDetailsSummaryRows: [
+    {
+      key: {
+        classes: 'govuk-!-width-one-third',
+        text: 'reissue-payment:account-details.account-holder',
+      },
+      value: { text: 'Joe Bloggs' },
+    }, {
+      key: {
+        classes: 'govuk-!-width-one-third',
+        text: 'reissue-payment:account-details.account-number',
+      },
+      value: { text: '12345678' },
+    }, {
+      key: {
+        classes: 'govuk-!-width-one-third',
+        text: 'reissue-payment:account-details.sort-code',
+      },
+      value: { text: '11 22 33' },
+    }, {
+      key: {
+        classes: 'govuk-!-width-one-third',
+        text: 'reissue-payment:account-details.roll-number',
+      },
+      value: { text: '231231232' },
+    },
+  ],
+  paymentDetailsSummaryRows: [
+    {
+      key: {
+        classes: 'govuk-!-width-one-third govuk-!-font-weight-bold',
+        text: 'reissue-payment:payment-details.total',
+      },
+      value: {
+        classes: 'govuk-!-font-weight-bold',
+        text: '£100.00',
+      },
+    }, {
+      key: {
+        classes: 'govuk-!-width-one-third govuk-!-font-weight-regular',
+        text: 'reissue-payment:payment-details.period',
+      },
+      value: { text: '31/07/2019 to 28/08/2019' },
+    },
+  ],
+};
+
+
 const baseRequest = {
   session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, body: {},
 };
@@ -204,6 +220,7 @@ let validPaymentStatusRequest = { session: { awardDetails: claimData.validClaim(
 const validPaymentStatusRequest2 = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
 const validPaymentStatusRequestSent = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
 const validPaymentStatusRequestRecalling = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+let validReissueRequest = { };
 
 const emptyPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: {} });
 const blankPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: '' } });
@@ -216,6 +233,9 @@ const yesPostRequestPaid = Object.assign(JSON.parse(JSON.stringify(baseRequest))
 yesPostRequestPaid.params.id = 1111;
 
 describe('Payment history controller', () => {
+  afterEach(() => {
+    nock.cleanAll();
+  });
   describe('getPaymentHistoryDetail function (GET /changes-and-enquiries/payment-history/detail)', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -580,6 +600,118 @@ describe('Payment history controller', () => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/1111/status-update');
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/payment/update-status');
       });
+    });
+  });
+
+  describe('getReissuePayment function (GET /changes-and-enquiries/payment-history/:id/reissue)', () => {
+    beforeEach(() => {
+      genericResponse = responseHelper.genericResponse();
+      genericResponse.locals = responseHelper.localResponse(genericResponse);
+      validReissueRequest = {
+        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+      };
+    });
+
+    it('should return view when receive 500 response from API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- There are no payment details.');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/payment/123');
+    });
+
+    it('should return view when receive 404 response from API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.NOT_FOUND, {});
+      await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- There are no payment details.');
+      assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/payment/123');
+    });
+
+    it('should return view when receive 200 response from API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/reissue');
+      assert.deepEqual(genericResponse.data.details, reissuePaymentDetailsFormatted);
+    });
+
+    it('should allow status update when status is RETURNED', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/reissue');
+    });
+
+    it('should return redirect and display alert when payment status is not updatable - STATUS', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailSent);
+      validReissueRequest.params.id = 12345678;
+      await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+  });
+
+  describe('postReissuePayment function (POST /changes-and-enquiries/payment-history/:id/reissue)', () => {
+    beforeEach(() => {
+      genericResponse = responseHelper.genericResponse();
+      genericResponse.locals = responseHelper.localResponse(genericResponse);
+      validReissueRequest = {
+        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+      };
+    });
+    it('should return redirect and display alert when payment status is not updatable - STATUS', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailSent);
+      validReissueRequest.params.id = 12345678;
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+
+    it('should return redirect when receive 200 response from payment API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      nock('http://test-url/').put(reissuePaymentApi).reply(httpStatus.OK);
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.isUndefined(validReissueRequest.session['payment-history']['123']);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
+    });
+
+    it('should return redirect with flash data view when receive 500 response from the payment API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      nock('http://test-url/').put(reissuePaymentApi).reply(httpStatus.INTERNAL_SERVER_ERROR);
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - could not save data.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/reissue');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - undefined - Requested on /api/payment/reissue-payment');
+    });
+
+    it('should return redirect with flash data view when receive 400 response from the payment API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      nock('http://test-url/').put(reissuePaymentApi).reply(httpStatus.BAD_REQUEST);
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - connection refused.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/reissue');
+      assert.equal(genericResponse.locals.logMessage, '400 - 400 - undefined - Requested on /api/payment/reissue-payment');
+    });
+
+    it('should return redirect with flash data view when receive 404 response from the payment API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.OK, paymentDetailReturned);
+      nock('http://test-url/').put(reissuePaymentApi).reply(httpStatus.NOT_FOUND);
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - not found.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/123/reissue');
+      assert.equal(genericResponse.locals.logMessage, '404 - 404 - undefined - Requested on /api/payment/reissue-payment');
+    });
+
+    it('should return view when receive 500 response from payment API', async () => {
+      nock('http://test-url/').get(`${paymentUri}/123`).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- There are no payment details.');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/payment/123');
     });
   });
 });

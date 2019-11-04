@@ -1,0 +1,15 @@
+{
+  "header": "Reissue payment",
+  "payment-details": {
+    "header": "Payment details",
+    "total": "Total",
+    "period": "Period"
+  },
+  "account-details": {
+    "header": "Account the payment is going to",
+    "account-holder": "Account holder",
+    "account-number": "Account number",
+    "sort-code": "Sort code",
+    "roll-number": "Roll number"
+  }
+}

@@ -22,6 +22,7 @@ const paidStatusBefore14Days = Object.assign(JSON.parse(JSON.stringify(paymentDe
 const paidStatusAfter14Days = Object.assign(JSON.parse(JSON.stringify(paymentDetailBase)), { status: 'PAID', creditDate: creditDate15DaysAgo });
 const sentStatus = Object.assign(JSON.parse(JSON.stringify(paymentDetailBase)), { status: 'SENT', creditDate: creditDate15DaysAgo });
 const recallingStatus = Object.assign(JSON.parse(JSON.stringify(paymentDetailBase)), { status: 'RECALLING', creditDate: creditDate15DaysAgo });
+const returnedStatus = Object.assign(JSON.parse(JSON.stringify(paymentDetailBase)), { status: 'RETURNED', creditDate: creditDate15DaysAgo });
 
 const formattedBase = {
   accountHolder: 'Mr R H Smith',
@@ -68,6 +69,15 @@ recallingStatusFormatted.detailsSummaryRows[2].actions = {
   }],
 };
 
+const returnedStatusFormatted = Object.assign(JSON.parse(JSON.stringify(formattedBase)), { status: 'Returned' });
+returnedStatusFormatted.detailsSummaryRows[2].value.text = 'Returned';
+returnedStatusFormatted.detailsSummaryRows[2].actions = {
+  items: [{
+    href: '/changes-and-enquiries/payment-history/1/reissue',
+    text: 'payment-detail:summary-keys.statusLink.reissue.text',
+  }],
+};
+
 describe('frequency schedule object formatter', () => {
   it('should return valid json when object is called with PAID status and link before 14 days after credit day', (done) => {
     const json = object.formatter(paidStatusBefore14Days, id);
@@ -87,6 +97,11 @@ describe('frequency schedule object formatter', () => {
   it('should return valid json when object is called with RECALLING status', (done) => {
     const json = object.formatter(recallingStatus, id);
     assert.deepEqual(json, recallingStatusFormatted);
+    done();
+  });
+  it('should return valid json when object is called with RETURNED status', (done) => {
+    const json = object.formatter(returnedStatus, id);
+    assert.deepEqual(json, returnedStatusFormatted);
     done();
   });
 });
