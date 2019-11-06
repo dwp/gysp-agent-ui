@@ -1,3 +1,15 @@
+<a name="5.17.0"></a>
+# [5.17.0](https://github.com/dwp/gysp-agent-ui/compare/v5.16.0...v5.17.0) (2019-11-06)
+
+
+### Features
+
+* **payment:** add reissued status ([b602f66](https://github.com/dwp/gysp-agent-ui/commit/b602f66))
+* **payment:** reissue payment ([a34af90](https://github.com/dwp/gysp-agent-ui/commit/a34af90))
+* **payment:** reissue status for timeline ([a762ef0](https://github.com/dwp/gysp-agent-ui/commit/a762ef0))
+
+
+
 <a name="5.16.0"></a>
 # [5.16.0](https://github.com/dwp/gysp-agent-ui/compare/v5.15.0...v5.16.0) (2019-10-22)
 
