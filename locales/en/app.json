@@ -2,12 +2,21 @@
   "service_name": "DWP",
   "button": {
     "save": "Save",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "continue": "Continue"
   },
   "link": {
     "back": "Back"
   },
   "timeline": {
     "unavailable": "Unable to load changes"
+  },
+  "errors": {
+    "api": {
+      "not-found": "There has been a problem - __SERVICE__ not found. This has been logged.",
+      "bad-request": "There has been a problem with the service, please go back and try again. This has been logged.",
+      "internal-server-error": "There has been a problem with the service, please try again. This has been logged.",
+      "no-status": "There is a problem with the service. This has been logged. Please try again later."
+    }
   }
 }

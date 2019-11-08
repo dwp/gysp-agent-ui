@@ -13,6 +13,12 @@ const navigationData = require('../../lib/navigationData');
 let testPromise;
 let genericResponse = {};
 
+let flash = { type: '', message: '' };
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
+
 const enterDateOfDeathRequest = { session: { awardDetails: claimData.validClaim() } };
 const enterDateOfDeathResponse = {
   keyDetails: {
@@ -47,13 +53,7 @@ const validPostRequest = {
   body: {
     dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'V',
   },
-};
-const validPostNVRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
-  session: { awardDetails: claimData.validClaim() },
-  body: {
-    dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'NV',
-  },
+  flash: flashMock,
 };
 
 const validYesPostRequest = {
@@ -72,6 +72,37 @@ const validNoPostRequest = {
   },
 };
 
+const paymentRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+      },
+    },
+  },
+  flash: flashMock,
+};
+
+const recordDeathRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+      },
+      'death-payment': {
+        amount: 100.0,
+        startDate: '2019-01-01T00:00:00.000Z',
+        endDate: '2019-01-01T00:00:00.000Z',
+      },
+    },
+  },
+  flash: flashMock,
+};
+
 const emptyAddVerifedDeathPostRequest = { session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, body: {} };
 const validAddVerifedDeathPostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
@@ -81,14 +112,38 @@ const validAddVerifedDeathPostRequest = {
   },
 };
 
+const deathArrearsResponses = {
+  overpayment: {
+    amount: -100.0,
+    endDate: '2019-11-06T14:00:16.444Z',
+    startDate: '2020-13-06T14:00:16.444Z',
+  },
+  arrears: {
+    amount: 102.11,
+    endDate: '2019-11-06T14:00:16.444Z',
+    startDate: '2020-13-06T14:00:16.444Z',
+  },
+  nothingOwed: {
+    amount: 0,
+    endDate: null,
+    startDate: null,
+  },
+  cannotCalculate: {
+    amount: null,
+    endDate: null,
+    startDate: null,
+  },
+};
+
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const deathDetailsUpdateApiUri = '/api/award/record-death';
+const deathArrearsApiUri = '/api/payment/death-arrears';
 
 const errorMessages = {
-  400: 'Error - connection refused.',
-  404: 'Error - award not found.',
-  500: 'Error - could not save data.',
+  400: 'app:errors.api.bad-request',
+  404: 'app:errors.api.not-found',
+  500: 'app:errors.api.internal-server-error',
 };
 
 describe('Change circumstances date of death controller ', () => {
@@ -111,6 +166,8 @@ describe('Change circumstances date of death controller ', () => {
         resolve();
       }, 30);
     });
+
+    flash = { type: '', message: '' };
   });
   afterEach(() => {
     nock.cleanAll();
@@ -134,49 +191,96 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+    it('should save to session and redirect to next screen when post is valid', () => {
       controller.postAddDateDeath(validPostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date');
+        assert.equal(validPostRequest.session.death['date-of-death'].dateYear, validPostRequest.body.dateYear);
+        assert.equal(validPostRequest.session.death['date-of-death'].dateMonth, validPostRequest.body.dateMonth);
+        assert.equal(validPostRequest.session.death['date-of-death'].dateDay, validPostRequest.body.dateDay);
+        assert.equal(validPostRequest.session.death['date-of-death'].verification, validPostRequest.body.verification);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
       });
     });
+  });
 
-    it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
-      controller.postAddDateDeath(validPostRequest, genericResponse);
+  describe(' getDeathPayment function (GET /changes-and-enquiries/personal/death/payment)', () => {
+    it('should return view with error when API returns 400 state', () => {
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.BAD_REQUEST, {});
+      controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[404]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date');
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/payment/death-arrears');
+        assert.equal(genericResponse.data.globalError, errorMessages[400]);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
       });
     });
 
     it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      controller.postAddDateDeath(validPostRequest, genericResponse);
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/record-death');
+        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/payment/death-arrears');
         assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
       });
     });
 
-    it('should return a redirect when API returns 200 state with valid bank post', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
-      controller.postAddDateDeath(validPostRequest, genericResponse);
+    it('should display overpayment result when requested and API returns 200 with negative values', () => {
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.overpayment);
+      controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/overpayment');
       });
     });
 
-    it('should return a redirect when API returns 200 state with NV validation', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
-      controller.postAddDateDeath(validPostNVRequest, genericResponse);
+    it('should display arrears result when requested and API returns 200 with positive values', () => {
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.arrears);
+      controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
+      });
+    });
+
+    it('should display nothing owed result when requested and API returns 200 with zero value', () => {
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
+      controller.getDeathPayment(paymentRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
+      });
+    });
+
+    it('should display nothing owed result when requested and API returns 200 with null values', () => {
+      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
+      controller.getDeathPayment(paymentRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
       });
     });
   });
@@ -214,7 +318,7 @@ describe('Change circumstances date of death controller ', () => {
       controller.postVerifyDeath(validYesPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[404]);
+        assert.equal(genericResponse.data.globalError, errorMessages[404].replace('<SERVICE>', 'award'));
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
       });
     });
@@ -279,7 +383,7 @@ describe('Change circumstances date of death controller ', () => {
       controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[404]);
+        assert.equal(genericResponse.data.globalError, errorMessages[404].replace('<SERVICE>', 'award'));
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
       });
     });
@@ -299,6 +403,46 @@ describe('Change circumstances date of death controller ', () => {
       controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+  });
+
+  describe('getRecordDeath', () => {
+    it('should return view with error when API returns 400 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+      controller.getRecordDeath(recordDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[400]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should return view with error when API returns 404 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
+      controller.getRecordDeath(recordDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[404]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should return view with error when API returns 500 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      controller.getRecordDeath(recordDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[500]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should return a redirect when API returns 200', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      controller.getRecordDeath(paymentRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
     });
   });

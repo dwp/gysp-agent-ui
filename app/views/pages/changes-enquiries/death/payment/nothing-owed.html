@@ -1,0 +1,25 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block pageTitle %}{{ t("death-payment:nothing-owed.header") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/personal/death",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t("death-payment:nothing-owed.header") }}</h1>
+
+  <p class="govuk-body">{{ t("death-payment:nothing-owed.p") }}</p>
+
+  {{ govukButton({
+    text: t("app:button.continue"),
+    href: '/changes-and-enquiries/personal/death/record'
+  }) }}
+{% endblock %}
