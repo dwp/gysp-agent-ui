@@ -43,7 +43,6 @@ const notVerifiedResponse = {
   dateOfDeath: '2000-01-01T00:00:00.000Z',
   dateOfDeathVerification: 'NV',
   nino: 'AA370773A',
-  amountDetails: verifiedDetails['death-payment'],
   eventCategory: 'PERSONAL',
   eventType: 'ADD',
   eventName: 'personal:timeline.date_of_death.not_verified',

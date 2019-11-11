@@ -47,11 +47,20 @@ const verifiedResponse = {
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
-const validPostRequest = {
+const validVPostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: { awardDetails: claimData.validClaim() },
   body: {
     dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'V',
+  },
+  flash: flashMock,
+};
+
+const validNVPostRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: { awardDetails: claimData.validClaim() },
+  body: {
+    dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'NV',
   },
   flash: flashMock,
 };
@@ -191,14 +200,25 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should save to session and redirect to next screen when post is valid', () => {
-      controller.postAddDateDeath(validPostRequest, genericResponse);
+    it('should save to session and redirect to next screen when post is valid and verification is V', () => {
+      controller.postAddDateDeath(validVPostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(validPostRequest.session.death['date-of-death'].dateYear, validPostRequest.body.dateYear);
-        assert.equal(validPostRequest.session.death['date-of-death'].dateMonth, validPostRequest.body.dateMonth);
-        assert.equal(validPostRequest.session.death['date-of-death'].dateDay, validPostRequest.body.dateDay);
-        assert.equal(validPostRequest.session.death['date-of-death'].verification, validPostRequest.body.verification);
+        assert.equal(validVPostRequest.session.death['date-of-death'].dateYear, validVPostRequest.body.dateYear);
+        assert.equal(validVPostRequest.session.death['date-of-death'].dateMonth, validVPostRequest.body.dateMonth);
+        assert.equal(validVPostRequest.session.death['date-of-death'].dateDay, validVPostRequest.body.dateDay);
+        assert.equal(validVPostRequest.session.death['date-of-death'].verification, validVPostRequest.body.verification);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should save to session and redirect to next screen when post is valid and verification is NV', () => {
+      controller.postAddDateDeath(validNVPostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(validNVPostRequest.session.death['date-of-death'].dateYear, validNVPostRequest.body.dateYear);
+        assert.equal(validNVPostRequest.session.death['date-of-death'].dateMonth, validNVPostRequest.body.dateMonth);
+        assert.equal(validNVPostRequest.session.death['date-of-death'].dateDay, validNVPostRequest.body.dateDay);
+        assert.equal(validNVPostRequest.session.death['date-of-death'].verification, validNVPostRequest.body.verification);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/record');
       });
     });
   });

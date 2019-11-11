@@ -36,7 +36,11 @@ function postAddDateDeath(req, res) {
   const errors = formValidator.dateOfDeathValidation(details);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'date-of-death', details, 'death');
-    res.redirect('/changes-and-enquiries/personal/death/payment');
+    if (details.verification === 'V') {
+      res.redirect('/changes-and-enquiries/personal/death/payment');
+    } else {
+      res.redirect('/changes-and-enquiries/personal/death/record');
+    }
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
@@ -97,7 +101,7 @@ function getRecordDeathErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, deathDetailsUpdateApiUri, traceID, res.locals.logger);
   req.flash('error', generalHelper.globalErrorMessage(error, 'award'));
-  res.redirect('/changes-and-enquiries/personal/death/payment');
+  res.redirect('back');
 }
 
 function getRecordDeath(req, res) {
