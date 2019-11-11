@@ -102,7 +102,7 @@ function getRecordDeathErrorHandler(error, req, res) {
 
 function getRecordDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const death = dataStore.get(req, 'date-of-death', 'death');
+  const death = dataStore.get(req, 'death');
   const deathDetails = deathObject.formatter(death, awardDetails);
   const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
   request(putDeathDetailsCall).then(() => {
