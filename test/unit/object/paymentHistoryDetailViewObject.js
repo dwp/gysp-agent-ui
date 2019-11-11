@@ -3,8 +3,8 @@ const moment = require('moment');
 
 const object = require('../../../lib/objects/paymentHistoryDetailViewObject');
 
-const creditDate5DaysAgo = moment().subtract(5, 'd');
-const creditDate15DaysAgo = moment().subtract(15, 'd');
+const creditDate5DaysAgo = `${moment().subtract(5, 'd').format('YYYY-MM-DD')}T00:00:00.000+0000`;
+const creditDate15DaysAgo = `${moment().subtract(15, 'd').format('YYYY-MM-DD')}T00:00:00.000+0000`;
 
 const id = 1;
 

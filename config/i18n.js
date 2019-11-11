@@ -7,6 +7,7 @@ module.exports = {
       'robot',
       'contact-details',
       'claim-information',
+      'death-dap',
       'death-payment',
       'find-claim',
       'find-someone',
