@@ -1,7 +1,10 @@
 const assert = require('assert');
 const claimData = require('../../lib/claimData');
+const addressData = require('../../lib/addressData');
 
 const object = require('../../../lib/objects/deathObject');
+
+const detailsUprn = { address: '10091853817' };
 
 const verifiedDetails = {
   'date-of-death': {
@@ -15,6 +18,14 @@ const verifiedDetails = {
     endDate: null,
     amount: null,
   },
+  'dap-name': {
+    name: 'Margaret Meldrew',
+  },
+  'dap-phone-number': {
+    phoneNumber: '0000 000 000',
+  },
+  'dap-address': detailsUprn,
+  'address-lookup': addressData.multipleAddressesNoneEmpty(),
 };
 const verifiedResponse = {
   dateOfDeath: '2000-01-01T00:00:00.000Z',
@@ -24,6 +35,21 @@ const verifiedResponse = {
   eventCategory: 'PERSONAL',
   eventType: 'ADD',
   eventName: 'personal:timeline.date_of_death.verified',
+  deathPayeeDetails: {
+    address: {
+      buildingName: 'buildingName',
+      subBuildingName: 'subBuildingName',
+      buildingNumber: 148,
+      dependentLocality: 'dependentLocality',
+      thoroughfareName: 'PICCADILLY',
+      dependentThoroughfareName: 'dependentThoroughfareName',
+      postTown: 'LONDON',
+      postCode: 'W1J 7NT',
+      uprn: 10091853817,
+    },
+    fullName: 'Margaret Meldrew',
+    phoneNumber: '0000 000 000',
+  },
 };
 
 const notVerifiedDetails = {
@@ -38,6 +64,14 @@ const notVerifiedDetails = {
     endDate: null,
     amount: null,
   },
+  'dap-name': {
+    name: 'Margaret Meldrew',
+  },
+  'dap-phone-number': {
+    phoneNumber: '0000 000 000',
+  },
+  'dap-address': detailsUprn,
+  'address-lookup': addressData.multipleAddressesNoneEmpty(),
 };
 const notVerifiedResponse = {
   dateOfDeath: '2000-01-01T00:00:00.000Z',
@@ -46,6 +80,21 @@ const notVerifiedResponse = {
   eventCategory: 'PERSONAL',
   eventType: 'ADD',
   eventName: 'personal:timeline.date_of_death.not_verified',
+  deathPayeeDetails: {
+    address: {
+      buildingName: 'buildingName',
+      subBuildingName: 'subBuildingName',
+      buildingNumber: 148,
+      dependentLocality: 'dependentLocality',
+      thoroughfareName: 'PICCADILLY',
+      dependentThoroughfareName: 'dependentThoroughfareName',
+      postTown: 'LONDON',
+      postCode: 'W1J 7NT',
+      uprn: 10091853817,
+    },
+    fullName: 'Margaret Meldrew',
+    phoneNumber: '0000 000 000',
+  },
 };
 
 describe('deathObject object', () => {

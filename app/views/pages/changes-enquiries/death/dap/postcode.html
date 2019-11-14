@@ -1,0 +1,34 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}{{ t("death-dap:header.address", { NAME: awardDetails.firstName }) }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/personal/death/phone-number",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+    <form method="post" action="/changes-and-enquiries/personal/death/address" autocomplete="off">
+      <h1 class="govuk-heading-l">{{ t("death-dap:header.address", { NAME: awardDetails.firstName }) }}</h1>
+      {{ govukInput({
+        label: {
+          text: t("death-dap:fields.postcode.label")
+        },
+        id: "postcode",
+        name: "postcode",
+        value: details.postcode,
+        classes: "govuk-input--width-10",
+        errorMessage: errors.postcode
+      }) }}
+
+      {{ govukButton({
+        text: t("death-dap:button.postcode")
+      }) }}
+    </form>
+{% endblock %}

@@ -7,6 +7,22 @@ router.route('/personal/death')
   .get(functions.getAddDateDeath)
   .post(functions.postAddDateDeath);
 
+router.route('/personal/death/name')
+  .get(functions.getDapName)
+  .post(functions.postDapName);
+
+router.route('/personal/death/address')
+  .get(functions.getDapPostcodeLookup)
+  .post(functions.postDapPostcodeLookup);
+
+router.route('/personal/death/address-select')
+  .get(functions.getDapAddressSelect)
+  .post(functions.postDapAddressSelect);
+
+router.route('/personal/death/phone-number')
+  .get(functions.getDapPhoneNumber)
+  .post(functions.postDapPhoneNumber);
+
 router.route('/personal/death/payment')
   .get(functions.getDeathPayment);
 

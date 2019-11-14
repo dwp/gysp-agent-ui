@@ -1,0 +1,43 @@
+{
+
+  "header": {
+    "name": "Name of the person dealing with __NAME__'s estate",
+    "phone-number": "Phone number of the person dealing with __NAME__'s estate",
+    "address": "Address of the person dealing with __NAME__'s estate"
+  },
+  "fields": {
+    "name": {
+      "label": "Full name",
+      "errors": {
+        "required": "Enter the full name of the person dealing with the estate"
+      }
+    },
+    "phone-number": {
+      "label": "Phone number",
+      "errors": {
+        "required": "Enter a phone number",
+        "invalid": "Enter a phone number in the correct format, like 01632 960 001 or 4408081570192",
+        "length": "Phone number must be 70 characters or less"
+      }
+    },
+    "postcode": {
+      "label": "Enter postcode",
+      "errors": {
+        "required": "Enter a phone number",
+        "invalid": "Enter a phone number in the correct format, like 01632 960 001 or 4408081570192",
+        "length": "Phone number must be 70 characters or less"
+      }
+    },
+    "address": {
+      "label": "Select address",
+      "errors": {
+        "required": "Enter a phone number",
+        "invalid": "Enter a phone number in the correct format, like 01632 960 001 or 4408081570192",
+        "length": "Phone number must be 70 characters or less"
+      }
+    }
+  },
+  "button": {
+    "postcode": "Find address"
+  }
+}

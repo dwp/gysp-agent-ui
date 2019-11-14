@@ -1,0 +1,34 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("death-dap:header.phone-number", { NAME: awardDetails.firstName }) }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/personal/death/name",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/personal/death/phone-number" autocomplete="off">
+    <h1 class="govuk-heading-l">{{ t("death-dap:header.phone-number", { NAME: awardDetails.firstName }) }}</h1>
+    {{ govukInput({
+      label: {
+        text: t("death-dap:fields.phone-number.label")
+      },
+      id: "phone-number",
+      name: "phoneNumber",
+      value: details.phoneNumber,
+      classes: "govuk-!-width-two-thirds",
+      errorMessage: errors.phoneNumber
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}
