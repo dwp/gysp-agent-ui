@@ -37,4 +37,10 @@ router.route('/personal/death/verified-date')
   .get(functions.getAddVerifedDeath)
   .post(functions.postAddVerifedDeath);
 
+router.route('/personal/death/retry-calculation')
+  .get(functions.getRetryCalculation);
+
+router.route('/personal/death/update')
+  .get(functions.getUpdateDeath);
+
 module.exports = router;

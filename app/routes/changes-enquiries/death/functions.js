@@ -5,6 +5,7 @@ const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const deathObject = require('../../../../lib/objects/deathObject');
+const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
 const deathVerifyObject = require('../../../../lib/objects/deathVerifyObject');
 const deathVerifiedObject = require('../../../../lib/objects/deathVerifiedObject');
 const deathPaymentObject = require('../../../../lib/objects/view/deathPaymentObject');
@@ -16,6 +17,7 @@ const deleteSession = require('../../../../lib/deleteSession');
 
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
+const deathArrearsUpdateApiUri = 'api/award/update-death-calculation';
 const postcodeLookupApiUri = 'addresses?postcode=';
 
 function getAddDateDeath(req, res) {
@@ -257,12 +259,40 @@ function getDeathPayment(req, res) {
   request(getDeathArrearsCall).then((details) => {
     dataStore.save(req, 'death-payment', details, 'death');
     const formattedDetails = deathPaymentObject.formatter(details);
+    const pageData = deathPaymentObject.pageData(false);
     res.render(deathPaymentView(details), {
       keyDetails,
       details: formattedDetails,
+      pageData,
     });
   }).catch((err) => {
     getDeathPaymentErrorHandler(err, req, res, keyDetails);
+  });
+}
+
+function getRetryCalculationErrorHandler(error, req, res) {
+  const traceID = requestHelper.getTraceID(error);
+  requestHelper.loggingHelper(error, deathArrearsApiUri, traceID, res.locals.logger);
+  req.flash('error', generalHelper.globalErrorMessage(error, 'payment'));
+  res.redirect('/changes-and-enquiries/personal');
+}
+
+function getRetryCalculation(req, res) {
+  const awardDetails = dataStore.get(req, 'awardDetails');
+  const keyDetails = keyDetailsHelper.formatter(awardDetails);
+  const dateOfDeath = dateHelper.timestampToDateDash(awardDetails.dateOfDeath);
+  const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
+  request(getDeathArrearsCall).then((details) => {
+    dataStore.save(req, 'death-payment', details, 'death');
+    const formattedDetails = deathPaymentObject.formatter(details);
+    const pageData = deathPaymentObject.pageData(true);
+    res.render(deathPaymentView(details), {
+      keyDetails,
+      details: formattedDetails,
+      pageData,
+    });
+  }).catch((err) => {
+    getRetryCalculationErrorHandler(err, req, res);
   });
 }
 
@@ -285,6 +315,31 @@ function getRecordDeath(req, res) {
   }).catch((err) => {
     getRecordDeathErrorHandler(err, req, res);
   });
+}
+
+function getUpdateDeathErrorHandler(error, req, res) {
+  const traceID = requestHelper.getTraceID(error);
+  requestHelper.loggingHelper(error, deathArrearsUpdateApiUri, traceID, res.locals.logger);
+  req.flash('error', generalHelper.globalErrorMessage(error, 'award'));
+  res.redirect('/changes-and-enquiries/personal/death/retry-calculation');
+}
+
+function getUpdateDeath(req, res) {
+  const awardDetails = dataStore.get(req, 'awardDetails');
+  const deathPayment = dataStore.get(req, 'death-payment', 'death');
+  if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment.amount)) {
+    const deathUpdateDetails = deathUpdateObject.formatter(deathPayment, awardDetails);
+    const putDeathUpdateDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathArrearsUpdateApiUri, deathUpdateDetails, 'award', req.user);
+    request(putDeathUpdateDetailsCall).then(() => {
+      deleteSession.deleteDeathDetail(req);
+      deleteSession.deleteChangesEnquiries(req);
+      res.redirect('/changes-and-enquiries/personal');
+    }).catch((err) => {
+      getUpdateDeathErrorHandler(err, req, res);
+    });
+  } else {
+    res.redirect('/changes-and-enquiries/personal');
+  }
 }
 
 function postVerifyDeathErrorHandler(error, req, res, keyDetails) {
@@ -398,3 +453,6 @@ module.exports.getVerifyDeath = getVerifyDeath;
 module.exports.postVerifyDeath = postVerifyDeath;
 module.exports.getAddVerifedDeath = getAddVerifedDeath;
 module.exports.postAddVerifedDeath = postAddVerifedDeath;
+
+module.exports.getRetryCalculation = getRetryCalculation;
+module.exports.getUpdateDeath = getUpdateDeath;

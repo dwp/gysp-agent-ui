@@ -3,6 +3,15 @@
 
 {% block pageTitle %}Personal details - Changes and enquiries{% endblock %}
 
+{% block topContent %}
+  {% if details.dateOfDeathVerification == 'Verified' and details.deathCalculationPerformed == false %}
+    {{ govukWarningText({
+      html: 'Final payment has not been calculated<br /><a href="/changes-and-enquiries/personal/death/retry-calculation" class="govuk-link govuk-link--no-visited-state">Calculate final payment</a>',
+      iconFallbackText: "Warning"
+    }) }}
+  {% endif %}
+{% endblock %}
+
 {% block innerContent %}
 
   <h1 class="govuk-heading-m">Personal details</h1>
@@ -14,6 +23,7 @@
         iconFallbackText: "Warning"
       }) }}
     {% endif %}
+
     <table id="personal-details-table" class="govuk-table">
       <caption class="govuk-table__caption govuk-heading-l govuk-visually-hidden">Personal details</caption>
       <tbody class="govuk-table__body">

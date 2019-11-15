@@ -21,6 +21,7 @@
             {% if keyDetails %}
                 {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
             {% endif %}
+            {% block topContent %}{% endblock %}
             {% if secondaryNavigationList %}
                 {{ secondaryNavigation(secondaryNavigationList) }}
             {% endif %}
