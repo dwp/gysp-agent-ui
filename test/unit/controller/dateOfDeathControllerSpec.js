@@ -137,6 +137,14 @@ const paymentRequest = {
   flash: flashMock,
 };
 
+const retryCalculationRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaimWithDeathVerified(),
+  },
+  flash: flashMock,
+};
+
 const recordDeathRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
@@ -158,6 +166,36 @@ const recordDeathRequest = {
       },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+  },
+  flash: flashMock,
+};
+
+const updateDeathRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'death-payment': {
+        amount: 100.0,
+        startDate: '2019-01-01T00:00:00.000Z',
+        endDate: '2019-01-01T00:00:00.000Z',
+      },
+    },
+  },
+  flash: flashMock,
+};
+
+const updateDeathNullPaymentRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'death-payment': {
+        amount: null,
+        startDate: null,
+        endDate: null,
+      },
     },
   },
   flash: flashMock,
@@ -200,6 +238,7 @@ const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 const deathDetailsUpdateApiUri = '/api/award/record-death';
 const deathArrearsApiUri = '/api/payment/death-arrears';
 const postcodeLookupApiUri = '/addresses?postcode=W1J7NT';
+const deathArrearsUpdateApiUri = '/api/award/update-death-calculation';
 
 const errorMessages = {
   400: 'app:errors.api.bad-request',
@@ -707,6 +746,123 @@ describe('Change circumstances date of death controller ', () => {
     it('should return a redirect when API returns 200', () => {
       nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+  });
+
+  describe('getRetryCalculation function (GET /changes-and-enquiries/personal/death/retry-calculation)', () => {
+    const dateOfDeath = '2019-01-01';
+    it('should return view with error when API returns 400 state', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.BAD_REQUEST, {});
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/payment/death-arrears');
+        assert.equal(flash.message, 'app:errors.api.bad-request');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+
+    it('should return view with error when API returns 500 state', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/payment/death-arrears');
+        assert.equal(flash.message, 'app:errors.api.internal-server-error');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+
+    it('should display overpayment result when requested and API returns 200 with negative values', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.overpayment);
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/overpayment');
+      });
+    });
+
+    it('should display arrears result when requested and API returns 200 with positive values', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.arrears);
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
+      });
+    });
+
+    it('should display nothing owed result when requested and API returns 200 with zero value', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
+      });
+    });
+
+    it('should display nothing owed result when requested and API returns 200 with null values', () => {
+      nock('http://test-url/').get(deathArrearsApiUri)
+        .query({ nino: retryCalculationRequest.session.awardDetails.nino, dateOfDeath })
+        .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
+      controller.getRetryCalculation(retryCalculationRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
+      });
+    });
+  });
+
+  describe('getUpdateDeath function (GET /changes-and-enquiries/personal/death/update)', () => {
+    it('should return a redirect when payment amount is null', () => {
+      controller.getUpdateDeath(updateDeathNullPaymentRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+    it('should return view with error when API returns 400 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+      controller.getUpdateDeath(updateDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[400]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/retry-calculation');
+      });
+    });
+
+    it('should return view with error when API returns 404 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
+      controller.getUpdateDeath(updateDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[404]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/retry-calculation');
+      });
+    });
+
+    it('should return view with error when API returns 500 state', () => {
+      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      controller.getUpdateDeath(updateDeathRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessages[500]);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/retry-calculation');
+      });
+    });
+
+    it('should return a redirect when API returns 200', () => {
+      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
+      controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
