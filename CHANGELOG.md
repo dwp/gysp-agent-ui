@@ -1,3 +1,15 @@
+<a name="5.18.0"></a>
+# [5.18.0](https://github.com/dwp/gysp-agent-ui/compare/v5.17.0...v5.18.0) (2019-11-20)
+
+
+### Features
+
+* **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
+* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
+* **death:** overpayment and arrears calculation ([197d441](https://github.com/dwp/gysp-agent-ui/commit/197d441))
+
+
+
 <a name="5.17.0"></a>
 # [5.17.0](https://github.com/dwp/gysp-agent-ui/compare/v5.16.0...v5.17.0) (2019-11-06)
 
