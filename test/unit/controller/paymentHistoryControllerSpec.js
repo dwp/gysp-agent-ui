@@ -43,8 +43,8 @@ const paymentDetail = {
   sortCode: '400500',
   referenceNumber: null,
   totalAmount: 100,
-  startDate: '2019-07-30T00:00:00.000+0000',
-  endDate: '2019-08-27T00:00:00.000+0000',
+  startDate: '2019-07-30T06:00:00.000+0000',
+  endDate: '2019-08-27T06:00:00.000+0000',
   creditDate: creditDate5DaysAgo,
 };
 
@@ -83,8 +83,8 @@ const paymentDetailWithReferenceNumber = {
   sortCode: '400500',
   referenceNumber: '12345678',
   totalAmount: 100,
-  startDate: '2019-07-30T23:00:00.000+0000',
-  endDate: '2019-08-27T23:00:00.000+0000',
+  startDate: '2019-07-30T06:00:00.000+0000',
+  endDate: '2019-08-27T06:00:00.000+0000',
   creditDate: '2019-08-27T06:00:00',
 };
 
@@ -99,7 +99,7 @@ const paymentDetailWithReferenceNumberFormatted = {
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
-      value: { html: '31/07/2019 to<br />28/08/2019', classes: 'payment-detail__period' },
+      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
@@ -127,8 +127,8 @@ const baseResponse = {
   sortCode: '400500',
   referenceNumber: null,
   totalAmount: 100,
-  startDate: '2019-07-30T23:00:00.000+0000',
-  endDate: '2019-08-27T23:00:00.000+0000',
+  startDate: '2019-07-30T06:00:00.000+0000',
+  endDate: '2019-08-27T06:00:00.000+0000',
 };
 const paymentDetailPaid = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'PAID', creditDate: creditDate5DaysAgo });
 const paymentDetailSent = Object.assign(JSON.parse(JSON.stringify(baseResponse)), { status: 'SENT', creditDate: creditDate5DaysAgo });
@@ -146,7 +146,7 @@ const paymentDetailPaidFormattedAfter14Days = {
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
-      value: { html: '31/07/2019 to<br />28/08/2019', classes: 'payment-detail__period' },
+      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
@@ -205,7 +205,7 @@ const reissuePaymentDetailsFormatted = {
         classes: 'govuk-!-width-one-third govuk-!-font-weight-regular',
         text: 'reissue-payment:payment-details.period',
       },
-      value: { text: '31/07/2019 to 28/08/2019' },
+      value: { text: '30/07/2019 to 27/08/2019' },
     },
   ],
 };
