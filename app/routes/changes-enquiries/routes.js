@@ -13,6 +13,5 @@ router.use('/', require('./payment/routes'));
 router.use('/', require('./payment-frequency/routes'));
 router.use('/', require('./payment-frequency-schedule/routes'));
 router.use('/', require('./payment-history/routes'));
-router.use('/', require('./payment-schedule/routes'));
 
 module.exports = router;
