@@ -1,0 +1,27 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block pageTitle %}{{ t("award-detail:header") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/award",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+
+  <h1 class="govuk-heading-m">{{ t("award-detail:header") }}</h1>
+
+  {{ govukSummaryList({
+    rows: details.detailsSummaryRows
+  }) }}
+
+  {{ govukSummaryList({
+    rows: details.amountSummaryRows
+  }) }}
+
+{% endblock %}

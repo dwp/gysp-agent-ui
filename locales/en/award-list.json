@@ -1,0 +1,10 @@
+{
+  "header": "State Pension awards",
+  "table": {
+    "head": {
+      "from": "From",
+      "to": "To",
+      "weekly-amount": "Weekly amount"
+    }
+  }
+}

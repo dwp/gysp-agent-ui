@@ -1,10 +1,18 @@
 {
   "header": "Current State Pension award",
   "summary-keys": {
+    "from": "From",
+    "reason": "Reason",
     "total": "Total",
     "new-state-pension": "New State Pension",
     "protected-payment": "Protected payment",
     "extra-state-pension": "Extra State Pension",
     "inherited-extra-state-pension": "Inherited extra State Pension"
+  },
+  "summary-values": {
+    "reason": {
+      "first-award": "First award",
+      "annual-uprating": "Annual uprating"
+    }
   }
 }

@@ -4,6 +4,7 @@ module.exports = {
       'app',
       'add',
       'award-detail',
+      'award-list',
       'robot',
       'contact-details',
       'claim-information',
