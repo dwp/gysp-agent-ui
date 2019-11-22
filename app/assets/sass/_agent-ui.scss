@@ -48,7 +48,8 @@
     color: $govuk-secondary-text-colour;
 }
 
-.gysp-status {
+.gysp-status,
+.gysp-payment {
     &::before {
         display: inline-block;
         width: 15px;

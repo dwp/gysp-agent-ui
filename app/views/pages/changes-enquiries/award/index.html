@@ -1,35 +1,12 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
-{% block pageTitle %}{{ t("award-detail:header") }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t("award-list:header") }} - Changes and enquiries{% endblock %}
 
-{% block innerContent %}
+{% block outerContent %}
 
-  <h1 class="govuk-heading-m">{{ t("award-detail:header") }}</h1>
+  <h1 class="govuk-heading-m">{{ t("award-list:header") }}</h1>
 
-  {{ govukSummaryList({
-    rows: [
-      {
-        key: { text: t("award-detail:summary-keys.total"), classes: "govuk-!-width-two-thirds" },
-        value: { text: "£" + details.totalAmount + " per week", classes: "govuk-!-font-weight-bold" }
-      },
-      {
-        key: { text: t("award-detail:summary-keys.new-state-pension"), classes: "govuk-!-width-two-thirds govuk-!-font-weight-regular" },
-        value: { text: "£" + details.weeklyStatePensionAmount }
-      },
-      {
-        key: { text: t("award-detail:summary-keys.protected-payment"), classes: "govuk-!-width-two-thirds govuk-!-font-weight-regular"  },
-        value: { text: "£" + details.weeklyProtectedPaymentAmount }
-      },
-      {
-        key: { text: t("award-detail:summary-keys.extra-state-pension"), classes: "govuk-!-width-two-thirds govuk-!-font-weight-regular"  },
-        value: { text: "£" + details.weeklyExtraStatePensionAmount }
-      },
-      {
-        key: { text: t("award-detail:summary-keys.inherited-extra-state-pension"), classes: "govuk-!-width-two-thirds govuk-!-font-weight-regular"  },
-        value: { text: "£" + details.weeklyInheritedExtraStatePensionAmount }
-      }
-    ]
-  }) }}
+  {{ govukTable(details) }}
 
 {% endblock %}
