@@ -1,7 +1,12 @@
 {
-  "header": "Current State Pension award",
+  "header": {
+    "new": "New State Pension award",
+    "current": "Current State Pension award",
+    "previous": "Previous State Pension award"
+  },
   "summary-keys": {
     "from": "From",
+    "weekly-amount": "weekly amount",
     "reason": "Reason",
     "total": "Total",
     "new-state-pension": "New State Pension",

@@ -37,6 +37,24 @@ const rowsWithToDate = [
     { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
   ],
 ];
+const rowsWithFutureUprating = [
+  [
+    { text: '6 March 2019' },
+    { text: '6 March 2019' },
+    { text: '£110.00' },
+    { html: '<a href="/changes-and-enquiries/award/1" class="govuk-link">Details</a>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+  ],
+];
+const rowsWithCurrentUprating = [
+  [
+    { text: '6 March 2019' },
+    { text: '' },
+    { text: '£160.00' },
+    { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+  ],
+];
 
 const tableObjectWithPayment = {
   firstCellIsHeader: false,
@@ -56,27 +74,55 @@ const tableObjectWithToDate = {
   rows: rowsWithToDate,
 };
 
+const tableObjectWithFutureUprating = {
+  firstCellIsHeader: false,
+  head,
+  rows: rowsWithFutureUprating,
+};
+
+const tableObjectWithCurrentUprating = {
+  firstCellIsHeader: false,
+  head,
+  rows: rowsWithCurrentUprating,
+};
+
+const banner = {
+  text: 'award-list:banner.text',
+  link: 'award-list:banner.link',
+};
+
 describe('awardListObject ', () => {
   describe('formatter', () => {
     it('should return object', () => {
       const formatted = awardListObject.formatter(claimData.validAwardAmountDetails());
-      assert.isObject(formatted);
+      assert.isObject(formatted.table);
     });
-    it('should return formatted table object with payment', () => {
+    it('should return formatted table object with payment and without banner', () => {
       const formatted = awardListObject.formatter(claimData.validAwardAmountDetails());
-      assert.deepEqual(formatted, tableObjectWithPayment);
+      assert.deepEqual(formatted.table, tableObjectWithPayment);
+      assert.isNull(formatted.banner);
     });
     it('should return formatted table object without payment', () => {
       const details = claimData.validAwardAmountDetails();
       details.awardAmounts[0].inPayment = false;
       const formatted = awardListObject.formatter(details);
-      assert.deepEqual(formatted, tableObjectWithoutPayment);
+      assert.deepEqual(formatted.table, tableObjectWithoutPayment);
     });
     it('should return formatted table object with todate', () => {
       const details = claimData.validAwardAmountDetails();
       details.awardAmounts[0].toDate = 1551830400000;
       const formatted = awardListObject.formatter(details);
-      assert.deepEqual(formatted, tableObjectWithToDate);
+      assert.deepEqual(formatted.table, tableObjectWithToDate);
+    });
+    it('should return formatted table object without banner and annual uprating is current', () => {
+      const formatted = awardListObject.formatter(claimData.validAwardAmountDetailsFutureUpratingIsCurrent());
+      assert.deepEqual(formatted.table, tableObjectWithCurrentUprating);
+      assert.isNull(formatted.banner);
+    });
+    it('should return formatted table object with banner', () => {
+      const formatted = awardListObject.formatter(claimData.validAwardAmountDetailsWithCurrentAndFutureUprating());
+      assert.deepEqual(formatted.table, tableObjectWithFutureUprating);
+      assert.deepEqual(formatted.banner, banner);
     });
   });
 });

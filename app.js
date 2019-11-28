@@ -26,6 +26,7 @@ const templateCache = true;
 nunjucks.configure([
   'app/views',
   'node_modules/govuk-frontend/',
+  'node_modules/@ministryofjustice/frontend/',
 ], { autoescape: true, express: app, noCache: templateCache });
 
 // Compression of assets
