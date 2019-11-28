@@ -22,12 +22,13 @@ const secondaryNavigationList = secondaryNavigationHelper.navigationItems(active
 
 const returnPaymentApi = 'api/payment/return-payment';
 const reissuePaymentApi = 'api/payment/reissue-payment';
+const reissueRecalledPaymentApi = 'api/payment/reissue-recalled-payment';
 const paymentUpdateStatusApi = 'api/payment/update-status';
 const awardStatusUpdateApi = 'api/award/update-status';
 const maxDaysAllowedToChangePaidStaus = 14;
 
 // Payment and award statues
-const [PAID, SENT, PAYMENTS_STOPPED, RECALLING, RETURNED, INPAYMENT] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING', 'RETURNED', 'INPAYMENT'];
+const [PAID, SENT, PAYMENTS_STOPPED, RECALLING, RETURNED, INPAYMENT, RECALLED] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING', 'RETURNED', 'INPAYMENT', 'RECALLED'];
 
 async function paymentDetail(req, res, id) {
   const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
@@ -56,7 +57,7 @@ async function getPaymentHistoryDetail(req, res) {
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const { id } = req.params;
     const detail = await paymentDetail(req, res, id);
-    const paymentHistoryDetail = paymentHistoryDetailViewObject.formatter(detail, id);
+    const paymentHistoryDetail = paymentHistoryDetailViewObject.formatter(detail, id, awardDetails.awardStatus);
     const timelineDetails = await timelineHelper.getTimeline(req, res, 'PAYMENTDETAIL', id);
     res.render('pages/changes-enquiries/payment-history/detail', {
       keyDetails,
@@ -170,8 +171,8 @@ async function postStatusUpdate(req, res) {
   }
 }
 
-function isAllowedToBeReissued(status) {
-  if (status === RETURNED) {
+function isAllowedToBeReissued(status, awardStatus) {
+  if (status === RETURNED || (status === RECALLED && awardStatus !== 'DEAD' && awardStatus !== 'DEADNOTVERIFIED')) {
     return true;
   }
   return false;
@@ -183,7 +184,7 @@ async function getReissuePayment(req, res) {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const detail = await paymentDetail(req, res, id);
-    if (!isAllowedToBeReissued(detail.status)) {
+    if (!isAllowedToBeReissued(detail.status, awardDetails.awardStatus)) {
       req.flash('error', 'Error - this payment cannot be reissued.');
       res.redirect(`/changes-and-enquiries/payment-history/${id}`);
     } else {
@@ -225,10 +226,11 @@ async function postReissuePayment(req, res) {
     } else {
       const awardDetails = dataStore.get(req, 'awardDetails');
       const reissuePaymentApiObjectFormatted = reissuePaymentApiObject.formatter(id, awardDetails);
-      const putReissueCall = requestHelper.generatePutCall(res.locals.agentGateway + reissuePaymentApi, reissuePaymentApiObjectFormatted, 'payment', req.user);
+      const apiToUse = detail.status === 'RECALLED' ? reissueRecalledPaymentApi : reissuePaymentApi;
+      const putReissueCall = requestHelper.generatePutCall(res.locals.agentGateway + apiToUse, reissuePaymentApiObjectFormatted, 'payment', req.user);
       try {
         await request(putReissueCall);
-        if (dataStore.get(req, 'number-returned-payments') <= 1) {
+        if (detail.status === 'RETURNED' && dataStore.get(req, 'number-returned-payments') <= 1) {
           await startPayments(req, res);
         }
         deleteSession.deletePaymentDetail(req, id);
