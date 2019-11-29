@@ -19,6 +19,9 @@ let testPromise;
 let genericResponse = {};
 const ninoRequest = { session: { searchedNino: 'AA370773A' } };
 const ninoRequestWithId = { session: { searchedNino: 'AA370773A' }, body: {}, params: { id: '0' } };
+const ninoRequestWithIdForUprating = { session: { searchedNino: 'AA370773B' }, body: {}, params: { id: '0' } };
+const ninoRequestWithIdForUpratingNonWeekly = { session: { searchedNino: 'AA370773C' }, body: {}, params: { id: '0' } };
+const ninoRequestWithFutureUpratingNotInPayment = { session: { searchedNino: 'AA370773D' } };
 
 const changeCircumstancesDetailsUri = '/api/award';
 
@@ -72,6 +75,16 @@ describe('Change circumstances award controller', () => {
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
       });
     });
+
+    it('should return view name and view data when future uprating exists and not in payment', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequestWithFutureUpratingNotInPayment.session.searchedNino}`).reply(200, claimData.validClaimWithFutureUprating());
+      controller.getAwardList(ninoRequestWithFutureUpratingNotInPayment, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/award/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validAwardListViewDataWithFutureUprating()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
+      });
+    });
   });
 
   describe('getAwardDetails function (GET /changes-enquiries/award/0)', () => {
@@ -99,6 +112,28 @@ describe('Change circumstances award controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/award/details');
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validAwardDetailsViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
+      });
+    });
+
+    it('should return view name and view data when detail is for uprating amounts not in payment yet', () => {
+      const details = claimData.validClaimWithFutureUprating();
+      details.paymentFrequency = '1W';
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequestWithIdForUprating.session.searchedNino}`).reply(200, details);
+      controller.getAwardDetails(ninoRequestWithIdForUprating, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/award/details');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validAwardDetailsViewDataWithUprating()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
+      });
+    });
+
+    it('should return view name and view data when detail is for uprating amounts not in payment yet and is not weekly', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequestWithIdForUpratingNonWeekly.session.searchedNino}`).reply(200, claimData.validClaimWithFutureUprating());
+      controller.getAwardDetails(ninoRequestWithIdForUpratingNonWeekly, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/award/details');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validAwardDetailsViewDataWithUpratingWithFrequencyAmount()));
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
       });
     });

@@ -12,6 +12,17 @@ const detailsSummaryRowsBase = [{
 const detailsSummaryRowsAnnualUprating = JSON.parse(JSON.stringify(detailsSummaryRowsBase));
 detailsSummaryRowsAnnualUprating[1].value.text = 'award-detail:summary-values.reason.annual-uprating';
 
+const detailsSummaryRowsAnnualUpratingWith4Weekly = [{
+  key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
+  value: { text: '6 March 2019' },
+}, {
+  key: { text: '4 award-detail:summary-keys.weekly-amount', classes: 'govuk-!-width-two-thirds' },
+  value: { text: '£640.00' },
+}, {
+  key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
+  value: { text: 'award-detail:summary-values.reason.annual-uprating' },
+}];
+
 const amountSummaryRows = [{
   key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
   value: { text: '£110.00 a week', classes: 'govuk-!-font-weight-bold' },
@@ -37,21 +48,48 @@ describe('awardDetailsObject ', () => {
       assert.isArray(formatted.amountSummaryRows);
     });
 
-    it('should return formatted object with first award', () => {
+    it('should return formatted object with current first award', () => {
       const formatted = awardDetailsObject.formatter(claimData.validAwardAmountDetails(), 0);
       assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsBase);
+      assert.deepEqual(formatted.header, 'award-detail:header.current');
     });
 
     it('should return formatted object with annual uprating', () => {
       const details = claimData.validAwardAmountDetails();
       details.awardAmounts[0].reasonCode = 'ANNUALUPRATING';
-      const formatted = awardDetailsObject.formatter(details, 0);
+      details.paymentFrequency = '1W';
+      const formatted = awardDetailsObject.formatter(details, '0');
       assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsAnnualUprating);
     });
 
     it('should return formatted object with correct amountSummaryRows', () => {
       const formatted = awardDetailsObject.formatter(claimData.validAwardAmountDetails(), 0);
       assert.deepEqual(formatted.amountSummaryRows, amountSummaryRows);
+    });
+
+    it('should return formatted object with new uprating award and new award flag set to true', () => {
+      const details = claimData.validAwardAmountDetailsFutureUprating();
+      details.paymentFrequency = '1W';
+      const formatted = awardDetailsObject.formatter(details, '0');
+      assert.isTrue(formatted.isNewAward);
+      assert.deepEqual(formatted.header, 'award-detail:header.new');
+    });
+
+    it('should return formatted object with extra frequency row when future uprating and not weekly', () => {
+      const details = claimData.validAwardAmountDetailsFutureUprating();
+      details.paymentFrequency = '4W';
+      const formatted = awardDetailsObject.formatter(details, '0');
+      assert.isTrue(formatted.isNewAward);
+      assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsAnnualUpratingWith4Weekly);
+    });
+
+    it('should return formatted object with previous award', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].inPayment = false;
+      details.awardAmounts[0].toDate = 1574812800000;
+      const formatted = awardDetailsObject.formatter(details, 0);
+      assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsBase);
+      assert.deepEqual(formatted.header, 'award-detail:header.previous');
     });
   });
 });

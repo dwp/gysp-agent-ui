@@ -30,6 +30,11 @@ module.exports = {
     }
     return false;
   },
+  validClaimWithFutureUprating() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetailsWithCurrentAndFutureUprating(),
+    };
+  },
   validAddressEventChangeTimeline() {
     return {
       eventCategory: 'CONTACT',
@@ -95,6 +100,64 @@ module.exports = {
         reasonCode: 'FIRSTAWARD',
         inPayment: true,
       }],
+    };
+  },
+  validAwardAmountDetailsFutureUprating() {
+    return {
+      awardAmounts: [{
+        totalAmount: 160.0,
+        weeklyStatePensionAmount: 110.0,
+        weeklyProtectedPaymentAmount: 20.0,
+        weeklyExtraStatePensionAmount: 0.0,
+        weeklyInheritedExtraStatePensionAmount: 0.0,
+        fromDate: 1551830400000,
+        toDate: null,
+        reasonCode: 'ANNUALUPRATING',
+        inPayment: false,
+      }],
+    };
+  },
+  validAwardAmountDetailsFutureUpratingIsCurrent() {
+    return {
+      awardAmounts: [{
+        totalAmount: 160.0,
+        weeklyStatePensionAmount: 110.0,
+        weeklyProtectedPaymentAmount: 20.0,
+        weeklyExtraStatePensionAmount: 0.0,
+        weeklyInheritedExtraStatePensionAmount: 0.0,
+        fromDate: 1551830400000,
+        toDate: null,
+        reasonCode: 'ANNUALUPRATING',
+        inPayment: true,
+      }],
+    };
+  },
+  validAwardAmountDetailsWithCurrentAndFutureUprating() {
+    return {
+      awardAmounts: [
+        {
+          totalAmount: 160.0,
+          weeklyStatePensionAmount: 150.0,
+          weeklyProtectedPaymentAmount: 20.0,
+          weeklyExtraStatePensionAmount: 0.0,
+          weeklyInheritedExtraStatePensionAmount: 0.0,
+          fromDate: 1551830400000,
+          toDate: null,
+          reasonCode: 'ANNUALUPRATING',
+          inPayment: false,
+        },
+        {
+          totalAmount: 110.0,
+          weeklyStatePensionAmount: 100.0,
+          weeklyProtectedPaymentAmount: 10.0,
+          weeklyExtraStatePensionAmount: 0.0,
+          weeklyInheritedExtraStatePensionAmount: 0.0,
+          fromDate: 1551830400000,
+          toDate: 1551830400000,
+          reasonCode: 'FIRSTAWARD',
+          inPayment: true,
+        },
+      ],
     };
   },
   validUkAddress() {
@@ -213,27 +276,59 @@ module.exports = {
   },
   validAwardListViewData() {
     return {
-      firstCellIsHeader: false,
-      head: [
-        { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-quarter' },
-        { text: 'award-list:table.head.to', classes: 'govuk-!-width-one-quarter' },
-        { text: 'award-list:table.head.weekly-amount' },
-        { text: '' },
-        { text: '' },
-      ],
-      rows: [
-        [
-          { text: '6 March 2019' },
+      banner: null,
+      table: {
+        firstCellIsHeader: false,
+        head: [
+          { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-quarter' },
+          { text: 'award-list:table.head.to', classes: 'govuk-!-width-one-quarter' },
+          { text: 'award-list:table.head.weekly-amount' },
           { text: '' },
-          { text: '£110.00' },
-          { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
-          { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+          { text: '' },
         ],
-      ],
+        rows: [
+          [
+            { text: '6 March 2019' },
+            { text: '' },
+            { text: '£110.00' },
+            { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
+            { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+          ],
+        ],
+      },
+    };
+  },
+  validAwardListViewDataWithFutureUprating() {
+    return {
+      banner: {
+        text: 'award-list:banner.text',
+        link: 'award-list:banner.link',
+      },
+      table: {
+        firstCellIsHeader: false,
+        head: [
+          { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-quarter' },
+          { text: 'award-list:table.head.to', classes: 'govuk-!-width-one-quarter' },
+          { text: 'award-list:table.head.weekly-amount' },
+          { text: '' },
+          { text: '' },
+        ],
+        rows: [
+          [
+            { text: '6 March 2019' },
+            { text: '6 March 2019' },
+            { text: '£110.00' },
+            { html: '<a href="/changes-and-enquiries/award/1" class="govuk-link">Details</a>' },
+            { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+          ],
+        ],
+      },
     };
   },
   validAwardDetailsViewData() {
     return {
+      isNewAward: false,
+      header: 'award-detail:header.current',
       detailsSummaryRows: [{
         key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
         value: { text: '6 March 2019' },
@@ -250,6 +345,67 @@ module.exports = {
       }, {
         key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
         value: { text: '£10.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£0.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.inherited-extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£0.00' },
+      }],
+    };
+  },
+  validAwardDetailsViewDataWithUprating() {
+    return {
+      isNewAward: true,
+      header: 'award-detail:header.new',
+      detailsSummaryRows: [{
+        key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
+        value: { text: '6 March 2019' },
+      }, {
+        key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
+        value: { text: 'award-detail:summary-values.reason.annual-uprating' },
+      }],
+      amountSummaryRows: [{
+        key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
+        value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
+      }, {
+        key: { text: 'award-detail:summary-keys.new-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£150.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£20.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£0.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.inherited-extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£0.00' },
+      }],
+    };
+  },
+  validAwardDetailsViewDataWithUpratingWithFrequencyAmount() {
+    return {
+      isNewAward: true,
+      header: 'award-detail:header.new',
+      detailsSummaryRows: [{
+        key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
+        value: { text: '6 March 2019' },
+      }, {
+        key: { text: '4 award-detail:summary-keys.weekly-amount', classes: 'govuk-!-width-two-thirds' },
+        value: { text: '£640.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
+        value: { text: 'award-detail:summary-values.reason.annual-uprating' },
+      }],
+      amountSummaryRows: [{
+        key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
+        value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
+      }, {
+        key: { text: 'award-detail:summary-keys.new-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£150.00' },
+      }, {
+        key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+        value: { text: '£20.00' },
       }, {
         key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
         value: { text: '£0.00' },

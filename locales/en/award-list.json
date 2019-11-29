@@ -6,5 +6,9 @@
       "to": "To",
       "weekly-amount": "Weekly amount"
     }
+  },
+  "banner": {
+    "text": "This award will increase on __date__",
+    "link": "View new award"
   }
 }

@@ -1,12 +1,30 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/banner/macro.njk" import mojBanner %}
 
 {% block pageTitle %}{{ t("award-list:header") }} - Changes and enquiries{% endblock %}
 
 {% block outerContent %}
 
-  <h1 class="govuk-heading-m">{{ t("award-list:header") }}</h1>
+  {% if details.banner.text %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+    {% set bannerHtml %}
+      {{ details.banner.text }}<br>
+      <a href="/changes-and-enquiries/award/0" class="govuk-link">{{ t("award-list:banner.link") }}</a>
+    {% endset %}
 
-  {{ govukTable(details) }}
+    {{ mojBanner({
+    type: 'information',
+    html: bannerHtml
+    }) }} 
+    </div>
+  </div>
+
+  {% endif %}
+
+  <h1 class="govuk-heading-m">{{ t("award-list:header") }}</h1>
+  
+  {{ govukTable(details.table) }}
 
 {% endblock %}

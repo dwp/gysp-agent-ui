@@ -2,7 +2,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% block pageTitle %}{{ t("award-detail:header") }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ details.header }} - Changes and enquiries{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -14,14 +14,28 @@
 
 {% block innerContent %}
 
-  <h1 class="govuk-heading-m">{{ t("award-detail:header") }}</h1>
+  <h1 class="govuk-heading-m">{{ details.header }}</h1>
 
-  {{ govukSummaryList({
-    rows: details.detailsSummaryRows
-  }) }}
+  {% if details.isNewAward %}
 
-  {{ govukSummaryList({
-    rows: details.amountSummaryRows
-  }) }}
+    {{ govukSummaryList({
+      rows: details.amountSummaryRows
+    }) }}
+
+    {{ govukSummaryList({
+      rows: details.detailsSummaryRows
+    }) }}
+
+  {% else %}
+  
+    {{ govukSummaryList({
+      rows: details.detailsSummaryRows
+    }) }}
+
+    {{ govukSummaryList({
+      rows: details.amountSummaryRows
+    }) }}
+
+  {% endif %}
 
 {% endblock %}
