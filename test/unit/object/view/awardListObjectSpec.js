@@ -16,7 +16,7 @@ const rowsWithPayment = [
     { text: '' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
-    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
   ],
 ];
 const rowsWithoutPayment = [
@@ -34,7 +34,7 @@ const rowsWithToDate = [
     { text: '6 March 2019' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
-    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
   ],
 ];
 const rowsWithFutureUprating = [
@@ -43,7 +43,7 @@ const rowsWithFutureUprating = [
     { text: '6 March 2019' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/1" class="govuk-link">Details</a>' },
-    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
   ],
 ];
 const rowsWithCurrentUprating = [
@@ -52,7 +52,7 @@ const rowsWithCurrentUprating = [
     { text: '' },
     { text: '£160.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
-    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In Payment</span>' },
+    { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
   ],
 ];
 
