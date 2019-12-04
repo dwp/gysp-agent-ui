@@ -1,12 +1,26 @@
+<a name="5.19.0"></a>
+# [5.19.0](https://github.com/dwp/gysp-agent-ui/compare/v5.18.0...v5.19.0) (2019-12-04)
+
+
+### Features
+
+* Reissue a recalled payment ([1516538](https://github.com/dwp/gysp-agent-ui/commit/1516538))
+* **award:** add uprate details ([536aa09](https://github.com/dwp/gysp-agent-ui/commit/536aa09))
+* **award:** award list and details ([9260fba](https://github.com/dwp/gysp-agent-ui/commit/9260fba))
+* **scope:** remove payment schedule and hyperlink ([c70b499](https://github.com/dwp/gysp-agent-ui/commit/c70b499))
+* remove link ([85aa416](https://github.com/dwp/gysp-agent-ui/commit/85aa416))
+
+
+
 <a name="5.18.0"></a>
 # [5.18.0](https://github.com/dwp/gysp-agent-ui/compare/v5.17.0...v5.18.0) (2019-11-20)
 
 
 ### Features
 
-* **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
-* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
 * **death:** overpayment and arrears calculation ([197d441](https://github.com/dwp/gysp-agent-ui/commit/197d441))
+* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
+* **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
 
 
 
