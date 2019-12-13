@@ -12,6 +12,7 @@ const flash = require('express-flash');
 const connectRedis = require('connect-redis');
 const encyption = require('./lib/encryption');
 const roles = require('./lib/middleware/roleAuth.js');
+const mockDateRoutes = require('./app/routes/mock-date/routes.js');
 
 const app = express();
 
@@ -169,6 +170,10 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+if (config.env !== 'prod') {
+  app.use('/mock-date', mockDateRoutes);
+}
 
 app.use('/customer', roles.permit('GYSP-TEST-SUPPORT-TEAM'), require('./app/routes/customer/routes.js'));
 app.use('/claims', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/next-claim/routes.js'));
