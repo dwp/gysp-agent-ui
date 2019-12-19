@@ -24,6 +24,7 @@ function build() {
     'lib/**',
     'locales/**',
     'logs',
+    'package.json',
     '*.js',
     '!app/assets/**',
     '!gulpfile.js/**',
