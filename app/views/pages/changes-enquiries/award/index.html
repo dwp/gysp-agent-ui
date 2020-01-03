@@ -15,16 +15,16 @@
     {% endset %}
 
     {{ mojBanner({
-    type: 'information',
-    html: bannerHtml
-    }) }} 
+      type: 'information',
+      html: bannerHtml
+    }) }}
     </div>
   </div>
 
   {% endif %}
 
   <h1 class="govuk-heading-m">{{ t("award-list:header") }}</h1>
-  
+
   {{ govukTable(details.table) }}
 
 {% endblock %}

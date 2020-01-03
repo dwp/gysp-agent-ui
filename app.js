@@ -13,6 +13,7 @@ const connectRedis = require('connect-redis');
 const encyption = require('./lib/encryption');
 const roles = require('./lib/middleware/roleAuth.js');
 const mockDateRoutes = require('./app/routes/mock-date/routes.js');
+const packageJson = require('./package.json');
 
 const app = express();
 
@@ -22,6 +23,7 @@ const i18nConfig = require('./config/i18n');
 const log = require('./config/logging')('agent-ui', config.application.logs);
 
 const templateCache = true;
+const { cacheLength } = config.application.assets;
 
 // Template setup for nunjucks
 nunjucks.configure([
@@ -38,9 +40,9 @@ app.disable('x-powered-by');
 
 // Middleware to serve static assets
 app.set('view engine', 'html');
-app.use('/assets', express.static('./public'));
+app.use('/assets', express.static('./public', { maxage: cacheLength }));
 app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: 86400000 }));
+app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: cacheLength }));
 app.use(favicon('./node_modules/govuk-frontend/govuk/assets/images/favicon.ico'));
 
 // Disable Etag for pages
@@ -128,6 +130,7 @@ app.use((req, res, next) => {
   res.locals.agentGateway = agentGateway(process, config);
   res.locals.robotKey = config.application.robot.key;
   res.locals.robotSecret = config.secret;
+  res.locals.version = packageJson.version;
   next();
 });
 
