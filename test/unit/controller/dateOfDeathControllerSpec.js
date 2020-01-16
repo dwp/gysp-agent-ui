@@ -608,46 +608,14 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
-      controller.postVerifyDeath(validYesPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
-      });
-    });
-
-    it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
-      controller.postVerifyDeath(validYesPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[404].replace('<SERVICE>', 'award'));
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
-      });
-    });
-
-    it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      controller.postVerifyDeath(validYesPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
-      });
-    });
-
     it('should return a redirect to personal when API returns 200 state with valid yes post', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.postVerifyDeath(validYesPostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
       });
     });
 
     it('should return a redirect to verified date when API returns 200 state with valid no post', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.postVerifyDeath(validNoPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/verified-date');
@@ -673,41 +641,10 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
-      controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
-      });
-    });
-
-    it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
-      controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[404].replace('<SERVICE>', 'award'));
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
-      });
-    });
-
-    it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/record-death');
-        assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
-      });
-    });
-
     it('should return a redirect when API returns 200 state with valid post', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
       });
     });
   });
