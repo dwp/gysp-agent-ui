@@ -6,8 +6,6 @@ const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const deathObject = require('../../../../lib/objects/deathObject');
 const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
-const deathVerifyObject = require('../../../../lib/objects/deathVerifyObject');
-const deathVerifiedObject = require('../../../../lib/objects/deathVerifiedObject');
 const deathPaymentObject = require('../../../../lib/objects/view/deathPaymentObject');
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
 const dateHelper = require('../../../../lib/dateHelper');
@@ -36,6 +34,7 @@ function postAddDateDeath(req, res) {
   const errors = formValidator.dateOfDeathValidation(details);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'date-of-death', details, 'death');
+    dataStore.save(req, 'death-stage', 'defaultRoute', 'death');
     res.redirect('/changes-and-enquiries/personal/death/name');
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
@@ -252,14 +251,15 @@ function getDeathPaymentErrorHandler(error, req, res, keyDetails) {
 
 function getDeathPayment(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const { dateYear, dateMonth, dateDay } = dataStore.get(req, 'date-of-death', 'death');
+  const deathStage = dataStore.get(req, 'death-stage', 'death');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
+  const { dateYear, dateMonth, dateDay } = dataStore.get(req, 'date-of-death', 'death');
   const dateOfDeath = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
   const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
   request(getDeathArrearsCall).then((details) => {
     dataStore.save(req, 'death-payment', details, 'death');
     const formattedDetails = deathPaymentObject.formatter(details);
-    const pageData = deathPaymentObject.pageData(false);
+    const pageData = deathPaymentObject.pageData(deathStage);
     res.render(deathPaymentView(details), {
       keyDetails,
       details: formattedDetails,
@@ -285,7 +285,7 @@ function getRetryCalculation(req, res) {
   request(getDeathArrearsCall).then((details) => {
     dataStore.save(req, 'death-payment', details, 'death');
     const formattedDetails = deathPaymentObject.formatter(details);
-    const pageData = deathPaymentObject.pageData(true);
+    const pageData = deathPaymentObject.pageData('retryCalc');
     res.render(deathPaymentView(details), {
       keyDetails,
       details: formattedDetails,
@@ -342,23 +342,14 @@ function getUpdateDeath(req, res) {
   }
 }
 
-function postVerifyDeathErrorHandler(error, req, res, keyDetails) {
-  const traceID = requestHelper.getTraceID(error);
-  requestHelper.loggingHelper(error, deathDetailsUpdateApiUri, traceID, res.locals.logger);
-  res.render('pages/changes-enquiries/death/verify-date', {
-    keyDetails,
-    dateOfDeath: dateHelper.longDate(req.session.awardDetails.dateOfDeath),
-    details: req.body,
-    globalError: generalHelper.globalErrorMessage(error, 'award'),
-  });
-}
-
 function getVerifyDeath(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
+  const details = dataStore.get(req, 'death');
   res.render('pages/changes-enquiries/death/verify-date', {
     keyDetails,
     awardDetails,
+    details,
     dateOfDeath: dateHelper.longDate(awardDetails.dateOfDeath),
   });
 }
@@ -369,15 +360,15 @@ function postVerifyDeath(req, res) {
   const errors = formValidator.dateOfDeathVerify(details);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
+    dataStore.save(req, 'verify', details.verify, 'death');
     if (details.verify === 'yes') {
-      const deathDetails = deathVerifyObject.formatter(awardDetails);
-      const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
-      request(putDeathDetailsCall).then(() => {
-        res.redirect('/changes-and-enquiries/personal');
-      }).catch((err) => {
-        postVerifyDeathErrorHandler(err, req, res, keyDetails);
-      });
+      const verifiedDetails = dateHelper.dateComponents(dateHelper.timestampToDateDash(awardDetails.dateOfDeath));
+      verifiedDetails.verification = 'V';
+      dataStore.save(req, 'death-stage', 'verifiedDateOfDeathYes', 'death');
+      dataStore.save(req, 'date-of-death', verifiedDetails, 'death');
+      res.redirect('/changes-and-enquiries/personal/death/payment');
     } else {
+      dataStore.save(req, 'date-of-death', null, 'death');
       res.redirect('/changes-and-enquiries/personal/death/verified-date');
     }
   } else {
@@ -393,21 +384,13 @@ function postVerifyDeath(req, res) {
 function getAddVerifedDeath(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
+  const details = dataStore.get(req, 'date-of-death', 'death');
 
   res.render('pages/changes-enquiries/death/enter-date-verified', {
     keyDetails,
     awardDetails,
+    details,
     longDate: dateHelper.longDate,
-  });
-}
-
-function postAddVerifedDeathErrorHandler(error, req, res, keyDetails) {
-  const traceID = requestHelper.getTraceID(error);
-  requestHelper.loggingHelper(error, deathDetailsUpdateApiUri, traceID, res.locals.logger);
-  res.render('pages/changes-enquiries/death/enter-date-verified', {
-    keyDetails,
-    details: req.body,
-    globalError: generalHelper.globalErrorMessage(error, 'award'),
   });
 }
 
@@ -417,14 +400,10 @@ function postAddVerifedDeath(req, res) {
   const errors = formValidator.dateOfDeathVerifedValidation(details);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
-    const deathDetails = deathVerifiedObject.formatter(details, awardDetails);
-    const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
-    request(putDeathDetailsCall).then(() => {
-      deleteSession.deleteDeathDetail(req);
-      res.redirect('/changes-and-enquiries/personal');
-    }).catch((err) => {
-      postAddVerifedDeathErrorHandler(err, req, res, keyDetails);
-    });
+    details.verification = 'V';
+    dataStore.save(req, 'death-stage', 'reVerifiedDateOfDeath', 'death');
+    dataStore.save(req, 'date-of-death', details, 'death');
+    res.redirect('/changes-and-enquiries/personal/death/payment');
   } else {
     res.render('pages/changes-enquiries/death/enter-date-verified', {
       keyDetails,
