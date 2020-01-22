@@ -1,14 +1,26 @@
+<a name="5.20.0"></a>
+# [5.20.0](https://github.com/dwp/gysp-agent-ui/compare/v5.19.0...v5.20.0) (2020-01-22)
+
+
+### Features
+
+* add calculation for NV death to V death ([1bdfdb8](https://github.com/dwp/gysp-agent-ui/commit/1bdfdb8))
+* **mockdate:** added ablity to mock the current date ([8cfff2e](https://github.com/dwp/gysp-agent-ui/commit/8cfff2e))
+* **performance:** improvements ([5a6d6df](https://github.com/dwp/gysp-agent-ui/commit/5a6d6df))
+
+
+
 <a name="5.19.0"></a>
 # [5.19.0](https://github.com/dwp/gysp-agent-ui/compare/v5.18.0...v5.19.0) (2019-12-04)
 
 
 ### Features
 
-* Reissue a recalled payment ([1516538](https://github.com/dwp/gysp-agent-ui/commit/1516538))
+* remove link ([85aa416](https://github.com/dwp/gysp-agent-ui/commit/85aa416))
 * **award:** add uprate details ([536aa09](https://github.com/dwp/gysp-agent-ui/commit/536aa09))
+* Reissue a recalled payment ([1516538](https://github.com/dwp/gysp-agent-ui/commit/1516538))
 * **award:** award list and details ([9260fba](https://github.com/dwp/gysp-agent-ui/commit/9260fba))
 * **scope:** remove payment schedule and hyperlink ([c70b499](https://github.com/dwp/gysp-agent-ui/commit/c70b499))
-* remove link ([85aa416](https://github.com/dwp/gysp-agent-ui/commit/85aa416))
 
 
 
@@ -18,9 +30,9 @@
 
 ### Features
 
-* **death:** overpayment and arrears calculation ([197d441](https://github.com/dwp/gysp-agent-ui/commit/197d441))
-* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
 * **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
+* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
+* **death:** overpayment and arrears calculation ([197d441](https://github.com/dwp/gysp-agent-ui/commit/197d441))
 
 
 
@@ -87,22 +99,22 @@
 ### Features
 
 * **new-award:** screen to show new award to review ([eac9fe1](https://github.com/dwp/gysp-agent-ui/commit/eac9fe1))
+* **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
+* **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
+* **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
+* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **review-award:** payment breakdown and complete ([b2b1a52](https://github.com/dwp/gysp-agent-ui/commit/b2b1a52))
 * **review-award:** review an award reason ([f8de485](https://github.com/dwp/gysp-agent-ui/commit/f8de485))
 
 
 
 <a name="5.12.0"></a>
-# [5.12.0](https://github.com/dwp/gysp-agent-ui/compare/v5.11.0...v5.12.0) (2019-08-13)
+# [5.12.0](https://github.com/dwp/gysp-agent-ui/compare/v5.11.0...v5.12.0) (2019-07-31)
 
 
 ### Features
 
 * **payment:** add timeline to payment page ([6cab99d](https://github.com/dwp/gysp-agent-ui/commit/6cab99d))
-* **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
-* **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
-* **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
-* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **personal:** add timeline feature to personal page ([953ecaa](https://github.com/dwp/gysp-agent-ui/commit/953ecaa))
 * **timeline:** contact timeline ([39d09f6](https://github.com/dwp/gysp-agent-ui/commit/39d09f6))
 
