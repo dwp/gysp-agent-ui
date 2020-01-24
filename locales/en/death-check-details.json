@@ -1,0 +1,9 @@
+{
+  "header": "Check details",
+  "summary": {
+    "name": "Name",
+    "phone": "Phone number",
+    "address": "Address"
+  },
+  "p": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due."
+}

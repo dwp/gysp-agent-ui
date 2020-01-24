@@ -1,5 +1,8 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
+const i18n = require('i18next');
+
+i18n.init({ sendMissingTo: 'fallback' });
 
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
@@ -7,6 +10,7 @@ const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const deathObject = require('../../../../lib/objects/deathObject');
 const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
 const deathPaymentObject = require('../../../../lib/objects/view/deathPaymentObject');
+const deathCheckDetailsObject = require('../../../../lib/objects/view/deathCheckDetailsObject');
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
 const dateHelper = require('../../../../lib/dateHelper');
 const generalHelper = require('../../../../lib/helpers/general');
@@ -270,6 +274,17 @@ function getDeathPayment(req, res) {
   });
 }
 
+function getCheckDetails(req, res) {
+  const awardDetails = dataStore.get(req, 'awardDetails');
+  const keyDetails = keyDetailsHelper.formatter(awardDetails);
+  const death = dataStore.get(req, 'death');
+  const pageData = deathCheckDetailsObject.pageData(death);
+  res.render('pages/changes-enquiries/death/check-details', {
+    keyDetails,
+    pageData,
+  });
+}
+
 function getRetryCalculationErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, deathArrearsApiUri, traceID, res.locals.logger);
@@ -303,12 +318,20 @@ function getRecordDeathErrorHandler(error, req, res) {
   res.redirect('back');
 }
 
+function successMesssage(verification) {
+  if (verification === 'V') {
+    return i18n.t('death-record:messages.success.verified');
+  }
+  return i18n.t('death-record:messages.success.not-verified');
+}
+
 function getRecordDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const death = dataStore.get(req, 'death');
   const deathDetails = deathObject.formatter(death, awardDetails);
   const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
   request(putDeathDetailsCall).then(() => {
+    req.flash('success', successMesssage(death['date-of-death'].verification));
     deleteSession.deleteDeathDetail(req);
     deleteSession.deleteChangesEnquiries(req);
     res.redirect('/changes-and-enquiries/personal');
@@ -427,6 +450,10 @@ module.exports.postDapAddressSelect = postDapAddressSelect;
 
 module.exports.getRecordDeath = getRecordDeath;
 module.exports.getDeathPayment = getDeathPayment;
+
+module.exports.getCheckDetails = getCheckDetails;
+
+module.exports.getRecordDeath = getRecordDeath;
 
 module.exports.getVerifyDeath = getVerifyDeath;
 module.exports.postVerifyDeath = postVerifyDeath;
