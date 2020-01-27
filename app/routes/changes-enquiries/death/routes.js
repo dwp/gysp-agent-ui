@@ -26,6 +26,9 @@ router.route('/personal/death/phone-number')
 router.route('/personal/death/payment')
   .get(functions.getDeathPayment);
 
+router.route('/personal/death/check-details')
+  .get(functions.getCheckDetails);
+
 router.route('/personal/death/record')
   .get(functions.getRecordDeath);
 

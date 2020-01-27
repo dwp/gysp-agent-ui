@@ -4,6 +4,7 @@
 {% from 'helpers/key-details.html' import keyDetailsSection %}
 {% from 'helpers/secondary-navigation.html' import secondaryNavigation %}
 {% from 'helpers/timeline.html' import timeline %}
+{% from 'moj/components/banner/macro.njk' import mojBanner %}
 
 {% block globalNavigation %}
     {{ globalNavigation(activeGlobalNavigationSection) }}
@@ -18,6 +19,15 @@
             {% if messages.error %}
                 {{ error(messages.error) }}
             {% endif %}
+
+            {% if messages.success %}
+                {{ mojBanner({
+                    type: 'success',
+                    text: messages.success,
+                    iconFallbackText: 'Success'
+                }) }}
+            {% endif %}
+
             {% if keyDetails %}
                 {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
             {% endif %}

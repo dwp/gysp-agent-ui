@@ -1,0 +1,8 @@
+{
+  "messages": {
+    "success": {
+      "verified": "Date of death - verified",
+      "not-verified": "Date of death - not verified"
+    }
+  }
+}
