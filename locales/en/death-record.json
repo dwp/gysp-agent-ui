@@ -2,7 +2,8 @@
   "messages": {
     "success": {
       "verified": "Date of death - verified",
-      "not-verified": "Date of death - not verified"
+      "not-verified": "Date of death - not verified",
+      "arrears": "Arrears calculated – awaiting confirmation of payee details"
     }
   }
 }

@@ -151,6 +151,33 @@ const paymentRequestNotVerified = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
+      'death-payment': {
+        amount: '-100.0',
+      },
+      'dap-address': { address: '10091853817' },
+      'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+  },
+  flash: flashMock,
+};
+
+const paymentRequestNotVerifiedArrears = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+      },
+      'dap-name': {
+        name: 'Margaret Meldrew',
+      },
+      'dap-phone-number': {
+        phoneNumber: '0000 000 000',
+      },
+      'death-payment': {
+        amount: '100.0',
+      },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
     },
@@ -612,8 +639,12 @@ describe('Change circumstances date of death controller ', () => {
   });
 
   describe('getCheckDetails function (GET /changes-and-enquiries/personal/death/check-details)', () => {
-    it('should return check details page', () => {
+    it('should return check details page for cannnot calculate', () => {
       controller.getCheckDetails(paymentRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
+    });
+    it('should return check details page for arrears', () => {
+      controller.getCheckDetails(paymentRequestNotVerifiedArrears, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
   });
@@ -724,6 +755,16 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'death-record:messages.success.not-verified');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+
+    it('should return a redirect when API returns 200 with arrears success message', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      controller.getRecordDeath(paymentRequestNotVerifiedArrears, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'death-record:messages.success.arrears');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
     });

@@ -1,9 +1,15 @@
 {
-  "header": "Check details",
+  "header": {
+    "cannot-calculate": "Check details",
+    "arrears": "Check details and send BR330 form"
+  },
   "summary": {
     "name": "Name",
     "phone": "Phone number",
     "address": "Address"
   },
-  "p": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due."
+  "p": {
+    "cannot-calculate": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due.",
+    "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete."
+  }
 }
