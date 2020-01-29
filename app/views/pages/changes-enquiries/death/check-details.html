@@ -3,7 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}{{ t("death-check-details:header") }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ pageData.header }} - Changes and enquiries{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <h1 class="govuk-heading-l">{{ t("death-check-details:header") }}</h1>
+  <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
   {{ govukSummaryList({
     rows: [{
       key: { text: t("death-check-details:summary.name") },
@@ -28,7 +28,7 @@
     }]
   }) }}
 
-  <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p") }}</p>
+  <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ pageData.signOff }}</p>
 
   {{ govukButton({
     text: t("app:button.continue"),
