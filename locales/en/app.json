@@ -3,7 +3,8 @@
   "button": {
     "save": "Save",
     "confirm": "Confirm",
-    "continue": "Continue"
+    "continue": "Continue",
+    "send-letter": "Send letter"
   },
   "link": {
     "back": "Back"
