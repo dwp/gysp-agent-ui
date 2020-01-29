@@ -115,7 +115,7 @@ function getDapPostcodeLookup(req, res) {
   deleteSession.deleteDeathAddress(req);
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const details = dataStore.get(req, 'dap-phone-number', 'death');
+  const details = dataStore.get(req, 'dap-postcode', 'death');
   res.render('pages/changes-enquiries/death/dap/postcode', {
     keyDetails,
     awardDetails,
@@ -339,6 +339,9 @@ function getRecordDeathErrorHandler(error, req, res) {
 function successMesssage(verification, status) {
   if (status === ARREARS) {
     return i18n.t('death-record:messages.success.arrears');
+  }
+  if (status === OVERPAYMENT) {
+    return i18n.t('death-record:messages.success.overpayment');
   }
   if (verification === 'V') {
     return i18n.t('death-record:messages.success.verified');

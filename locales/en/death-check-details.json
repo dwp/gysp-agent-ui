@@ -1,7 +1,8 @@
 {
   "header": {
     "cannot-calculate": "Check details",
-    "arrears": "Check details and send BR330 form"
+    "arrears": "Check details and send BR330 form",
+    "overpayment": "Check details and send letter"
   },
   "summary": {
     "name": "Name",
@@ -10,6 +11,13 @@
   },
   "p": {
     "cannot-calculate": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due.",
-    "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete."
+    "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete.",
+    "overpayment": "A letter will be sent to this person letting them know:"
+  },
+  "list": {
+    "overpayment": {
+      "li1": "we have updated the State Pension record and stopped future payments",
+      "li2": "someone may be in touch about the overpayment"
+    }
   }
 }

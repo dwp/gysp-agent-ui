@@ -3,7 +3,8 @@
     "success": {
       "verified": "Date of death - verified",
       "not-verified": "Date of death - not verified",
-      "arrears": "Arrears calculated – awaiting confirmation of payee details"
+      "arrears": "Arrears calculated – awaiting confirmation of payee details",
+      "overpayment": "Verified date of death – account closed"
     }
   }
 }
