@@ -355,8 +355,10 @@ function getRecordDeath(req, res) {
   const deathDetails = deathObject.formatter(death, awardDetails);
   const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
   request(putDeathDetailsCall).then(() => {
-    const status = deathPaymentStatus(death['death-payment'].amount);
-    req.flash('success', successMesssage(death['date-of-death'].verification, status));
+    if (generalHelper.isNotUndefinedEmptyOrNull(death['death-payment'])) {
+      const status = deathPaymentStatus(death['death-payment'].amount);
+      req.flash('success', successMesssage(death['date-of-death'].verification, status));
+    }
     deleteSession.deleteDeathDetail(req);
     deleteSession.deleteChangesEnquiries(req);
     res.redirect('/changes-and-enquiries/personal');
