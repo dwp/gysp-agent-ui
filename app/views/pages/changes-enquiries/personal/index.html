@@ -10,6 +10,13 @@
       iconFallbackText: "Warning"
     }) }}
   {% endif %}
+
+  {% if details.deathArrearsAmount and details.deathCalculationPerformed == true %}
+    {{ govukWarningText({
+      text: details.deathArrearsAmount + ' arrears payment due',
+      iconFallbackText: "Warning"
+    }) }}
+  {% endif %}
 {% endblock %}
 
 {% block innerContent %}

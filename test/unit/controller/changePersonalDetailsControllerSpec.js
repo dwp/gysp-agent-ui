@@ -88,6 +88,16 @@ describe('Change circumstances personal controller', () => {
       });
     });
 
+    it('should return view name and dead verified arrears view data when called nino exists in session and exists on API', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(200, claimData.validClaimWithDeathNotVerified());
+      controller.getPersonalDetails(ninoRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathNotVerifiedData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
+      });
+    });
+
     it('should return error view name when API returns a 404 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(404, {});
       controller.getPersonalDetails(ninoRequest, genericResponse);
