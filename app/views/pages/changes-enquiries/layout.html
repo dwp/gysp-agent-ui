@@ -13,19 +13,22 @@
 {% block content %}
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {% if globalError %}
-                {{ error(globalError) }}
-            {% endif %}
-            {% if messages.error %}
-                {{ error(messages.error) }}
-            {% endif %}
-
             {% if messages.success %}
                 {{ mojBanner({
                     type: 'success',
                     text: messages.success,
                     iconFallbackText: 'Success'
                 }) }}
+            {% endif %}
+        </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% if globalError %}
+                {{ error(globalError) }}
+            {% endif %}
+            {% if messages.error %}
+                {{ error(messages.error) }}
             {% endif %}
 
             {% if keyDetails %}
