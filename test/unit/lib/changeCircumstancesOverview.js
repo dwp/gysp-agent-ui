@@ -13,5 +13,10 @@ describe('change of circumstances overview ', () => {
       const formatter = changeCircumstancesOverview.formatter(claimData.validClaimWithDeathVerified());
       assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validClaimWithDeathVerifiedData()));
     });
+
+    it('should return formatted object with populated values with deathArrearsAmount arrears due', () => {
+      const formatter = changeCircumstancesOverview.formatter(claimData.validClaimWithDeathArrearsDue());
+      assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validClaimWithDeathVerifiedArrearsData()));
+    });
   });
 });

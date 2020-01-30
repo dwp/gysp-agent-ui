@@ -11,6 +11,13 @@ module.exports = {
       ...base, ...this.validDeathVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
     };
   },
+  validClaimWithDeathArrearsDue() {
+    const base = { ...this.validBase() };
+    base.awardStatus = 'DEAD';
+    return {
+      ...base, ...this.validDeathVerifiedArrears(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+    };
+  },
   validClaimWithDeathNotVerified() {
     const base = { ...this.validBase() };
     base.awardStatus = 'DEADNOTVERIFIED';
@@ -75,6 +82,13 @@ module.exports = {
     return {
       dateOfDeath: '2019-01-01T00:00:00.000Z',
       dateOfDeathVerification: 'NV',
+    };
+  },
+  validDeathVerifiedArrears() {
+    return {
+      dateOfDeath: '2019-01-01T00:00:00.000Z',
+      dateOfDeathVerification: 'V',
+      deathArrearsAmount: 100.0,
     };
   },
   validAccountDetails() {
@@ -256,6 +270,17 @@ module.exports = {
       statePensionDate: '9 November 2018',
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Not verified',
+    };
+  },
+  validClaimWithDeathVerifiedArrearsData() {
+    return {
+      fullName: 'Joe Bloggs',
+      nino: 'AA 37 07 73 A',
+      dob: '9 November 1953',
+      statePensionDate: '9 November 2018',
+      dateOfDeath: '1 January 2019',
+      deathArrearsAmount: '£100.00',
+      dateOfDeathVerification: 'Verified',
     };
   },
   validContactDetailsViewData() {
