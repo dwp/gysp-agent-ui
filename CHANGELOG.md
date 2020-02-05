@@ -1,3 +1,15 @@
+<a name="5.21.0"></a>
+# [5.21.0](https://github.com/dwp/gysp-agent-ui/compare/v5.20.0...v5.21.0) (2020-02-05)
+
+
+### Features
+
+* **death:** check details arrears ([8ad0aef](https://github.com/dwp/gysp-agent-ui/commit/8ad0aef))
+* **death:** check details page with success alert ([1608d67](https://github.com/dwp/gysp-agent-ui/commit/1608d67))
+* **death:** overpayment check details ([ba85a0e](https://github.com/dwp/gysp-agent-ui/commit/ba85a0e))
+
+
+
 <a name="5.20.0"></a>
 # [5.20.0](https://github.com/dwp/gysp-agent-ui/compare/v5.19.0...v5.20.0) (2020-01-22)
 
