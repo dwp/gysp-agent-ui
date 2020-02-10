@@ -1,10 +1,14 @@
+const nock = require('nock');
+const httpStatus = require('http-status-codes');
+
+nock.disableNetConnect();
+
 const { assert } = require('chai');
 
 const controller = require('../../../app/routes/changes-enquiries/payment-frequency/functions');
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
-const paymentData = require('../../lib/paymentData');
 const navigationData = require('../../lib/navigationData');
 
 let testPromise;
@@ -25,10 +29,37 @@ const changePaymentFrequencyViewData = {
   secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
 };
 
-const emptyPostRequest = { session: { awardDetails: claimData.validClaim(), paymentDetails: paymentData.validSchedule() }, body: {} };
-const validPostSameFrequencyRequest = { session: { awardDetails: claimData.validClaim(), paymentDetails: paymentData.validSchedule(4) }, body: { frequency: '4W' } };
-const validOneWeekPostDifferentFrequencyRequest = { session: { awardDetails: claimData.validClaim(), paymentDetails: paymentData.validSchedule(4) }, body: { frequency: '1W' } };
-const validTwoWeekPostDifferentFrequencyRequest = { session: { awardDetails: claimData.validClaim(), paymentDetails: paymentData.validSchedule(4) }, body: { frequency: '2W' } };
+const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
+const validPostSameFrequencyRequest = { session: { awardDetails: claimData.validClaim() }, body: { frequency: '4W' } };
+
+const putChangePaymentFrequencyApiUri = '/api/award/frequencychangeupdate';
+
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+
+const errorMessage = {
+  notFound: 'There has been a problem - award not found. This has been logged.',
+  badRequest: 'There has been a problem with the service, please go back and try again. This has been logged.',
+  other: 'There is a problem with the service. This has been logged. Please try again later.',
+};
+
+const flash = {
+  type: '',
+  message: '',
+};
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
+
+const paymentSchedulePostRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    searchedNino: 'AA370773A',
+  },
+  body: { frequency: '2W' },
+  flash: flashMock,
+};
 
 describe('Change payment frequency controller ', () => {
   beforeEach(() => {
@@ -70,26 +101,51 @@ describe('Change payment frequency controller ', () => {
       });
     });
 
-    it('should return a redirect to back payment page when post is a valid post and is same as current frequency', () => {
+    it('should return a redirect to payment page when post is a valid post and is same as current frequency', () => {
       controller.postChangePaymentFrequency(validPostSameFrequencyRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
     });
 
-    it('should return a redirect to next page when post is a valid post and is different to current frequency - 1 week', () => {
-      controller.postChangePaymentFrequency(validOneWeekPostDifferentFrequencyRequest, genericResponse);
+    it('should return a redirect to payment page when post is valid and is different frequency', () => {
+      nock('http://test-url/', reqHeaders).put(putChangePaymentFrequencyApiUri).reply(httpStatus.OK, {});
+      controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(JSON.stringify(validOneWeekPostDifferentFrequencyRequest.session['payment-frequency']), JSON.stringify({ frequency: '1W' }));
-        assert.equal(genericResponse.address, '/changes-and-enquiries/payment/frequency/schedule');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
     });
 
-    it('should return a redirect to next page when post is a valid post and is different to current frequency - 2 week', () => {
-      controller.postChangePaymentFrequency(validTwoWeekPostDifferentFrequencyRequest, genericResponse);
+    it('should return a the schedule with not found global error', () => {
+      nock('http://test-url/', reqHeaders).put(putChangePaymentFrequencyApiUri).reply(httpStatus.NOT_FOUND, {});
+      controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
       return testPromise.then(() => {
-        assert.equal(JSON.stringify(validTwoWeekPostDifferentFrequencyRequest.session['payment-frequency']), JSON.stringify({ frequency: '2W' }));
-        assert.equal(genericResponse.address, '/changes-and-enquiries/payment/frequency/schedule');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessage.notFound);
+        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/frequencychangeupdate');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/payment/frequency');
+      });
+    });
+
+    it('should return a the schedule with bad request global error', () => {
+      nock('http://test-url/', reqHeaders).put(putChangePaymentFrequencyApiUri).reply(httpStatus.BAD_REQUEST, {});
+      controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessage.badRequest);
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/frequencychangeupdate');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/payment/frequency');
+      });
+    });
+
+    it('should return a the schedule with other global error', () => {
+      nock('http://test-url/', reqHeaders).put(putChangePaymentFrequencyApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorMessage.other);
+        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/frequencychangeupdate');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/payment/frequency');
       });
     });
   });
