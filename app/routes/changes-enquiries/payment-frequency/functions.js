@@ -1,10 +1,16 @@
+const request = require('request-promise');
+const httpStatus = require('http-status-codes');
+
 const formValidator = require('../../../../lib/formValidator');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
-const dataStore = require('../../../../lib/dataStore');
+const requestHelper = require('../../../../lib/requestHelper');
+const freqencyScheduleObject = require('../../../../lib/objects/freqencyScheduleObject');
 
 const activeSecondaryNavigationSection = 'payment';
 const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
+
+const putChangePaymentFrequencyApiUri = 'api/award/frequencychangeupdate';
 
 function selectedPaymentFrequency(value, currentFrequency, inputFrequency) {
   if (inputFrequency !== false) {
@@ -44,6 +50,19 @@ function isFrequencySame(details, frequency) {
   return false;
 }
 
+function postChangePaymentFrequencyErrorHandler(error, req, res) {
+  const traceID = requestHelper.getTraceID(error);
+  requestHelper.loggingHelper(error, putChangePaymentFrequencyApiUri, traceID, res.locals.logger);
+  if (error.statusCode === httpStatus.BAD_REQUEST) {
+    req.flash('error', 'There has been a problem with the service, please go back and try again. This has been logged.');
+  } else if (error.statusCode === httpStatus.NOT_FOUND) {
+    req.flash('error', 'There has been a problem - award not found. This has been logged.');
+  } else {
+    req.flash('error', 'There is a problem with the service. This has been logged. Please try again later.');
+  }
+  res.redirect('/changes-and-enquiries/payment/frequency');
+}
+
 function postChangePaymentFrequency(req, res) {
   const details = req.body;
   const { awardDetails } = req.session;
@@ -53,8 +72,21 @@ function postChangePaymentFrequency(req, res) {
     if (isFrequencySame(awardDetails, details.frequency)) {
       res.redirect('/changes-and-enquiries/payment');
     } else {
-      dataStore.save(req, 'payment-frequency', details);
-      res.redirect('/changes-and-enquiries/payment/frequency/schedule');
+      const scheduleDetails = freqencyScheduleObject.formatter(
+        details.frequency,
+        req.session.searchedNino,
+      );
+      const putScheduleUpdateCall = requestHelper.generatePutCall(
+        res.locals.agentGateway + putChangePaymentFrequencyApiUri,
+        scheduleDetails,
+        'award',
+        req.user,
+      );
+      request(putScheduleUpdateCall).then(() => {
+        res.redirect('/changes-and-enquiries/payment');
+      }).catch((err) => {
+        postChangePaymentFrequencyErrorHandler(err, req, res);
+      });
     }
   } else {
     res.render('pages/changes-enquiries/payment-frequency/index', {

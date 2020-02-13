@@ -11,7 +11,6 @@ router.use('/', require('./death/routes'));
 router.use('/', require('./personal/routes.js'));
 router.use('/', require('./payment/routes'));
 router.use('/', require('./payment-frequency/routes'));
-router.use('/', require('./payment-frequency-schedule/routes'));
 router.use('/', require('./payment-history/routes'));
 
 module.exports = router;

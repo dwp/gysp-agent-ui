@@ -1,55 +1,20 @@
 const { assert } = require('chai');
 
-const object = require('../../../lib/objects/paymentHistoryDetailViewObject');
+const object = require('../../../lib/objects/freqencyScheduleObject');
 
-const id = 123;
+const frequency = '4W';
+const nino = 'AA370773A';
 
-const detail = {
-  status: 'SENT',
-  accountName: 'Mr R H Smith',
-  accountNumber: '98765432',
-  sortCode: '400500',
-  totalAmount: 100,
-  startDate: '2019-07-30T00:00:00.000+0000',
-  endDate: '2019-08-27T00:00:00.000+0000',
-  creditDate: '2019-08-27T06:00:00',
+const objectResponse = {
+  paymentFrequency: frequency,
+  nino,
+  eventCategory: 'PAYMENT',
+  eventType: 'CHANGE',
+  eventName: 'payment:timeline.payment_frequency.changed',
 };
 
-const detailFormatted = {
-  status: 'Sent',
-  accountHolder: 'Mr R H Smith',
-  accountNumber: '98765432',
-  sortCode: '40 05 00',
-  detailsSummaryRows: [
-    {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.total' },
-      value: { classes: 'govuk-!-font-weight-bold', text: '£100.00' },
-    },
-    {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
-      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
-    },
-    {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
-      value: { text: 'Sent' },
-      actions: {
-        items: [
-          {
-            href: '/changes-and-enquiries/payment-history/123/status-update',
-            text: 'payment-detail:summary-keys.statusLink.recall.text',
-          },
-        ],
-      },
-    },
-  ],
-  id: 123,
-};
-
-describe('payment history detail object formatter', () => {
-  it('should return false when detail is undefined', () => {
-    assert.isFalse(object.formatter(undefined));
-  });
+describe('freqency object formatter', () => {
   it('should return valid json when object is called with unformatted object', () => {
-    assert.deepEqual(object.formatter(detail, id), detailFormatted);
+    assert.deepEqual(object.formatter(frequency, nino), objectResponse);
   });
 });
