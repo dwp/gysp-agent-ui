@@ -38,13 +38,13 @@
 	</section>
 {% endmacro %}
 
-{% macro keyDetailsSlimSection(name, nino, status, entitlementDate) %}
+{% macro keyDetailsSlimSection(name, nino, status, spDate) %}
 	<section class="key-details-slim-section" role="contentinfo" aria-labelledby="key-details-label">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-one-half">
 				<h3 class="govuk-heading-m key-details-slim-section__name">{{ name }}</h3>
 				<span class="govuk-caption-m key-details-slim-section__nino">{{ nino }}</span>
-				<p class="govuk-body govuk-!-font-size-16 key-details-slim-section__state-pension-date">State Pension date: {{ entitlementDate }}</p>
+				<p class="govuk-body govuk-!-font-size-16 key-details-slim-section__state-pension-date">State Pension date: {{ spDate }}</p>
 			</div>
 			<div class="govuk-grid-column-one-half">
 				{% if status %}

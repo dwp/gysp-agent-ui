@@ -66,9 +66,9 @@ function getNewAward(req, res) {
     const award = dataStore.get(req, 'award');
     const keyDetails = keyDetailsHelper.formatter(award);
     const details = reviewAwardNewAwardObject.formatter(reviewAward);
-    const entitlementDate = reviewAwardNewAwardObject.entitlementDateFormatter(reviewAward);
+    const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
     res.render('pages/review-award/new-award', {
-      keyDetails, details, reviewAward, entitlementDate,
+      keyDetails, details, reviewAward, spDate,
     });
   } catch (err) {
     res.render('pages/error', { status: '- Issue getting award to review.' });
@@ -107,9 +107,9 @@ async function getPaymentSchedule(req, res) {
     dataStore.save(req, 'srb-breakdown', body);
     const details = paymentObject.formatter(body);
     const keyDetails = keyDetailsHelper.formatter(award);
-    const entitlementDate = reviewAwardNewAwardObject.entitlementDateFormatter(reviewAward);
+    const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
     res.render('pages/review-award/breakdown', {
-      keyDetails, details, entitlementDate,
+      keyDetails, details, spDate,
     });
   } catch (err) {
     getPaymentScheduleErrorHandler(err, req, res);
