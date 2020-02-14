@@ -149,6 +149,7 @@ describe('Review award controller', () => {
           inviteKey: validReviewAwardRequest.session.award.inviteKey,
           spAmount: validReviewAwardRequest.session['review-award'].newStatePensionAmount,
           protectedAmount: validReviewAwardRequest.session['review-award'].protectedPaymentAmount,
+          entitlementDate: '2018-11-09',
         })
         .reply(200, dataObjects.validPaymentApiResponse());
 
@@ -169,12 +170,13 @@ describe('Review award controller', () => {
           inviteKey: validReviewAwardRequest.session.award.inviteKey,
           spAmount: validReviewAwardRequest.session['review-award'].newStatePensionAmount,
           protectedAmount: validReviewAwardRequest.session['review-award'].protectedPaymentAmount,
+          entitlementDate: '2018-11-09',
         })
         .reply(httpStatus.NOT_FOUND, {});
       await controller.getPaymentSchedule(validReviewAwardRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.data.status, '- Payment breakdown not found.');
-      assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=200');
+      assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=200&entitlementDate=2018-11-09');
     });
 
     it('should return error view when API returns 500 state', async () => {
@@ -183,12 +185,13 @@ describe('Review award controller', () => {
           inviteKey: validReviewAwardRequest.session.award.inviteKey,
           spAmount: validReviewAwardRequest.session['review-award'].newStatePensionAmount,
           protectedAmount: validReviewAwardRequest.session['review-award'].protectedPaymentAmount,
+          entitlementDate: '2018-11-09',
         })
         .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.getPaymentSchedule(validReviewAwardRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.data.status, '- Issue getting payment breakdown.');
-      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=200');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=200&entitlementDate=2018-11-09');
     });
   });
 
@@ -211,7 +214,7 @@ describe('Review award controller', () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.BAD_REQUEST);
       await controller.postPaymentSchedule(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, 'Error - connection refused.');
+      assert.equal(flash.message, 'There has been a problem with the service, please go back and try again. This has been logged.');
       assert.equal(genericResponse.address, '/review-award/schedule');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.BAD_REQUEST} - ${httpStatus.BAD_REQUEST} - undefined - Requested on /api/award/srbamountsupdate`);
     });
@@ -220,7 +223,7 @@ describe('Review award controller', () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.NOT_FOUND);
       await controller.postPaymentSchedule(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, 'Error - award not found.');
+      assert.equal(flash.message, 'There has been a problem - award not found. This has been logged.');
       assert.equal(genericResponse.address, '/review-award/schedule');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.NOT_FOUND} - ${httpStatus.NOT_FOUND} - undefined - Requested on /api/award/srbamountsupdate`);
     });
@@ -229,7 +232,7 @@ describe('Review award controller', () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
       await controller.postPaymentSchedule(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, 'Error - could not save data.');
+      assert.equal(flash.message, 'There is a problem with the service. This has been logged. Please try again later.');
       assert.equal(genericResponse.address, '/review-award/schedule');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.INTERNAL_SERVER_ERROR} - ${httpStatus.INTERNAL_SERVER_ERROR} - undefined - Requested on /api/award/srbamountsupdate`);
     });

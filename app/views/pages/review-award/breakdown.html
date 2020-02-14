@@ -5,8 +5,9 @@
 {% from 'govuk/components/table/macro.njk' import govukTable %}
 {% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% block pageTitle %}Put State Pension into payment{% endblock %}
+{% block pageTitle %}New payment amounts{% endblock %}
 
 {% block content %}
 
@@ -31,42 +32,31 @@
         {{ error(messages.error) }}
     {% endif %}
 
-    <h1 class="govuk-heading-xl">Put State Pension into payment</h1>
+    <h1 class="govuk-heading-xl">New payment amounts</h1>
     {% if details %}
-      {{ govukTable({
-        caption: details.bankDetails.caption,
-        firstCellIsHeader: true,
-        classes: 'gysp-payment-table',
-        attributes: {
-          id: 'bank-details'
-        },
-        rows: details.bankDetails.rows
-      }) }}
-
       {% if details.firstPayment %}
-        {{ govukTable({
-          caption: details.firstPayment.caption,
-          firstCellIsHeader: true,
-          classes: 'gysp-payment-table',
+        <h3 class="govuk-heading-m">{{ details.firstPayment.title }}</h3>
+        {{ govukSummaryList({
+          classes: 'gysp-payment-details-summary',
           attributes: {
-            id: 'first-payement-details'
+            id: 'first-payment-details'
           },
           rows: details.firstPayment.rows
         }) }}
       {% endif %}
 
-      {{ govukTable({
-          caption: details.regularPayment.caption,
-          firstCellIsHeader: true,
-          classes: 'gysp-payment-table',
-          attributes: {
-            id: 'regular-payement-details'
-          },
-          rows: details.regularPayment.rows
-        }) }}
+      <h3 class="govuk-heading-m">{{ details.regularPayment.title }}</h3>
+      {{ govukSummaryList({
+        classes: 'gysp-payment-details-summary',
+        attributes: {
+          id: 'regular-payment-details'
+        },
+        rows: details.regularPayment.rows
+      }) }}
+
       <form method="post" action="/review-award/schedule" id="form__create-letter" autocomplete="off">
         {{ govukButton({
-          text: 'Save and send letter',
+          text: details.button,
           attributes: {
             id: 'create-letter'
           }
