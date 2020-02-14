@@ -11,6 +11,12 @@ const validNextSrb = {
   totalAmount: 300.0,
 };
 
+const reviewAwardDate = {
+  dateYear: '2020',
+  dateMonth: '01',
+  dateDay: '01',
+};
+
 const responseNextSrb = {
   summaryOne: [
     {
@@ -65,6 +71,82 @@ const responseNextSrb = {
       value: {
         text: '9 November 2018',
       },
+      actions: {
+        items: [
+          {
+            href: '/review-award/entitlement-date',
+            text: 'Change',
+            visuallyHiddenText: 'entitlement date',
+          },
+        ],
+      },
+    },
+  ],
+};
+
+const responseReviewAwardDate = {
+  summaryOne: [
+    {
+      key: {
+        text: 'Total',
+        classes: 'govuk-!-font-weight-bold govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '£300.00 per week',
+        classes: 'govuk-!-font-weight-bold',
+      },
+    }, {
+      key: {
+        text: 'New State Pension',
+        classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '£100.00',
+      },
+    }, {
+      key: {
+        text: 'Protected payment',
+        classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '£200.00',
+      },
+    }, {
+      key: {
+        text: 'Extra State Pension',
+        classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '£0.00',
+      },
+    }, {
+      key: {
+        text: 'Inherited Extra State Pension',
+        classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '£0.00',
+      },
+    },
+  ],
+  summaryTwo: [
+    {
+      key: {
+        text: 'Entitlement date',
+        classes: 'govuk-!-width-two-thirds',
+      },
+      value: {
+        text: '1 January 2020',
+      },
+      actions: {
+        items: [
+          {
+            href: '/review-award/entitlement-date',
+            text: 'Change',
+            visuallyHiddenText: 'entitlement date',
+          },
+        ],
+      },
     },
   ],
 };
@@ -82,6 +164,10 @@ describe('review new award object', () => {
     it('should return valid summary list object', () => {
       const response = reviewAwardNewAwardObject.formatter(validNextSrb);
       assert.equal(JSON.stringify(response), JSON.stringify(responseNextSrb));
+    });
+    it('should return valid summary list object with asserted entitlement date', () => {
+      const response = reviewAwardNewAwardObject.formatter(validNextSrb, reviewAwardDate);
+      assert.equal(JSON.stringify(response), JSON.stringify(responseReviewAwardDate));
     });
   });
 });

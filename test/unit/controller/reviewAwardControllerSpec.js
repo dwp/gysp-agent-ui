@@ -40,6 +40,9 @@ let validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Te
 
 const invalidRequest = { session: { }, user: { cis: { surname: 'User', givenname: 'Test' } } };
 
+const emptyPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: {} };
+const validPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: { dateYear: '2020', dateMonth: '01', dateDay: '01' } };
+
 describe('Review award controller', () => {
   describe('getReviewAward function (GET /review-award)', () => {
     genericResponse = responseHelper.genericResponse();
@@ -142,6 +145,7 @@ describe('Review award controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     const validReviewAwardRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
+    const validReviewAwardWithAssetedEntitlementDateRequest = dataObjects.validReviewAwardPaymentScheduleAssetedEntitlementDateRequest();
 
     it('should return view with data when a 200 reponse from the API is received', async () => {
       nock('http://test-url/').get(awardReviewBreakdownUri)
@@ -154,6 +158,21 @@ describe('Review award controller', () => {
         .reply(200, dataObjects.validPaymentApiResponse());
 
       await controller.getPaymentSchedule(validReviewAwardRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/review-award/breakdown');
+      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
+    });
+
+    it('should return view with data when a 200 reponse from the API is received with assserted entitlement date', async () => {
+      nock('http://test-url/').get(awardReviewBreakdownUri)
+        .query({
+          inviteKey: validReviewAwardRequest.session.award.inviteKey,
+          spAmount: validReviewAwardRequest.session['review-award'].newStatePensionAmount,
+          protectedAmount: validReviewAwardRequest.session['review-award'].protectedPaymentAmount,
+          entitlementDate: '2020-11-09',
+        })
+        .reply(200, dataObjects.validPaymentApiResponse());
+
+      await controller.getPaymentSchedule(validReviewAwardWithAssetedEntitlementDateRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/breakdown');
       assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
     });
@@ -255,6 +274,31 @@ describe('Review award controller', () => {
       controller.getComplete(validReviewAwardRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/complete');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetailsResponse);
+    });
+  });
+
+  describe('getNewEntitlementDate function (GET /review-award/entitlement-date)', () => {
+    beforeEach(() => {
+      validRequest = { session: { award: claimData.validClaim() }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+    });
+
+    it('should display form when page when requested', () => {
+      controller.getNewEntitlementDate(validRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/review-award/date');
+    });
+  });
+
+  describe('postNewEntitlementDate function (POST /review-award/entitlement-date)', () => {
+    it('should return view name when called with invalid post with empty data', () => {
+      controller.postNewEntitlementDate(emptyPostNewEntitlementDateRequest, genericResponse);
+      assert.equal(Object.keys(genericResponse.data.errors).length, 4);
+      assert.equal(genericResponse.viewName, 'pages/review-award/date');
+    });
+
+    it('should return view name when called with invalid post with errors', () => {
+      controller.postNewEntitlementDate(validPostNewEntitlementDateRequest, genericResponse);
+      assert.deepEqual(validPostNewEntitlementDateRequest.session['review-award-date'], validPostNewEntitlementDateRequest.body);
+      assert.equal(genericResponse.address, '/review-award/new-award');
     });
   });
 });

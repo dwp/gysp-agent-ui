@@ -9,6 +9,7 @@ const dataStore = require('../../../lib/dataStore');
 const reviewAwardReasonObject = require('../../../lib/objects/reviewAwardReasonObject');
 const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
 const srbAmountUpdateObject = require('../../../lib/objects/srbAmountUpdateObject');
+const formValidator = require('../../../lib/formValidator');
 
 async function cacheRetriveAndStore(req, key, apiCall) {
   if (dataStore.get(req, key)) {
@@ -63,9 +64,10 @@ async function getReviewReason(req, res) {
 function getNewAward(req, res) {
   try {
     const reviewAward = dataStore.get(req, 'review-award');
+    const reviewAwardDate = dataStore.get(req, 'review-award-date');
     const award = dataStore.get(req, 'award');
     const keyDetails = keyDetailsHelper.formatter(award);
-    const details = reviewAwardNewAwardObject.formatter(reviewAward);
+    const details = reviewAwardNewAwardObject.formatter(reviewAward, reviewAwardDate);
     const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
     res.render('pages/review-award/new-award', {
       keyDetails, details, reviewAward, spDate,
@@ -75,13 +77,20 @@ function getNewAward(req, res) {
   }
 }
 
-function srbPaymentBreakdownURL(res, inviteKey, reviewAward) {
+function formatEntitlementDate(entitlementDate, reviewAwardDate) {
+  if (reviewAwardDate !== undefined) {
+    return dateHelper.timestampToDateDash(`${reviewAwardDate.dateYear}-${reviewAwardDate.dateMonth}-${reviewAwardDate.dateDay}`);
+  }
+  return dateHelper.timestampToDateDash(entitlementDate);
+}
+
+function srbPaymentBreakdownURL(res, inviteKey, reviewAward, reviewAwardDate) {
   const { newStatePensionAmount, protectedPaymentAmount, entitlementDate } = reviewAward;
   const query = querystring.stringify({
     inviteKey,
     spAmount: newStatePensionAmount,
     protectedAmount: protectedPaymentAmount,
-    entitlementDate: dateHelper.timestampToDateDash(entitlementDate),
+    entitlementDate: formatEntitlementDate(entitlementDate, reviewAwardDate),
   });
   return `${res.locals.agentGateway}api/award/srbpaymentbreakdown?${query}`;
 }
@@ -100,8 +109,9 @@ function getPaymentScheduleErrorHandler(err, req, res) {
 async function getPaymentSchedule(req, res) {
   const award = dataStore.get(req, 'award');
   const reviewAward = dataStore.get(req, 'review-award');
+  const reviewAwardDate = dataStore.get(req, 'review-award-date');
   try {
-    const breakDownUrl = srbPaymentBreakdownURL(res, award.inviteKey, reviewAward);
+    const breakDownUrl = srbPaymentBreakdownURL(res, award.inviteKey, reviewAward, reviewAwardDate);
     const paymentScheduleCall = requestHelper.generateGetCall(breakDownUrl, {}, 'award');
     const body = await request(paymentScheduleCall);
     dataStore.save(req, 'srb-breakdown', body);
@@ -139,8 +149,9 @@ function processSessionAndDeleteReviewAward(req) {
 async function postPaymentSchedule(req, res) {
   const { inviteKey } = dataStore.get(req, 'award');
   const reviewAward = dataStore.get(req, 'review-award');
+  const reviewAwardDate = dataStore.get(req, 'review-award-date');
   try {
-    const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, reviewAward);
+    const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, reviewAward, reviewAwardDate);
     const srbAmountPutCall = requestHelper.generatePutCall(`${res.locals.agentGateway}api/award/srbamountsupdate`, putSrbAmountObject, 'award', req.user);
     await request(srbAmountPutCall);
     processSessionAndDeleteReviewAward(req);
@@ -157,9 +168,37 @@ function getComplete(req, res) {
   res.render('pages/review-award/complete', { keyDetails, arrearsPayment });
 }
 
+function getNewEntitlementDate(req, res) {
+  const award = dataStore.get(req, 'award');
+  const keyDetails = keyDetailsHelper.formatter(award);
+  const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
+  res.render('pages/review-award/date', { keyDetails, spDate });
+}
+
+function postNewEntitlementDate(req, res) {
+  const details = req.body;
+  const award = dataStore.get(req, 'award');
+  const errors = formValidator.reviewAwardEntitlementDateValidation(award.statePensionDate, details);
+  if (Object.keys(errors).length === 0) {
+    dataStore.save(req, 'review-award-date', details);
+    res.redirect('/review-award/new-award');
+  } else {
+    const keyDetails = keyDetailsHelper.formatter(award);
+    const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
+    res.render('pages/review-award/date', {
+      keyDetails,
+      spDate,
+      details,
+      errors,
+    });
+  }
+}
+
 module.exports.getReviewAward = getReviewAward;
 module.exports.getReviewReason = getReviewReason;
 module.exports.getNewAward = getNewAward;
 module.exports.getPaymentSchedule = getPaymentSchedule;
 module.exports.postPaymentSchedule = postPaymentSchedule;
 module.exports.getComplete = getComplete;
+module.exports.getNewEntitlementDate = getNewEntitlementDate;
+module.exports.postNewEntitlementDate = postNewEntitlementDate;
