@@ -1,5 +1,7 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
+const querystring = require('querystring');
+const dateHelper = require('../../../lib/dateHelper');
 const requestHelper = require('../../../lib/requestHelper');
 const deleteSession = require('../../../lib/deleteSession');
 const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
@@ -73,8 +75,15 @@ function getNewAward(req, res) {
   }
 }
 
-function srbPaymentBreakdownURL(res, inviteKey, spAmount, protectedAmount) {
-  return `${res.locals.agentGateway}api/award/srbpaymentbreakdown?inviteKey=${inviteKey}&spAmount=${spAmount}&protectedAmount=${protectedAmount}`;
+function srbPaymentBreakdownURL(res, inviteKey, reviewAward) {
+  const { newStatePensionAmount, protectedPaymentAmount, entitlementDate } = reviewAward;
+  const query = querystring.stringify({
+    inviteKey,
+    spAmount: newStatePensionAmount,
+    protectedAmount: protectedPaymentAmount,
+    entitlementDate: dateHelper.timestampToDateDash(entitlementDate),
+  });
+  return `${res.locals.agentGateway}api/award/srbpaymentbreakdown?${query}`;
 }
 
 function getPaymentScheduleErrorHandler(err, req, res) {
@@ -92,9 +101,10 @@ async function getPaymentSchedule(req, res) {
   const award = dataStore.get(req, 'award');
   const reviewAward = dataStore.get(req, 'review-award');
   try {
-    const breakDownUrl = srbPaymentBreakdownURL(res, award.inviteKey, reviewAward.newStatePensionAmount, reviewAward.protectedPaymentAmount);
+    const breakDownUrl = srbPaymentBreakdownURL(res, award.inviteKey, reviewAward);
     const paymentScheduleCall = requestHelper.generateGetCall(breakDownUrl, {}, 'award');
     const body = await request(paymentScheduleCall);
+    dataStore.save(req, 'srb-breakdown', body);
     const details = paymentObject.formatter(body);
     const keyDetails = keyDetailsHelper.formatter(award);
     const entitlementDate = reviewAwardNewAwardObject.entitlementDateFormatter(reviewAward);
@@ -112,11 +122,11 @@ function postPaymentScheduleErrorHandler(err, req, res) {
   requestHelper.loggingHelper(err, getPath, traceID, res.locals.logger);
 
   if (err.statusCode === httpStatus.BAD_REQUEST) {
-    req.flash('error', 'Error - connection refused.');
+    req.flash('error', 'There has been a problem with the service, please go back and try again. This has been logged.');
   } else if (err.statusCode === httpStatus.NOT_FOUND) {
-    req.flash('error', 'Error - award not found.');
+    req.flash('error', 'There has been a problem - award not found. This has been logged.');
   } else {
-    req.flash('error', 'Error - could not save data.');
+    req.flash('error', 'There is a problem with the service. This has been logged. Please try again later.');
   }
   res.redirect('/review-award/schedule');
 }
@@ -128,9 +138,9 @@ function processSessionAndDeleteReviewAward(req) {
 
 async function postPaymentSchedule(req, res) {
   const { inviteKey } = dataStore.get(req, 'award');
-  const { newStatePensionAmount, protectedPaymentAmount } = dataStore.get(req, 'review-award');
+  const reviewAward = dataStore.get(req, 'review-award');
   try {
-    const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, newStatePensionAmount, protectedPaymentAmount);
+    const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, reviewAward);
     const srbAmountPutCall = requestHelper.generatePutCall(`${res.locals.agentGateway}api/award/srbamountsupdate`, putSrbAmountObject, 'award', req.user);
     await request(srbAmountPutCall);
     processSessionAndDeleteReviewAward(req);
@@ -142,8 +152,9 @@ async function postPaymentSchedule(req, res) {
 
 function getComplete(req, res) {
   const award = dataStore.get(req, 'award');
+  const { arrearsPayment } = dataStore.get(req, 'srb-breakdown');
   const keyDetails = keyDetailsHelper.formatter(award);
-  res.render('pages/review-award/complete', { keyDetails });
+  res.render('pages/review-award/complete', { keyDetails, arrearsPayment });
 }
 
 module.exports.getReviewAward = getReviewAward;

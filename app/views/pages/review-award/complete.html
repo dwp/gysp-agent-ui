@@ -9,14 +9,10 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         {{ govukPanel({
-            titleText: "State Pension award updated and letter sent",
+            titleText: "Award updated, arrears paid and letter sent" if arrearsPayment else "Award updated and letter sent",
             headingLevel: 1,
             classes: "govuk-!-margin-bottom-6"
         }) }}
-
-        {% if keyDetails %}
-            {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
-        {% endif %}
 
         <p class="govuk-body"><a href="/review-award">Process another award</a></p>
     </div>

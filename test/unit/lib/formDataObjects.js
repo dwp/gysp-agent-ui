@@ -3,12 +3,7 @@ const claimData = require('../../lib/claimData');
 module.exports = {
   validPaymentApiResponse() {
     return {
-      bankDetails: {
-        accountHolder: 'Mr Joe Bloggs',
-        accountNumber: '12345678',
-        referenceNumber: '000000000',
-        sortCode: '986456',
-      },
+      arrearsPayment: false,
       firstPayment: {
         endDate: '2018-12-31T09:43:11.315Z',
         paymentCalculation: {
@@ -59,17 +54,13 @@ module.exports = {
     delete object.firstPayment;
     return object;
   },
-  validPaymentApiResponseWithFirstSecondRegularPayment() {
+  validPaymentApiResponseWithFirstPaymentArrearsFalse() {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
-    object.adjustedPayment = {
-      endDate: '2018-12-31T09:43:11.315Z',
-      paymentCalculation: {
-        protectedPaymentAmount: 20,
-        statePensionAmount: 50,
-        totalAmount: 70,
-      },
-      startDate: '2018-12-10T09:43:11.315Z',
-    };
+    return object;
+  },
+  validPaymentApiResponseWithFirstPaymentArrearsTrue() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
+    object.arrearsPayment = true;
     return object;
   },
   validProcessClaimPaymentRequest() {
@@ -102,37 +93,32 @@ module.exports = {
           protectedPaymentAmount: 200.0,
           totalAmount: 300.0,
         },
+        'srb-breakdown': {
+          arrearsPayment: false,
+        },
       },
       user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
   validPaymentFormattedObject() {
     return {
-      bankDetails: {
-        caption: 'Bank details',
-        rows: [
-          [{ text: 'Account holder' }, { text: 'Mr Joe Bloggs' }],
-          [{ text: 'Sort code' }, { text: '986456' }],
-          [{ text: 'Account number' }, { text: '12345678' }],
-          [{ text: 'Roll number' }, { text: '000000000' }],
-        ],
-      },
       regularPayment: {
-        caption: 'Second and regular payment',
+        title: 'Second and regular payment',
         rows: [
-          [{ text: 'Total' }, { text: '£170' }],
-          [{ text: 'Breakdown' }, { html: 'New State Pension £140<br />Protected payment £30' }],
-          [{ text: 'Payment period dates' }, { html: '1 January 2019 to<br />12 December 2019' }],
+          { key: { text: 'Total' }, value: { text: '£170.00' } },
+          { key: { text: 'Breakdown' }, value: { html: 'New State Pension £140.00<br />Protected payment £30.00' } },
+          { key: { text: 'Payment period dates' }, value: { html: '1 January 2019 to<br />12 December 2019' } },
         ],
       },
       firstPayment: {
-        caption: 'First payment',
+        title: 'First payment',
         rows: [
-          [{ text: 'Total' }, { text: '£150' }],
-          [{ text: 'Breakdown' }, { html: 'New State Pension £100<br />Protected payment £50' }],
-          [{ text: 'Payment period dates' }, { html: '10 December 2018 to<br />31 December 2018' }],
+          { key: { text: 'Total' }, value: { text: '£150.00' } },
+          { key: { text: 'Breakdown' }, value: { html: 'New State Pension £100.00<br />Protected payment £50.00' } },
+          { key: { text: 'Payment period dates' }, value: { html: '10 December 2018 to<br />31 December 2018' } },
         ],
       },
+      button: 'Save and send letter',
     };
   },
   validPaymentFormattedObjectWithoutReferenceNumber() {
@@ -142,33 +128,36 @@ module.exports = {
   },
   validPaymentFormattedObjectWithoutFirstPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    const [protectedPayment0] = object.firstPayment.rows[1][1].html.split('<br />');
-    object.firstPayment.rows[1][1].html = protectedPayment0;
+    const [protectedPayment0] = object.firstPayment.rows[1].value.html.split('<br />');
+    object.firstPayment.rows[1].value.html = protectedPayment0;
+    object.button = 'Save and send letter';
     return object;
   },
   validPaymentFormattedObjectWithoutRegularPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    const [protectedPayment0] = object.regularPayment.rows[1][1].html.split('<br />');
-    object.regularPayment.rows[1][1].html = protectedPayment0;
+    const [protectedPayment0] = object.regularPayment.rows[1].value.html.split('<br />');
+    object.regularPayment.rows[1].value.html = protectedPayment0;
+    object.button = 'Save and send letter';
     return object;
   },
   validPaymentFormattedObjectWithoutFirstPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     delete object.firstPayment;
-    object.regularPayment.caption = 'First and regular payment';
+    object.regularPayment.title = 'First and regular payment';
+    object.button = 'Save and send letter';
     return object;
   },
-  validPaymentFormattedObjectWithFirstSecondRegularPayment() {
+  validPaymentFormattedObjectWithFirstPaymentArrearsFalse() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    object.secondPayment = {
-      caption: 'Second payment',
-      rows: [
-        [{ text: 'Total' }, { text: '£70' }],
-        [{ text: 'Breakdown' }, { html: 'New State Pension £50<br />Protected payment £20' }],
-        [{ text: 'Payment period dates' }, { html: '10 December 2018 to<br />31 December 2018' }],
-      ],
-    };
-    object.regularPayment.caption = 'Regular payment';
+    object.regularPayment.title = 'Second and regular payment';
+    object.button = 'Save and send letter';
+    return object;
+  },
+  validPaymentFormattedObjectWithFirstPaymentArrearsTrue() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    object.firstPayment.title = 'Arrears payment';
+    object.regularPayment.title = 'Next and regular payment';
+    object.button = 'Pay arrears and send letter';
     return object;
   },
   validProcessClaimPaymentFormRequest() {

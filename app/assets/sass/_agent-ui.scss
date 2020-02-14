@@ -102,6 +102,48 @@
     }
 }
 
+.gysp-payment-details-summary {
+    .govuk-summary-list__row {
+        &:not(:first-child) {
+            .govuk-summary-list__key {
+                font-weight: 400;
+            }
+        }
+
+        &:first-child {
+            .govuk-summary-list__value {
+                font-weight: 600;
+            }
+        }
+    }
+
+    .govuk-summary-list {
+        &__key {
+            @include govuk-media-query($from: tablet) {
+                width: 50%;
+            }
+        }
+
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 30%;
+            }
+
+            &:last-child {
+                @include govuk-media-query($from: tablet) {
+                    width: 50%;
+                }
+            }
+        }
+
+        &__actions {
+            @include govuk-media-query($from: tablet) {
+                width: 30%;
+            }
+        }
+    }
+}
+
 .gysp-bank-building-table {
     @include govuk-media-query($from: tablet) {
         &__heading {
