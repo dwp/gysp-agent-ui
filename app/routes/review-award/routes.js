@@ -11,4 +11,8 @@ router.route('/schedule')
   .post(functions.postPaymentSchedule);
 router.get('/complete', functions.getComplete);
 
+router.route('/entitlement-date')
+  .get(functions.getNewEntitlementDate)
+  .post(functions.postNewEntitlementDate);
+
 module.exports = router;

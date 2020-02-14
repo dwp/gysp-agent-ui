@@ -25,6 +25,7 @@ module.exports = {
       'personal',
       'date-of-death',
       'reissue-payment',
+      'review-award-date',
       'verify-date-of-death',
       'verified-date-of-death',
     ],

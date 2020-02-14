@@ -100,6 +100,30 @@ module.exports = {
       user: { cis: { surname: 'User', givenname: 'Test' } },
     };
   },
+  validReviewAwardPaymentScheduleAssetedEntitlementDateRequest() {
+    return {
+      session: {
+        award: claimData.validClaim(),
+        'review-award': {
+          nino: 'AA370773A',
+          reasonForChange: 'REVISION OF ENTITLEMENT DUE TO CHANGE IN CONT/CREDIT POSITION',
+          entitlementDate: '2018-11-09T12:27:48.795Z',
+          newStatePensionAmount: 100.0,
+          protectedPaymentAmount: 200.0,
+          totalAmount: 300.0,
+        },
+        'srb-breakdown': {
+          arrearsPayment: false,
+        },
+        'review-award-date': {
+          dateYear: '2020',
+          dateMonth: '11',
+          dateDay: '09',
+        },
+      },
+      user: { cis: { surname: 'User', givenname: 'Test' } },
+    };
+  },
   validPaymentFormattedObject() {
     return {
       regularPayment: {

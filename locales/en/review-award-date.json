@@ -1,0 +1,25 @@
+{
+  "header": "Enter the new entitlement date",
+  "fields": {
+    "date": {
+      "legend": "Enter the new entitlement date",
+      "items": {
+        "day": {
+          "label": "Day"
+        },
+        "month": {
+          "label": "Month"
+        },
+        "year": {
+          "label": "Year"
+        }
+      },
+      "errors": {
+        "required": "Enter a new entitlement date",
+        "incomplete": "Entitlement date must include a day, month and yearr",
+        "format": "Enter a real date",
+        "before": "Entitlement date cannot be before State Pension date"
+      }
+    }
+  }
+}

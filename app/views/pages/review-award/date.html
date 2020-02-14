@@ -1,0 +1,72 @@
+{% extends 'helpers/layout.html' %}
+{% from 'helpers/key-details.html' import keyDetailsSlimSection %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("review-award-date:header") }}{% endblock %}
+
+{% block content %}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        {% if keyDetails %}
+            {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, spDate) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ govukBackLink({
+    text: 'Back',
+    href: '/review-award/new-award',
+    classes: 'govuk-!-margin-bottom-8'
+}) }}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="POST" action="/review-award/entitlement-date" autocomplete="off">
+            {{ govukDateInput({
+                id: "date",
+                fieldset: {
+                    legend: {
+                        text: t("review-award-date:fields.date.legend"),
+                        isPageHeading: true,
+                        classes: "govuk-fieldset__legend--l"
+                    }
+                },
+                items: [{
+                    label: t("review-award-date:fields.date.items.day.label"),
+                    id: "date-day",
+                    name: "dateDay",
+                    value: details.dateDay,
+                    classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateDay),
+                    attributes: { maxlength: '2' }
+                }, {
+                    label: t("review-award-date:fields.date.items.month.label"),
+                    id: "date-month",
+                    name: "dateMonth",
+                    value: details.dateMonth,
+                    classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dateMonth),
+                    attributes: { maxlength: '2' }
+                }, {
+                    label: t("review-award-date:fields.date.items.year.label"),
+                    id: "date-year",
+                    name: "dateYear",
+                    value: details.dateYear,
+                    classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dateYear),
+                    attributes: { maxlength: '4' }
+                }],
+                errorMessage: errors.date
+            }) }}
+
+            {{ govukButton({
+                text: t("app:button.continue"),
+                attributes: {
+                    id: 'date-continue'
+                }
+            }) }}
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
