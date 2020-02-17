@@ -16,7 +16,7 @@
       },
       "errors": {
         "required": "Enter a new entitlement date",
-        "incomplete": "Entitlement date must include a day, month and yearr",
+        "incomplete": "Entitlement date must include a day, month and year",
         "format": "Enter a real date",
         "before": "Entitlement date cannot be before State Pension date"
       }
