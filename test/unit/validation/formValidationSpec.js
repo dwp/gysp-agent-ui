@@ -691,34 +691,41 @@ describe('Form validation', () => {
 
   describe('reviewAwardEntitlementDateValidation validator', () => {
     it('should return no error when valid data is supplied', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
         dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
       });
       assert.equal(Object.keys(errors).length, 0);
     });
 
     it('should return all errors when empty', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', { });
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, { });
       assert.equal(Object.keys(errors).length, 4);
     });
 
     it('should return all errors when blank', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
         dateYear: '', dateMonth: '', dateDay: '',
       });
       assert.equal(Object.keys(errors).length, 4);
     });
 
     it('should return error when date in before sp data', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
         dateYear: '2017', dateMonth: '01', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 1);
       assert.equal(errors.date.text, 'review-award-date:fields.date.errors.before');
     });
 
+    it('should return no error when date in sp data', () => {
+      const errors = validator.reviewAwardEntitlementDateValidation(1583474400000, {
+        dateYear: '2020', dateMonth: '03', dateDay: '06',
+      });
+      assert.equal(Object.keys(errors).length, 0);
+    });
+
     it('should return error when month is invalid', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
         dateYear: '2018', dateMonth: '20', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 2);
@@ -726,7 +733,7 @@ describe('Form validation', () => {
     });
 
     it('should return error when day is invalid', () => {
-      const errors = validator.reviewAwardEntitlementDateValidation('2018-11-01', {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
         dateYear: '2018', dateMonth: '01', dateDay: '40',
       });
       assert.equal(Object.keys(errors).length, 2);
