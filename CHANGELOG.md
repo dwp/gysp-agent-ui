@@ -1,3 +1,15 @@
+<a name="5.22.0"></a>
+# [5.22.0](https://github.com/dwp/gysp-agent-ui/compare/v5.21.0...v5.22.0) (2020-02-19)
+
+
+### Features
+
+* **payment:** removed CPS local page ([89e429a](https://github.com/dwp/gysp-agent-ui/commit/89e429a))
+* **review:** change entitlement date ([56f8abc](https://github.com/dwp/gysp-agent-ui/commit/56f8abc))
+* **review-award:** new payment amounts ([0ee9288](https://github.com/dwp/gysp-agent-ui/commit/0ee9288))
+
+
+
 <a name="5.21.0"></a>
 # [5.21.0](https://github.com/dwp/gysp-agent-ui/compare/v5.20.0...v5.21.0) (2020-02-05)
 
