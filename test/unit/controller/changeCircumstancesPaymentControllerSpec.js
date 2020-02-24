@@ -21,7 +21,7 @@ const paymentViewDataWithReference = {
 
 const paymentSummaryViewDataFirstPaymentPaid = {
   paymentOne: {
-    label: 'payment:payment_table.last_payment',
+    label: 'payment:payment_table.first_payment',
     creditDate: '11 April 2019',
     amount: '£203.57',
   },
@@ -117,7 +117,7 @@ describe('Change circumstances payment controller ', () => {
 
     it('should return view name and view data when nino exists in session and exists on API first payment paid with recent payments sent and paid', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
-      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
+      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentNotSent());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validPaidAndSent());
       paymentRequest.session['payment-frequency'] = '4W';
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
@@ -132,7 +132,7 @@ describe('Change circumstances payment controller ', () => {
 
     it('should return view name and view data when nino exists in session and exists on API first payment not paid with recent payments all paid', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
-      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentNotPaid());
+      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentNotSent());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validAllPaid());
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {
@@ -168,7 +168,7 @@ describe('Change circumstances payment controller ', () => {
 
     it('should return error view name when payment details API returns 404 response but payment summary returns a 200 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(404, {});
-      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
+      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentNotSent());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(200, recentPaymentData.validPaidAndSent());
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {
@@ -178,7 +178,7 @@ describe('Change circumstances payment controller ', () => {
 
     it('should return not return error view name when all api\'s return 200 but recent payments returns a 404 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
-      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
+      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentSent());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(404, {});
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {
@@ -188,7 +188,7 @@ describe('Change circumstances payment controller ', () => {
 
     it('should return error view name when all api\'s return 200 but recent payments returns a 500 response', () => {
       nock('http://test-url/').get(`${changeCircumstancesPaymentDetailsUri}/${paymentRequest.session.searchedNino}`).reply(200, claimData.validClaim());
-      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentPaid());
+      nock('http://test-url/').get(`${paymentSummaryUri}/${paymentRequest.session.searchedNino}`).reply(200, paymentSummaryData.validFirstPaymentSent());
       nock('http://test-url/').get(`${recentPaymentsUri}/${paymentRequest.session.searchedNino}`).reply(500, {});
       changeCircumstancesPaymentController.getPaymentOverview(paymentRequest, genericResponse);
       return testPromise.then(() => {

@@ -4,12 +4,7 @@ const paymentSummaryObject = require('../../../lib/objects/changeCircumstancesPa
 
 const paymentSummaryData = require('../../lib/paymentSummaryData');
 
-const paymentSummaryViewDataFirstPaymentPaid = {
-  paymentOne: {
-    label: 'payment:payment_table.last_payment',
-    creditDate: '11 April 2019',
-    amount: '£203.57',
-  },
+const paymentSummaryViewDataFirstPaymentSent = {
   paymentTwo: {
     label: 'payment:payment_table.next_payment',
     creditDate: '19 April 2019',
@@ -17,7 +12,7 @@ const paymentSummaryViewDataFirstPaymentPaid = {
   },
 };
 
-const paymentSummaryViewDataFirstPaymentNotPaid = {
+const paymentSummaryViewDataFirstPaymentNotSent = {
   paymentOne: {
     label: 'payment:payment_table.first_payment',
     creditDate: '11 April 2019',
@@ -30,13 +25,7 @@ const paymentSummaryViewDataFirstPaymentNotPaid = {
   },
 };
 
-const paymentSummaryViewDataFirstPaymentPaidNextAmountNull = {
-  paymentOne: {
-    label: 'payment:payment_table.last_payment',
-    creditDate: '11 April 2019',
-    amount: '£203.57',
-  },
-};
+const paymentSummaryViewDataFirstPaymentSentNextAmountNull = { };
 
 describe('Payment summary object formatter', () => {
   it('should return false when object is null', (done) => {
@@ -44,21 +33,21 @@ describe('Payment summary object formatter', () => {
     done();
   });
 
-  it('should return valid object when object has first payment paid', (done) => {
-    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentPaid());
-    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentPaid));
+  it('should return valid object with paymentTwo and when details has first payment sent', (done) => {
+    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentSent());
+    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentSent));
     done();
   });
 
-  it('should return valid object when object is with first payment not paid', (done) => {
-    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentNotPaid());
-    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentNotPaid));
+  it('should return valid object with paymentOne and paymentTwo when details has with first payment not sent and next payment', (done) => {
+    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentNotSent());
+    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentNotSent));
     done();
   });
 
   it('should return valid object without second payment when nextAmount is null', (done) => {
-    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstPaymentPaidWithoutNextAmount());
-    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentPaidNextAmountNull));
+    const json = paymentSummaryObject.formatter(paymentSummaryData.validFirstAndNextPaymentNull());
+    assert.equal(JSON.stringify(json), JSON.stringify(paymentSummaryViewDataFirstPaymentSentNextAmountNull));
     done();
   });
 });
