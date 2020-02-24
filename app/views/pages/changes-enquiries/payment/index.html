@@ -52,11 +52,13 @@
             <a href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
           </td>
         </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell" scope="row">{{ paymentSummary.paymentOne.label }}</th>
-          <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentOne.amount }}</td>
-        </tr>
+        {% if paymentSummary.paymentOne %}
+          <tr class="govuk-table__row">
+            <th class="govuk-table__cell" scope="row">{{ paymentSummary.paymentOne.label }}</th>
+            <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentOne.amount }}</td>
+          </tr>
+        {% endif %}
         {% if paymentSummary.paymentTwo %}
           <tr class="govuk-table__row">
             <th class="govuk-table__cell" scope="row">{{ paymentSummary.paymentTwo.label }}</th>
