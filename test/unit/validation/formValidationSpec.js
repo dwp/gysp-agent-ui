@@ -48,6 +48,7 @@ const blankBankPostData = { accountName: '', accountNumber: '', sortCode: '' };
 const bankObjects = {
   emptyObject: { accountName: '', accountNumber: '', sortCode: '' },
   longTextObject: { accountName: 'qwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiowe', accountNumber: '', sortCode: '' },
+  maxTextObject: { accountName: 'qwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiow', accountNumber: '', sortCode: '' },
   validObject: { accountName: 'Mr P. Peterson', accountNumber: '12345678', sortCode: '112233' },
   validObjectWithSpaces: { accountName: 'Mr P. Peterson', accountNumber: '12345678', sortCode: ' 11 22 33 ' },
   validObjectWithHyphens: { accountName: 'Mr P. Peterson', accountNumber: '12345678', sortCode: '11-22-33' },
@@ -738,6 +739,111 @@ describe('Form validation', () => {
       });
       assert.equal(Object.keys(errors).length, 2);
       assert.equal(errors.date.text, 'review-award-date:fields.date.errors.format');
+    });
+  });
+
+  describe('payeeAccountDetails validator', () => {
+    it('should return error when empty object is supplied', () => {
+      const errors = validator.payeeAccountDetails(emptyBankBuildingPostData);
+      assert.equal(Object.keys(errors).length, 3);
+    });
+
+    it('should return error when blank object is supplied', () => {
+      const errors = validator.payeeAccountDetails(blankBankPostData);
+      assert.equal(Object.keys(errors).length, 3);
+    });
+
+    describe(' accountName ', () => {
+      it('should return error if empty ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
+        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.required');
+      });
+      it('should return error if to long (greater then 70 characters) ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longTextObject);
+        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.length');
+      });
+      it('should return no error if 70 characters long', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.maxTextObject);
+        assert.equal(accountValidationResponse.accountName, undefined);
+      });
+      it('should return error if text includes none alpha ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.nonAlphaName);
+        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.format');
+      });
+      it('should return no error if text includes a & ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.includesAnd);
+        assert.equal(accountValidationResponse.accountName, undefined);
+      });
+      it('should return error if text does not start with alpha ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.startNotAlphaName);
+        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.format');
+      });
+    });
+
+    describe('account number ', () => {
+      it('should return error if empty', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
+        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.required');
+      });
+      it('should return error if less then 8 numbers', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.shortAccount);
+        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.length');
+      });
+
+      it('should return error if more then 8 numbers', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longAccount);
+        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.length');
+      });
+    });
+
+    describe('sort code ', () => {
+      it('should return error if empty', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
+        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.required');
+      });
+      it('should return error if not numbers', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.textAccount);
+        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.format');
+      });
+      it('should return error if one numbers', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.shortAccount);
+        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.length');
+      });
+      it('should return error if length greater then 6', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longAccount);
+        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.length');
+      });
+      it('should return no errors when sort code is valid and contains spaces', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithSpaces);
+        assert.equal(accountValidationResponse.length, 0);
+      });
+      it('should return no errors when sort code valid and contains hyphens', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithHyphens);
+        assert.equal(accountValidationResponse.length, 0);
+      });
+      it('should return no errors when sort code valid, contains hyphens and spaces', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithHyphensAndSpaces);
+        assert.equal(accountValidationResponse.length, 0);
+      });
+    });
+
+    describe('buildingRoll  ', () => {
+      it('should return no error if roll is empty ', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.emptyRoll);
+        assert.equal(accountValidationResponse.referenceNumber, undefined);
+      });
+      it('should return no error if roll is valid', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.validRoll);
+        assert.equal(accountValidationResponse.referenceNumber, undefined);
+      });
+      it('should return error if contains $$', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.invalidRoll);
+        assert.equal(accountValidationResponse.referenceNumber.text, 'payee-account:fields.referenceNumber.errors.format');
+      });
+      it('should return error if to long', () => {
+        const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.longRoll);
+        assert.equal(accountValidationResponse.referenceNumber.text, 'payee-account:fields.referenceNumber.errors.length');
+      });
     });
   });
 });

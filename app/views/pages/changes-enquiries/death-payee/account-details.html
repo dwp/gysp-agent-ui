@@ -1,0 +1,98 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ pageData.header }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: pageData.back,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
+  <form method="post" action="{{ pageData.formAction }}" autocomplete="off">
+    {{ govukInput({
+      id: "accountName",
+      name: "accountName",
+      type: "text",
+      label: {
+        text: t("payee-account:fields.accountName.label"),
+        attributes: {
+          id: "accountName-label"
+        }
+      },
+      attributes: {
+        spellcheck: "false"
+      },
+      value: details.accountName,
+      errorMessage: errors.accountName
+    }) }}
+
+    {{ govukInput({
+      id: "sortCode",
+      name: "sortCode",
+      type: "text",
+      classes: "govuk-input--width-5",
+      label: {
+        text: t("payee-account:fields.sortCode.label"),
+        attributes: {
+          id: "sortCode-label"
+        }
+      },
+      inputmode: "numeric",
+      pattern: "[0-9]*",
+      attributes: {
+        spellcheck: "false"
+      },
+      value: details.sortCode,
+      errorMessage: errors.sortCode
+    }) }}
+
+    {{ govukInput({
+      id: "accountNumber",
+      name: "accountNumber",
+      type: "text",
+      classes: "govuk-input--width-10",
+      label: {
+        text: t("payee-account:fields.accountNumber.label"),
+        attributes: {
+          id: "accountNumber-label"
+        }
+      },
+      inputmode: "numeric",
+      pattern: "[0-9]*",
+      attributes: {
+        spellcheck: "false"
+      },
+      value: details.accountNumber,
+      errorMessage: errors.accountNumber
+    }) }}
+
+    {{ govukInput({
+      id: "referenceNumber",
+      name: "referenceNumber",
+      type: "text",
+      classes: "govuk-input--width-10",
+      label: {
+        text: t("payee-account:fields.referenceNumber.label"),
+        attributes: {
+          id: "referenceNumber-label"
+        }
+      },
+      attributes: {
+        spellcheck: "false"
+      },
+      value: details.referenceNumber,
+      errorMessage: errors.referenceNumber
+    }) }}
+
+    {{ govukButton({
+      text: pageData.buttonText
+    }) }}
+  </form>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ pageData.header }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: pageData.back,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
+  {{ govukSummaryList({
+    rows: [{
+      key: { text: t("death-check-details:summary.name") },
+      value: { text: pageData.name }
+    }, {
+      key: { text: t("death-check-details:summary.phone") },
+      value: { text: pageData.phoneNumber }
+    }, {
+      key: { text: t("death-check-details:summary.address") },
+      value: { html: pageData.address }
+    }]
+  }) }}
+
+  {{ govukButton({
+    text: pageData.buttonText,
+    href: pageData.button
+  }) }}
+{% endblock %}
