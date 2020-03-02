@@ -1,0 +1,8 @@
+{
+  "header": "Check payee details",
+  "summary": {
+    "name": "Name",
+    "phone": "Phone number",
+    "address": "Address"
+  }
+}

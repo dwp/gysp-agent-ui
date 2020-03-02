@@ -11,9 +11,9 @@
     }) }}
   {% endif %}
 
-  {% if details.deathArrearsAmount and details.deathCalculationPerformed == true %}
+  {% if details.deathAllActionsPerformed == false and details.deathArrearsAmount and details.deathCalculationPerformed == true  %}
     {{ govukWarningText({
-      text: details.deathArrearsAmount + ' arrears payment due',
+      html: details.deathArrearsAmount + ' arrears payment due<br /><a href="/changes-and-enquiries/personal/death/payee-details" class="govuk-link govuk-link--no-visited-state">Enter payee details</a>',
       iconFallbackText: "Warning"
     }) }}
   {% endif %}

@@ -1,0 +1,16 @@
+{
+  "header": "Pay the arrears",
+  "paymentDetails": {
+    "header": "Payment details",
+    "total": "Total",
+    "period": "Period"
+  },
+  "accountDetails": {
+    "header": "Bank or building society account details",
+    "account_holder": "Account holder name",
+    "account_number": "Account number",
+    "sort_code": "Sort code",
+    "roll_number": "Roll number"
+  },
+  "button": "Pay arrears"
+}

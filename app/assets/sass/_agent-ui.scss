@@ -144,6 +144,28 @@
     }
 }
 
+.gysp-summary-pay-arrears {
+    .govuk-summary-list {
+        &__key {
+            @include govuk-media-query($from: tablet) {
+                width: 40%;
+            }
+        }
+
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 30%;
+            }
+
+            &:last-child {
+                @include govuk-media-query($from: tablet) {
+                    width: 60%;
+                }
+            }
+        }
+    }
+}
+
 .gysp-bank-building-table {
     @include govuk-media-query($from: tablet) {
         &__heading {
