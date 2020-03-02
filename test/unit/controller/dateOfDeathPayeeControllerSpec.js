@@ -89,8 +89,8 @@ const payArrearsDetailsValidPageData = {
   buttonText: 'death-pay-arrears:button',
   paymentDetails: {
     amount: '£157.63',
-    startDate: '28/01/2020',
-    endDate: '28/02/2020',
+    startDate: '28 January 2020',
+    endDate: '28 February 2020',
   },
   accountDetails: {
     rows: [{
