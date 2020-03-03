@@ -25,4 +25,23 @@ describe('General Helper ', () => {
       assert.equal(helper.formatNinoWithSpaces('Z'), 'Z');
     });
   });
+  describe('formatSortCode', () => {
+    it('should return string with spaces every 2 characters when a string with more than 2 characters is supplied', () => {
+      assert.equal(helper.formatSortCode('887755'), '88 77 55');
+    });
+    it('should return string with no spaces when a string with 2 characters is supplied', () => {
+      assert.equal(helper.formatSortCode('00'), '00');
+    });
+    it('should return string with no spaces when a string with less than 2 characters is supplied', () => {
+      assert.equal(helper.formatSortCode('0'), '0');
+    });
+    it('should return string with dashes removed and spaces every 2 characters when a string with dashes is supplied', () => {
+      assert.equal(helper.formatSortCode('88-77-55'), '88 77 55');
+    });
+  });
+  describe('removeSpacesAndHyphens', () => {
+    it('should return string with no spaces or hyphens', () => {
+      assert.equal(helper.removeSpacesAndHyphens('00  -00-  00-00   '), '00000000');
+    });
+  });
 });
