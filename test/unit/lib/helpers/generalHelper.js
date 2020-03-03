@@ -38,6 +38,12 @@ describe('General Helper ', () => {
     it('should return string with dashes removed and spaces every 2 characters when a string with dashes is supplied', () => {
       assert.equal(helper.formatSortCode('88-77-55'), '88 77 55');
     });
+    it('should return string with only spaces every 2 characters when a string with spaces is supplied', () => {
+      assert.equal(helper.formatSortCode('88 77 55'), '88 77 55');
+    });
+    it('should return string with only spaces every 2 characters when a string with spaces and dashes are supplied', () => {
+      assert.equal(helper.formatSortCode('88-77 55'), '88 77 55');
+    });
   });
   describe('removeSpacesAndHyphens', () => {
     it('should return string with no spaces or hyphens', () => {
