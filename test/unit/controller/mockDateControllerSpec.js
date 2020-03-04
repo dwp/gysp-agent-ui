@@ -50,7 +50,7 @@ describe('mock date controller ', () => {
     });
     it('should return redirect and set the date when valid datetime is supplied', () => {
       controller.getMockSetDate(validDateTime, genericResponse);
-      assert.equal(new Date().toString(), 'Thu Oct 01 2020 10:00:00 GMT+0100 (British Summer Time)');
+      assert.include(new Date().toString(), 'Thu Oct 01 2020 10:00:00');
       assert.equal(genericResponse.address, '/');
     });
   });
