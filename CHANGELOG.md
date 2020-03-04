@@ -1,3 +1,14 @@
+<a name="5.23.0"></a>
+# [5.23.0](https://github.com/dwp/gysp-agent-ui/compare/v5.22.0...v5.23.0) (2020-03-04)
+
+
+### Features
+
+* **death:** payee account details ([280a0da](https://github.com/dwp/gysp-agent-ui/commit/280a0da))
+* **payment:** remove last payment ([9321643](https://github.com/dwp/gysp-agent-ui/commit/9321643))
+
+
+
 <a name="5.22.0"></a>
 # [5.22.0](https://github.com/dwp/gysp-agent-ui/compare/v5.21.0...v5.22.0) (2020-02-19)
 
@@ -123,22 +134,22 @@
 ### Features
 
 * **new-award:** screen to show new award to review ([eac9fe1](https://github.com/dwp/gysp-agent-ui/commit/eac9fe1))
-* **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
-* **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
-* **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
-* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **review-award:** payment breakdown and complete ([b2b1a52](https://github.com/dwp/gysp-agent-ui/commit/b2b1a52))
 * **review-award:** review an award reason ([f8de485](https://github.com/dwp/gysp-agent-ui/commit/f8de485))
 
 
 
 <a name="5.12.0"></a>
-# [5.12.0](https://github.com/dwp/gysp-agent-ui/compare/v5.11.0...v5.12.0) (2019-07-31)
+# [5.12.0](https://github.com/dwp/gysp-agent-ui/compare/v5.11.0...v5.12.0) (2019-08-13)
 
 
 ### Features
 
 * **payment:** add timeline to payment page ([6cab99d](https://github.com/dwp/gysp-agent-ui/commit/6cab99d))
+* **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
+* **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
+* **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
+* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **personal:** add timeline feature to personal page ([953ecaa](https://github.com/dwp/gysp-agent-ui/commit/953ecaa))
 * **timeline:** contact timeline ([39d09f6](https://github.com/dwp/gysp-agent-ui/commit/39d09f6))
 
