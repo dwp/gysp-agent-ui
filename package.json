@@ -57,7 +57,7 @@
     "mockdate": "2.0.5",
     "moment": "2.24.0",
     "nunjucks": "3.2.0",
-    "redis": "2.8.0",
+    "redis": "3.0.2",
     "request-promise": "4.2.5",
     "serve-favicon": "2.5.0",
     "validator": "12.1.0",
