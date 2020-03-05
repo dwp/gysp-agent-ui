@@ -68,7 +68,7 @@
     "@commitlint/travis-cli": "8.2.0",
     "@dwp/commitlint-config-base": "1.1.0",
     "@dwp/eslint-config-base": "4.1.0",
-    "@dwp/eslint-config-mocha": "1.0.0",
+    "@dwp/eslint-config-mocha": "1.1.0",
     "aws-sdk": "2.556.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
