@@ -54,7 +54,6 @@ const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validC
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
 const validVSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), death: { 'date-of-death': { verification: 'V' }, 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
-const validNVSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), death: { 'date-of-death': { verification: 'NV' }, 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '' } };
 
 const notFoundResponse = {
@@ -140,6 +139,27 @@ const paymentRequest = {
   flash: flashMock,
 };
 
+const paymentRequestDeathNotVerified = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+      },
+      'dap-name': {
+        name: 'Margaret Meldrew',
+      },
+      'dap-phone-number': {
+        phoneNumber: '0000 000 000',
+      },
+      'dap-address': { address: '10091853817' },
+      'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+  },
+  flash: flashMock,
+};
+
 const paymentRequestNotVerified = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
@@ -154,9 +174,6 @@ const paymentRequestNotVerified = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
-      'death-payment': {
-        amount: null,
-      },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
     },
@@ -164,13 +181,13 @@ const paymentRequestNotVerified = {
   flash: flashMock,
 };
 
-const paymentRequestNotVerifiedArrears = {
+const paymentRequestVerifiedArrears = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
     awardDetails: claimData.validClaim(),
     death: {
       'date-of-death': {
-        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
       },
       'dap-name': {
         name: 'Margaret Meldrew',
@@ -188,13 +205,13 @@ const paymentRequestNotVerifiedArrears = {
   flash: flashMock,
 };
 
-const paymentRequestNotVerifiedOverpayment = {
+const paymentRequestVerifiedOverpayment = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
     awardDetails: claimData.validClaim(),
     death: {
       'date-of-death': {
-        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
       },
       'dap-name': {
         name: 'Margaret Meldrew',
@@ -570,16 +587,10 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/address-select');
     });
 
-    it('should return a redirect to payment page and set relevant session data when date of death is V', () => {
+    it('should return a redirect to payment page and set relevant session data', () => {
       controller.postDapAddressSelect(validVSelectPostRequest, genericResponse);
       assert.equal(validVSelectPostRequest.session.death['dap-address'].address, validVSelectPostRequest.body.address);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
-    });
-
-    it('should return a redirect to payment page and set relevant session data when date of death is NV', () => {
-      controller.postDapAddressSelect(validNVSelectPostRequest, genericResponse);
-      assert.equal(validNVSelectPostRequest.session.death['dap-address'].address, validNVSelectPostRequest.body.address);
-      assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/record');
     });
   });
 
@@ -663,6 +674,14 @@ describe('Change circumstances date of death controller ', () => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
       });
     });
+
+    it('should display awaiting verification of death result when death verification is not verified', () => {
+      controller.getDeathPayment(paymentRequestDeathNotVerified, genericResponse);
+      return testPromise.then(() => {
+        assert.isDefined(genericResponse.data.keyDetails, keyDetails);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/death-not-verified');
+      });
+    });
   });
 
   describe('getCheckDetails function (GET /changes-and-enquiries/personal/death/check-details)', () => {
@@ -675,7 +694,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
     it('should return check details page for arrears', () => {
-      controller.getCheckDetails(paymentRequestNotVerifiedArrears, genericResponse);
+      controller.getCheckDetails(paymentRequestVerifiedArrears, genericResponse);
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.arrears');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
@@ -683,11 +702,19 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
     it('should return check details page for overpayment', () => {
-      controller.getCheckDetails(paymentRequestNotVerifiedOverpayment, genericResponse);
+      controller.getCheckDetails(paymentRequestVerifiedOverpayment, genericResponse);
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.overpayment');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
       assert.equal(genericResponse.data.pageData.status, 'OVERPAYMENT');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
+    });
+    it('should return check details page for death not verified', () => {
+      controller.getCheckDetails(paymentRequestDeathNotVerified, genericResponse);
+      assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.death-not-verified');
+      assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
+      assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.status, 'DEATH_NOT_VERIFIED');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
   });
@@ -804,7 +831,7 @@ describe('Change circumstances date of death controller ', () => {
 
     it('should return a redirect when API returns 200 with arrears success message', () => {
       nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
-      controller.getRecordDeath(paymentRequestNotVerifiedArrears, genericResponse);
+      controller.getRecordDeath(paymentRequestVerifiedArrears, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'death-record:messages.success.arrears');
@@ -814,7 +841,7 @@ describe('Change circumstances date of death controller ', () => {
 
     it('should return a redirect when API returns 200 with overpayment success message', () => {
       nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
-      controller.getRecordDeath(paymentRequestNotVerifiedOverpayment, genericResponse);
+      controller.getRecordDeath(paymentRequestVerifiedOverpayment, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'death-record:messages.success.overpayment');
