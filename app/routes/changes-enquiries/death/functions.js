@@ -276,8 +276,7 @@ function getDeathPayment(req, res) {
     request(getDeathArrearsCall).then((details) => {
       dataStore.save(req, 'death-payment', details, 'death');
       const formattedDetails = deathPaymentObject.formatter(details);
-      const status = deathPaymentStatus(details.amount);
-      const pageData = deathPaymentObject.pageData(deathStage, status);
+      const pageData = deathPaymentObject.pageData(deathStage);
       res.render(deathPaymentView(details), {
         keyDetails,
         details: formattedDetails,
@@ -351,6 +350,9 @@ function successMesssage(verification, status) {
   }
   if (status === OVERPAYMENT) {
     return i18n.t('death-record:messages.success.overpayment');
+  }
+  if (status === NOTHING_OWED) {
+    return i18n.t('death-record:messages.success.nothing-owed');
   }
   if (verification === 'V') {
     return i18n.t('death-record:messages.success.verified');
