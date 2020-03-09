@@ -229,6 +229,30 @@ const paymentRequestVerifiedOverpayment = {
   flash: flashMock,
 };
 
+const paymentRequestVerifiedNothingOwed = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+      },
+      'dap-name': {
+        name: 'Margaret Meldrew',
+      },
+      'dap-phone-number': {
+        phoneNumber: '0000 000 000',
+      },
+      'death-payment': {
+        amount: '0',
+      },
+      'dap-address': { address: '10091853817' },
+      'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+  },
+  flash: flashMock,
+};
+
 const retryCalculationRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
@@ -644,7 +668,8 @@ describe('Change circumstances date of death controller ', () => {
         .reply(httpStatus.OK, deathArrearsResponses.arrears);
       controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
       });
     });
@@ -657,12 +682,14 @@ describe('Change circumstances date of death controller ', () => {
         .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
       controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.isDefined(genericResponse.data.details);
+        assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
       });
     });
 
-    it('should display nothing owed result when requested and API returns 200 with null values', () => {
+    it('should display cannot calculate result when requested and API returns 200 with null values', () => {
       const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
       const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
       nock('http://test-url/').get(deathArrearsApiUri)
@@ -670,7 +697,8 @@ describe('Change circumstances date of death controller ', () => {
         .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
       controller.getDeathPayment(paymentRequest, genericResponse);
       return testPromise.then(() => {
-        assert.isDefined(genericResponse.data.details);
+        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
       });
     });
@@ -690,6 +718,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.cannot-calculate');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.buttonText, 'app:button.continue');
       assert.equal(genericResponse.data.pageData.status, 'CANNOT_CALCULATE');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
@@ -698,6 +727,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.arrears');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.buttonText, 'app:button.confirm');
       assert.equal(genericResponse.data.pageData.status, 'ARREARS');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
@@ -706,6 +736,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.overpayment');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.buttonText, 'app:button.send-letter');
       assert.equal(genericResponse.data.pageData.status, 'OVERPAYMENT');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
@@ -714,7 +745,17 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.death-not-verified');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.buttonText, 'app:button.continue');
       assert.equal(genericResponse.data.pageData.status, 'DEATH_NOT_VERIFIED');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
+    });
+    it('should return check details page for death nothing owed', () => {
+      controller.getCheckDetails(paymentRequestVerifiedNothingOwed, genericResponse);
+      assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.nothing-owed');
+      assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
+      assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(genericResponse.data.pageData.buttonText, 'app:button.send-letter');
+      assert.equal(genericResponse.data.pageData.status, 'NOTHING_OWED');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
   });
@@ -845,6 +886,16 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'death-record:messages.success.overpayment');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      });
+    });
+
+    it('should return a redirect when API returns 200 with nothing owed success message', () => {
+      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      controller.getRecordDeath(paymentRequestVerifiedNothingOwed, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'death-record:messages.success.nothing-owed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
     });

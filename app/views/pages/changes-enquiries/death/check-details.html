@@ -40,6 +40,8 @@
     <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p.cannot-calculate") }}</p>
   {% elif pageData.status == 'DEATH_NOT_VERIFIED' %}
     <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p.death-not-verified") }}</p>
+  {% elif pageData.status == 'NOTHING_OWED' %}
+    <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p.nothing-owed") }}</p>
   {% endif %}
 
   {{ govukButton({
