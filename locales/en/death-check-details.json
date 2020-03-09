@@ -2,7 +2,8 @@
   "header": {
     "cannot-calculate": "Check details",
     "arrears": "Check details and send BR330 form",
-    "overpayment": "Check details and send letter"
+    "overpayment": "Check details and send letter",
+    "death-not-verified": "Check details"
   },
   "summary": {
     "name": "Name",
@@ -12,7 +13,8 @@
   "p": {
     "cannot-calculate": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due.",
     "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete.",
-    "overpayment": "A letter will be sent to this person letting them know:"
+    "overpayment": "A letter will be sent to this person letting them know:",
+    "death-not-verified": "Let this person know they may receive a letter once the death has been verified and the final payment has been calculated."
   },
   "list": {
     "overpayment": {

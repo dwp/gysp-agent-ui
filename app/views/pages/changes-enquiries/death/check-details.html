@@ -38,6 +38,8 @@
     </ul>
   {% elif pageData.status == 'CANNOT_CALCULATE' %}
     <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p.cannot-calculate") }}</p>
+  {% elif pageData.status == 'DEATH_NOT_VERIFIED' %}
+    <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-details:p.death-not-verified") }}</p>
   {% endif %}
 
   {{ govukButton({
