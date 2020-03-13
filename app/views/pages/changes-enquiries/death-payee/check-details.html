@@ -17,13 +17,13 @@
   <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
   {{ govukSummaryList({
     rows: [{
-      key: { text: t("death-check-details:summary.name") },
+      key: { text: t("death-check-details:summary.name.key") },
       value: { text: pageData.name }
     }, {
-      key: { text: t("death-check-details:summary.phone") },
+      key: { text: t("death-check-details:summary.phone.key") },
       value: { text: pageData.phoneNumber }
     }, {
-      key: { text: t("death-check-details:summary.address") },
+      key: { text: t("death-check-details:summary.address.key") },
       value: { html: pageData.address }
     }]
   }) }}
