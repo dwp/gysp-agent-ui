@@ -24,6 +24,8 @@ const errorMessage = {
   other: 'Error - connection refused.',
 };
 
+const editQueryString = { query: { edit: 'true' } };
+
 const keyDetails = {
   fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
 };
@@ -34,26 +36,38 @@ const enterDateOfDeathResponse = {
   awardDetails: claimData.validClaim(),
 };
 
-const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
+const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { } } };
+const dapGetNamePopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
 
 const dapPostNameInvalidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: '' } };
+const dapPostNameInvalidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: '' } };
 const dapPostNameValidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: 'Margret Meldrew' } };
+const dapPostNameValidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: 'Margret Meldrew' } };
 
-const dapGetPhoneNumberRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' }, 'dap-phone-number': { phoneNumber: '00000 000 000' } } } };
+const dapGetPhoneNumberRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
+const dapGetPhoneNumberPopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' }, 'dap-phone-number': { phoneNumber: '00000 000 000' } } } };
 
 const dapPostPhoneNumberInvalidRequest = { session: { awardDetails: claimData.validClaim() }, body: { phoneNumber: '' } };
+const dapPostPhoneNumberInvalidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-phone-number' }, body: { phoneNumber: '' } };
 const dapPostPhoneNumberValidRequest = { session: { awardDetails: claimData.validClaim() }, body: { phoneNumber: '00000 000 000' } };
+const dapPostPhoneNumberValidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-phone-number', death: { 'dap-phone-number': { phoneNumber: '00000 000 000' } } }, body: { phoneNumber: '00000 000 000' } };
 
-const dapGetPostcodeLookupRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-address': { address: '12123123123' } } }, body: { postcode: 'NE1 1ET' } };
+const dapGetPostcodeLookupRequest = { session: { awardDetails: claimData.validClaim() } };
+const dapGetPostcodeLookupPopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-postcode': { postcode: 'W1J 7NT' } } } };
+const dapGetPostcodeLookupPopulatedEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-address', death: { 'dap-postcode': { postcode: 'W1J 7NT' } } } };
 
-const dapGetPostcodeLookupInvalidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: '' } };
+const dapPostDapPostcodeLookupInvalidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: '' } };
+const dapPostDapPostcodeLookupInvalidEditPost = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-address' }, body: { postcode: '' } };
 const postcodeValidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: 'W1J 7NT' } };
+const postcodeValidEditPost = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-address' }, body: { postcode: 'W1J 7NT' } };
 
 const validSelectRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } } };
+const validSelectEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-address', death: { 'address-lookup__edit': addressData.multipleAddresses(), 'dap-postcode__edit': { postcode: 'W1J 7NT' } } } };
 const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
 const validVSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), death: { 'date-of-death': { verification: 'V' }, 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
+const validVSelectPostEditRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), editSection: 'dap-address', death: { 'date-of-death': { verification: 'V' }, 'address-lookup__edit': addressData.multipleAddresses(), 'dap-postcode__edit': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '' } };
 
 const notFoundResponse = {
@@ -253,6 +267,31 @@ const paymentRequestVerifiedNothingOwed = {
   flash: flashMock,
 };
 
+const paymentRequestEdit = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaim(),
+    death: {
+      'date-of-death': {
+        dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+      },
+      'dap-name': {
+        name: 'Margaret Meldrew',
+      },
+      'dap-phone-number': {
+        phoneNumber: '0000 000 000',
+      },
+      'death-payment': {
+        amount: '0',
+      },
+      'dap-address__edit': { address: '10091853817' },
+      'address-lookup__edit': addressData.multipleAddressesNoneEmpty(),
+      editSection: 'dap-address',
+    },
+  },
+  flash: flashMock,
+};
+
 const retryCalculationRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
@@ -431,11 +470,31 @@ describe('Change circumstances date of death controller ', () => {
   });
 
   describe('getDapName function (GET /changes-and-enquiries/personal/death/name)', () => {
-    it('should display form when requested', (done) => {
+    it('should display blank form when requested', (done) => {
       controller.getDapName(dapGetNameRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.isUndefined(genericResponse.data.details);
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+    it('should display populated form when requested', (done) => {
+      controller.getDapName(dapGetNamePopulatedRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { name: 'Margret Meldrew' });
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should display populated form when requested in edit mode', (done) => {
+      controller.getDapName({ ...dapGetNamePopulatedRequest, ...editQueryString }, genericResponse);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.deepEqual(genericResponse.data.details, { name: 'Margret Meldrew' });
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -447,6 +506,15 @@ describe('Change circumstances date of death controller ', () => {
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.errors.name.text, 'death-dap:fields.name.errors.required');
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should return form again with error when invalid data supplied in edit mode', (done) => {
+      controller.postDapName(dapPostNameInvalidEditRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.errors.name.text, 'death-dap:fields.name.errors.required');
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -457,25 +525,62 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/phone-number');
       done();
     });
+
+    it('should return redirect to check details and save data to session when valid data supplied and in edit mode', (done) => {
+      controller.postDapName(dapPostNameValidEditRequest, genericResponse);
+      assert.deepEqual(dapPostNameValidEditRequest.session.death['dap-name'], { name: 'Margret Meldrew' });
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/check-details');
+      done();
+    });
   });
 
   describe('getDapPhoneNumber function (GET /changes-and-enquiries/personal/death/phone-number)', () => {
-    it('should display form when requested', (done) => {
+    it('should display blank form when requested', (done) => {
       controller.getDapPhoneNumber(dapGetPhoneNumberRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.isUndefined(genericResponse.data.details);
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/phone-number');
+      done();
+    });
+
+    it('should display populated form when requested', (done) => {
+      controller.getDapPhoneNumber(dapGetPhoneNumberPopulatedRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { phoneNumber: '00000 000 000' });
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/phone-number');
+      done();
+    });
+
+    it('should display populated form when requested in edit mode', (done) => {
+      controller.getDapPhoneNumber({ ...dapGetPhoneNumberPopulatedRequest, ...editQueryString }, genericResponse);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.deepEqual(genericResponse.data.details, { phoneNumber: '00000 000 000' });
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/phone-number');
       done();
     });
   });
 
-  describe('postDapName function (POST /changes-and-enquiries/personal/death/phone-number)', () => {
+  describe('postDapPhoneNumber function (POST /changes-and-enquiries/personal/death/phone-number)', () => {
     it('should return form again with error when invalid data supplied', (done) => {
       controller.postDapPhoneNumber(dapPostPhoneNumberInvalidRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.errors.phoneNumber.text, 'death-dap:fields.phone-number.errors.required');
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/phone-number');
+      done();
+    });
+
+    it('should return form again with error when invalid data supplied in edit mode', (done) => {
+      controller.postDapPhoneNumber(dapPostPhoneNumberInvalidEditRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.errors.phoneNumber.text, 'death-dap:fields.phone-number.errors.required');
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/phone-number');
       done();
     });
@@ -486,16 +591,40 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/address');
       done();
     });
+
+    it('should return redirect to check details and save data to session when valid data supplied and in edit mode', (done) => {
+      controller.postDapPhoneNumber(dapPostPhoneNumberValidEditRequest, genericResponse);
+      assert.deepEqual(dapPostPhoneNumberValidEditRequest.session.death['dap-phone-number'], { phoneNumber: '00000 000 000' });
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/check-details');
+      done();
+    });
   });
 
   describe('getPostcodeLookup function (GET /changes-and-enquiries/personal/death/address)', () => {
-    it('should return change address page', (done) => {
+    it('display blank form when requested', (done) => {
       controller.getDapPostcodeLookup(dapGetPostcodeLookupRequest, genericResponse);
-      assert.isUndefined(dapGetPostcodeLookupRequest.session.death['address-lookup']);
-      assert.isUndefined(dapGetPostcodeLookupRequest.session.death['dap-address']);
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.isUndefined(genericResponse.data.details);
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
+      done();
+    });
+    it('display populated form when requested', (done) => {
+      controller.getDapPostcodeLookup(dapGetPostcodeLookupPopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.details, dapGetPostcodeLookupPopulatedRequest.session.death['dap-postcode']);
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
+      done();
+    });
+    it('display populated form when requested in edit mode', (done) => {
+      controller.getDapPostcodeLookup(dapGetPostcodeLookupPopulatedEditRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.deepEqual(genericResponse.data.details, dapGetPostcodeLookupPopulatedEditRequest.session.death['dap-postcode']);
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
       done();
     });
@@ -503,11 +632,20 @@ describe('Change circumstances date of death controller ', () => {
 
   describe('postPostcodeLookup function (POST /changes-and-enquiries/personal/death/address)', () => {
     it('should return validation error when postcode is empty', () => {
-      controller.postDapPostcodeLookup(dapGetPostcodeLookupInvalidPost, genericResponse);
+      controller.postDapPostcodeLookup(dapPostDapPostcodeLookupInvalidPost, genericResponse);
       assert.equal(Object.keys(genericResponse.data.errors).length, 1);
       assert.equal(genericResponse.data.errors.postcode.text, 'address:fields.postcode.errors.required');
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
+    });
+
+    it('should return validation error when postcode is empty and in edit mode', () => {
+      controller.postDapPostcodeLookup(dapPostDapPostcodeLookupInvalidEditPost, genericResponse);
+      assert.equal(Object.keys(genericResponse.data.errors).length, 1);
+      assert.equal(genericResponse.data.errors.postcode.text, 'address:fields.postcode.errors.required');
+      assert.isTrue(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
     });
 
@@ -571,12 +709,29 @@ describe('Change circumstances date of death controller ', () => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/address-select');
       });
     });
+
+    it('should return addresses when postcode lookup return is success and in edit mode', () => {
+      nock('http://test-url/').get(postcodeLookupApiUri).reply(httpStatus.OK, addressData.multipleAddresses());
+      controller.postDapPostcodeLookup(postcodeValidEditPost, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(postcodeValidEditPost.session.death['dap-postcode__edit'].postcode, 'W1J 7NT');
+        assert.equal(JSON.stringify(postcodeValidEditPost.session.death['address-lookup__edit']), JSON.stringify(addressData.multipleAddresses()));
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/address-select');
+      });
+    });
   });
 
   describe('getDapAddressSelect function (GET /changes-and-enquiries/personal/death/address-select)', () => {
     it('should return change address select page', (done) => {
       controller.getDapAddressSelect(validSelectRequest, genericResponse);
+      assert.isFalse(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/address-select');
+      done();
+    });
+
+    it('should return change address select page in edit mode', (done) => {
+      controller.getDapAddressSelect(validSelectEditRequest, genericResponse);
+      assert.isTrue(genericResponse.data.editMode);
       done();
     });
 
@@ -608,6 +763,7 @@ describe('Change circumstances date of death controller ', () => {
       controller.postDapAddressSelect(invalidSelectPostRequest, genericResponse);
       assert.equal(Object.keys(genericResponse.data.errors).length, 1);
       assert.equal(genericResponse.data.errors.address.text, 'address:fields.address.errors.required');
+      assert.isFalse(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/address-select');
     });
 
@@ -615,6 +771,12 @@ describe('Change circumstances date of death controller ', () => {
       controller.postDapAddressSelect(validVSelectPostRequest, genericResponse);
       assert.equal(validVSelectPostRequest.session.death['dap-address'].address, validVSelectPostRequest.body.address);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+    });
+
+    it('should return a redirect to check details page and set relevant session data in edit mode', () => {
+      controller.postDapAddressSelect(validVSelectPostEditRequest, genericResponse);
+      assert.equal(validVSelectPostEditRequest.session.death['dap-address__edit'].address, validVSelectPostEditRequest.body.address);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/check-details');
     });
   });
 
@@ -756,6 +918,14 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/record');
       assert.equal(genericResponse.data.pageData.buttonText, 'app:button.send-letter');
       assert.equal(genericResponse.data.pageData.status, 'NOTHING_OWED');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
+    });
+    it('should return check details page with cleared edit data', () => {
+      controller.getCheckDetails(paymentRequestEdit, genericResponse);
+      assert.isUndefined(paymentRequestEdit.editSection);
+      assert.isUndefined(paymentRequestEdit.session.death['dap-address__edit']);
+      assert.isUndefined(paymentRequestEdit.session.death['address-lookup__edit']);
+      assert.equal(paymentRequestEdit.editSection);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/check-details');
     });
   });

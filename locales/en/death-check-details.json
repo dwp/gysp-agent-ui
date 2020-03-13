@@ -7,9 +7,18 @@
     "nothing-owed": "Check details and send letter"
   },
   "summary": {
-    "name": "Name",
-    "phone": "Phone number",
-    "address": "Address"
+    "name": {
+      "key": "Name",
+      "action": "Change"
+    },
+    "phone": {
+      "key": "Phone number",
+      "action": "Change"
+    },
+    "address": {
+      "key": "Address",
+      "action": "Change"
+    }
   },
   "p": {
     "cannot-calculate": "We will send a letter to this person once the final payment is calculated to let them know if there is any State Pension due.",

@@ -16,6 +16,9 @@ const dateHelper = require('../../../../lib/dateHelper');
 const generalHelper = require('../../../../lib/helpers/general');
 const dataStore = require('../../../../lib/dataStore');
 const deleteSession = require('../../../../lib/deleteSession');
+const checkChangeHelper = require('../../../../lib/helpers/checkChangeHelper');
+const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
@@ -54,22 +57,29 @@ function postAddDateDeath(req, res) {
 }
 
 function getDapName(req, res) {
+  checkChangeHelper.checkAndSetEditMode(req, 'dap-name');
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-name', 'death');
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-name');
   res.render('pages/changes-enquiries/death/dap/name', {
     keyDetails,
     awardDetails,
     details,
+    editMode,
   });
 }
 
 function postDapName(req, res) {
   const details = req.body;
   const errors = formValidator.deathDapNameValidation(details);
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-name');
   if (Object.keys(errors).length === 0) {
-    dataStore.save(req, 'dap-name', details, 'death');
-    res.redirect('/changes-and-enquiries/personal/death/phone-number');
+    const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-name', editMode);
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapName(), details);
+    dataStore.checkAndSave(req, 'death', 'dap-name', filteredRequest, editMode);
+    checkChangeHelper.checkEditSectionAndClearCheckChange(req, editMode);
+    res.redirect(redirectUrl);
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
@@ -78,27 +88,35 @@ function postDapName(req, res) {
       awardDetails,
       details,
       errors,
+      editMode,
     });
   }
 }
 
 function getDapPhoneNumber(req, res) {
+  checkChangeHelper.checkAndSetEditMode(req, 'dap-phone-number');
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-phone-number', 'death');
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-phone-number');
   res.render('pages/changes-enquiries/death/dap/phone-number', {
     keyDetails,
     awardDetails,
     details,
+    editMode,
   });
 }
 
 function postDapPhoneNumber(req, res) {
   const details = req.body;
   const errors = formValidator.deathDapPhoneNumberValidation(details);
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-phone-number');
   if (Object.keys(errors).length === 0) {
-    dataStore.save(req, 'dap-phone-number', details, 'death');
-    res.redirect('/changes-and-enquiries/personal/death/address');
+    const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-phone-number', editMode);
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapPhoneNumber(), details);
+    dataStore.checkAndSave(req, 'death', 'dap-phone-number', filteredRequest, editMode);
+    checkChangeHelper.checkEditSectionAndClearCheckChange(req, editMode);
+    res.redirect(redirectUrl);
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
@@ -107,19 +125,22 @@ function postDapPhoneNumber(req, res) {
       awardDetails,
       details,
       errors,
+      editMode,
     });
   }
 }
 
 function getDapPostcodeLookup(req, res) {
-  deleteSession.deleteDeathAddress(req);
+  checkChangeHelper.checkAndSetEditMode(req, 'dap-address');
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const details = dataStore.get(req, 'dap-postcode', 'death');
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-address');
+  const details = checkChangeHelper.getEditOrPreviousData(req, 'death', 'dap-postcode', editMode);
   res.render('pages/changes-enquiries/death/dap/postcode', {
     keyDetails,
     awardDetails,
     details,
+    editMode,
   });
 }
 
@@ -160,6 +181,7 @@ function postDapPostcodeLookup(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const errors = formValidator.addressPostcodeDetails(details);
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-address');
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
     const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
@@ -168,9 +190,16 @@ function postDapPostcodeLookup(req, res) {
       if (response.error) {
         throw response.error;
       }
-      dataStore.save(req, 'address-lookup', response, 'death');
-      dataStore.save(req, 'dap-postcode', details, 'death');
-      res.redirect('/changes-and-enquiries/personal/death/address-select');
+      const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-postcode', editMode);
+      const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapPostcode(), details);
+      if (editMode) {
+        dataStore.save(req, 'address-lookup__edit', response, 'death');
+        dataStore.checkAndSave(req, 'death', 'dap-postcode__edit', filteredRequest, editMode);
+      } else {
+        dataStore.save(req, 'address-lookup', response, 'death');
+        dataStore.checkAndSave(req, 'death', 'dap-postcode', filteredRequest, editMode);
+      }
+      res.redirect(redirectUrl);
     }).catch((err) => {
       postDapPostcodeLookupErrorHandler(err, req, res);
     });
@@ -180,13 +209,15 @@ function postDapPostcodeLookup(req, res) {
       awardDetails,
       details,
       errors,
+      editMode,
     });
   }
 }
 
 function getDapAddressSelect(req, res) {
-  const addressLookup = dataStore.get(req, 'address-lookup', 'death');
-  const postcode = dataStore.get(req, 'dap-postcode', 'death');
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-address');
+  const addressLookup = checkChangeHelper.getEditOrPreviousData(req, 'death', 'address-lookup', editMode);
+  const postcode = checkChangeHelper.getEditOrPreviousData(req, 'death', 'dap-postcode', editMode);
   if (addressLookup && postcode) {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
@@ -197,6 +228,7 @@ function getDapAddressSelect(req, res) {
       postCodeDetails: postcode,
       addressList,
       awardDetails,
+      editMode,
     });
   } else {
     res.status(httpStatus.INTERNAL_SERVER_ERROR);
@@ -209,9 +241,16 @@ function postDapAddressSelect(req, res) {
   const errors = formValidator.addressDetails(details);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
+  const editMode = checkChangeHelper.isEditMode(req, 'dap-address');
   if (Object.keys(errors).length === 0) {
-    dataStore.save(req, 'dap-address', details, 'death');
-    res.redirect('/changes-and-enquiries/personal/death/payment');
+    const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-address', editMode);
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapAddress(), details);
+    if (editMode) {
+      dataStore.checkAndSave(req, 'death', 'dap-address__edit', filteredRequest, editMode);
+    } else {
+      dataStore.checkAndSave(req, 'death', 'dap-address', filteredRequest, editMode);
+    }
+    res.redirect(redirectUrl);
   } else {
     const addressLookup = dataStore.get(req, 'address-lookup', 'death');
     const addressList = postcodeLookupObject.addressList(addressLookup);
@@ -221,6 +260,7 @@ function postDapAddressSelect(req, res) {
       postCodeDetails,
       addressList,
       errors,
+      editMode,
     });
   }
 }
@@ -295,6 +335,7 @@ function getDeathPayment(req, res) {
 }
 
 function getCheckDetails(req, res) {
+  checkChangeHelper.cleanUpCheckChange(req, 'death');
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const death = dataStore.get(req, 'death');

@@ -8,7 +8,7 @@
 {% block sectionBackLink %}
   {{ govukBackLink({
     text: t("app:link.back"),
-    href: "/changes-and-enquiries/personal/death",
+    href:  "/changes-and-enquiries/personal/death/check-details" if editMode else "/changes-and-enquiries/personal/death",
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
   }) }}
 {% endblock %}
