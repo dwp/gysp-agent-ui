@@ -1,3 +1,16 @@
+<a name="5.24.0"></a>
+# [5.24.0](https://github.com/dwp/gysp-agent-ui/compare/v5.23.0...v5.24.0) (2020-03-18)
+
+
+### Features
+
+* **death:** change date format ([1f5ba00](https://github.com/dwp/gysp-agent-ui/commit/1f5ba00))
+* **death:** check change ([49427b9](https://github.com/dwp/gysp-agent-ui/commit/49427b9))
+* **death:** check death not verified details ([6784613](https://github.com/dwp/gysp-agent-ui/commit/6784613))
+* **death:** nothing owed check details ([51fd547](https://github.com/dwp/gysp-agent-ui/commit/51fd547))
+
+
+
 <a name="5.23.0"></a>
 # [5.23.0](https://github.com/dwp/gysp-agent-ui/compare/v5.22.0...v5.23.0) (2020-03-04)
 
