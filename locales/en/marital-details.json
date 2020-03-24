@@ -1,0 +1,42 @@
+{
+  "header": "Marital details",
+  "details": {
+    "summary": {
+      "keys": {
+        "status": "Status",
+        "date": {
+          "married": "Date of marriage",
+          "civil": "Date of civil partnership",
+          "divorced": "Date of divorce",
+          "dissolved": "Date civil partnership was dissolved",
+          "widowed": "Date spouse or partner died"
+        }
+      },
+      "values": {
+        "status": {
+          "single": "Never been married",
+          "married": "Married",
+          "civil": "In a civil partnership",
+          "divorced": "Divorced",
+          "dissolved": "Dissolve civil Partnership",
+          "widowed": "Widowed"
+        }
+      }
+    }
+  },
+  "partner-details": {
+    "header": {
+      "married": "Spouse details",
+      "civil": "Partner details",
+      "divorced": "Ex-spouse details",
+      "dissolved": "Ex-partner details",
+      "widowed": "Late spouse or partner details"
+    },
+    "summary-keys": {
+      "first-name": "First name",
+      "surname": "Surname",
+      "other-names": "Other names",
+      "dob": "Date of birth"
+    }
+  }
+}

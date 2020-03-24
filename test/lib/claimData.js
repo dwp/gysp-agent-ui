@@ -1,28 +1,33 @@
 module.exports = {
   validClaim() {
     return {
-      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(),
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalSingle(),
     };
   },
   validClaimWithDeathVerified() {
     const base = { ...this.validBase() };
     base.awardStatus = 'DEAD';
     return {
-      ...base, ...this.validDeathVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+      ...base, ...this.validDeathVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
     };
   },
   validClaimWithDeathArrearsDue() {
     const base = { ...this.validBase() };
     base.awardStatus = 'DEAD';
     return {
-      ...base, ...this.validDeathVerifiedArrears(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+      ...base, ...this.validDeathVerifiedArrears(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
     };
   },
   validClaimWithDeathNotVerified() {
     const base = { ...this.validBase() };
     base.awardStatus = 'DEADNOTVERIFIED';
     return {
-      ...base, ...this.validDeathNotVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(),
+      ...base, ...this.validDeathNotVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
+    };
+  },
+  validClaimMarried() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalMarried(),
     };
   },
   validClaimContactNull(type) {
@@ -98,6 +103,72 @@ module.exports = {
         accountNumber: '12345678',
         sortCode: '112233',
         referenceNumber: '231231232',
+      },
+    };
+  },
+  validMaritalSingle() {
+    return {
+      maritalStatus: 'Single',
+      partnerDetail: null,
+    };
+  },
+  validMaritalMarried() {
+    return {
+      maritalStatus: 'Married',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        marriageDate: '2000-03-19T00:00:00.000Z',
+      },
+    };
+  },
+  validMaritalCivilPartnership() {
+    return {
+      maritalStatus: 'Civil Partnership',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        civilPartnershipDate: '2000-03-19T00:00:00.000Z',
+      },
+    };
+  },
+  validMaritalDivorced() {
+    return {
+      maritalStatus: 'Divorced',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        divorcedDate: '2000-03-19T00:00:00.000Z',
+      },
+    };
+  },
+  validMaritalDissolvedDate() {
+    return {
+      maritalStatus: 'Dissolved',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        dissolvedDate: '2000-03-19T00:00:00.000Z',
+      },
+    };
+  },
+  validMaritalWidowedDate() {
+    return {
+      maritalStatus: 'Widowed',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        widowedDate: '2000-03-19T00:00:00.000Z',
       },
     };
   },
@@ -250,6 +321,18 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
+      maritalStatus: 'marital-details:details.summary.values.status.single',
+      showMaritalStatusDetails: false,
+    };
+  },
+  validPersonalDetailsMarriedViewData() {
+    return {
+      fullName: 'Joe Bloggs',
+      nino: 'AA 37 07 73 A',
+      dob: '9 November 1953',
+      statePensionDate: '9 November 2018',
+      maritalStatus: 'marital-details:details.summary.values.status.married',
+      showMaritalStatusDetails: true,
     };
   },
   validClaimWithDeathVerifiedData() {
@@ -258,6 +341,8 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
+      maritalStatus: 'marital-details:details.summary.values.status.single',
+      showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Verified',
     };
@@ -268,6 +353,8 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
+      maritalStatus: 'marital-details:details.summary.values.status.single',
+      showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Not verified',
     };
@@ -278,6 +365,8 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
+      maritalStatus: 'marital-details:details.summary.values.status.single',
+      showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       deathArrearsAmount: '£100.00',
       dateOfDeathVerification: 'Verified',

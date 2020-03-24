@@ -18,5 +18,10 @@ describe('change of circumstances overview ', () => {
       const formatter = changeCircumstancesOverview.formatter(claimData.validClaimWithDeathArrearsDue());
       assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validClaimWithDeathVerifiedArrearsData()));
     });
+
+    it('should return formatted object with populated values show link true when marital status is not Single', () => {
+      const formatter = changeCircumstancesOverview.formatter(claimData.validClaimMarried());
+      assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validPersonalDetailsMarriedViewData()));
+    });
   });
 });

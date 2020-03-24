@@ -1,0 +1,47 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% block pageTitle %}{{ t('marital-details:header') }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries/personal',
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t('marital-details:header') }}</h1>
+  <table id="marital-details" class="govuk-table">
+      <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__cell" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
+          <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
+          <td class="govuk-table__cell">
+            &nbsp;
+          </td>
+        </tr>
+        <tr class="govuk-table__row">
+          <th class="govuk-table__cell" scope="row">{{ maritalDetails.details.dateLabel }}</th>
+          <td class="govuk-table__cell">{{ maritalDetails.details.date }}</td>
+          <td class="govuk-table__cell govuk-table__header--numeric">
+            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">
+              Not verified
+            </span>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+  {{ govukSummaryList({
+    rows: maritalDetails.detailsSummaryRows
+  }) }}
+
+  <h2 class="govuk-heading-m">{{ maritalDetails.partnerSummary.header }}</h2>
+  {{ govukSummaryList({
+    rows: maritalDetails.partnerSummary.rows
+  }) }}
+
+{% endblock %}
