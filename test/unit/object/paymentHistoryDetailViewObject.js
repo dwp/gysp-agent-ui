@@ -88,6 +88,12 @@ recalledStatusFormatted.detailsSummaryRows[2].actions = {
   }],
 };
 
+const recalledStatusDeadFormatted = Object.assign(JSON.parse(JSON.stringify(formattedBase)), { status: 'Recalled' });
+recalledStatusDeadFormatted.detailsSummaryRows[2].value.text = 'Recalled';
+
+const returnedStatusDeadFormatted = Object.assign(JSON.parse(JSON.stringify(formattedBase)), { status: 'Returned' });
+returnedStatusDeadFormatted.detailsSummaryRows[2].value.text = 'Returned';
+
 describe('frequency schedule object formatter', () => {
   it('should return valid json when object is called with PAID status and link before 14 days after credit day', (done) => {
     const json = object.formatter(paidStatusBefore14Days, id);
@@ -115,13 +121,23 @@ describe('frequency schedule object formatter', () => {
     done();
   });
   it('should return valid json when object is called with RECALLED status and award status is DEAD', (done) => {
-    const json = object.formatter(recalledStatus, id, 'INPAYMENT');
-    assert.deepEqual(json, recalledStatusFormatted);
+    const json = object.formatter(recalledStatus, id, 'DEAD');
+    assert.deepEqual(json, recalledStatusDeadFormatted);
     done();
   });
   it('should return valid json when object is called with RECALLED status and award status is DEADNOTVERIFIED', (done) => {
-    const json = object.formatter(recalledStatus, id, 'INPAYMENT');
-    assert.deepEqual(json, recalledStatusFormatted);
+    const json = object.formatter(recalledStatus, id, 'DEADNOTVERIFIED');
+    assert.deepEqual(json, recalledStatusDeadFormatted);
+    done();
+  });
+  it('should return valid json when object is called with RETURNED status and award status is DEAD', (done) => {
+    const json = object.formatter(returnedStatus, id, 'DEAD');
+    assert.deepEqual(json, returnedStatusDeadFormatted);
+    done();
+  });
+  it('should return valid json when object is called with RETURNED status and award status is DEADNOTVERIFIED', (done) => {
+    const json = object.formatter(returnedStatus, id, 'DEADNOTVERIFIED');
+    assert.deepEqual(json, returnedStatusDeadFormatted);
     done();
   });
 });

@@ -222,6 +222,14 @@ const validPaymentStatusRequestSent = { session: { awardDetails: claimData.valid
 const validPaymentStatusRequestRecalling = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
 let validReissueRequest = { };
 
+const validReissueDeathRequest = {
+  session: { awardDetails: claimData.validClaimWithDeathVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+};
+
+const validReissueDeathNotVerifedRequest = {
+  session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+};
+
 const emptyPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: {} });
 const blankPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: '' } });
 const noPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'no' } });
@@ -641,10 +649,28 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/reissue');
     });
 
-    it('should return redirect and display alert when payment status is not updatable - STATUS', async () => {
+    it('should return redirect and display alert when payment status is not updatable - SENT', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailSent);
       validReissueRequest.params.id = 12345678;
       await controller.getReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
+      validReissueDeathRequest.params.id = 12345678;
+      await controller.getReissuePayment(validReissueDeathRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFED', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
+      validReissueDeathNotVerifedRequest.params.id = 12345678;
+      await controller.getReissuePayment(validReissueDeathNotVerifedRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'Error - this payment cannot be reissued.');
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
@@ -659,10 +685,28 @@ describe('Payment history controller', () => {
         session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
       };
     });
-    it('should return redirect and display alert when payment status is not updatable - STATUS', async () => {
+    it('should return redirect and display alert when payment status is not updatable - SENT', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailSent);
       validReissueRequest.params.id = 12345678;
       await controller.postReissuePayment(validReissueRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
+      validReissueDeathRequest.params.id = 12345678;
+      await controller.postReissuePayment(validReissueDeathRequest, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'Error - this payment cannot be reissued.');
+      assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
+    });
+
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFED', async () => {
+      nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
+      validReissueDeathNotVerifedRequest.params.id = 12345678;
+      await controller.postReissuePayment(validReissueDeathNotVerifedRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'Error - this payment cannot be reissued.');
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');

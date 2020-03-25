@@ -172,7 +172,7 @@ async function postStatusUpdate(req, res) {
 }
 
 function isAllowedToBeReissued(status, awardStatus) {
-  if (status === RETURNED || (status === RECALLED && awardStatus !== 'DEAD' && awardStatus !== 'DEADNOTVERIFIED')) {
+  if ((status === RETURNED || status === RECALLED) && (awardStatus !== 'DEAD' && awardStatus !== 'DEADNOTVERIFIED')) {
     return true;
   }
   return false;
@@ -220,11 +220,11 @@ async function postReissuePayment(req, res) {
   try {
     const { id } = req.params;
     const detail = await paymentDetail(req, res, id);
-    if (!isAllowedToBeReissued(detail.status)) {
+    const awardDetails = dataStore.get(req, 'awardDetails');
+    if (!isAllowedToBeReissued(detail.status, awardDetails.awardStatus)) {
       req.flash('error', 'Error - this payment cannot be reissued.');
       res.redirect(`/changes-and-enquiries/payment-history/${id}`);
     } else {
-      const awardDetails = dataStore.get(req, 'awardDetails');
       const reissuePaymentApiObjectFormatted = reissuePaymentApiObject.formatter(id, awardDetails);
       const apiToUse = detail.status === 'RECALLED' ? reissueRecalledPaymentApi : reissuePaymentApi;
       const putReissueCall = requestHelper.generatePutCall(res.locals.agentGateway + apiToUse, reissuePaymentApiObjectFormatted, 'payment', req.user);
