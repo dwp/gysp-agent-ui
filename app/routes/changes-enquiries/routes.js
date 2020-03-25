@@ -13,5 +13,6 @@ router.use('/', require('./personal/routes.js'));
 router.use('/', require('./payment/routes'));
 router.use('/', require('./payment-frequency/routes'));
 router.use('/', require('./payment-history/routes'));
+router.use('/', require('./marital/routes'));
 
 module.exports = router;

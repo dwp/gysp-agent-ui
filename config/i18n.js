@@ -17,6 +17,7 @@ module.exports = {
       'death-record',
       'find-claim',
       'find-someone',
+      'marital-details',
       'remove-contact-details',
       'enter-amounts',
       'address',

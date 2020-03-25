@@ -54,6 +54,17 @@
           <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
           <td class="govuk-table__cell">&nbsp;</td>
         </tr>
+        <tr class="govuk-table__row">
+          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Marital status</th>
+          <td class="govuk-table__cell">{{ details.maritalStatus }}</td>
+          <td class="govuk-table__cell">
+            {% if details.showMaritalStatusDetails %}
+              <a href="/changes-and-enquiries/marital-details" class="govuk-link govuk-link--no-visited-state">Details</a>
+            {% else %}
+              &nbsp;
+            {% endif %}
+          </td>
+        </tr>
         {% if details.dateOfDeath %}
           <tr class="govuk-table__row">
             <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Date of death</th>
