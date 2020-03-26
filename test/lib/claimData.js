@@ -42,6 +42,11 @@ module.exports = {
     }
     return false;
   },
+  validClaimNullContact() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContactAllNull(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalSingle(),
+    };
+  },
   validClaimWithFutureUprating() {
     return {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetailsWithCurrentAndFutureUprating(),
@@ -295,6 +300,16 @@ module.exports = {
       },
     };
   },
+  validContactAllNull() {
+    return {
+      contactDetail: {
+        email: null,
+        homeTelephoneNumber: null,
+        mobileTelephoneNumber: null,
+        workTelephoneNumber: null,
+      },
+    };
+  },
   validContactHomeNull() {
     const contact = { ...this.validContact() };
     contact.contactDetail.homeTelephoneNumber = null;
@@ -373,20 +388,120 @@ module.exports = {
     };
   },
   validContactDetailsViewData() {
-    return {
-      address: [
-        'Sub Building Name, Building Name',
-        'Building Number Dependent Thoroughfare Name',
-        'Thoroughfare Name',
-        'Dependent Locality',
-        'Post Town',
-        'Post Code',
-      ],
-      homeTelephoneNumber: '0000000000',
-      mobileTelephoneNumber: '1111111111',
-      workTelephoneNumber: '2222222222',
-      email: 'a@b.com',
-    };
+    return [{
+      key: { text: 'contact-details-overview:summary.keys.address', classes: 'govuk-!-width-two-thirds' },
+      value: { html: 'Sub Building Name, Building Name<br />Building Number Dependent Thoroughfare Name<br />Thoroughfare Name<br />Dependent Locality<br />Post Town<br />Post Code' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/address',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.address',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.home-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '0000000000' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/home',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.home-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.work-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '2222222222' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/work',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.work-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.mobile-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '1111111111' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/mobile',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.mobile-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.email', classes: 'govuk-!-width-two-thirds' },
+      value: { text: 'a@b.com' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/email',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.email',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }];
+  },
+  validContactDetailsAddViewData() {
+    return [{
+      key: { text: 'contact-details-overview:summary.keys.address', classes: 'govuk-!-width-two-thirds' },
+      value: { html: 'Sub Building Name, Building Name<br />Building Number Dependent Thoroughfare Name<br />Thoroughfare Name<br />Dependent Locality<br />Post Town<br />Post Code' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/address',
+          text: 'contact-details-overview:summary.actions.change',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.address',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.home-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/home',
+          text: 'contact-details-overview:summary.actions.add',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.home-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.work-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/work',
+          text: 'contact-details-overview:summary.actions.add',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.work-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.mobile-phone-number', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/mobile',
+          text: 'contact-details-overview:summary.actions.add',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.mobile-phone-number',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }, {
+      key: { text: 'contact-details-overview:summary.keys.email', classes: 'govuk-!-width-two-thirds' },
+      value: { text: '' },
+      actions: {
+        items: [{
+          href: '/changes-and-enquiries/contact/email',
+          text: 'contact-details-overview:summary.actions.add',
+          visuallyHiddenText: 'contact-details-overview:summary.keys.email',
+          classes: 'govuk-link--no-visited-state',
+        }],
+      },
+    }];
   },
   validAwardListViewData() {
     return {

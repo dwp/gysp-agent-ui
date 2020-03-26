@@ -8,7 +8,7 @@ const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavi
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 const contactDetailsObject = require('../../../../lib/contactDetailsObject');
 const removeContactDetailsObject = require('../../../../lib/removeContactDetailsObject');
-const contactDetailsOverview = require('../../../../lib/contactDetailsOverview');
+const contactDetailsOverview = require('../../../../lib/objects/view/contactDetailsOverview');
 
 const contactDetailsUpdateUri = 'api/award/updatecontactdetails';
 

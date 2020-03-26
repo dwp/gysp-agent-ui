@@ -6,6 +6,7 @@ module.exports = {
       'award-detail',
       'award-list',
       'robot',
+      'contact-details-overview',
       'contact-details',
       'claim-information',
       'death-check-details',
