@@ -1,0 +1,6 @@
+{
+  "header": "Get a task",
+  "p": "View the next available task that requires an action.",
+  "button": "View next task",
+  "no-tasks": "There are no available tasks."
+}

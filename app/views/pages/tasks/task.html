@@ -1,0 +1,31 @@
+{% extends 'helpers/layout.html' %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('tasks:header') }}{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl">{{ t('task:' + details.reason + '.header') }}</h1>
+        <p class="govuk-body govuk-!-margin-bottom-7">{{ t('task:' + details.reason + '.p') }}</p>
+        {{ govukButton({
+            text: t('task:primary-button'),
+            href: '/tasks/task/detail',
+            attributes: {
+                id: 'task-detail-button'
+            }
+        }) }}
+        {{ govukButton({
+            text: t('task:secondary-button'),
+            href: '/tasks/task/return-to-queue',
+            classes: "govuk-button--secondary",
+            attributes: {
+                id: 'task-return-to-queue-button'
+            }
+        }) }}
+    </div>
+</div>
+
+
+{% endblock %}
