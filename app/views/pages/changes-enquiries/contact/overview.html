@@ -1,66 +1,18 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block pageTitle %}Contact details - Changes and enquiries{% endblock %}
 
 {% block innerContent %}
 
-  <h1 class="govuk-visually-hidden">Changes and enquiries - Contact</h1>
+  <h1 class="govuk-heading-m">{{ t('contact-details-overview:header') }}</h1>
 
   {% if details %}
-    <table id="contact-details-table" class="govuk-table">
-      <caption class="govuk-table__caption govuk-heading-l">Contact details</caption>
-      <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell gysp-table__cell--first gysp-text-align-top govuk-!-font-weight-regular" scope="row">Address</th>
-          <td class="govuk-table__cell gysp-table__cell--first">
-          {% for addressLine in details.address %}
-            {{ addressLine }}{{ "<br />" | safe if loop.last == false }}
-          {% endfor %}
-          </td>
-          <td class="govuk-table__cell govuk-table__cell--numeric gysp-table__cell--first">
-            <a href="/changes-and-enquiries/address" id="changeAddress" class="govuk-link govuk-link--no-visited-state">
-              Change<span class="govuk-visually-hidden"> address</span>
-            </a>
-          </td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Home phone number</th>
-          <td class="govuk-table__cell gysp-table__cell--wrap">{{ details.homeTelephoneNumber }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/home" id="changeHomePhoneNumber" class="govuk-link govuk-link--no-visited-state">
-              {{ "Change" if details.homeTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> home phone number</span>
-            </a>
-          </td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Work phone number</th>
-          <td class="govuk-table__cell gysp-table__cell--wrap">{{ details.workTelephoneNumber }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/work" id="changeWorkPhoneNumber" class="govuk-link govuk-link--no-visited-state">
-              {{ "Change" if details.workTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> work phone number</span>
-            </a>
-          </td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Mobile phone number</th>
-          <td class="govuk-table__cell gysp-table__cell--wrap">{{ details.mobileTelephoneNumber }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/mobile" id="changeMobilePhoneNumber" class="govuk-link govuk-link--no-visited-state">
-              {{ "Change" if details.mobileTelephoneNumber else "Add" }}<span class="govuk-visually-hidden"> mobile phone number</span>
-            </a>
-          </td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Email address</th>
-          <td class="govuk-table__cell gysp-table__cell--wrap">{{ details.email }}</td>
-          <td class="govuk-table__cell govuk-table__cell--numeric">
-            <a href="/changes-and-enquiries/contact/email" id="changeEmail" class="govuk-link govuk-link--no-visited-state">
-              {{ "Change" if details.email else "Add" }}<span class="govuk-visually-hidden"> email</span>
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+    {{ govukSummaryList({
+      rows: details.conatctDetailsSummaryRows
+    }) }}
+
   {% else %}
     <p class="govuk-body">Sorry, no contact details found.</p>
   {% endif %}

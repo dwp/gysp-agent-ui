@@ -180,7 +180,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.getContactDetails(contactDetailsRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/overview');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validContactDetailsViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.details.conatctDetailsSummaryRows), JSON.stringify(claimData.validContactDetailsViewData()));
       });
     });
 

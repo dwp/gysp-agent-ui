@@ -1,0 +1,16 @@
+{
+  "header": "Contact details",
+  "summary": {
+    "keys": {
+      "address": "Address",
+      "home-phone-number": "Home phone number",
+      "work-phone-number": "Work phone number",
+      "mobile-phone-number": "Mobile phone number",
+      "email": "Email address"
+    },
+    "actions": {
+      "add": "Add",
+      "change": "Change"
+    }
+  }
+}
