@@ -161,6 +161,7 @@ app.use((req, res, next) => {
 app.use(require('./lib/middleware/processClaim')(log));
 app.use(require('./lib/middleware/reviewAward')(log));
 app.use(require('./lib/middleware/changesEnquiries')(log));
+app.use(require('./lib/middleware/tasks')(log));
 app.use(require('./lib/kongAuth'));
 
 // Route information
@@ -192,6 +193,7 @@ app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./ap
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-payment/routes'));
 app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-complete/routes'));
+app.use('/tasks', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/tasks/routes'));
 app.use('/review-award', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/review-award/routes'));
 
 // 404 catch

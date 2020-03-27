@@ -1,0 +1,12 @@
+{
+  "married": {
+    "header": "Consider the State Pension entitlement of a spouse",
+    "p": "Check the record of the claimant's spouse to see if there is any change to their State Pension entitlement."
+  },
+  "civilpartnership": {
+    "header": "Consider the State Pension entitlement of a civil partner",
+    "p": "Check the record of the claimant's civil partner to see if there is any change to their State Pension entitlement."
+  },
+  "primary-button": "Start this task",
+  "secondary-button": "Return task to queue"
+}
