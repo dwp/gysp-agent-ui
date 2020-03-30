@@ -1,0 +1,26 @@
+{
+  "header": {
+    "married": "Consider spouse entitlement",
+    "civil": "Consider civil partner entitlement"
+  },
+  "partner-details": {
+    "header": {
+      "married": "Spouse's details",
+      "civil": "Civil partner's details"
+    },
+    "summary-keys": {
+      "first-name": "First name",
+      "surname": "Surname",
+      "other-names": "Other names",
+      "dob": "Date of birth"
+    }
+  },
+  "claimant-details": {
+    "header": "Claimant's details",
+    "summary-keys": {
+      "nino": "National Insurance Number",
+      "full-name": "Full name",
+      "address": "Address"
+    }
+  }
+}
