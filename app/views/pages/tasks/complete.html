@@ -1,0 +1,39 @@
+{% extends 'helpers/layout.html' %}
+{% from 'helpers/form.html' import globalError as error %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('task-complete:header') }}{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: 'Back',
+      href: '/tasks/task/detail',
+      classes: 'govuk-!-margin-top-8 govuk-!-margin-bottom-0'
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if messages.error %}
+          {{ error(messages.error) }}
+        {% endif %}
+
+        <h1 class="govuk-heading-xl">{{ t('task-complete:header') }}</h1>
+        <p class="govuk-body govuk-!-margin-bottom-7">{{ t('task-complete:p.' + details.reason) }}</p>
+        {{ govukButton({
+          text: t('task-complete:button'),
+          href: '/tasks/task/end',
+          attributes: {
+            id: 'task-end'
+          }
+        }) }}
+    </div>
+</div>
+
+{% endblock %}

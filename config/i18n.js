@@ -33,6 +33,8 @@ module.exports = {
       'reissue-payment',
       'review-award-date',
       'tasks',
+      'task-complete',
+      'task-detail',
       'task',
       'verify-date-of-death',
       'verified-date-of-death',

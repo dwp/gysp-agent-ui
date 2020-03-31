@@ -16,6 +16,7 @@ application:
       addressLookupApiKey:
       paymentApiKey:
       hmrcCalculationApiKey:
+      filterApiKey:
       host: host
   robot:
     key:

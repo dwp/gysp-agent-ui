@@ -1,0 +1,8 @@
+{
+  "header": "Complete task",
+  "p": {
+    "married": "If you have checked the spouse's record and completed any necessary actions, you can end the task.",
+    "civilpartnership": "If you have checked the civil partner's record and completed any necessary actions, you can end the task."
+  },
+  "button": "End task"
+}

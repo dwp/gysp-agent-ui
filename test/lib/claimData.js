@@ -30,6 +30,11 @@ module.exports = {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalMarried(),
     };
   },
+  validClaimCivilPartner() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalCivilPartnership(),
+    };
+  },
   validClaimContactNull(type) {
     if (type === 'home') {
       return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactHomeNull() };
