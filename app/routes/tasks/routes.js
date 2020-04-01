@@ -3,7 +3,9 @@ const express = require('express');
 const router = new express.Router();
 const functions = require('./functions');
 
-router.get('/', functions.getTasks);
+router.route('/')
+  .get(functions.getTasks)
+  .post(functions.postTasks);
 router.get('/task', functions.getTask);
 router.get('/task/detail', functions.getTaskDetail);
 router.get('/task/complete', functions.getTaskComplete);

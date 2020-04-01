@@ -17,15 +17,17 @@ const putWorkItemUpdateStatusReturnedEndPoint = 'api/workitem/update-status-retu
 const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
 const putWorkItemUpdateStatusCompleteEndPoint = 'api/workitem/update-status-complete';
 
-async function getTasks(req, res) {
+function getTasks(req, res) {
+  deleteSession.deleteSessionBySection(req, 'tasks');
+  res.render('pages/tasks/index', { tasks: true });
+}
+
+async function postTasks(req, res) {
   try {
-    deleteSession.deleteSessionBySection(req, 'tasks');
     const workItemCall = requestHelper.generateGetCall(res.locals.agentGateway + getWorkItemEndPoint, {}, 'filter');
     const workItem = await request(workItemCall);
     dataStore.save(req, 'work-item', workItem, 'tasks');
-    res.render('pages/tasks/index', {
-      tasks: true,
-    });
+    res.redirect('/tasks/task');
   } catch (err) {
     if (err.statusCode === httpStatus.NOT_FOUND) {
       res.render('pages/tasks/index', {
@@ -34,9 +36,7 @@ async function getTasks(req, res) {
     } else {
       const traceID = requestHelper.getTraceID(err);
       requestHelper.loggingHelper(err, getWorkItemEndPoint, traceID, res.locals.logger);
-      res.render('pages/tasks/index', {
-        tasks: false,
-      });
+      errorHelper.flashErrorAndRedirect(req, res, err, 'filter', '/tasks');
     }
   }
 }
@@ -96,6 +96,7 @@ async function getEndTask(req, res) {
 }
 
 module.exports.getTasks = getTasks;
+module.exports.postTasks = postTasks;
 module.exports.getTask = getTask;
 module.exports.getReturnTaskToQueue = getReturnTaskToQueue;
 module.exports.getTaskDetail = getTaskDetail;

@@ -31,7 +31,7 @@ const flashMock = (type, message) => {
 
 // Requests
 const emptyRequest = { session: {} };
-const tasksRequest = { session: { tasks: marriedWorkItem } };
+const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock };
 
 let marriedTaskRequest;
 let civilTaskRequest;
@@ -46,30 +46,36 @@ describe('tasks controller ', () => {
   });
 
   describe('getTasks function', () => {
-    it('should return task view when requested with API response NOT_FOUND', async () => {
+    it('should return tasks view when requested', async () => {
+      controller.getTasks(emptyRequest, genericResponse);
+      assert.isUndefined(emptyRequest.session.tasks);
+      assert.equal(genericResponse.viewName, 'pages/tasks/index');
+    });
+  });
+
+  describe('postTasks function', () => {
+    it('should return tasks view when requested with API response NOT_FOUND', async () => {
       nock('http://test-url/').get(workItemUri).reply(httpStatus.NOT_FOUND, {});
-      await controller.getTasks(tasksRequest, genericResponse);
+      await controller.postTasks(emptyRequest, genericResponse);
       assert.isUndefined(emptyRequest.session.tasks);
       assert.equal(genericResponse.viewName, 'pages/tasks/index');
       assert.isFalse(genericResponse.data.tasks);
       assert.equal(genericResponse.locals.logMessage, '');
     });
 
-    it('should return task view when requested with API response INTERNAL_SERVER_ERROR', async () => {
+    it('should return redirect with flash error when requested with API response INTERNAL_SERVER_ERROR', async () => {
       nock('http://test-url/').get(workItemUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      await controller.getTasks(tasksRequest, genericResponse);
-      assert.isUndefined(emptyRequest.session.tasks);
-      assert.equal(genericResponse.viewName, 'pages/tasks/index');
-      assert.isFalse(genericResponse.data.tasks);
-      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/workitem/next-workitem');
+      await controller.postTasks(tasksRequest, genericResponse);
+      assert(genericResponse.address, '/tasks/task');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/workitem/next-workitem');
     });
 
-    it('should return task view when requested with API response OK', async () => {
+    it('should return redirect when requested with API response OK', async () => {
       nock('http://test-url/').get(workItemUri).reply(httpStatus.OK, marriedWorkItem);
-      await controller.getTasks(emptyRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/index');
-      assert.isTrue(genericResponse.data.tasks);
-      assert.deepEqual(emptyRequest.session.tasks['work-item'], marriedWorkItem);
+      await controller.postTasks(emptyRequest, genericResponse);
+      assert(genericResponse.address, '/tasks/task');
     });
   });
 

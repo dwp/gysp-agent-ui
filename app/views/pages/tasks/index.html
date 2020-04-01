@@ -15,13 +15,14 @@
 
         {% if tasks %}
             <p class="govuk-body govuk-!-margin-bottom-7">{{ t('tasks:p') }}</p>
-            {{ govukButton({
-                text: t('tasks:button'),
-                href: '/tasks/task',
-                attributes: {
-                    id: 'view-task'
-                }
-            }) }}
+            <form method="post" action="/tasks" id="form-view-tasks" autocomplete="off">
+                {{ govukButton({
+                    text: t('tasks:button'),
+                    attributes: {
+                        id: 'view-tasks'
+                    }
+                }) }}
+            </form>
         {% else %}
             <p class="govuk-body">{{ t('tasks:no-tasks') }}</p>
         {% endif %}
