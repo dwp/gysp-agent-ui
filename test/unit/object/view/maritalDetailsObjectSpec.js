@@ -25,30 +25,30 @@ const nullPartnerDetails = {
 };
 
 const basePartnerDetailRows = [{
-  key: { text: 'marital-details:partner-details.summary-keys.first-name', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.first-name', classes: 'gysp-col-1' },
   value: { text: 'Joe' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.surname', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.surname', classes: 'gysp-col-1' },
   value: { text: 'Bloggs' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.other-names', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.other-names', classes: 'gysp-col-1' },
   value: { text: 'Middle' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '19 March 1953' },
 }];
 
 const blankPartnerDetailRows = [{
-  key: { text: 'marital-details:partner-details.summary-keys.first-name', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.first-name', classes: 'gysp-col-1' },
   value: { text: '' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.surname', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.surname', classes: 'gysp-col-1' },
   value: { text: '' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.other-names', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.other-names', classes: 'gysp-col-1' },
   value: { text: '' },
 }, {
-  key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'govuk-!-width-one-half' },
+  key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '' },
 }];
 
