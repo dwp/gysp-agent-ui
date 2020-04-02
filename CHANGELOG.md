@@ -1,3 +1,18 @@
+<a name="5.25.0"></a>
+# [5.25.0](https://github.com/dwp/gysp-agent-ui/compare/v5.24.0...v5.25.0) (2020-04-02)
+
+
+### Features
+
+* **design:** update design of contact page ([a16761f](https://github.com/dwp/gysp-agent-ui/commit/a16761f))
+* **marital:** marital status and partner ([b49bc8b](https://github.com/dwp/gysp-agent-ui/commit/b49bc8b))
+* **payment:** dead returned payment ([2f64d2f](https://github.com/dwp/gysp-agent-ui/commit/2f64d2f))
+* **task:** add tasks module ([184c98e](https://github.com/dwp/gysp-agent-ui/commit/184c98e))
+* **tasks:** update tasks functionality ([79df3f2](https://github.com/dwp/gysp-agent-ui/commit/79df3f2))
+* **tasks:** view and end tasks ([410a415](https://github.com/dwp/gysp-agent-ui/commit/410a415))
+
+
+
 <a name="5.24.0"></a>
 # [5.24.0](https://github.com/dwp/gysp-agent-ui/compare/v5.23.0...v5.24.0) (2020-03-18)
 
