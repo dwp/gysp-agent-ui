@@ -20,6 +20,14 @@
                 id: 'task-detail-button'
             }
         }) }}
+        {{ govukButton({
+            text: t('task:secondary-button'),
+            href: '/tasks/task/return-to-queue',
+            classes: 'govuk-button--secondary',
+            attributes: {
+                id: 'task-return-button'
+            }
+        }) }}
     </div>
 </div>
 
