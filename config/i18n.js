@@ -19,6 +19,8 @@ module.exports = {
       'find-claim',
       'find-someone',
       'marital-details',
+      'marital-date',
+      'marital-status',
       'remove-contact-details',
       'enter-amounts',
       'address',

@@ -1,0 +1,56 @@
+{
+  "header": {
+    "divorced": "Date of divorce",
+    "widowed": "Date spouse or partner died",
+    "dissolved": "Date civil partnership was dissolved"
+  },
+  "fields": {
+    "date": {
+      "items": {
+        "day": {
+          "label": "Day"
+        },
+        "month": {
+          "label": "Month"
+        },
+        "year": {
+          "label": "Year"
+        }
+      },
+      "errors": {
+        "divorced": {
+          "required": "Enter the date of divorce",
+          "format": "Enter a real date, like 12 4 1993",
+          "future": "Date of divorce must be in the past"
+        },
+        "widowed": {
+          "required": "Enter the date the spouse or partner died",
+          "format": "Enter a real date, like 12 4 1993",
+          "future": "The date the spouse or partner died must be in the past"
+        },
+        "dissolved": {
+          "required": "Enter the date the civil partnership was dissolved",
+          "format": "Enter a real date, like 12 4 1993",
+          "future": "Date civil partnership was dissolved must be in the past"
+        }
+      }
+    },
+    "verification": {
+      "options": {
+        "verified": "Verified",
+        "not_verified": "Not verified"
+      },
+      "errors": {
+        "divorced": {
+          "required": "Select whether the date of divorce is verified or not verified"
+        },
+        "widowed": {
+          "required": "Select whether the date spouse or partner died is verified or not verified"
+        },
+        "dissolved": {
+          "required": "Select whether the date civil partnership was dissolved is verified or not verified"
+        }
+      }
+    }
+  }
+}

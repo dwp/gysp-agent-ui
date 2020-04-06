@@ -20,17 +20,21 @@
         <tr class="govuk-table__row">
           <th class="govuk-table__cell gysp-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
           <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
-          <td class="govuk-table__cell">
-            &nbsp;
+          <td class="govuk-table__cell govuk-table__header--numeric">
+            {% if maritalDetails.details.enableChange %}
+              <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
+            {% endif %}
           </td>
         </tr>
         <tr class="govuk-table__row">
           <th class="govuk-table__cell gysp-col-1" scope="row">{{ maritalDetails.details.dateLabel }}</th>
           <td class="govuk-table__cell">{{ maritalDetails.details.date }}</td>
           <td class="govuk-table__cell govuk-!-width-one-third govuk-table__header--numeric">
-            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">
-              Not verified
-            </span>
+            {% if maritalDetails.details.maritalStatusVerified %}
+              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Verified</span>
+            {% else %}
+              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">Not verified</span>
+            {% endif %}
           </td>
         </tr>
       </tbody>

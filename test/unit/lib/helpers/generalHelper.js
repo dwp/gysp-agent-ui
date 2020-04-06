@@ -50,4 +50,35 @@ describe('General Helper ', () => {
       assert.equal(helper.removeSpacesAndHyphens('00  -00-  00-00   '), '00000000');
     });
   });
+  describe('checkIfValidMaritalStatusByStatus', () => {
+    it('should return false when undefined', () => {
+      assert.isFalse(helper.checkIfValidMaritalStatusByStatus());
+    });
+    it('should return false when invalid status supplied', () => {
+      assert.isFalse(helper.checkIfValidMaritalStatusByStatus('bob'));
+    });
+    it('should return true when divorced status supplied and current status Married', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('divorced', 'Married'));
+    });
+    it('should return true when widowed status supplied and current status Married', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('widowed', 'Married'));
+    });
+    it('should return true when dissolved status supplied and current status Civil Partnership', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('dissolved', 'Civil Partnership'));
+    });
+    it('should return true when widowed status supplied and current status Civil Partnership', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('widowed', 'Civil Partnership'));
+    });
+  });
+  describe('lowerCaseOrNull', () => {
+    it('should return null when undefined', () => {
+      assert.isNull(helper.lowerCaseOrNull());
+    });
+    it('should return null when empty', () => {
+      assert.isNull(helper.lowerCaseOrNull(''));
+    });
+    it('should return lowercase string when string supplied', () => {
+      assert.equal(helper.lowerCaseOrNull('TEST TEST'), 'test test');
+    });
+  });
 });
