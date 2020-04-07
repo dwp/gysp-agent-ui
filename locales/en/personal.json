@@ -5,6 +5,7 @@
     "date_of_death": {
       "verified": "Date of death - verified",
       "not_verified": "Date of death - not verified"
-    }
+    },
+    "marital-status": "Marital status changed"
   }
 }

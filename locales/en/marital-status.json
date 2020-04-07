@@ -1,0 +1,16 @@
+{
+  "header": "Marital status",
+  "fields": {
+    "status": {
+      "options": {
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "dissolved": "Dissolved civil partnership"
+      },
+      "errors": {
+        "required": "Select a new marital status"
+      }
+    }
+  },
+  "success-message": "Marital status changed"
+}

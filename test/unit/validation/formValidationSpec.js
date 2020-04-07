@@ -846,4 +846,110 @@ describe('Form validation', () => {
       });
     });
   });
+
+  describe('maritalDate validator', () => {
+    ['divorced', 'widowed', 'dissolved'].forEach((status) => {
+      it(`should return no error when valid data is supplied - V ${status} status`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
+        });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+
+      it(`should return no error when valid data is supplied - NV V ${status} status`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'NV',
+        });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+
+      it(`should return all errors when empty - ${status} status`, () => {
+        const errors = validator.maritalDate({ }, status);
+        assert.equal(Object.keys(errors).length, 5);
+      });
+
+      it(`should return all errors when blank - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '', dateMonth: '', dateDay: '', verification: '',
+        }, status);
+        assert.equal(Object.keys(errors).length, 5);
+      });
+
+      it(`should return error when date in the future - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2099', dateMonth: '01', dateDay: '01', verification: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.future`);
+      });
+
+      it(`should return error when year is invalid - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '20', dateMonth: '01', dateDay: '01', verification: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+      });
+
+      it(`should return error when month is invalid - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2018', dateMonth: '20', dateDay: '01', verification: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+      });
+
+      it(`should return error when day is invalid - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2018', dateMonth: '01', dateDay: '40', verification: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+      });
+
+      it(`should return error when verification is invalid - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: '2018', dateMonth: '01', dateDay: '01', verification: 'bob',
+        }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.verification.text, `marital-date:fields.verification.errors.${status}.required`);
+      });
+    });
+  });
+
+  describe('maritalStatus validator', () => {
+    it('should return error when data is undefined', () => {
+      const errors = validator.maritalStatus();
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+    });
+    it('should return error when status is undefined', () => {
+      const errors = validator.maritalStatus({});
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+    });
+    it('should return no error when valid data is supplied - Married', () => {
+      const errors = validator.maritalStatus({
+        maritalStatus: 'divorced',
+      }, 'Married');
+      assert.equal(Object.keys(errors).length, 0);
+    });
+    ['Married', 'Civil Partnership'].forEach((currentMaritalStatus) => {
+      it(`should return error when status is undefined - ${currentMaritalStatus}`, () => {
+        const errors = validator.maritalStatus({}, currentMaritalStatus);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+      });
+      it(`should return error when status is blank - ${currentMaritalStatus}`, () => {
+        const errors = validator.maritalStatus({ maritalStatus: '' }, currentMaritalStatus);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+      });
+      it(`should return error when status is invalid status - ${currentMaritalStatus}`, () => {
+        const errors = validator.maritalStatus({ maritalStatus: 'bob' }, currentMaritalStatus);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+      });
+    });
+  });
 });

@@ -34,7 +34,7 @@
     },
     "summary-keys": {
       "first-name": "First name",
-      "surname": "Surname",
+      "surname": "Last name",
       "other-names": "Other names",
       "dob": "Date of birth"
     }
