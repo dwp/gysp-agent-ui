@@ -3,7 +3,7 @@
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% block pageTitle %}{{ t('marital-details:header') }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t('marital-details:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -22,7 +22,7 @@
           <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
           <td class="govuk-table__cell govuk-table__header--numeric">
             {% if maritalDetails.details.enableChange %}
-              <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
+              <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
             {% endif %}
           </td>
         </tr>
@@ -31,9 +31,9 @@
           <td class="govuk-table__cell">{{ maritalDetails.details.date }}</td>
           <td class="govuk-table__cell govuk-!-width-one-third govuk-table__header--numeric">
             {% if maritalDetails.details.maritalStatusVerified %}
-              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">Verified</span>
+              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">{{ t('app:verification-status.verified') }}</span>
             {% else %}
-              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">Not verified</span>
+              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">{{ t('app:verification-status.not-verified') }}</span>
             {% endif %}
           </td>
         </tr>

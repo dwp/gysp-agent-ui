@@ -30,6 +30,11 @@ module.exports = {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalMarried(),
     };
   },
+  validClaimMarriedVerified() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalMarriedVerified(),
+    };
+  },
   validClaimCivilPartner() {
     return {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalCivilPartnership(),
@@ -125,6 +130,19 @@ module.exports = {
   validMaritalMarried() {
     return {
       maritalStatus: 'Married',
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloogs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        marriageDate: '2000-03-19T00:00:00.000Z',
+      },
+    };
+  },
+  validMaritalMarriedVerified() {
+    return {
+      maritalStatus: 'Married',
+      maritalStatusVerified: true,
       partnerDetail: {
         firstName: 'Jane',
         surname: 'Bloogs',

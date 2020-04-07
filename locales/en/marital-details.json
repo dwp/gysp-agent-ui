@@ -36,7 +36,8 @@
       "first-name": "First name",
       "surname": "Last name",
       "other-names": "Other names",
-      "dob": "Date of birth"
+      "dob": "Date of birth",
+      "nino": "National Insurance number"
     }
   }
 }

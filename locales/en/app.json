@@ -7,10 +7,19 @@
     "send-letter": "Send letter"
   },
   "link": {
-    "back": "Back"
+    "back": "Back",
+    "add": "Add",
+    "change": "Change"
+  },
+  "title": {
+    "changes-enquiries": "Changes and enquiries"
   },
   "timeline": {
     "unavailable": "Unable to load changes"
+  },
+  "verification-status": {
+    "verified": "Verified",
+    "not-verified": "Not verified"
   },
   "errors": {
     "api": {

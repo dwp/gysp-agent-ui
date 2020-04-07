@@ -1,0 +1,62 @@
+{
+  "married": {
+    "fields": {
+      "nino": {
+        "label": "Spouse's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Spouse details updated"
+      }
+    }
+  },
+  "civil": {
+    "fields": {
+      "nino": {
+        "label": "Partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Partner details updated"
+      }
+    }
+  },
+  "divorced": {
+    "fields": {
+      "nino": {
+        "label": "Ex-spouse's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Ex-spouse details updated"
+      }
+    }
+  },
+  "dissolved": {
+    "fields": {
+      "nino": {
+        "label": "Ex-partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Ex-partner details updated"
+      }
+    }
+  },
+  "widowed": {
+    "fields": {
+      "nino": {
+        "label": "Late spouse or partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Late spouse or partner details updated"
+      }
+    }
+  }
+}
