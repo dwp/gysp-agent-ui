@@ -35,27 +35,27 @@
       <caption class="govuk-table__caption govuk-heading-l govuk-visually-hidden">Personal details</caption>
       <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-          <th class="govuk-table__cell gysp-table__cell--first govuk-!-font-weight-regular" scope="row">Full name</th>
-          <td class="govuk-table__cell gysp-table__cell--first">{{ details.fullName }}</td>
-          <td class="govuk-table__cell gysp-table__cell--first">&nbsp;</td>
+          <th class="govuk-table__cell" scope="row">Full name</th>
+          <td class="govuk-table__cell">{{ details.fullName }}</td>
+          <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">National Insurance number</th>
+          <th class="govuk-table__cell" scope="row">National Insurance number</th>
           <td class="govuk-table__cell">{{ details.nino }}</td>
           <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Date of birth</th>
+          <th class="govuk-table__cell" scope="row">Date of birth</th>
           <td class="govuk-table__cell">{{ details.dob }}</td>
           <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">State Pension date</th>
+          <th class="govuk-table__cell" scope="row">State Pension date</th>
           <td class="govuk-table__cell">{{ details.statePensionDate }}</td>
           <td class="govuk-table__cell">&nbsp;</td>
         </tr>
         <tr class="govuk-table__row">
-          <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Marital status</th>
+          <th class="govuk-table__cell" scope="row">Marital status</th>
           <td class="govuk-table__cell">{{ details.maritalStatus }}</td>
           <td class="govuk-table__cell">
             {% if details.showMaritalStatusDetails %}
@@ -67,7 +67,7 @@
         </tr>
         {% if details.dateOfDeath %}
           <tr class="govuk-table__row">
-            <th class="govuk-table__cell govuk-!-font-weight-regular" scope="row">Date of death</th>
+            <th class="govuk-table__cell" scope="row">Date of death</th>
             <td class="govuk-table__cell">{{ details.dateOfDeath }}</td>
             <td class="govuk-table__cell">
               <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if details.dateOfDeathVerification == 'Verified' else 'inactive' }}">
