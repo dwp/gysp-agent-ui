@@ -1,4 +1,5 @@
 const { assert } = require('chai');
+const moment = require('moment');
 const awardDetailsObject = require('../../../../lib/objects/view/awardDetailsObject');
 const claimData = require('../../../lib/claimData');
 
@@ -90,6 +91,14 @@ describe('awardDetailsObject ', () => {
       const formatted = awardDetailsObject.formatter(details, 0);
       assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsBase);
       assert.deepEqual(formatted.header, 'award-detail:header.previous');
+    });
+
+    it('should return current award header when first award is future', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].inPayment = false;
+      details.awardAmounts[0].fromDate = moment().add(5, 'd').toDate().getTime();
+      const formatted = awardDetailsObject.formatter(details, 0);
+      assert.deepEqual(formatted.header, 'award-detail:header.current');
     });
   });
 });
