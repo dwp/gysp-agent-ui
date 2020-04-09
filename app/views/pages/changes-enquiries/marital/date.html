@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="/changes-and-enquiries/marital-details/date" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/marital-details/date" autocomplete="off" novalidate>
 
     {{ govukDateInput({
       id: "date",
