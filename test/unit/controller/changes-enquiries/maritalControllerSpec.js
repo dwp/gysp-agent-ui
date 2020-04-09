@@ -36,6 +36,14 @@ const validDatePostRequest = {
   flash: flashMock,
 };
 
+const emptyNinoPostRequest = { session: { awardDetails: claimData.validClaimMarried() }, body: {} };
+const validNinoPostRequest = {
+  session: { awardDetails: claimData.validClaimMarried() },
+  body: { partnerNino: 'AA123456C' },
+  flash: flashMock,
+};
+
+// API Endpoints
 const changeCircumstancesDetailsUri = '/api/award';
 const putMaritalDetailsApiUri = '/api/award/update-marital-details';
 
@@ -153,6 +161,52 @@ describe('Change circumstances - marital controller', () => {
       assert.equal(flash.type, 'success');
       assert.equal(flash.message, 'marital-status:success-message');
       assert.isUndefined(validDatePostRequest.session.marital);
+    });
+  });
+
+  describe('getChangePartnerNino function (GET /changes-enquiries/marital-details/nino)', () => {
+    it('should return nino view with empty partnerNino when requested', () => {
+      controller.getChangePartnerNino(marriedRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/nino');
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.isUndefined(genericResponse.data.details);
+    });
+  });
+
+  describe('postChangePartnerNino function (POST /changes-enquiries/marital-details/nino)', () => {
+    it('should return view name with errors when called with empty post', () => {
+      controller.postChangePartnerNino(emptyNinoPostRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/nino');
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.deepEqual(genericResponse.data.details, {});
+    });
+
+    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postChangePartnerNino(validNinoPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/nino');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/update-marital-details');
+    });
+
+    it('should be return a redirect with BAD_REQUEST message', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.BAD_REQUEST, {});
+      await controller.postChangePartnerNino(validNinoPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/nino');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+      assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on /api/award/update-marital-details');
+    });
+
+    it('should be return a redirect with OK message and clear session', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.OK, {});
+      await controller.postChangePartnerNino(validNinoPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      assert.equal(flash.type, 'success');
+      assert.equal(flash.message, 'marital-detail:married.fields.nino.success-message');
+      assert.isUndefined(validNinoPostRequest.session.marital);
     });
   });
 });

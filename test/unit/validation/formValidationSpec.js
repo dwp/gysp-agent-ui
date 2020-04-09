@@ -952,4 +952,37 @@ describe('Form validation', () => {
       });
     });
   });
+  describe('maritalPartnerNino validator', () => {
+    ['married', 'civil', 'divorced', 'widowed', 'dissolved'].forEach((status) => {
+      it(`should return error when data is undefined - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+      });
+      it(`should return error when partnerNino is blank - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: '' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+      });
+      it(`should return error when partnerNino is invalid - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'ZZ123456C' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+      });
+      it(`should return error when partnerNino length is 7 - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.length`);
+      });
+      it(`should return error when partnerNino length is 10 - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345678' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.length`);
+      });
+      it(`should return no errors when partnerNino valid - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA123456C' }, status);
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+  });
 });

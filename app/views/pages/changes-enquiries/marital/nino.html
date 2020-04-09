@@ -1,0 +1,39 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}{{ t("marital-detail:" + maritalStatus + ".fields.nino.label") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/marital-details",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/marital-details/nino" autocomplete="off">
+    {{ govukInput({
+      id: "partnerNino",
+      name: "partnerNino",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("marital-detail:" + maritalStatus + ".fields.nino.label"),
+        attributes: {
+          id: "partnerNino-label"
+        },
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      },
+      value: details.partnerNino,
+      errorMessage: errors.partnerNino
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
+{% endblock %}

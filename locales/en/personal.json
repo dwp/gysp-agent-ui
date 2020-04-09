@@ -6,6 +6,13 @@
       "verified": "Date of death - verified",
       "not_verified": "Date of death - not verified"
     },
-    "marital-status": "Marital status changed"
+    "marital-status": "Marital status changed",
+    "marital-partner": {
+      "married": "Spouse details updated",
+      "civil": "Partner details updated",
+      "divorced": "Ex-spouse details updated",
+      "dissolved": "Ex-partner details updated",
+      "widowed": "Late spouse or partner details updated"
+    }
   }
 }

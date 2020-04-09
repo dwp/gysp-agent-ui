@@ -11,6 +11,7 @@ const basePartnerObject = {
   surname: 'Bloggs',
   allOtherNames: 'Middle',
   dob: '1953-03-19T17:26:35.089Z',
+  partnerNino: 'AA123456A',
 };
 
 const nullPartnerDetails = {
@@ -20,6 +21,7 @@ const nullPartnerDetails = {
     surname: null,
     allOtherNames: null,
     dob: null,
+    partnerNino: null,
     marriageDate: '2000-04-19T17:26:35.089Z',
   },
 };
@@ -36,6 +38,17 @@ const basePartnerDetailRows = [{
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '19 March 1953' },
+}, {
+  key: { text: 'marital-details:partner-details.summary-keys.nino', classes: 'gysp-col-1' },
+  value: { text: 'AA 12 34 56 A' },
+  actions: {
+    items: [{
+      href: '/changes-and-enquiries/marital-details/nino',
+      text: 'app:link.change',
+      visuallyHiddenText: 'marital-details:partner-details.summary-keys.nino',
+      classes: 'govuk-link--no-visited-state',
+    }],
+  },
 }];
 
 const blankPartnerDetailRows = [{
@@ -50,6 +63,17 @@ const blankPartnerDetailRows = [{
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '' },
+}, {
+  key: { text: 'marital-details:partner-details.summary-keys.nino', classes: 'gysp-col-1' },
+  value: { text: '' },
+  actions: {
+    items: [{
+      href: '/changes-and-enquiries/marital-details/nino',
+      text: 'app:link.add',
+      visuallyHiddenText: 'marital-details:partner-details.summary-keys.nino',
+      classes: 'govuk-link--no-visited-state',
+    }],
+  },
 }];
 
 const validObjects = {

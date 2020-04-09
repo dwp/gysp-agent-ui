@@ -107,8 +107,47 @@ async function postChangeMaritalDate(req, res) {
   }
 }
 
+function getChangePartnerNino(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const keyDetails = keyDetailsHelper.formatter(award);
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  res.render('pages/changes-enquiries/marital/nino', {
+    keyDetails,
+    maritalStatus,
+  });
+}
+
+async function postChangePartnerNino(req, res) {
+  const details = req.body;
+  const award = dataStore.get(req, 'awardDetails');
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  const errors = formValidator.maritalPartnerNino(details, maritalStatus);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerNino(), details);
+    const maritalDetails = maritalDetailsApiObject.partnerDetailFormatter(filteredRequest, maritalStatus, award);
+    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
+    try {
+      await request(putMaritalDetailsCall);
+      req.flash('success', i18n.t(`marital-detail:${maritalStatus}.fields.nino.success-message`));
+      res.redirect('/changes-and-enquiries/personal');
+    } catch (err) {
+      errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/nino');
+    }
+  } else {
+    const keyDetails = keyDetailsHelper.formatter(award);
+    res.render('pages/changes-enquiries/marital/nino', {
+      keyDetails,
+      maritalStatus,
+      details,
+      errors,
+    });
+  }
+}
+
 module.exports.getMaritalDetails = getMaritalDetails;
 module.exports.getChangeMaritalStatus = getChangeMaritalStatus;
 module.exports.postChangeMaritalStatus = postChangeMaritalStatus;
 module.exports.getChangeMaritalDate = getChangeMaritalDate;
 module.exports.postChangeMaritalDate = postChangeMaritalDate;
+module.exports.getChangePartnerNino = getChangePartnerNino;
+module.exports.postChangePartnerNino = postChangePartnerNino;
