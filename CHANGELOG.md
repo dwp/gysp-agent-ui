@@ -1,3 +1,21 @@
+<a name="5.26.0"></a>
+# [5.26.0](https://github.com/dwp/gysp-agent-ui/compare/v5.25.0...v5.26.0) (2020-04-15)
+
+
+### Bug Fixes
+
+* use correct header for future first award ([d33ec7c](https://github.com/dwp/gysp-agent-ui/commit/d33ec7c))
+
+
+### Features
+
+* change style on personal table ([15084bf](https://github.com/dwp/gysp-agent-ui/commit/15084bf))
+* **marital:** add/update partner nino ([79e5d26](https://github.com/dwp/gysp-agent-ui/commit/79e5d26))
+* **marital:** change marital status for married and civil partnerdship ([6119d23](https://github.com/dwp/gysp-agent-ui/commit/6119d23))
+* **tasks:** enable return to queue ([2f32657](https://github.com/dwp/gysp-agent-ui/commit/2f32657))
+
+
+
 <a name="5.25.0"></a>
 # [5.25.0](https://github.com/dwp/gysp-agent-ui/compare/v5.24.0...v5.25.0) (2020-04-02)
 
