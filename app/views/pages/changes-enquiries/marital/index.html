@@ -28,13 +28,14 @@
         </tr>
         <tr class="govuk-table__row">
           <th class="govuk-table__cell gysp-col-1" scope="row">{{ maritalDetails.details.dateLabel }}</th>
-          <td class="govuk-table__cell">{{ maritalDetails.details.date }}</td>
-          <td class="govuk-table__cell govuk-!-width-one-third govuk-table__header--numeric">
-            {% if maritalDetails.details.maritalStatusVerified %}
-              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active">{{ t('app:verification-status.verified') }}</span>
-            {% else %}
-              <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--inactive">{{ t('app:verification-status.not-verified') }}</span>
-            {% endif %}
+          <td class="govuk-table__cell">
+            {{ maritalDetails.details.date }}
+            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-padding-left-6 gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if maritalDetails.details.maritalStatusVerified else 'inactive' }}">
+              {{ t('app:verification-status.verified') if maritalDetails.details.maritalStatusVerified else t('app:verification-status.not-verified') }}
+            </span>
+          </td>
+          <td class="govuk-table__cell govuk-table__header--numeric">
+            <a href="/changes-and-enquiries/marital-details/date" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ maritalDetails.details.dateLabel | lower }}</span></a>
           </td>
         </tr>
       </tbody>
