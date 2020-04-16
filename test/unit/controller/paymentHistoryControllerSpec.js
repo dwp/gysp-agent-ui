@@ -27,7 +27,7 @@ const reissuePaymentApi = '/api/payment/reissue-payment';
 const paymentUpdateStatusApi = '/api/payment/update-status';
 const awardStatusUpdateApi = '/api/award/update-status';
 
-const flash = {
+let flash = {
   type: '',
   message: '',
 };
@@ -210,7 +210,6 @@ const reissuePaymentDetailsFormatted = {
   ],
 };
 
-
 const baseRequest = {
   session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, body: {},
 };
@@ -233,14 +232,17 @@ const validReissueDeathNotVerifedRequest = {
 const emptyPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: {} });
 const blankPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: '' } });
 const noPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'no' } });
-const yesPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'yes' } });
-const yesPostRequestRecalling = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'yes' } });
+const yesPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'yes' }, flash: flashMock });
+const yesPostRequestRecalling = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'yes' }, flash: flashMock });
 yesPostRequestRecalling.params.id = 1111;
-const yesPostRequestRecalled = JSON.parse(JSON.stringify(yesPostRequestRecalling));
-const yesPostRequestPaid = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'no' } });
+const yesPostRequestRecalled = Object.assign(JSON.parse(JSON.stringify(yesPostRequestRecalling)), { flash: flashMock });
+const yesPostRequestPaid = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: { statusUpdate: 'no' }, flash: flashMock });
 yesPostRequestPaid.params.id = 1111;
 
 describe('Payment history controller', () => {
+  beforeEach(() => {
+    flash = { type: '', message: '' };
+  });
   afterEach(() => {
     nock.cleanAll();
   });
@@ -408,6 +410,8 @@ describe('Payment history controller', () => {
         nock('http://test-url/').put(awardStatusUpdateApi).reply(httpStatus.OK);
         await controller.postStatusUpdate(yesPostRequest, genericResponse);
         assert.isUndefined(yesPostRequest.session['payment-history']['123']);
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'payment-status:success-message.returned');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
 
@@ -487,13 +491,14 @@ describe('Payment history controller', () => {
         nock('http://test-url/').put(paymentUpdateStatusApi).reply(httpStatus.OK);
         await controller.postStatusUpdate(yesPostRequestRecalling, genericResponse);
         assert.isUndefined(yesPostRequestRecalling.session['payment-history']['1111']);
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'payment-status:success-message.recall');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
 
       it('should return redirect with flash data view when status update is yes but receive 500 response from the payment API', async () => {
         nock('http://test-url/').get(`${paymentUri}/1111`).reply(httpStatus.OK, paymentDetailSent);
         nock('http://test-url/').put(paymentUpdateStatusApi).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-        yesPostRequestRecalling.flash = flashMock;
         await controller.postStatusUpdate(yesPostRequestRecalling, genericResponse);
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, 'Error - could not save data.');
@@ -504,7 +509,6 @@ describe('Payment history controller', () => {
       it('should return redirect with flash data view when status update is yes but receive 400 response from the payment API', async () => {
         nock('http://test-url/').get(`${paymentUri}/1111`).reply(httpStatus.OK, paymentDetailSent);
         nock('http://test-url/').put(paymentUpdateStatusApi).reply(httpStatus.BAD_REQUEST, {});
-        yesPostRequestRecalling.flash = flashMock;
         await controller.postStatusUpdate(yesPostRequestRecalling, genericResponse);
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, 'Error - connection refused.');
@@ -515,7 +519,6 @@ describe('Payment history controller', () => {
       it('should return redirect with flash data view when status update is yes but receive 404 response from the payment API', async () => {
         nock('http://test-url/').get(`${paymentUri}/1111`).reply(httpStatus.OK, paymentDetailSent);
         nock('http://test-url/').put(paymentUpdateStatusApi).reply(httpStatus.NOT_FOUND, {});
-        yesPostRequestRecalling.flash = flashMock;
         await controller.postStatusUpdate(yesPostRequestRecalling, genericResponse);
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, 'Error - not found.');

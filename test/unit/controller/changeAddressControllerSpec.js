@@ -12,6 +12,14 @@ const addressData = require('../../lib/addressData');
 
 let testPromise;
 let genericResponse = {};
+
+// Mocks
+const flash = { type: '', message: '' };
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
+
 const validRequest = { session: { awardDetails: claimData.validClaim() } };
 const postcodeValidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: 'W1J 7NT' } };
 const postcodeInvalidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: '' } };
@@ -20,7 +28,12 @@ const validSelectRequest = { session: { awardDetails: claimData.validClaim(), ad
 const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
-const validSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '10091853817' } };
+const validSelectPostRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } },
+  body: { address: '10091853817' },
+  flash: flashMock,
+};
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '' } };
 
 const notFoundResponse = {
@@ -226,6 +239,8 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(validSelectPostRequest.session.addressLookup, undefined);
         assert.equal(validSelectPostRequest.session.postcode, undefined);
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'address:success-message');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });

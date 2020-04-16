@@ -5,6 +5,7 @@ const formValidator = require('../../../../lib/formValidator');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const requestHelper = require('../../../../lib/requestHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const freqencyScheduleObject = require('../../../../lib/objects/freqencyScheduleObject');
 
 const activeSecondaryNavigationSection = 'payment';
@@ -43,11 +44,7 @@ function getChangePaymentFrequency(req, res) {
 }
 
 function isFrequencySame(details, frequency) {
-  const frequencyString = details.paymentFrequency;
-  if (frequency === frequencyString) {
-    return true;
-  }
-  return false;
+  return frequency === details.paymentFrequency;
 }
 
 function postChangePaymentFrequencyErrorHandler(error, req, res) {
@@ -83,7 +80,7 @@ function postChangePaymentFrequency(req, res) {
         req.user,
       );
       request(putScheduleUpdateCall).then(() => {
-        res.redirect('/changes-and-enquiries/payment');
+        redirectHelper.successAlertAndRedirect(req, res, 'payment-frequency:success-message', '/changes-and-enquiries/payment');
       }).catch((err) => {
         postChangePaymentFrequencyErrorHandler(err, req, res);
       });

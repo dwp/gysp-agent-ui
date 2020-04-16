@@ -1,6 +1,7 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
 const requestHelper = require('../../../../lib/requestHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const dataStore = require('../../../../lib/dataStore');
@@ -152,7 +153,12 @@ async function postStatusUpdate(req, res) {
           await request(putAwardStatusCall);
         }
         deleteSession.deletePaymentDetail(req, id);
-        res.redirect('/changes-and-enquiries/payment');
+        if (detail.status === SENT || detail.status === PAID) {
+          const { changeType } = statusDetail;
+          redirectHelper.successAlertAndRedirect(req, res, `payment-status:success-message.${changeType}`, '/changes-and-enquiries/payment');
+        } else {
+          res.redirect('/changes-and-enquiries/payment');
+        }
       } catch (err) {
         postStatusUpdateErrorHandler(err, req, res);
         res.redirect(`/changes-and-enquiries/payment-history/${id}/status-update`);

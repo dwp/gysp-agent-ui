@@ -3,6 +3,7 @@ const httpStatus = require('http-status-codes');
 
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
@@ -111,7 +112,7 @@ function postChangeContactDetails(req, res) {
     const contactDetails = contactDetailsObject.formatter(req.body, req.session.awardDetails, type);
     const putContactDetailCall = requestHelper.generatePutCall(res.locals.agentGateway + contactDetailsUpdateUri, contactDetails, 'batch', req.user);
     request(putContactDetailCall).then(() => {
-      res.redirect('/changes-and-enquiries/contact');
+      redirectHelper.successAlertAndRedirect(req, res, `contact-details:success-message.${type}.${addOrChange}`, '/changes-and-enquiries/contact');
     }).catch((err) => {
       postChangeContactDetailsErrorHandler(err, req, res, type, addOrChange, keyDetails);
     });
@@ -167,7 +168,7 @@ function postRemoveContactDetails(req, res) {
         req.user,
       );
       request(putContactDetailCall).then(() => {
-        res.redirect('/changes-and-enquiries/contact');
+        redirectHelper.successAlertAndRedirect(req, res, `contact-details:success-message.${type}.remove`, '/changes-and-enquiries/contact');
       }).catch((err) => {
         postRemoveContactDetailsErrorHandler(err, req, res, type, keyDetails);
       });

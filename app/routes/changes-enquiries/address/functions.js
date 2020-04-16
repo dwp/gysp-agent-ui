@@ -3,6 +3,7 @@ const httpStatus = require('http-status-codes');
 
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const dataStore = require('../../../../lib/dataStore');
@@ -137,7 +138,7 @@ function postSelectAddress(req, res) {
     );
     request(putAddressDetailCall).then(() => {
       deleteSession.deleteChangeAddress(req);
-      res.redirect('/changes-and-enquiries/contact');
+      redirectHelper.successAlertAndRedirect(req, res, 'address:success-message', '/changes-and-enquiries/contact');
     }).catch((err) => {
       postSelectAddressErrorHandler(err, req, res, keyDetails);
     });

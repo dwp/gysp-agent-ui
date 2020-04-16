@@ -42,7 +42,7 @@ const errorMessage = {
   other: 'There is a problem with the service. This has been logged. Please try again later.',
 };
 
-const flash = {
+let flash = {
   type: '',
   message: '',
 };
@@ -75,6 +75,8 @@ describe('Change payment frequency controller ', () => {
         },
       },
     };
+
+    flash = { type: '', message: '' };
 
     testPromise = new Promise((resolve) => {
       setTimeout(() => {
@@ -112,6 +114,8 @@ describe('Change payment frequency controller ', () => {
       nock('http://test-url/', reqHeaders).put(putChangePaymentFrequencyApiUri).reply(httpStatus.OK, {});
       controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'payment-frequency:success-message');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
     });

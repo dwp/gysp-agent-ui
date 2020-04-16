@@ -35,5 +35,9 @@
     "header": "Status changes",
     "empty": "No changes made",
     "returned": "Payment returned - payments stopped"
+  },
+  "success-message": {
+    "recall": "Recalling payment",
+    "returned": "Payment returned - payments stopped"
   }
 }
