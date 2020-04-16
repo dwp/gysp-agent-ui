@@ -13,6 +13,24 @@
       "divorced": "Ex-spouse details updated",
       "dissolved": "Ex-partner details updated",
       "widowed": "Late spouse or partner details updated"
+    },
+    "marital-date": {
+      "married": {
+        "verified": "Date of marriage verified",
+        "not-verified": "Date of marriage not verified"
+      },
+      "divorced": {
+        "verified": "Date of divorce verified",
+        "not-verified": "Date of divorce not verified"
+      },
+      "widowed": {
+        "verified": "Date spouse or partner died verified",
+        "not-verified": "Date spouse or partner died not verified"
+      },
+      "dissolved": {
+        "verified": "Date civil partnership was dissolved verified",
+        "not-verified": "Date civil partnership was dissolved not verified"
+      }
     }
   }
 }

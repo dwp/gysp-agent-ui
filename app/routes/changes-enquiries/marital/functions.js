@@ -73,25 +73,29 @@ function postChangeMaritalStatus(req, res) {
 function getChangeMaritalDate(req, res) {
   const award = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(award);
-  const maritalStatus = dataStore.get(req, 'maritalStatus', 'marital');
+  const newMaritalStatus = dataStore.get(req, 'maritalStatus', 'marital');
+  const maritalStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalStatus);
+  const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalStatus);
   res.render('pages/changes-enquiries/marital/date', {
     keyDetails,
     maritalStatus,
+    backHref,
   });
 }
 
 async function postChangeMaritalDate(req, res) {
   const details = req.body;
   const award = dataStore.get(req, 'awardDetails');
-  const maritalStatus = dataStore.get(req, 'maritalStatus', 'marital');
-  const errors = formValidator.maritalDate(details, maritalStatus);
+  const newMaritalShortStatus = dataStore.get(req, 'maritalStatus', 'marital');
+  const maritalShortStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalShortStatus);
+  const errors = formValidator.maritalDate(details, maritalShortStatus);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalDate(), details);
-    const maritalDetails = maritalDetailsApiObject.formatter(filteredRequest, maritalStatus, award);
+    const maritalDetails = maritalDetailsApiObject.formatter(filteredRequest, maritalShortStatus, award);
     const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
     try {
       await request(putMaritalDetailsCall);
-      req.flash('success', i18n.t('marital-status:success-message'));
+      req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(award.maritalStatus, maritalShortStatus, details.verification));
       redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
     } catch (err) {
       errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date');
@@ -100,7 +104,7 @@ async function postChangeMaritalDate(req, res) {
     const keyDetails = keyDetailsHelper.formatter(award);
     res.render('pages/changes-enquiries/marital/date', {
       keyDetails,
-      maritalStatus,
+      maritalStatus: maritalShortStatus,
       details,
       errors,
     });

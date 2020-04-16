@@ -40,6 +40,21 @@ module.exports = {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalCivilPartnership(),
     };
   },
+  validClaimDivorced() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalDivorced(),
+    };
+  },
+  validClaimDissolved() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalDissolved(),
+    };
+  },
+  validClaimWidowed() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalWidowed(),
+    };
+  },
   validClaimContactNull(type) {
     if (type === 'home') {
       return { ...this.validBase(), ...this.validUkAddress(), ...this.validContactHomeNull() };
@@ -176,7 +191,7 @@ module.exports = {
       },
     };
   },
-  validMaritalDissolvedDate() {
+  validMaritalDissolved() {
     return {
       maritalStatus: 'Dissolved',
       partnerDetail: {
@@ -188,7 +203,7 @@ module.exports = {
       },
     };
   },
-  validMaritalWidowedDate() {
+  validMaritalWidowed() {
     return {
       maritalStatus: 'Widowed',
       partnerDetail: {
