@@ -102,5 +102,27 @@
       "changed": "Email address changed",
       "removed": "Email address removed"
     }
+  },
+  "success-message": {
+    "home": {
+      "add": "Home number added",
+      "change": "Home number changed",
+      "remove": "Home number removed"
+    },
+    "work": {
+      "add": "Work number added",
+      "change": "Work number changed",
+      "remove": "Work number removed"
+    },
+    "mobile": {
+      "add": "Mobile number added",
+      "change": "Mobile number changed",
+      "remove": "Mobile number removed"
+    },
+    "email": {
+      "add": "Email address added",
+      "change": "Email address changed",
+      "remove": "Email address removed"
+    }
   }
 }

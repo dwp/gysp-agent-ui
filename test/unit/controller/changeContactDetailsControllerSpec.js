@@ -13,6 +13,13 @@ const navigationData = require('../../lib/navigationData');
 let testPromise;
 let genericResponse = {};
 
+// Mocks
+let flash = { type: '', message: '' };
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
+
 const contactDetailsRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
 
 const homePhoneAddRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaimContactNull('home') } };
@@ -111,20 +118,31 @@ const emailRemoveViewData = {
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };
 const validHomePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
+const validAddHomePostRequest = { ...validHomePostRequest, session: { awardDetails: claimData.validClaimContactNull('home') } };
+
 const emptyWorkPostRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '' } };
 const validWorkPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
+const validAddWorkPostRequest = { ...validWorkPostRequest, session: { awardDetails: claimData.validClaimContactNull('work') } };
+
 const emptyMobilePostRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '' } };
 const validMobilePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
+const validAddMobilePostRequest = { ...validMobilePostRequest, session: { awardDetails: claimData.validClaimContactNull('mobile') } };
+
+const emptyEmailPostRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { email: '' } };
+const validEmailPostRequest = {
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { email: 'a@b.com' }, flash: flashMock,
+};
+const validAddEmailPostRequest = { ...validEmailPostRequest, session: { awardDetails: claimData.validClaimContactNull('email') } };
 
 const emptyHomeRemovePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: '' } };
 const validYesHomeRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' }, flash: flashMock,
 };
 const validNoHomeRemovePostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'no' },
@@ -132,7 +150,7 @@ const validNoHomeRemovePostRequest = {
 
 const emptyEmailRemovePostRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: '' } };
 const validYesEmailRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' },
+  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' }, flash: flashMock,
 };
 const validNoEmailRemovePostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'no' },
@@ -163,6 +181,8 @@ describe('Change circumstances contact controller', () => {
         },
       },
     };
+
+    flash = { type: '', message: '' };
 
     testPromise = new Promise((resolve) => {
       setTimeout(() => {
@@ -248,10 +268,22 @@ describe('Change circumstances contact controller', () => {
       });
     });
 
-    it('should return a redirect when API returns 200 state', () => {
+    it('should return a redirect when API returns 200 state - add', () => {
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
+      changeContactDetailsController.postChangeContactDetails(validAddHomePostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.home.add');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
+      });
+    });
+
+    it('should return a redirect when API returns 200 state - change', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validHomePostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.home.change');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -312,10 +344,22 @@ describe('Change circumstances contact controller', () => {
       });
     });
 
-    it('should return a redirect when API returns 200 state', () => {
+    it('should return a redirect when API returns 200 state - add', () => {
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
+      changeContactDetailsController.postChangeContactDetails(validAddWorkPostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.work.add');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
+      });
+    });
+
+    it('should return a redirect when API returns 200 state - change', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validWorkPostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.work.change');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -376,10 +420,22 @@ describe('Change circumstances contact controller', () => {
       });
     });
 
-    it('should return a redirect when API returns 200 state', () => {
+    it('should return a redirect when API returns 200 state - add', () => {
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
+      changeContactDetailsController.postChangeContactDetails(validAddMobilePostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.mobile.add');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
+      });
+    });
+
+    it('should return a redirect when API returns 200 state - change', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.mobile.change');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -403,47 +459,59 @@ describe('Change circumstances contact controller', () => {
 
   describe(' postChangeContactDetails function (POST /changes-and-enquiries/contact/email)', () => {
     it('should return view name when called with empty post with errors', () => {
-      changeContactDetailsController.postChangeContactDetails(emptyMobilePostRequest, genericResponse);
+      changeContactDetailsController.postChangeContactDetails(emptyEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(Object.keys(genericResponse.data.errors).length, 1);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/index');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/email');
       });
     });
 
     it('should return view with error when API returns 400 state', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.BAD_REQUEST, {});
-      changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
+      changeContactDetailsController.postChangeContactDetails(validEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/index');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/email');
       });
     });
 
     it('should return view with error when API returns 404 state', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.NOT_FOUND, {});
-      changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
+      changeContactDetailsController.postChangeContactDetails(validEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[404]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/index');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/email');
       });
     });
 
     it('should return view with error when API returns 500 state', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
+      changeContactDetailsController.postChangeContactDetails(validEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/updatecontactdetails');
         assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/index');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/contact/email');
       });
     });
 
-    it('should return a redirect when API returns 200 state', () => {
+    it('should return a redirect when API returns 200 state - add', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
-      changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
+      changeContactDetailsController.postChangeContactDetails(validAddEmailPostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.email.add');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
+      });
+    });
+
+    it('should return a redirect when API returns 200 state - change', () => {
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
+      changeContactDetailsController.postChangeContactDetails(validEmailPostRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.email.change');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -509,6 +577,8 @@ describe('Change circumstances contact controller', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validYesHomeRemovePostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.home.remove');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -574,6 +644,8 @@ describe('Change circumstances contact controller', () => {
       nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validYesEmailRemovePostRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'contact-details:success-message.email.remove');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });

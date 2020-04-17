@@ -24,5 +24,6 @@
     "address": {
       "changed": "Address changed"
     }
-  }
+  },
+  "success-message": "Address changed"
 }

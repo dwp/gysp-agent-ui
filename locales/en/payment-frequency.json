@@ -14,5 +14,6 @@
       }
     }
   },
-  "button": "Continue"
+  "button": "Continue",
+  "success-message": "Frequency changed"
 }
