@@ -21,6 +21,7 @@ module.exports = {
       'marital-detail',
       'marital-details',
       'marital-date',
+      'marital-partner',
       'marital-status',
       'remove-contact-details',
       'enter-amounts',

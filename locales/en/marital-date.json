@@ -1,6 +1,7 @@
 {
   "header": {
     "married": "Date of marriage",
+    "civil": "Date of civil partnership",
     "divorced": "Date of divorce",
     "widowed": "Date spouse or partner died",
     "dissolved": "Date civil partnership was dissolved"
@@ -23,6 +24,11 @@
           "required": "Enter the date of marriage",
           "format": "Enter a real date, like 12 4 1993",
           "future": "Date of marriage must be in the past"
+        },
+        "civil": {
+          "required": "Enter the date of civil partnership",
+          "format": "Enter a real date, like 12 4 1993",
+          "future": "Date of civil partnership must be in the past"
         },
         "divorced": {
           "required": "Enter the date of divorce",
@@ -49,6 +55,9 @@
       "errors": {
         "married": {
           "required": "Select whether the date of marriage is verified or not verified"
+        },
+        "civil": {
+          "required": "Select whether the date of civil partnership is verified or not verified"
         },
         "divorced": {
           "required": "Select whether the date of divorce is verified or not verified"

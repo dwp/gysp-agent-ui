@@ -1,0 +1,126 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("marital-partner:header." + maritalStatus) }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries/marital-details/date',
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
+
+    <h1 class="govuk-heading-l">{{ t("marital-partner:header." + maritalStatus) }} </h1>
+
+    {{ govukInput({
+      id: "partnerNino",
+      name: "partnerNino",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("marital-partner:fields.nino.label"),
+        classes: "govuk-label--s",
+        attributes: {
+          id: "partnerNino-label"
+        }
+      },
+      value: details.partnerNino,
+      errorMessage: errors.partnerNino
+    }) }}
+
+    {{ govukInput({
+      id: "firstName",
+      name: "firstName",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("marital-partner:fields.first-name.label"),
+        classes: "govuk-label--s",
+        attributes: {
+          id: "firstName-label"
+        }
+      },
+      value: details.firstName,
+      errorMessage: errors.firstName
+    }) }}
+
+    {{ govukInput({
+      id: "lastName",
+      name: "lastName",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      label: {
+        text: t("marital-partner:fields.last-name.label"),
+        classes: "govuk-label--s",
+        attributes: {
+          id: "lastName-label"
+        }
+      },
+      value: details.lastName,
+      errorMessage: errors.lastName
+    }) }}
+
+    {{ govukInput({
+      id: "otherName",
+      name: "otherName",
+      type: "text",
+      classes: "govuk-!-width-two-thirds",
+      hint: {
+        text: t("marital-partner:fields.other-name.hint")
+      },
+      label: {
+        text: t("marital-partner:fields.other-name.label"),
+        classes: "govuk-label--s",
+        attributes: {
+          id: "otherName-label"
+        }
+      },
+      value: details.otherName,
+      errorMessage: errors.otherName
+    }) }}
+
+    {{ govukDateInput({
+      id: "dob",
+      fieldset: {
+        legend: {
+          text: t("marital-partner:fields.dob.legend"),
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      items: [{
+        label: t("marital-partner:fields.dob.items.day.label"),
+        id: "dob-day",
+        name: "dobDay",
+        value: details.dobDay,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobDay),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("marital-partner:fields.dob.items.month.label"),
+        id: "dob-month",
+        name: "dobMonth",
+        value: details.dobMonth,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobMonth),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("marital-partner:fields.dob.items.year.label"),
+        id: "dob-year",
+        name: "dobYear",
+        value: details.dobYear,
+        classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dobYear),
+        attributes: { maxlength: '4' }
+      }],
+      errorMessage: errors.dob
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
+{% endblock %}

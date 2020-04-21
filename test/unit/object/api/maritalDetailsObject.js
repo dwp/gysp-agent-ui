@@ -93,6 +93,44 @@ const ninoAddFormatted = {
 };
 const ninoChangeFormatted = Object.assign(JSON.parse(JSON.stringify(ninoAddFormatted)), { eventType: 'CHANGE' });
 
+const fullMaritalStatusAllDataChangeFormattedVerified = {
+  nino: 'AA370773A',
+  eventCategory: 'PERSONAL',
+  eventType: 'CHANGE',
+  eventName: 'personal:timeline.marital-status',
+  maritalStatus: 'Married',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Jane',
+    surname: 'Bloogs',
+    allOtherNames: 'Middle',
+    dob: '1952-03-19T00:00:00.000Z',
+    marriageDate: '2020-03-01T00:00:00.000Z',
+    partnerNino: 'AA123456A',
+  },
+};
+
+const fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified = {
+  nino: 'AA370773A',
+  eventCategory: 'PERSONAL',
+  eventType: 'CHANGE',
+  eventName: 'personal:timeline.marital-status',
+  maritalStatus: 'Married',
+  maritalStatusVerified: false,
+  partnerDetail: {
+    firstName: 'Jane',
+    surname: 'Bloogs',
+    marriageDate: '2020-03-01T00:00:00.000Z',
+  },
+};
+const otherName = JSON.parse(JSON.stringify(fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified));
+otherName.partnerDetail.allOtherNames = 'Middle';
+
+const dob = JSON.parse(JSON.stringify(fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified));
+dob.partnerDetail.dob = '1952-03-19T00:00:00.000Z';
+
+const partnerNino = JSON.parse(JSON.stringify(fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified));
+partnerNino.partnerDetail.partnerNino = 'AA123456A';
 
 const maritalDateBaseFormatted = {
   nino: 'AA370773A',
@@ -169,6 +207,39 @@ const dateDetailsNotVerified = {
 
 const partnerNinoDetails = { partnerNino: 'AA123456A' };
 
+const partnerAllDetails = {
+  firstName: 'Jane',
+  lastName: 'Bloogs',
+  otherName: 'Middle',
+  dobYear: '1952',
+  dobMonth: '03',
+  dobDay: '19',
+  partnerNino: 'AA123456A',
+};
+
+const partnerOptionalNotCompleteDetails = {
+  firstName: 'Jane',
+  lastName: 'Bloogs',
+  otherName: '',
+  dobYear: '',
+  dobMonth: '',
+  dobDay: '',
+  partnerNino: '',
+};
+
+const maritalDataMarriedVerified = {
+  maritalStatus: 'married',
+  date: {
+    dateYear: '2020', dateMonth: '03', dateDay: '01', verification: 'V',
+  },
+};
+const maritalDataMarriedNoneVerified = {
+  maritalStatus: 'married',
+  date: {
+    dateYear: '2020', dateMonth: '03', dateDay: '01', verification: 'NV',
+  },
+};
+
 describe('maritalDetailsObject', () => {
   describe('formatter', () => {
     describe('marital status', () => {
@@ -220,14 +291,35 @@ describe('maritalDetailsObject', () => {
     });
   });
 
-  describe('partnerDetailFormatter', () => {
+  describe('partnerNinoDetailFormatter', () => {
     it('should return formatted add object with nino updated when nino supplied but not complete in partner details', () => {
-      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerNinoDetails, 'married', claimData.validClaimMarriedVerified()), ninoAddFormatted);
+      assert.deepEqual(maritalDetailsObject.partnerNinoDetailFormatter(partnerNinoDetails, 'married', claimData.validClaimMarriedVerified()), ninoAddFormatted);
     });
     it('should return formatted change object with nino updated when nino supplied and complete in partner details', () => {
       const award = claimData.validClaimMarriedVerified();
       award.partnerDetail.partnerNino = 'AA654321C';
-      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerNinoDetails, 'married', award), ninoChangeFormatted);
+      assert.deepEqual(maritalDetailsObject.partnerNinoDetailFormatter(partnerNinoDetails, 'married', award), ninoChangeFormatted);
+    });
+  });
+  describe('partnerDetailFormatter', () => {
+    it('should return verified formatted object with all optional field present when all data is supplied', () => {
+      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerAllDetails, maritalDataMarriedVerified, claimData.validClaimSingle()), fullMaritalStatusAllDataChangeFormattedVerified);
+    });
+    it('should return non verified formatted object with no optional field present when optional fields are blank', () => {
+      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerOptionalNotCompleteDetails, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified);
+    });
+    it('should return formatted object with all required partner fields present plus otherName when all required partner fields and otherName are complete', () => {
+      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({ ...partnerOptionalNotCompleteDetails, otherName: 'Middle' }, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), otherName);
+    });
+    it('should return formatted object with all required partner fields present plus dob when all required partner fields and dob are complete', () => {
+      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({
+        ...partnerOptionalNotCompleteDetails, dobYear: '1952', dobMonth: '03', dobDay: '19',
+      }, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), dob);
+    });
+    it('should return formatted object with all required partner fields present plus partnerNino when all required partner fields and partnerNino are complete', () => {
+      assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({
+        ...partnerOptionalNotCompleteDetails, partnerNino: 'AA123456A',
+      }, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), partnerNino);
     });
   });
 });

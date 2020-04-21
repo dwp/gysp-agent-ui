@@ -57,11 +57,11 @@
         <tr class="govuk-table__row">
           <th class="govuk-table__cell" scope="row">Marital status</th>
           <td class="govuk-table__cell">{{ details.maritalStatus }}</td>
-          <td class="govuk-table__cell">
+          <td class="govuk-table__cell govuk-table__header--numeric">
             {% if details.showMaritalStatusDetails %}
               <a href="/changes-and-enquiries/marital-details" class="govuk-link govuk-link--no-visited-state">Details</a>
             {% else %}
-              &nbsp;
+              <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> marital status</span></a>
             {% endif %}
           </td>
         </tr>

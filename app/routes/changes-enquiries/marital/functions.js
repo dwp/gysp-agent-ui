@@ -9,6 +9,7 @@ const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper
 const errorHelper = require('../../../../lib/helpers/errorHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const formValidator = require('../../../../lib/formValidator');
+const maritalValidation = require('../../../../lib/validation/maritalValidation');
 
 const maritalDetailsObject = require('../../../../lib/objects/view/maritalDetailsObject');
 const maritalDetailsApiObject = require('../../../../lib/objects/api/maritalDetailsObject');
@@ -45,9 +46,11 @@ function getChangeMaritalStatus(req, res) {
   const keyDetails = keyDetailsHelper.formatter(award);
   const statusDetails = dataStore.get(req, 'maritalStatus', 'marital');
   const newStatusOptions = maritalStatusHelper.newStatusOptions(award.maritalStatus, statusDetails);
+  const backHref = maritalStatusHelper.maritalStatusBackHref(award.maritalStatus);
   res.render('pages/changes-enquiries/marital/status', {
     keyDetails,
     newStatusOptions,
+    backHref,
   });
 }
 
@@ -75,12 +78,36 @@ function getChangeMaritalDate(req, res) {
   const keyDetails = keyDetailsHelper.formatter(award);
   const newMaritalStatus = dataStore.get(req, 'maritalStatus', 'marital');
   const maritalStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalStatus);
+  const details = dataStore.get(req, 'date', 'marital');
   const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalStatus);
+  const button = maritalStatusHelper.maritalDateButton(newMaritalStatus);
   res.render('pages/changes-enquiries/marital/date', {
     keyDetails,
     maritalStatus,
+    details,
     backHref,
+    button,
   });
+}
+
+function saveSessionAndRedirectToPartnerDetails(req, res, filteredRequest, maritalShortStatus) {
+  const redirectUrl = maritalStatusHelper.redirectUrlBasedOnStatusPartner(maritalShortStatus);
+  dataStore.save(req, 'date', filteredRequest, 'marital');
+  res.redirect(`/changes-and-enquiries/marital-details/${redirectUrl}`);
+}
+
+async function saveDateAndRedirect(req, res, award, filteredRequest, maritalShortStatus) {
+  const maritalDetails = maritalDetailsApiObject.formatter(filteredRequest, maritalShortStatus, award);
+  const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
+  const currentMaritalStatus = award.maritalStatus;
+  const { verification } = filteredRequest;
+  try {
+    await request(putMaritalDetailsCall);
+    req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification));
+    redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date');
+  }
 }
 
 async function postChangeMaritalDate(req, res) {
@@ -91,20 +118,20 @@ async function postChangeMaritalDate(req, res) {
   const errors = formValidator.maritalDate(details, maritalShortStatus);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalDate(), details);
-    const maritalDetails = maritalDetailsApiObject.formatter(filteredRequest, maritalShortStatus, award);
-    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
-    try {
-      await request(putMaritalDetailsCall);
-      req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(award.maritalStatus, maritalShortStatus, details.verification));
-      redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
-    } catch (err) {
-      errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date');
+    if (maritalStatusHelper.newMaritalStatusRequiresPartnerDetails(newMaritalShortStatus)) {
+      saveSessionAndRedirectToPartnerDetails(req, res, filteredRequest, newMaritalShortStatus);
+    } else {
+      await saveDateAndRedirect(req, res, award, filteredRequest, maritalShortStatus);
     }
   } else {
     const keyDetails = keyDetailsHelper.formatter(award);
+    const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalShortStatus);
+    const button = maritalStatusHelper.maritalDateButton(newMaritalShortStatus);
     res.render('pages/changes-enquiries/marital/date', {
       keyDetails,
       maritalStatus: maritalShortStatus,
+      backHref,
+      button,
       details,
       errors,
     });
@@ -128,7 +155,7 @@ async function postChangePartnerNino(req, res) {
   const errors = formValidator.maritalPartnerNino(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerNino(), details);
-    const maritalDetails = maritalDetailsApiObject.partnerDetailFormatter(filteredRequest, maritalStatus, award);
+    const maritalDetails = maritalDetailsApiObject.partnerNinoDetailFormatter(filteredRequest, maritalStatus, award);
     const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
     try {
       await request(putMaritalDetailsCall);
@@ -148,6 +175,46 @@ async function postChangePartnerNino(req, res) {
   }
 }
 
+function getPartnerDetails(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const keyDetails = keyDetailsHelper.formatter(award);
+  const newMaritalShortStatus = dataStore.get(req, 'maritalStatus', 'marital');
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(newMaritalShortStatus);
+  res.render('pages/changes-enquiries/marital/partner', {
+    formUrl: req.originalUrl,
+    keyDetails,
+    maritalStatus,
+  });
+}
+
+async function postPartnerDetails(req, res) {
+  const details = req.body;
+  const award = dataStore.get(req, 'awardDetails');
+  const maritalData = dataStore.get(req, 'marital');
+  const errors = maritalValidation.partnerValidator(details, maritalData.maritalStatus);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalPartner(), details);
+    const maritalDetails = maritalDetailsApiObject.partnerDetailFormatter(filteredRequest, maritalData, award);
+    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
+    try {
+      await request(putMaritalDetailsCall);
+      req.flash('success', i18n.t('marital-status:success-message'));
+      redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+    } catch (err) {
+      errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.originalUrl);
+    }
+  } else {
+    const keyDetails = keyDetailsHelper.formatter(award);
+    res.render('pages/changes-enquiries/marital/partner', {
+      formUrl: req.originalUrl,
+      keyDetails,
+      maritalStatus: maritalData.maritalStatus,
+      details,
+      errors,
+    });
+  }
+}
+
 module.exports.getMaritalDetails = getMaritalDetails;
 module.exports.getChangeMaritalStatus = getChangeMaritalStatus;
 module.exports.postChangeMaritalStatus = postChangeMaritalStatus;
@@ -155,3 +222,5 @@ module.exports.getChangeMaritalDate = getChangeMaritalDate;
 module.exports.postChangeMaritalDate = postChangeMaritalDate;
 module.exports.getChangePartnerNino = getChangePartnerNino;
 module.exports.postChangePartnerNino = postChangePartnerNino;
+module.exports.getPartnerDetails = getPartnerDetails;
+module.exports.postPartnerDetails = postPartnerDetails;

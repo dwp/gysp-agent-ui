@@ -3,6 +3,8 @@
   "fields": {
     "status": {
       "options": {
+        "married": "Married",
+        "civil": "In a civil partnership",
         "divorced": "Divorced",
         "widowed": "Widowed",
         "dissolved": "Dissolved civil partnership"

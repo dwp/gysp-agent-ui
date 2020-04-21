@@ -69,6 +69,30 @@ describe('General Helper ', () => {
     it('should return true when widowed status supplied and current status Civil Partnership', () => {
       assert.isTrue(helper.checkIfValidMaritalStatusByStatus('widowed', 'Civil Partnership'));
     });
+    it('should return true when married status supplied and current status Single', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('married', 'Single'));
+    });
+    it('should return true when civil status supplied and current status Single', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('civil', 'Single'));
+    });
+    it('should return true when married status supplied and current status Divorced', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('married', 'Divorced'));
+    });
+    it('should return true when civil status supplied and current status Divorced', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('civil', 'Divorced'));
+    });
+    it('should return true when married status supplied and current status Dissolved', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('married', 'Dissolved'));
+    });
+    it('should return true when civil status supplied and current status Dissolved', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('civil', 'Dissolved'));
+    });
+    it('should return true when married status supplied and current status Widowed', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('married', 'Widowed'));
+    });
+    it('should return true when civil status supplied and current status Widowed', () => {
+      assert.isTrue(helper.checkIfValidMaritalStatusByStatus('civil', 'Widowed'));
+    });
   });
   describe('lowerCaseOrNull', () => {
     it('should return null when undefined', () => {

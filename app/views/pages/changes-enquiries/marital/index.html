@@ -21,9 +21,7 @@
           <th class="govuk-table__cell gysp-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
           <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
           <td class="govuk-table__cell govuk-table__header--numeric">
-            {% if maritalDetails.details.enableChange %}
-              <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
-            {% endif %}
+            <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
           </td>
         </tr>
         <tr class="govuk-table__row">

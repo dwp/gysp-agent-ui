@@ -1,0 +1,63 @@
+{
+  "header": {
+    "married": "Spouse details",
+    "civil": "Partner details"
+  },
+  "fields": {
+    "nino": {
+      "label": "National Insurance number",
+      "errors": {
+        "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+        "length": "National Insurance number must be 9 characters or less"
+      }
+    },
+    "first-name": {
+      "label": "First name",
+      "errors": {
+        "required": {
+          "married": "Enter the spouse's first name",
+          "partner": "Enter the partner's first name"
+        },
+        "invalid": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "length": "First name must have 35 characters or less"
+      }
+    },
+    "last-name": {
+      "label": "Last name",
+      "errors": {
+        "required": {
+          "married": "Enter the spouse's last name",
+          "partner": "Enter the partner's last name"
+        },
+        "invalid": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "length": "Last name must have 35 characters or less"
+      }
+    },
+    "other-name": {
+      "label": "Any other names",
+      "hint": "Include middle names, maiden name, former married names changes of family name.",
+      "errors": {
+        "invalid": "Other names must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "length": "Other names must have 35 characters or less"
+      }
+    },
+    "dob": {
+      "legend": "Date of birth",
+      "items": {
+        "day": {
+          "label": "Day"
+        },
+        "month": {
+          "label": "Month"
+        },
+        "year": {
+          "label": "Year"
+        }
+      },
+      "errors": {
+        "invalid": "Enter a real date, like 12 4 1993",
+        "future": "Date of birth must be in the past"
+      }
+    }
+  }
+}
