@@ -1,3 +1,15 @@
+<a name="5.27.0"></a>
+# [5.27.0](https://github.com/dwp/gysp-agent-ui/compare/v5.26.0...v5.27.0) (2020-04-28)
+
+
+### Features
+
+* **design:** add alerts to change enquiries ([2219056](https://github.com/dwp/gysp-agent-ui/commit/2219056))
+* **marital:** change date ([d1b05fc](https://github.com/dwp/gysp-agent-ui/commit/d1b05fc))
+* **marital:** change status ([b0eb416](https://github.com/dwp/gysp-agent-ui/commit/b0eb416))
+
+
+
 <a name="5.26.0"></a>
 # [5.26.0](https://github.com/dwp/gysp-agent-ui/compare/v5.25.0...v5.26.0) (2020-04-15)
 
