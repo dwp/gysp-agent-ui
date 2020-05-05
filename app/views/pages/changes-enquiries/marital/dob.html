@@ -1,0 +1,56 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}{{ t("marital-detail:" + maritalStatus + ".fields.dob.legend") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: "/changes-and-enquiries/marital-details",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/marital-details/date-of-birth" autocomplete="off" novalidate>
+    {{ govukDateInput({
+      id: "dob",
+      fieldset: {
+        legend: {
+          text: t("marital-detail:" + maritalStatus + ".fields.dob.legend"),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l"
+        }
+      },
+      items: [{
+        label: t("marital-detail:" + maritalStatus + ".fields.dob.items.day.label"),
+        id: "dob-day",
+        name: "dobDay",
+        value: details.dobDay,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobDay),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("marital-detail:" + maritalStatus + ".fields.dob.items.month.label"),
+        id: "dob-month",
+        name: "dobMonth",
+        value: details.dobMonth,
+        classes: "govuk-input--width-2" + (" govuk-input--error" if errors.dobMonth),
+        attributes: { maxlength: '2' }
+      }, {
+        label: t("marital-detail:" + maritalStatus + ".fields.dob.items.year.label"),
+        id: "dob-year",
+        name: "dobYear",
+        value: details.dobYear,
+        classes: "govuk-input--width-4" + (" govuk-input--error" if errors.dobYear),
+        attributes: { maxlength: '4' }
+      }],
+      errorMessage: errors.dob
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
+{% endblock %}

@@ -155,7 +155,7 @@ async function postChangePartnerNino(req, res) {
   const errors = formValidator.maritalPartnerNino(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerNino(), details);
-    const maritalDetails = maritalDetailsApiObject.partnerNinoDetailFormatter(filteredRequest, maritalStatus, award);
+    const maritalDetails = maritalDetailsApiObject.partnerDetailByItemFormatter(filteredRequest, maritalStatus, award);
     const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
     try {
       await request(putMaritalDetailsCall);
@@ -167,6 +167,43 @@ async function postChangePartnerNino(req, res) {
   } else {
     const keyDetails = keyDetailsHelper.formatter(award);
     res.render('pages/changes-enquiries/marital/nino', {
+      keyDetails,
+      maritalStatus,
+      details,
+      errors,
+    });
+  }
+}
+
+function getPartnerDateOfBirth(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const keyDetails = keyDetailsHelper.formatter(award);
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  res.render('pages/changes-enquiries/marital/dob', {
+    keyDetails,
+    maritalStatus,
+  });
+}
+
+async function postPartnerDateOfBirth(req, res) {
+  const details = req.body;
+  const award = dataStore.get(req, 'awardDetails');
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  const errors = maritalValidation.partnerDobValidator(details, maritalStatus);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerDob(), details);
+    const maritalDetails = maritalDetailsApiObject.partnerDetailByItemFormatter(filteredRequest, maritalStatus, award);
+    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
+    try {
+      await request(putMaritalDetailsCall);
+      req.flash('success', i18n.t(`marital-detail:${maritalStatus}.fields.dob.success-message`));
+      res.redirect('/changes-and-enquiries/personal');
+    } catch (err) {
+      errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date-of-birth');
+    }
+  } else {
+    const keyDetails = keyDetailsHelper.formatter(award);
+    res.render('pages/changes-enquiries/marital/dob', {
       keyDetails,
       maritalStatus,
       details,
@@ -222,5 +259,7 @@ module.exports.getChangeMaritalDate = getChangeMaritalDate;
 module.exports.postChangeMaritalDate = postChangeMaritalDate;
 module.exports.getChangePartnerNino = getChangePartnerNino;
 module.exports.postChangePartnerNino = postChangePartnerNino;
+module.exports.getPartnerDateOfBirth = getPartnerDateOfBirth;
+module.exports.postPartnerDateOfBirth = postPartnerDateOfBirth;
 module.exports.getPartnerDetails = getPartnerDetails;
 module.exports.postPartnerDetails = postPartnerDetails;
