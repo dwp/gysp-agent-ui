@@ -952,6 +952,7 @@ describe('Form validation', () => {
       });
     });
   });
+
   describe('maritalPartnerNino validator', () => {
     ['married', 'civil', 'divorced', 'widowed', 'dissolved'].forEach((status) => {
       it(`should return error when data is undefined - ${status}`, () => {

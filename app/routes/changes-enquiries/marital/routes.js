@@ -17,6 +17,10 @@ router.route('/marital-details/nino')
   .get(functions.getChangePartnerNino)
   .post(functions.postChangePartnerNino);
 
+router.route('/marital-details/date-of-birth')
+  .get(functions.getPartnerDateOfBirth)
+  .post(functions.postPartnerDateOfBirth);
+
 router.route(/\/marital-details\/(spouse|partner)-details/)
   .get(functions.getPartnerDetails)
   .post(functions.postPartnerDetails);

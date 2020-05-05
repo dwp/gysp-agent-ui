@@ -38,6 +38,14 @@ const basePartnerDetailRows = [{
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '19 March 1953' },
+  actions: {
+    items: [{
+      href: '/changes-and-enquiries/marital-details/date-of-birth',
+      text: 'app:link.change',
+      visuallyHiddenText: 'marital-details:partner-details.summary-keys.dob',
+      classes: 'govuk-link--no-visited-state',
+    }],
+  },
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.nino', classes: 'gysp-col-1' },
   value: { text: 'AA 12 34 56 A' },
@@ -63,6 +71,14 @@ const blankPartnerDetailRows = [{
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.dob', classes: 'gysp-col-1' },
   value: { text: '' },
+  actions: {
+    items: [{
+      href: '/changes-and-enquiries/marital-details/date-of-birth',
+      text: 'app:link.add',
+      visuallyHiddenText: 'marital-details:partner-details.summary-keys.dob',
+      classes: 'govuk-link--no-visited-state',
+    }],
+  },
 }, {
   key: { text: 'marital-details:partner-details.summary-keys.nino', classes: 'gysp-col-1' },
   value: { text: '' },

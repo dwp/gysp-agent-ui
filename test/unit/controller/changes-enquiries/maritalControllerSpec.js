@@ -60,6 +60,13 @@ const validNinoPostRequest = {
   flash: flashMock,
 };
 
+const emptyDobPostRequest = { session: { awardDetails: claimData.validClaimMarried() }, body: {} };
+const validDobPostRequest = {
+  session: { awardDetails: claimData.validClaimMarried() },
+  body: { dobDay: '01', dobMonth: '01', dobYear: '1980' },
+  flash: flashMock,
+};
+
 const emptySpousePostRequest = {
   session: {
     awardDetails: claimData.validClaimSingle(),
@@ -303,6 +310,52 @@ describe('Change circumstances - marital controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
       assert.equal(flash.message, 'marital-detail:married.fields.nino.success-message');
+      assert.isUndefined(validNinoPostRequest.session.marital);
+    });
+  });
+
+  describe('getPartnerDateOfBirth function (GET /changes-enquiries/marital-details/date-of-birth)', () => {
+    it('should return dob view with empty date of birht when requested', () => {
+      controller.getPartnerDateOfBirth(marriedRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/dob');
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.isUndefined(genericResponse.data.details);
+    });
+  });
+
+  describe('postPartnerDateOfBirth function (POST /changes-enquiries/marital-details/date-of-birth)', () => {
+    it('should return view name with errors when called with empty post', () => {
+      controller.postPartnerDateOfBirth(emptyDobPostRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/dob');
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 4);
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.deepEqual(genericResponse.data.details, {});
+    });
+
+    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postPartnerDateOfBirth(validDobPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/date-of-birth');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/update-marital-details');
+    });
+
+    it('should be return a redirect with BAD_REQUEST message', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.BAD_REQUEST, {});
+      await controller.postPartnerDateOfBirth(validDobPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/date-of-birth');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+      assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on /api/award/update-marital-details');
+    });
+
+    it('should be return a redirect with OK message and clear session', async () => {
+      nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.OK, {});
+      await controller.postPartnerDateOfBirth(validDobPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      assert.equal(flash.type, 'success');
+      assert.equal(flash.message, 'marital-detail:married.fields.dob.success-message');
       assert.isUndefined(validNinoPostRequest.session.marital);
     });
   });
