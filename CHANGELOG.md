@@ -1,3 +1,13 @@
+<a name="5.28.0"></a>
+# [5.28.0](https://github.com/dwp/gysp-agent-ui/compare/v5.27.0...v5.28.0) (2020-05-13)
+
+
+### Features
+
+* **marital:** partner date of birth ([2520fa8](https://github.com/dwp/gysp-agent-ui/commit/2520fa8))
+
+
+
 <a name="5.27.0"></a>
 # [5.27.0](https://github.com/dwp/gysp-agent-ui/compare/v5.26.0...v5.27.0) (2020-04-28)
 
@@ -22,6 +32,7 @@
 ### Features
 
 * change style on personal table ([15084bf](https://github.com/dwp/gysp-agent-ui/commit/15084bf))
+* change style on personal table ([9f3108d](https://github.com/dwp/gysp-agent-ui/commit/9f3108d))
 * **marital:** add/update partner nino ([79e5d26](https://github.com/dwp/gysp-agent-ui/commit/79e5d26))
 * **marital:** change marital status for married and civil partnerdship ([6119d23](https://github.com/dwp/gysp-agent-ui/commit/6119d23))
 * **tasks:** enable return to queue ([2f32657](https://github.com/dwp/gysp-agent-ui/commit/2f32657))
