@@ -105,4 +105,24 @@ describe('General Helper ', () => {
       assert.equal(helper.lowerCaseOrNull('TEST TEST'), 'test test');
     });
   });
+  describe('checkNameCharacters', () => {
+    it('should return false when blank', () => {
+      assert.isFalse(helper.checkNameCharacters(''));
+    });
+    it('should return false when contains a invalid character', () => {
+      assert.isFalse(helper.checkNameCharacters('Test!'));
+    });
+    it('should return true when contains a valid characters with space', () => {
+      assert.isTrue(helper.checkNameCharacters('Test tester'));
+    });
+    it('should return true when contains a valid characters with fullstop', () => {
+      assert.isTrue(helper.checkNameCharacters('Test.'));
+    });
+    it('should return true when contains a valid characters with dash', () => {
+      assert.isTrue(helper.checkNameCharacters('Test-tester'));
+    });
+    it('should return true when contains a valid characters with all', () => {
+      assert.isTrue(helper.checkNameCharacters('Joe Test-tester The First.'));
+    });
+  });
 });

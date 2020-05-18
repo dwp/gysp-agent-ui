@@ -9,7 +9,9 @@
     "name": {
       "label": "Full name",
       "errors": {
-        "required": "Enter the full name of the person dealing with the estate"
+        "required": "Enter the full name of the person dealing with the estate",
+        "invalid": "Full name must start with a letter and not contain numbers",
+        "length": "Full name must be 140 characters or less"
       }
     },
     "phone-number": {

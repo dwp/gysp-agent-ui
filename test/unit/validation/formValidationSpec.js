@@ -79,6 +79,17 @@ const buildingObjects = {
   },
 };
 
+const dapNameObjects = {
+  emptyObject: { },
+  blankObject: { name: '' },
+  nonAlpha: { name: '££' },
+  longTextObject: { name: 'qwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuioweqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiow' },
+  longTextWithSpaceObject: { name: 'qwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuioweqwerty uiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuio' },
+  startNotAlphaName: { name: ' Space Mistake' },
+  alphaAndDash: { name: 'Joe-paul Doe-bloggs' },
+  longValidObject: { name: 'qwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyuioweqwerty uiopasdfghjklzqwertyuiopasdfghjklzqwertyuiopasdfghjklzqwertyui' },
+};
+
 const emptyPaymentFrequencyPostData = {};
 const blankPaymentFrequencyPostData = { frequency: '' };
 const invalidPaymentFrequencyPostData = { frequency: 'bob' };
@@ -844,6 +855,41 @@ describe('Form validation', () => {
         const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.longRoll);
         assert.equal(accountValidationResponse.referenceNumber.text, 'payee-account:fields.referenceNumber.errors.length');
       });
+    });
+  });
+
+  describe('deathDapNameValidation validator', () => {
+    it('should return error if empty', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.emptyObject);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.required');
+    });
+    it('should return error if blank', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.blankObject);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.required');
+    });
+    it('should return error if to long (greater then 140 characters)', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.longTextObject);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.length');
+    });
+    it('should return error if to long with space (greater then 140 characters)', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.longTextWithSpaceObject);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.length');
+    });
+    it('should return error if text includes none alpha', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.nonAlpha);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.invalid');
+    });
+    it('should return error if text does not start with alpha', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.startNotAlphaName);
+      assert.equal(response.name.text, 'death-dap:fields.name.errors.invalid');
+    });
+    it('should return no error when name has dashes', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.alphaAndDash);
+      assert.equal(response.length, 0);
+    });
+    it('should return no error when name is 140 characters', () => {
+      const response = validator.deathDapNameValidation(dapNameObjects.longValidObject);
+      assert.equal(response.length, 0);
     });
   });
 
