@@ -1,0 +1,25 @@
+{
+
+  "header": {
+    "name": "Payee name",
+    "phone-number": "Payee phone number",
+    "address": "Payee address"
+  },
+  "fields": {
+    "name": {
+      "label": "Full name"
+    },
+    "phone-number": {
+      "label": "Phone number"
+    },
+    "postcode": {
+      "label": "Enter postcode"
+    },
+    "address": {
+      "label": "Select address"
+    }
+  },
+  "button": {
+    "postcode": "Find address"
+  }
+}

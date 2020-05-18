@@ -1,5 +1,6 @@
 {
   "header": "Check payee details",
+  "change": "payee details",
   "summary": {
     "name": "Name",
     "phone": "Phone number",

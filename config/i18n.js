@@ -11,6 +11,7 @@ module.exports = {
       'claim-information',
       'death-check-details',
       'death-check-payee-details',
+      'death-check-payee-dap',
       'death-dap',
       'death-payment',
       'death-pay-arrears',

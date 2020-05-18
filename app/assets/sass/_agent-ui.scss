@@ -34,7 +34,10 @@
     margin: 0;
 }
 
-.gysp-table__cell--first {
+.gysp-table__cell--first,
+.gysp-summary__key--first,
+.gysp-summary__value--first,
+.gysp-summary__action--first {
     border-top: 1px solid $govuk-border-colour;
 }
 
@@ -177,5 +180,15 @@
 .gysp-col-1 {
     @include govuk-media-query($from: tablet) {
         width: 200px;
+    }
+}
+
+.gysp-text-align {
+    &--left {
+        text-align: left;
+    }
+
+    &--right {
+        text-align: right;
     }
 }
