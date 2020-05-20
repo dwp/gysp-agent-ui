@@ -18,11 +18,17 @@ describe('deathPaymentObject ', () => {
     });
   });
   describe('pageData', () => {
-    it('should return retryCalc object when section is retryCalc', () => {
+    it('should return retryCalc object when section is retryCalc with no status', () => {
       const formatted = deathPaymentObject.pageData('retryCalc');
       assert.isObject(formatted);
       assert.equal(formatted.back, '/changes-and-enquiries/personal');
       assert.equal(formatted.button, '/changes-and-enquiries/personal/death/update');
+    });
+    it('should return retryCalc object when section is retryCalc with ARREARS status', () => {
+      const formatted = deathPaymentObject.pageData('retryCalc', 'ARREARS');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/payee-details');
     });
     it('should return verifiedDateOfDeathYes object when section is verifiedDateOfDeathYes', () => {
       const formatted = deathPaymentObject.pageData('verifiedDateOfDeathYes');

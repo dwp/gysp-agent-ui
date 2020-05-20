@@ -209,11 +209,11 @@ const paymentRequestVerifiedArrears = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
-      'death-payment': {
-        amount: '100.0',
-      },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+    'death-payment-details': {
+      amount: '100.0',
     },
   },
   flash: flashMock,
@@ -233,11 +233,11 @@ const paymentRequestVerifiedOverpayment = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
-      'death-payment': {
-        amount: '-100.0',
-      },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+    'death-payment-details': {
+      amount: '-100.0',
     },
   },
   flash: flashMock,
@@ -257,11 +257,11 @@ const paymentRequestVerifiedNothingOwed = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
-      'death-payment': {
-        amount: '0',
-      },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+    'death-payment-details': {
+      amount: '0',
     },
   },
   flash: flashMock,
@@ -281,12 +281,12 @@ const paymentRequestEdit = {
       'dap-phone-number': {
         phoneNumber: '0000 000 000',
       },
-      'death-payment': {
-        amount: '0',
-      },
       'dap-address__edit': { address: '10091853817' },
       'address-lookup__edit': addressData.multipleAddressesNoneEmpty(),
       editSection: 'dap-address',
+    },
+    'death-payment-details': {
+      amount: '0',
     },
   },
   flash: flashMock,
@@ -330,12 +330,10 @@ const updateDeathRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
     awardDetails: claimData.validClaim(),
-    death: {
-      'death-payment': {
-        amount: 100.0,
-        startDate: '2019-01-01T00:00:00.000Z',
-        endDate: '2019-01-01T00:00:00.000Z',
-      },
+    'death-payment-details': {
+      amount: 100.0,
+      startDate: '2019-01-01T00:00:00.000Z',
+      endDate: '2019-01-01T00:00:00.000Z',
     },
   },
   flash: flashMock,
@@ -345,12 +343,10 @@ const updateDeathNullPaymentRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: {
     awardDetails: claimData.validClaim(),
-    death: {
-      'death-payment': {
-        amount: null,
-        startDate: null,
-        endDate: null,
-      },
+    'death-payment-details': {
+      amount: null,
+      startDate: null,
+      endDate: null,
     },
   },
   flash: flashMock,
@@ -1183,6 +1179,8 @@ describe('Change circumstances date of death controller ', () => {
       nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'death-record:messages.success.arrears');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
     });

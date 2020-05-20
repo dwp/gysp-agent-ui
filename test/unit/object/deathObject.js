@@ -13,11 +13,6 @@ const verifiedDetails = {
     dateDay: '01',
     verification: 'V',
   },
-  'death-payment': {
-    startDate: null,
-    endDate: null,
-    amount: null,
-  },
   'dap-name': {
     name: 'Margaret Meldrew',
   },
@@ -27,11 +22,18 @@ const verifiedDetails = {
   'dap-address': detailsUprn,
   'address-lookup': addressData.multipleAddressesNoneEmpty(),
 };
+
+const deathPayment = {
+  startDate: null,
+  endDate: null,
+  amount: null,
+};
+
 const verifiedResponse = {
   dateOfDeath: '2000-01-01T00:00:00.000Z',
   dateOfDeathVerification: 'V',
   nino: 'AA370773A',
-  amountDetails: verifiedDetails['death-payment'],
+  amountDetails: deathPayment,
   eventCategory: 'PERSONAL',
   eventType: 'ADD',
   eventName: 'personal:timeline.date_of_death.verified',
@@ -58,11 +60,6 @@ const notVerifiedDetails = {
     dateMonth: '01',
     dateDay: '01',
     verification: 'NV',
-  },
-  'death-payment': {
-    startDate: null,
-    endDate: null,
-    amount: null,
   },
   'dap-name': {
     name: 'Margaret Meldrew',
@@ -100,13 +97,13 @@ const notVerifiedResponse = {
 describe('deathObject object', () => {
   describe('formatter', () => {
     it('should return valid json object when with verifed data when verification is set to V', (done) => {
-      const json = object.formatter(verifiedDetails, claimData.validClaim());
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, verifiedResponse);
       done();
     });
 
     it('should return valid json object when with verifed data when verification is set to NV', (done) => {
-      const json = object.formatter(notVerifiedDetails, claimData.validClaim());
+      const json = object.formatter(notVerifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, notVerifiedResponse);
       done();
     });

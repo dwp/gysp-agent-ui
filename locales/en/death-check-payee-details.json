@@ -1,9 +1,15 @@
 {
-  "header": "Check payee details",
+  "header": {
+    "default": "Check payee details",
+    "arrears": "Send BR330 form"
+  },
   "change": "payee details",
   "summary": {
     "name": "Name",
     "phone": "Phone number",
     "address": "Address"
+  },
+  "p": {
+    "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete."
   }
 }

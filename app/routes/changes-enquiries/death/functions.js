@@ -5,20 +5,23 @@ const i18n = require('i18next');
 i18n.init({ sendMissingTo: 'fallback' });
 
 const formValidator = require('../../../../lib/formValidator');
+const dataStore = require('../../../../lib/dataStore');
+const deleteSession = require('../../../../lib/deleteSession');
+
 const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const deathHelper = require('../../../../lib/helpers/deathHelper');
+const dateHelper = require('../../../../lib/dateHelper');
+const generalHelper = require('../../../../lib/helpers/general');
+const checkChangeHelper = require('../../../../lib/helpers/checkChangeHelper');
+const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
+
 const deathObject = require('../../../../lib/objects/deathObject');
 const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
 const deathPaymentObject = require('../../../../lib/objects/view/deathPaymentObject');
 const deathCheckDetailsObject = require('../../../../lib/objects/view/deathCheckDetailsObject');
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
-const dateHelper = require('../../../../lib/dateHelper');
-const generalHelper = require('../../../../lib/helpers/general');
-const dataStore = require('../../../../lib/dataStore');
-const deleteSession = require('../../../../lib/deleteSession');
-const checkChangeHelper = require('../../../../lib/helpers/checkChangeHelper');
-const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
-const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
@@ -314,7 +317,7 @@ function getDeathPayment(req, res) {
     const dateOfDeath = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
     const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
     request(getDeathArrearsCall).then((details) => {
-      dataStore.save(req, 'death-payment', details, 'death');
+      dataStore.save(req, 'death-payment-details', details);
       const formattedDetails = deathPaymentObject.formatter(details);
       const pageData = deathPaymentObject.pageData(deathStage);
       res.render(deathPaymentView(details), {
@@ -339,11 +342,12 @@ function getCheckDetails(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const death = dataStore.get(req, 'death');
+  const deathPayment = dataStore.get(req, 'death-payment-details');
   let status;
   if (death['date-of-death'] && death['date-of-death'].verification === 'NV') {
     status = DEATH_NOT_VERIFIED;
   } else {
-    status = deathPaymentStatus(death['death-payment'].amount);
+    status = deathPaymentStatus(deathPayment.amount);
   }
   const pageData = deathCheckDetailsObject.pageData(death, status);
   res.render('pages/changes-enquiries/death/check-details', {
@@ -365,9 +369,10 @@ function getRetryCalculation(req, res) {
   const dateOfDeath = dateHelper.timestampToDateDash(awardDetails.dateOfDeath);
   const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
   request(getDeathArrearsCall).then((details) => {
-    dataStore.save(req, 'death-payment', details, 'death');
+    dataStore.save(req, 'death-payment-details', details);
     const formattedDetails = deathPaymentObject.formatter(details);
-    const pageData = deathPaymentObject.pageData('retryCalc');
+    const status = deathHelper.deathPaymentStatus(details.amount);
+    const pageData = deathPaymentObject.pageData('retryCalc', status);
     res.render(deathPaymentView(details), {
       keyDetails,
       details: formattedDetails,
@@ -404,16 +409,17 @@ function successMesssage(verification, status) {
 function getRecordDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const death = dataStore.get(req, 'death');
-  const deathDetails = deathObject.formatter(death, awardDetails);
+  const deathPayment = dataStore.get(req, 'death-payment-details');
+  const deathDetails = deathObject.formatter(death, deathPayment, awardDetails);
   const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
   request(putDeathDetailsCall).then(() => {
-    if (generalHelper.isNotUndefinedEmptyOrNull(death['death-payment'])) {
-      const status = deathPaymentStatus(death['death-payment'].amount);
+    if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
+      const status = deathPaymentStatus(deathPayment.amount);
       req.flash('success', successMesssage(death['date-of-death'].verification, status));
     } else {
       req.flash('success', successMesssage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
     }
-    deleteSession.deleteDeathDetail(req);
+    deleteSession.deleteAllDeathSession(req);
     deleteSession.deleteChangesEnquiries(req);
     res.redirect('/changes-and-enquiries/personal');
   }).catch((err) => {
@@ -430,13 +436,17 @@ function getUpdateDeathErrorHandler(error, req, res) {
 
 function getUpdateDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const deathPayment = dataStore.get(req, 'death-payment', 'death');
+  const deathPayment = dataStore.get(req, 'death-payment-details');
   if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment.amount)) {
     const deathUpdateDetails = deathUpdateObject.formatter(deathPayment, awardDetails);
     const putDeathUpdateDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathArrearsUpdateApiUri, deathUpdateDetails, 'award', req.user);
     request(putDeathUpdateDetailsCall).then(() => {
-      deleteSession.deleteDeathDetail(req);
+      deleteSession.deleteAllDeathSession(req);
       deleteSession.deleteChangesEnquiries(req);
+      if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
+        const status = deathPaymentStatus(deathPayment.amount);
+        req.flash('success', successMesssage('V', status));
+      }
       res.redirect('/changes-and-enquiries/personal');
     }).catch((err) => {
       getUpdateDeathErrorHandler(err, req, res);
