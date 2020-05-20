@@ -1,0 +1,37 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% block pageTitle %}{{ t("death-check-payee-dap:header.address") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries/personal/death/payee-details/address',
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <h1 class="govuk-heading-l">{{ t("death-check-payee-dap:header.address") }}</h1>
+  <h2 class="govuk-heading-s">Postcode <br>
+  {{ postCodeDetails.postcode }} <a href="address" class="govuk-link govuk-link--no-visited-state">Change</a></h2>
+
+  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/address-select" autocomplete="off">
+    {{ govukSelect({
+      label: {
+        text: t("death-check-payee-dap:fields.address.label")
+      },
+      id: "address",
+      name: "address",
+      value: details.address,
+      items: addressList,
+      errorMessage: errors.address
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

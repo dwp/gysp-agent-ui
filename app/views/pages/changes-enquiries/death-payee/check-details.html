@@ -15,15 +15,20 @@
 
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <p class="govuk-body govuk-!-margin-bottom-2 gysp-text-align--right"><a href="payee-details/name" class="govuk-link govuk-link--no-visited-state">{{ t("app:link.change") }}<span class="govuk-visually-hidden"> {{ t("death-check-payee-details:change") }}</span></a></p>
+    </div>
+  </div>
   {{ govukSummaryList({
     rows: [{
-      key: { text: t("death-check-details:summary.name.key") },
-      value: { text: pageData.name }
+      key: { text: t("death-check-payee-details:summary.name"), classes: 'gysp-summary__key--first' },
+      value: { text: pageData.name, classes: 'gysp-summary__value--first' }
     }, {
-      key: { text: t("death-check-details:summary.phone.key") },
+      key: { text: t("death-check-payee-details:summary.phone") },
       value: { text: pageData.phoneNumber }
     }, {
-      key: { text: t("death-check-details:summary.address.key") },
+      key: { text: t("death-check-payee-details:summary.address") },
       value: { html: pageData.address }
     }]
   }) }}

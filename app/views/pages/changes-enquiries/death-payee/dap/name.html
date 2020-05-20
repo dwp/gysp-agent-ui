@@ -1,0 +1,33 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("death-check-payee-dap:header.name") }} - Changes and enquiries{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href:  "/changes-and-enquiries/personal/death/payee-details",
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/name" autocomplete="off">
+    <h1 class="govuk-heading-l">{{ t("death-check-payee-dap:header.name") }}</h1>
+    {{ govukInput({
+      label: {
+        text: t("death-check-payee-dap:fields.name.label")
+      },
+      id: "name",
+      name: "name",
+      value: details.name,
+      errorMessage: errors.name
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

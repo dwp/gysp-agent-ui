@@ -2,6 +2,7 @@ version: "3"
 services:
   redis:
     image: redis@sha256:552d17f7929fc0b70a17c0cdbd61371a58a5953bf0e2cb7849bca7b42346bce1
+    command: redis-server --requirepass password
     expose:
       - 6379
   agent_frontend:
