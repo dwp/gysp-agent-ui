@@ -15,15 +15,17 @@
 
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      <p class="govuk-body govuk-!-margin-bottom-2 gysp-text-align--right"><a href="payee-details/name" class="govuk-link govuk-link--no-visited-state">{{ t("app:link.change") }}<span class="govuk-visually-hidden"> {{ t("death-check-payee-details:change") }}</span></a></p>
+  {% if pageData.enableChange%}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <p class="govuk-body govuk-!-margin-bottom-2 gysp-text-align--right"><a href="payee-details/name" class="govuk-link govuk-link--no-visited-state">{{ t("app:link.change") }}<span class="govuk-visually-hidden"> {{ t("death-check-payee-details:change") }}</span></a></p>
+      </div>
     </div>
-  </div>
+  {% endif %}
   {{ govukSummaryList({
     rows: [{
-      key: { text: t("death-check-payee-details:summary.name"), classes: 'gysp-summary__key--first' },
-      value: { text: pageData.name, classes: 'gysp-summary__value--first' }
+      key: { text: t("death-check-payee-details:summary.name"), classes: 'gysp-summary__key--first' if pageData.enableChange },
+      value: { text: pageData.name, classes: 'gysp-summary__value--first' if pageData.enableChange }
     }, {
       key: { text: t("death-check-payee-details:summary.phone") },
       value: { text: pageData.phoneNumber }
@@ -32,6 +34,10 @@
       value: { html: pageData.address }
     }]
   }) }}
+
+  {% if pageData.status == 'ARREARS' %}
+    <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-payee-details:p.arrears") }}</p>
+  {% endif %}
 
   {{ govukButton({
     text: pageData.buttonText,

@@ -60,6 +60,7 @@ const checkPayeeUpdateDetailsRequest = {
     },
   },
 };
+const checkPayeeDetailsWithArrearsPaymentStatusRequest = { session: { awardDetails: claimData.validClaim(), 'death-payment-details': { amount: 100.0 } } };
 
 const accountDetailsRequest = {
   session: {
@@ -136,23 +137,36 @@ const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim
 const validSelectPostSession = { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' }, 'dap-address': { address: '10091853817' } };
 
 const payeeDetailsValidPageData = {
-  header: 'death-check-payee-details:header',
+  header: 'death-check-payee-details:header.default',
   back: '/changes-and-enquiries/personal',
   button: '/changes-and-enquiries/personal/death/account-details',
   buttonText: 'app:button.continue',
   name: 'Full name',
   phoneNumber: 'Phone number',
   address: '1 Thoroughfare name<br />Post town<br />Post code',
+  enableChange: true,
 };
 
 const payeeDetailsUpdaterValidPageData = {
-  header: 'death-check-payee-details:header',
+  header: 'death-check-payee-details:header.default',
   back: '/changes-and-enquiries/personal',
   button: '/changes-and-enquiries/personal/death/account-details',
   buttonText: 'app:button.continue',
   name: 'Rodney Trotter',
   phoneNumber: '000000',
   address: '148 PICCADILLY<br /> LONDON<br /> W1J 7NT',
+  enableChange: true,
+};
+
+const payeeDetailsValidArrearsPageData = {
+  header: 'death-check-payee-details:header.arrears',
+  back: '/changes-and-enquiries/personal/death/retry-calculation',
+  button: '/changes-and-enquiries/personal/death/update',
+  buttonText: 'app:button.confirm',
+  name: 'Full name',
+  phoneNumber: 'Phone number',
+  address: '1 Thoroughfare name<br />Post town<br />Post code',
+  status: 'ARREARS',
 };
 
 const payArrearsDetailsValidPageData = {
@@ -243,6 +257,14 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidPageData);
+    });
+
+    it('should return view when receive 200 response from API with arrears payment status', async () => {
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      await controller.getCheckPayeeDetails(checkPayeeDetailsWithArrearsPaymentStatusRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidArrearsPageData);
     });
 
     it('should return error view when receive 404 response from API', async () => {

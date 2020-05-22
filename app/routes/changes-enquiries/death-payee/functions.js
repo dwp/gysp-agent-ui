@@ -9,6 +9,7 @@ const requestHelper = require('../../../../lib/requestHelper');
 const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
+const deathHelper = require('../../../../lib/helpers/deathHelper');
 const formValidator = require('../../../../lib/formValidator');
 const deleteSession = require('../../../../lib/deleteSession');
 const deathCheckPayeeDetailsObject = require('../../../../lib/objects/view/deathCheckPayeeDetailsObject');
@@ -22,17 +23,6 @@ const deathPayeeAccountDetailsUpdateApiUri = 'api/award/death-payee-account-deta
 const deathContactDetailsUpdateApiUri = 'api/award/death-contact-details';
 const postcodeLookupApiUri = 'addresses?postcode=';
 
-async function payeeDetail(req, res, inviteKey, sessionData) {
-  if (sessionData) {
-    return false;
-  }
-  const detail = await dataStore.cacheRetriveAndStore(req, 'death-payee-details', inviteKey, () => {
-    const requestCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/death-payee-details/${inviteKey}`, {}, 'award');
-    return request(requestCall);
-  });
-  return detail;
-}
-
 function updatedPayeeDetails(req) {
   const details = dataStore.get(req, 'death-payee-details-updated');
   return details || false;
@@ -42,10 +32,12 @@ async function getCheckPayeeDetails(req, res) {
   try {
     deleteSession.deleteDeathDetail(req);
     const awardDetails = dataStore.get(req, 'awardDetails');
+    const deathPayment = dataStore.get(req, 'death-payment-details');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const sessionData = updatedPayeeDetails(req);
-    const detail = await payeeDetail(req, res, awardDetails.inviteKey, sessionData);
-    const pageData = deathCheckPayeeDetailsObject.pageData(detail, sessionData);
+    const detail = await deathHelper.payeeDetails(req, res, awardDetails.inviteKey, sessionData);
+    const status = deathPayment ? deathHelper.deathPaymentStatus(deathPayment.amount) : null;
+    const pageData = deathCheckPayeeDetailsObject.pageData(detail, status, sessionData);
     res.render('pages/changes-enquiries/death-payee/check-details', {
       keyDetails,
       pageData,
