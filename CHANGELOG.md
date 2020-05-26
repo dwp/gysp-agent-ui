@@ -1,3 +1,19 @@
+<a name="5.29.0"></a>
+# [5.29.0](https://github.com/dwp/gysp-agent-ui/compare/v5.28.0...v5.29.0) (2020-05-26)
+
+
+### Bug Fixes
+
+* **death:** add validation for DAP name ([4b78c87](https://github.com/dwp/gysp-agent-ui/commit/4b78c87))
+
+
+### Features
+
+* **death:** change recorded DAP details ([73eb5e5](https://github.com/dwp/gysp-agent-ui/commit/73eb5e5))
+* **death:** retriggered death arrears BR330 screen ([73a1b8d](https://github.com/dwp/gysp-agent-ui/commit/73a1b8d))
+
+
+
 <a name="5.28.0"></a>
 # [5.28.0](https://github.com/dwp/gysp-agent-ui/compare/v5.27.0...v5.28.0) (2020-05-13)
 
