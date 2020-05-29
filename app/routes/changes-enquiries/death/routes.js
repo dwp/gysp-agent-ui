@@ -46,4 +46,7 @@ router.route('/personal/death/retry-calculation')
 router.route('/personal/death/update')
   .get(functions.getUpdateDeath);
 
+router.route('/personal/death/review-payee')
+  .get(functions.getReviewPayeeDetails);
+
 module.exports = router;

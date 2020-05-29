@@ -16,12 +16,14 @@ const generalHelper = require('../../../../lib/helpers/general');
 const checkChangeHelper = require('../../../../lib/helpers/checkChangeHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
+const errorHelper = require('../../../../lib/helpers/errorHelper');
 
 const deathObject = require('../../../../lib/objects/deathObject');
 const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
 const deathPaymentObject = require('../../../../lib/objects/view/deathPaymentObject');
 const deathCheckDetailsObject = require('../../../../lib/objects/view/deathCheckDetailsObject');
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
+const deathReviewPayeeDetailsObject = require('../../../../lib/objects/view/deathReviewPayeeDetailsObject');
 
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
@@ -319,7 +321,8 @@ function getDeathPayment(req, res) {
     request(getDeathArrearsCall).then((details) => {
       dataStore.save(req, 'death-payment-details', details);
       const formattedDetails = deathPaymentObject.formatter(details);
-      const pageData = deathPaymentObject.pageData(deathStage);
+      const status = deathHelper.deathPaymentStatus(details.amount);
+      const pageData = deathPaymentObject.pageData(deathStage, status);
       res.render(deathPaymentView(details), {
         keyDetails,
         details: formattedDetails,
@@ -527,6 +530,20 @@ function postAddVerifedDeath(req, res) {
   }
 }
 
+async function getReviewPayeeDetails(req, res) {
+  try {
+    const { amount } = dataStore.get(req, 'death-payment-details');
+    const { inviteKey } = dataStore.get(req, 'awardDetails');
+    const deathStage = dataStore.get(req, 'death-stage', 'death');
+    const detail = await deathHelper.payeeDetails(req, res, inviteKey);
+    const status = deathHelper.deathPaymentStatus(amount);
+    const pageData = deathReviewPayeeDetailsObject.pageData(detail, status, deathStage);
+    res.render('pages/changes-enquiries/death-payee/check-details', { pageData });
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'payment', 'back');
+  }
+}
+
 module.exports.getAddDateDeath = getAddDateDeath;
 module.exports.postAddDateDeath = postAddDateDeath;
 
@@ -553,3 +570,5 @@ module.exports.postAddVerifedDeath = postAddVerifedDeath;
 
 module.exports.getRetryCalculation = getRetryCalculation;
 module.exports.getUpdateDeath = getUpdateDeath;
+
+module.exports.getReviewPayeeDetails = getReviewPayeeDetails;
