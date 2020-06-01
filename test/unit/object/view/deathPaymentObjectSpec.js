@@ -30,6 +30,12 @@ describe('deathPaymentObject ', () => {
       assert.equal(formatted.back, '/changes-and-enquiries/personal');
       assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
     });
+    it('should return retryCalc object when section is retryCalc with OVERPAYMENT status', () => {
+      const formatted = deathPaymentObject.pageData('retryCalc', 'OVERPAYMENT');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
+    });
     it('should return verifiedDateOfDeathYes object when section is verifiedDateOfDeathYes', () => {
       const formatted = deathPaymentObject.pageData('verifiedDateOfDeathYes');
       assert.isObject(formatted);
