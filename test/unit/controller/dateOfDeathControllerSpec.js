@@ -361,6 +361,29 @@ const validAddVerifedDeathPostRequest = {
   },
 };
 
+const reviewPayeeDetailsRequests = {
+  arrearsVerifiedDateOfDeathYes: {
+    session: {
+      awardDetails: claimData.validClaim(),
+      'death-payment-details': {
+        amount: '100.0',
+      },
+      'death-stage': 'verifiedDateOfDeathYes',
+    },
+    flash: flashMock,
+  },
+  arrearsReVerifiedDateOfDeath: {
+    session: {
+      awardDetails: claimData.validClaim(),
+      'death-payment-details': {
+        amount: '100.0',
+      },
+      'death-stage': 'reVerifiedDateOfDeath',
+    },
+    flash: flashMock,
+  },
+};
+
 const deathArrearsResponses = {
   overpayment: {
     amount: -100.0,
@@ -384,12 +407,36 @@ const deathArrearsResponses = {
   },
 };
 
+const payeDetailsValidResponse = {
+  address: {
+    buildingNumber: '1',
+    postCode: 'Post code',
+    postTown: 'Post town',
+    thoroughfareName: 'Thoroughfare name',
+    uprn: '2312323123213123',
+  },
+  fullName: 'Full name',
+  phoneNumber: 'Phone number',
+};
+
+const reviewPayeeValidPageData = {
+  header: 'death-check-payee-details:header.arrears',
+  back: '/changes-and-enquiries/personal/death/payment',
+  button: '/changes-and-enquiries/personal/death/record',
+  buttonText: 'app:button.confirm',
+  name: 'Full name',
+  phoneNumber: 'Phone number',
+  address: '1 Thoroughfare name<br />Post town<br />Post code',
+  status: 'ARREARS',
+};
+
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const deathDetailsUpdateApiUri = '/api/award/record-death';
 const deathArrearsApiUri = '/api/payment/death-arrears';
 const postcodeLookupApiUri = '/addresses?postcode=W1J7NT';
 const deathArrearsUpdateApiUri = '/api/award/update-death-calculation';
+const deathPayeeDetailsApiUri = '/api/award/death-payee-details';
 
 const errorMessages = {
   400: 'app:errors.api.bad-request',
@@ -1183,6 +1230,36 @@ describe('Change circumstances date of death controller ', () => {
         assert.equal(flash.message, 'death-record:messages.success.arrears');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
+    });
+  });
+
+  describe('getReviewPayeeDetails function (GET /changes-and-enquiries/personal/death/review-payee)', () => {
+    it('should return error view when receive 404 response from API', async () => {
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.NOT_FOUND);
+      await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsVerifiedDateOfDeathYes, genericResponse);
+      assert.equal(genericResponse.address, 'back');
+      assert.equal(genericResponse.locals.logMessage, '404 - 404 - undefined - Requested on /api/award/death-payee-details/BLOG123456');
+    });
+
+    it('should return error view when receive 500 response from API', async () => {
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.INTERNAL_SERVER_ERROR);
+      await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsReVerifiedDateOfDeath, genericResponse);
+      assert.equal(genericResponse.address, 'back');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - undefined - Requested on /api/award/death-payee-details/BLOG123456');
+    });
+
+    it('should return view and page data for arrears and verifiedDateOfDeathYes when receiving a 200 response from API', async () => {
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsVerifiedDateOfDeathYes, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
+      assert.deepEqual(genericResponse.data.pageData, reviewPayeeValidPageData);
+    });
+
+    it('should return view with page data for arrears and reVerifiedDateOfDeathYes when receiving a 200 response from API', async () => {
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsReVerifiedDateOfDeath, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
+      assert.deepEqual(genericResponse.data.pageData, reviewPayeeValidPageData);
     });
   });
 });
