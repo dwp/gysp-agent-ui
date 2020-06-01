@@ -3,8 +3,18 @@
     "header": "Personal changes",
     "empty": "No changes made",
     "date_of_death": {
-      "verified": "Date of death - verified",
-      "not_verified": "Date of death - not verified"
+      "not_verified": "Date of death - not verified",
+      "verified": {
+        "cannot_calc": "Date of death - verified",
+        "arrears": "Arrears calculated - awaiting payee details",
+        "overpayment": "Verified date of death - account closed",
+        "up_to_date": "Verified date of death - account closed"
+      },
+      "calc_triggered": {
+        "arrears": "Arrears calculated - awaiting payee details",
+        "overpayment": "Final payment calculated- account closed",
+        "up_to_date": "Final payment calculated- account closed"
+      }
     },
     "marital-status": "Marital status changed",
     "marital-partner": {
