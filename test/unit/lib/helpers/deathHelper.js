@@ -129,4 +129,76 @@ describe('death helper', () => {
       assert.isTrue(helper.isNothingOwed('NOTHING_OWED'));
     });
   });
+  describe('statusLocalesKey', () => {
+    it('should return default when status is null', () => {
+      assert.equal(helper.statusLocalesKey(null), 'default');
+    });
+    it('should return default when status is undefined', () => {
+      assert.equal(helper.statusLocalesKey(undefined), 'default');
+    });
+    it('should return default when status is string', () => {
+      assert.equal(helper.statusLocalesKey('string'), 'default');
+    });
+    it('should return arrears when status is ARREARS', () => {
+      assert.equal(helper.statusLocalesKey('ARREARS'), 'arrears');
+    });
+    it('should return overpayment when status is OVERPAYMENT', () => {
+      assert.equal(helper.statusLocalesKey('OVERPAYMENT'), 'overpayment');
+    });
+  });
+  describe('successMesssage', () => {
+    it('should return not-verified when all is undefined', () => {
+      assert.equal(helper.successMesssage(), 'death-record:messages.success.not-verified');
+    });
+    it('should return not-verified when all is null', () => {
+      assert.equal(helper.successMesssage(null, null), 'death-record:messages.success.not-verified');
+    });
+    it('should return arrears when verification is V and status ARREARS', () => {
+      assert.equal(helper.successMesssage('V', 'ARREARS'), 'death-record:messages.success.arrears');
+    });
+    it('should return arrears when verification is NV and status ARREARS', () => {
+      assert.equal(helper.successMesssage('NV', 'ARREARS'), 'death-record:messages.success.arrears');
+    });
+    it('should return overpayment when verification is V and status OVERPAYMENT', () => {
+      assert.equal(helper.successMesssage('V', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
+    });
+    it('should return overpayment when verification is NV and status OVERPAYMENT', () => {
+      assert.equal(helper.successMesssage('NV', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
+    });
+    it('should return arrears when verification is V, status OVERPAYMENT and section retryCalc', () => {
+      assert.equal(helper.successMesssage('V', 'OVERPAYMENT', 'retryCalc'), 'death-record:messages.retryCalc.success.overpayment');
+    });
+    it('should return overpayment when verification is V and status NOTHING_OWED', () => {
+      assert.equal(helper.successMesssage('V', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
+    });
+    it('should return overpayment when verification is NV and status NOTHING_OWED', () => {
+      assert.equal(helper.successMesssage('NV', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
+    });
+    it('should return verified when verification is V and status is undefined', () => {
+      assert.equal(helper.successMesssage('V'), 'death-record:messages.success.verified');
+    });
+    it('should return verified when verification is NV and status is undefined', () => {
+      assert.equal(helper.successMesssage('NV'), 'death-record:messages.success.not-verified');
+    });
+  });
+  describe('deathPaymentView', () => {
+    it('should return cannot-calculate file path when status is null', () => {
+      assert.equal(helper.deathPaymentView(null), 'pages/changes-enquiries/death/payment/cannot-calculate');
+    });
+    it('should return cannot-calculate file path when status is undefined', () => {
+      assert.equal(helper.deathPaymentView(undefined), 'pages/changes-enquiries/death/payment/cannot-calculate');
+    });
+    it('should return cannot-calculate file path when status is string', () => {
+      assert.equal(helper.deathPaymentView('string'), 'pages/changes-enquiries/death/payment/cannot-calculate');
+    });
+    it('should return arrears file path when status is ARREARS', () => {
+      assert.equal(helper.deathPaymentView('ARREARS'), 'pages/changes-enquiries/death/payment/arrears');
+    });
+    it('should return overpayment file path when status is OVERPAYMENT', () => {
+      assert.equal(helper.deathPaymentView('OVERPAYMENT'), 'pages/changes-enquiries/death/payment/overpayment');
+    });
+    it('should return overpayment file path when status is NOTHING_OWED', () => {
+      assert.equal(helper.deathPaymentView('NOTHING_OWED'), 'pages/changes-enquiries/death/payment/nothing-owed');
+    });
+  });
 });

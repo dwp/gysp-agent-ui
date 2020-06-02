@@ -284,22 +284,6 @@ function deathPaymentStatus(amount) {
   return status;
 }
 
-function deathPaymentView(details) {
-  let viewPath = 'pages/changes-enquiries/death/payment';
-  const status = deathPaymentStatus(details.amount);
-  if (status === OVERPAYMENT) {
-    viewPath += '/overpayment';
-  } else if (status === ARREARS) {
-    viewPath += '/arrears';
-  } else if (status === NOTHING_OWED) {
-    viewPath += '/nothing-owed';
-  } else {
-    viewPath += '/cannot-calculate';
-  }
-
-  return viewPath;
-}
-
 function getDeathPaymentErrorHandler(error, req, res, keyDetails) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, deathArrearsApiUri, traceID, res.locals.logger);
@@ -323,7 +307,7 @@ function getDeathPayment(req, res) {
       const formattedDetails = deathPaymentObject.formatter(details);
       const status = deathHelper.deathPaymentStatus(details.amount);
       const pageData = deathPaymentObject.pageData(deathStage, status);
-      res.render(deathPaymentView(details), {
+      res.render(deathHelper.deathPaymentView(status), {
         keyDetails,
         details: formattedDetails,
         pageData,
@@ -372,11 +356,12 @@ function getRetryCalculation(req, res) {
   const dateOfDeath = dateHelper.timestampToDateDash(awardDetails.dateOfDeath);
   const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
   request(getDeathArrearsCall).then((details) => {
+    dataStore.save(req, 'death-stage', 'retryCalc', 'death');
     dataStore.save(req, 'death-payment-details', details);
     const formattedDetails = deathPaymentObject.formatter(details);
     const status = deathHelper.deathPaymentStatus(details.amount);
     const pageData = deathPaymentObject.pageData('retryCalc', status);
-    res.render(deathPaymentView(details), {
+    res.render(deathHelper.deathPaymentView(status), {
       keyDetails,
       details: formattedDetails,
       pageData,
@@ -393,22 +378,6 @@ function getRecordDeathErrorHandler(error, req, res) {
   res.redirect('back');
 }
 
-function successMesssage(verification, status) {
-  if (status === ARREARS) {
-    return i18n.t('death-record:messages.success.arrears');
-  }
-  if (status === OVERPAYMENT) {
-    return i18n.t('death-record:messages.success.overpayment');
-  }
-  if (status === NOTHING_OWED) {
-    return i18n.t('death-record:messages.success.nothing-owed');
-  }
-  if (verification === 'V') {
-    return i18n.t('death-record:messages.success.verified');
-  }
-  return i18n.t('death-record:messages.success.not-verified');
-}
-
 function getRecordDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const death = dataStore.get(req, 'death');
@@ -418,9 +387,9 @@ function getRecordDeath(req, res) {
   request(putDeathDetailsCall).then(() => {
     if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
       const status = deathPaymentStatus(deathPayment.amount);
-      req.flash('success', successMesssage(death['date-of-death'].verification, status));
+      req.flash('success', deathHelper.successMesssage(death['date-of-death'].verification, status));
     } else {
-      req.flash('success', successMesssage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
+      req.flash('success', deathHelper.successMesssage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
     }
     deleteSession.deleteAllDeathSession(req);
     deleteSession.deleteChangesEnquiries(req);
@@ -440,16 +409,17 @@ function getUpdateDeathErrorHandler(error, req, res) {
 function getUpdateDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const deathPayment = dataStore.get(req, 'death-payment-details');
+  const deathStage = dataStore.get(req, 'death-stage', 'death');
   if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment.amount)) {
     const deathUpdateDetails = deathUpdateObject.formatter(deathPayment, awardDetails);
     const putDeathUpdateDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathArrearsUpdateApiUri, deathUpdateDetails, 'award', req.user);
+    const status = deathPaymentStatus(deathPayment.amount);
     request(putDeathUpdateDetailsCall).then(() => {
+      if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
+        req.flash('success', deathHelper.successMesssage('V', status, deathStage));
+      }
       deleteSession.deleteAllDeathSession(req);
       deleteSession.deleteChangesEnquiries(req);
-      if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
-        const status = deathPaymentStatus(deathPayment.amount);
-        req.flash('success', successMesssage('V', status));
-      }
       res.redirect('/changes-and-enquiries/personal');
     }).catch((err) => {
       getUpdateDeathErrorHandler(err, req, res);
@@ -537,6 +507,8 @@ async function getReviewPayeeDetails(req, res) {
     const deathStage = dataStore.get(req, 'death-stage', 'death');
     const detail = await deathHelper.payeeDetails(req, res, inviteKey);
     const status = deathHelper.deathPaymentStatus(amount);
+    console.log('status', status);
+    console.log('deathStage', deathStage);
     const pageData = deathReviewPayeeDetailsObject.pageData(detail, status, deathStage);
     res.render('pages/changes-enquiries/death-payee/check-details', { pageData });
   } catch (err) {

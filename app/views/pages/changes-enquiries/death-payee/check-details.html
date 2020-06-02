@@ -37,6 +37,12 @@
 
   {% if pageData.status == 'ARREARS' %}
     <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-payee-details:p.arrears") }}</p>
+  {% elif pageData.status == 'OVERPAYMENT' %}
+    <p class="govuk-body govuk-!-margin-top-8">{{ t("death-check-details:p.overpayment") }}</p>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-bottom-7">
+      <li>{{ t("death-check-payee-details:list.overpayment.li1") }}</li>
+      <li>{{ t("death-check-payee-details:list.overpayment.li2") }}</li>
+    </ul>
   {% endif %}
 
   {{ govukButton({
