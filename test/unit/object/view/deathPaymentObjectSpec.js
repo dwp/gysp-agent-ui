@@ -36,6 +36,13 @@ describe('deathPaymentObject ', () => {
       assert.equal(formatted.back, '/changes-and-enquiries/personal');
       assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
     });
+
+    it('should return retryCalc object when section is retryCalc with NOTHING_OWNED status', () => {
+      const formatted = deathPaymentObject.pageData('retryCalc', 'NOTHING_OWED');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
+    });
     it('should return verifiedDateOfDeathYes object when section is verifiedDateOfDeathYes', () => {
       const formatted = deathPaymentObject.pageData('verifiedDateOfDeathYes');
       assert.isObject(formatted);

@@ -507,8 +507,6 @@ async function getReviewPayeeDetails(req, res) {
     const deathStage = dataStore.get(req, 'death-stage', 'death');
     const detail = await deathHelper.payeeDetails(req, res, inviteKey);
     const status = deathHelper.deathPaymentStatus(amount);
-    console.log('status', status);
-    console.log('deathStage', deathStage);
     const pageData = deathReviewPayeeDetailsObject.pageData(detail, status, deathStage);
     res.render('pages/changes-enquiries/death-payee/check-details', { pageData });
   } catch (err) {

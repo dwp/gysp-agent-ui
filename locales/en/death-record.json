@@ -9,7 +9,8 @@
     },
     "retryCalc": {
       "success": {
-        "overpayment": "Final payment calculated – account closed"
+        "overpayment": "Final payment calculated - account closed",
+        "nothing-owed": "Final payment calculated - account closed"
       }
     }
   }
