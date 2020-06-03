@@ -85,8 +85,17 @@ describe('deathReviewPayeeDetailsObject ', () => {
       assert.equal(formatted.header, 'death-check-payee-details:header.overpayment');
       assert.equal(formatted.back, '/changes-and-enquiries/personal/death/retry-calculation');
       assert.equal(formatted.button, '/changes-and-enquiries/personal/death/update');
-      assert.equal(formatted.buttonText, 'app:button.confirm');
+      assert.equal(formatted.buttonText, 'app:button.send-letter');
       assert.equal(formatted.status, 'OVERPAYMENT');
+    });
+    it('should return payee review page object when status is NOTHING_OWED and section is retryCal', () => {
+      const formatted = deathReviewPayeeDetailsObject.pageData(validPayeeDetailsObject, 'NOTHING_OWED', 'retryCal');
+      assert.isObject(formatted);
+      assert.equal(formatted.header, 'death-check-payee-details:header.nothing-owed');
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/retry-calculation');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/update');
+      assert.equal(formatted.buttonText, 'app:button.send-letter');
+      assert.equal(formatted.status, 'NOTHING_OWED');
     });
   });
 });

@@ -522,6 +522,13 @@ const reviewPayeeRetryValidPageData = {
     header: 'death-check-payee-details:header.overpayment',
     status: 'OVERPAYMENT',
     ...reviewPayeeRetryValidBase,
+    buttonText: 'app:button.send-letter',
+  },
+  nothingOwed: {
+    header: 'death-check-payee-details:header.nothin-ownd',
+    status: 'NOTHING_OWED',
+    ...reviewPayeeRetryValidBase,
+    buttonText: 'app:button.send-letter',
   },
 };
 
@@ -1269,6 +1276,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.isDefined(genericResponse.data.details);
         assert.equal(retryCalculationRequest.session.death['death-stage'], 'retryCalc');
+        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/review-payee');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
       });
     });
@@ -1281,6 +1289,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.isDefined(genericResponse.data.details);
         assert.equal(retryCalculationRequest.session.death['death-stage'], 'retryCalc');
+        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/update');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
       });
     });
@@ -1358,7 +1367,7 @@ describe('Change circumstances date of death controller ', () => {
       controller.getUpdateDeath(updateDeathNothingOwnedRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'death-record:messages.success.nothing-owed');
+        assert.equal(flash.message, 'death-record:messages.retryCalc.success.nothing-owed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
     });

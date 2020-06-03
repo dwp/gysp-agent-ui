@@ -43,6 +43,8 @@
       <li>{{ t("death-check-payee-details:list.overpayment.li1") }}</li>
       <li>{{ t("death-check-payee-details:list.overpayment.li2") }}</li>
     </ul>
+  {% elif pageData.status == 'NOTHING_OWED' %}
+    <p class="govuk-body govuk-!-margin-top-8 govuk-!-margin-bottom-7">{{ t("death-check-payee-details:p.nothing-owed") }}</p>
   {% endif %}
 
   {{ govukButton({

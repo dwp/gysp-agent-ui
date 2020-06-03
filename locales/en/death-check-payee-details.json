@@ -2,7 +2,8 @@
   "header": {
     "default": "Check payee details",
     "arrears": "Send BR330 form",
-    "overpayment": "Send letter"
+    "overpayment": "Send letter",
+    "nothing-owed": "Send letter"
   },
   "change": "payee details",
   "summary": {
@@ -12,7 +13,8 @@
   },
   "p": {
     "arrears": "To confirm who we need to pay the arrears to, send this person a BR330 form to complete.",
-    "overpayment": "A letter will be sent to this person letting them know:"
+    "overpayment": "A letter will be sent to this person letting them know:",
+    "nothing-owed": "A letter will be sent to this person letting them know we have updated the State Pension record and stopped any future payments."
   },
   "list": {
     "overpayment": {

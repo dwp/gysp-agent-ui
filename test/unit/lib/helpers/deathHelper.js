@@ -174,6 +174,9 @@ describe('death helper', () => {
     it('should return overpayment when verification is NV and status NOTHING_OWED', () => {
       assert.equal(helper.successMesssage('NV', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
     });
+    it('should return arrears when verification is V, status NOTHING_OWED and section retryCalc', () => {
+      assert.equal(helper.successMesssage('V', 'NOTHING_OWED', 'retryCalc'), 'death-record:messages.retryCalc.success.nothing-owed');
+    });
     it('should return verified when verification is V and status is undefined', () => {
       assert.equal(helper.successMesssage('V'), 'death-record:messages.success.verified');
     });
