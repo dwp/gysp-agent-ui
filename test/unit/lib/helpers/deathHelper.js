@@ -129,6 +129,56 @@ describe('death helper', () => {
       assert.isTrue(helper.isNothingOwed('NOTHING_OWED'));
     });
   });
+  describe('isNullOrCannotCalculate', () => {
+    it('should return false when status is null', () => {
+      assert.isTrue(helper.isNullOrCannotCalculate(null));
+    });
+    it('should return false when status is undefined', () => {
+      assert.isFalse(helper.isNullOrCannotCalculate(undefined));
+    });
+    it('should return false when status is string', () => {
+      assert.isFalse(helper.isNullOrCannotCalculate('string'));
+    });
+    it('should return true when status is CANNOT_CALCULATE', () => {
+      assert.isTrue(helper.isNullOrCannotCalculate('CANNOT_CALCULATE'));
+    });
+  });
+  describe('isRetryCalc', () => {
+    it('should return false as section does not match when no-match supplied', () => {
+      assert.isFalse(helper.isRetryCalc('no-match'));
+    });
+    it('should return true as section is does match when retryCalc is supplied', () => {
+      assert.isTrue(helper.isRetryCalc('retryCalc'));
+    });
+  });
+  describe('isAllSection', () => {
+    it('should return false as section does not match when no-match supplied', () => {
+      assert.isFalse(helper.isAllSection('no-match'));
+    });
+    it('should return true as section is does match when retryCalc is supplied', () => {
+      assert.isTrue(helper.isAllSection('retryCalc'));
+    });
+    it('should return true as section is does match when verifiedDateOfDeathYes is supplied', () => {
+      assert.isTrue(helper.isAllSection('verifiedDateOfDeathYes'));
+    });
+    it('should return true as section is does match when reVerifiedDateOfDeath is supplied', () => {
+      assert.isTrue(helper.isAllSection('reVerifiedDateOfDeath'));
+    });
+  });
+  describe('isDateOfDeathSection', () => {
+    it('should return false as section does not match when no-match supplied', () => {
+      assert.isFalse(helper.isDateOfDeathSection('no-match'));
+    });
+    it('should return false as section is does match when retryCalc is supplied', () => {
+      assert.isFalse(helper.isDateOfDeathSection('retryCalc'));
+    });
+    it('should return true as section is does match when verifiedDateOfDeathYes is supplied', () => {
+      assert.isTrue(helper.isDateOfDeathSection('verifiedDateOfDeathYes'));
+    });
+    it('should return true as section is does match when reVerifiedDateOfDeath is supplied', () => {
+      assert.isTrue(helper.isDateOfDeathSection('reVerifiedDateOfDeath'));
+    });
+  });
   describe('statusLocalesKey', () => {
     it('should return default when status is null', () => {
       assert.equal(helper.statusLocalesKey(null), 'default');
