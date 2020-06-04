@@ -317,7 +317,8 @@ module.exports = {
       dependentThoroughfareName: 'dependentThoroughfareName',
       postTown: 'LONDON',
       postCode: 'W1J 7NT',
-      uprn: 10091853817,
+      singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
+      uprn: '10091853817',
     };
   },
   validUkAddressNull() {
@@ -330,7 +331,8 @@ module.exports = {
       dependentThoroughfareName: null,
       postTown: null,
       postCode: null,
-      uprn: 10091853817,
+      singleLine: null,
+      uprn: '10091853817',
     };
   },
   validContact() {

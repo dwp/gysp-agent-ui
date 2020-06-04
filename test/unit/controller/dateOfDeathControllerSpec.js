@@ -70,11 +70,7 @@ const validVSelectPostEditRequest = { user: { cis: { surname: 'User', givenname:
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '' } };
 
 const notFoundResponse = {
-  addressResults: null,
-  error: {
-    message: 'No addresses could be found using the postcode:W1J 7NT',
-    statusCode: 200,
-  },
+  data: [],
 };
 
 const verifyDeathRequest = { session: { awardDetails: claimData.validClaimWithDeathNotVerified() } };
@@ -535,7 +531,7 @@ const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const deathDetailsUpdateApiUri = '/api/award/record-death';
 const deathArrearsApiUri = '/api/payment/death-arrears';
-const postcodeLookupApiUri = '/addresses?postcode=W1J7NT';
+const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT';
 const deathArrearsUpdateApiUri = '/api/award/update-death-calculation';
 const deathPayeeDetailsApiUri = '/api/award/death-payee-details';
 
@@ -810,7 +806,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '401 - 401 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '401 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -820,7 +816,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '403 - 403 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '403 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -830,7 +826,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '400 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -840,7 +836,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.notFound);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '404 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 

@@ -28,7 +28,7 @@ const deathReviewPayeeDetailsObject = require('../../../../lib/objects/view/deat
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
 const deathArrearsUpdateApiUri = 'api/award/update-death-calculation';
-const postcodeLookupApiUri = 'addresses?postcode=';
+const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
 
 const [CANNOT_CALCULATE, OVERPAYMENT, ARREARS, NOTHING_OWED, DEATH_NOT_VERIFIED] = ['CANNOT_CALCULATE', 'OVERPAYMENT', 'ARREARS', 'NOTHING_OWED', 'DEATH_NOT_VERIFIED'];
 
@@ -188,18 +188,19 @@ function postDapPostcodeLookup(req, res) {
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
     const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
-    const getPostcodeLookupCall = requestHelper.generateGetCall(apiUri, {}, 'address');
+    const getPostcodeLookupCall = requestHelper.generateGetCallWithFullResponse(apiUri, {}, 'address');
     request(getPostcodeLookupCall).then((response) => {
-      if (response.error) {
-        throw response.error;
+      if (response.statusCode !== httpStatus.OK || (response.body.data !== undefined && response.body.data.length === 0)) {
+        throw response;
       }
+      const { body } = response;
       const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-postcode', editMode);
       const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapPostcode(), details);
       if (editMode) {
-        dataStore.save(req, 'address-lookup__edit', response, 'death');
+        dataStore.save(req, 'address-lookup__edit', body, 'death');
         dataStore.checkAndSave(req, 'death', 'dap-postcode__edit', filteredRequest, editMode);
       } else {
-        dataStore.save(req, 'address-lookup', response, 'death');
+        dataStore.save(req, 'address-lookup', body, 'death');
         dataStore.checkAndSave(req, 'death', 'dap-postcode', filteredRequest, editMode);
       }
       res.redirect(redirectUrl);
