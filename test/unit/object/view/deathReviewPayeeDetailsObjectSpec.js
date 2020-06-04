@@ -88,6 +88,25 @@ describe('deathReviewPayeeDetailsObject ', () => {
       assert.equal(formatted.buttonText, 'app:button.send-letter');
       assert.equal(formatted.status, 'OVERPAYMENT');
     });
+    it('should return payee review page object when status is OVERPAYMENT and section is verifiedDateOfDeathYes', () => {
+      const formatted = deathReviewPayeeDetailsObject.pageData(validPayeeDetailsObject, 'OVERPAYMENT', 'verifiedDateOfDeathYes');
+      assert.isObject(formatted);
+      assert.equal(formatted.header, 'death-check-payee-details:header.overpayment');
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/payment');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(formatted.buttonText, 'app:button.send-letter');
+      assert.equal(formatted.status, 'OVERPAYMENT');
+    });
+    it('should return payee review page object when status is OVERPAYMENT and section is reVerifiedDateOfDeath', () => {
+      const formatted = deathReviewPayeeDetailsObject.pageData(validPayeeDetailsObject, 'OVERPAYMENT', 'reVerifiedDateOfDeath');
+      assert.isObject(formatted);
+      assert.equal(formatted.header, 'death-check-payee-details:header.overpayment');
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/payment');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/record');
+      assert.equal(formatted.buttonText, 'app:button.send-letter');
+      assert.equal(formatted.status, 'OVERPAYMENT');
+    });
+
     it('should return payee review page object when status is NOTHING_OWED and section is retryCal', () => {
       const formatted = deathReviewPayeeDetailsObject.pageData(validPayeeDetailsObject, 'NOTHING_OWED', 'retryCal');
       assert.isObject(formatted);

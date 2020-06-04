@@ -55,6 +55,24 @@ describe('deathPaymentObject ', () => {
       assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verify');
       assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
     });
+    it('should return reVerifiedDateOfDeath object when section is reVerifiedDateOfDeath with ARREARS status', () => {
+      const formatted = deathPaymentObject.pageData('reVerifiedDateOfDeath', 'ARREARS');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verified-date');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
+    });
+    it('should return verifiedDateOfDeathYes object when section is verifiedDateOfDeathYes with OVERPAYMENT status', () => {
+      const formatted = deathPaymentObject.pageData('verifiedDateOfDeathYes', 'OVERPAYMENT');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verify');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
+    });
+    it('should return reVerifiedDateOfDeath object when section is reVerifiedDateOfDeath with OVERPAYMENT status', () => {
+      const formatted = deathPaymentObject.pageData('reVerifiedDateOfDeath', 'OVERPAYMENT');
+      assert.isObject(formatted);
+      assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verified-date');
+      assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
+    });
     it('should return reVerifiedDateOfDeath object when section is reVerifiedDateOfDeath', () => {
       const formatted = deathPaymentObject.pageData('reVerifiedDateOfDeath');
       assert.isObject(formatted);
