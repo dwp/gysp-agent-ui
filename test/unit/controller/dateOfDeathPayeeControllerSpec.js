@@ -18,10 +18,6 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
-const keyDetails = {
-  fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-};
-
 const payeDetailsValidResponse = {
   address: {
     buildingNumber: '1',
@@ -246,7 +242,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should return view with change data stored in session with cleared form data', async () => {
       await controller.getCheckPayeeDetails(checkPayeeUpdateDetailsRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsUpdaterValidPageData);
       assert.isUndefined(checkPayeeUpdateDetailsRequest.session.death);
     });
@@ -255,7 +250,6 @@ describe('Change circumstances date of death controller ', () => {
       nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
       await controller.getCheckPayeeDetails(checkPayeeDetailsRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidPageData);
     });
 
@@ -263,7 +257,6 @@ describe('Change circumstances date of death controller ', () => {
       nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
       await controller.getCheckPayeeDetails(checkPayeeDetailsWithArrearsPaymentStatusRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidArrearsPageData);
     });
 
@@ -288,7 +281,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should return view when requested', () => {
       controller.getAccountDetails(accountDetailsRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/account-details');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, accountDetailsPageData);
       assert.deepEqual(genericResponse.data.details, accountDetailsRequest.session.death['death-payee-account']);
     });
@@ -312,7 +304,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should return view when requested', () => {
       controller.getPayArrears(payArrearsRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/pay-arrears');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.pageData, payArrearsDetailsValidPageData);
     });
   });
@@ -396,7 +387,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should display blank form when requested', (done) => {
       controller.getPayeeName(dapGetNameRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.isUndefined(genericResponse.data.details);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/name');
       done();
@@ -404,7 +394,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should display populated form when requested', (done) => {
       controller.getPayeeName(dapGetNamePopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { name: 'Margret Meldrew' });
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/name');
       done();
@@ -415,7 +404,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should return form again with error when invalid data supplied', (done) => {
       controller.postPayeeName(dapPostNameInvalidRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.errors.name.text, 'death-dap:fields.name.errors.required');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/name');
       done();
@@ -433,7 +421,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should display blank form when requested', (done) => {
       controller.getPayeePhoneNumber(dapGetPhoneNumberRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.isUndefined(genericResponse.data.details);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/phone-number');
       done();
@@ -442,7 +429,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should display populated form when requested', (done) => {
       controller.getPayeePhoneNumber(dapGetPhoneNumberPopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { phoneNumber: '00000 000 000' });
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/phone-number');
       done();
@@ -453,7 +439,6 @@ describe('Change circumstances date of death controller ', () => {
     it('should return form again with error when invalid data supplied', (done) => {
       controller.postPayeePhoneNumber(dapPostPhoneNumberInvalidRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.errors.phoneNumber.text, 'death-dap:fields.phone-number.errors.required');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/phone-number');
       done();
@@ -470,7 +455,6 @@ describe('Change circumstances date of death controller ', () => {
   describe('getPayeePostcodeLookup function (GET /changes-and-enquiries/personal/death/payee-details/address)', () => {
     it('display blank form when requested', (done) => {
       controller.getPayeePostcodeLookup(dapGetPostcodeLookupRequest, genericResponse);
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.isUndefined(genericResponse.data.details);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
@@ -478,7 +462,6 @@ describe('Change circumstances date of death controller ', () => {
     });
     it('display populated form when requested', (done) => {
       controller.getPayeePostcodeLookup(dapGetPostcodeLookupPopulatedRequest, genericResponse);
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.details, dapGetPostcodeLookupPopulatedRequest.session.death['dap-postcode']);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
@@ -492,7 +475,6 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(Object.keys(genericResponse.data.errors).length, 1);
       assert.equal(genericResponse.data.errors.postcode.text, 'address:fields.postcode.errors.required');
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
     });
 
@@ -502,7 +484,6 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.notFound);
         assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-        assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
       });
     });

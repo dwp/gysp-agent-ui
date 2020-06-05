@@ -2,7 +2,6 @@ const request = require('request-promise');
 const i18n = require('i18next');
 const requestHelper = require('../../../../lib/requestHelper');
 const dataStore = require('../../../../lib/dataStore');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const generalHelper = require('../../../../lib/helpers/general');
 const maritalStatusHelper = require('../../../../lib/helpers/maritalStatusHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
@@ -27,10 +26,8 @@ async function awardDetails(req, res) {
 async function getMaritalDetails(req, res) {
   try {
     const award = await awardDetails(req, res);
-    const keyDetails = keyDetailsHelper.formatter(award);
     const maritalDetails = maritalDetailsObject.formatter(award);
     res.render('pages/changes-enquiries/marital/index', {
-      keyDetails,
       maritalDetails,
     });
   } catch (err) {
@@ -43,12 +40,10 @@ async function getMaritalDetails(req, res) {
 
 function getChangeMaritalStatus(req, res) {
   const award = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(award);
   const statusDetails = dataStore.get(req, 'maritalStatus', 'marital');
   const newStatusOptions = maritalStatusHelper.newStatusOptions(award.maritalStatus, statusDetails);
   const backHref = maritalStatusHelper.maritalStatusBackHref(award.maritalStatus);
   res.render('pages/changes-enquiries/marital/status', {
-    keyDetails,
     newStatusOptions,
     backHref,
   });
@@ -63,10 +58,8 @@ function postChangeMaritalStatus(req, res) {
     dataStore.save(req, 'marital', filteredRequest);
     res.redirect('/changes-and-enquiries/marital-details/date');
   } else {
-    const keyDetails = keyDetailsHelper.formatter(award);
     const newStatusOptions = maritalStatusHelper.newStatusOptions(award.maritalStatus, details.maritalStatus);
     res.render('pages/changes-enquiries/marital/status', {
-      keyDetails,
       newStatusOptions,
       errors,
     });
@@ -75,14 +68,12 @@ function postChangeMaritalStatus(req, res) {
 
 function getChangeMaritalDate(req, res) {
   const award = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(award);
   const newMaritalStatus = dataStore.get(req, 'maritalStatus', 'marital');
   const maritalStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalStatus);
   const details = dataStore.get(req, 'date', 'marital');
   const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalStatus);
   const button = maritalStatusHelper.maritalDateButton(newMaritalStatus);
   res.render('pages/changes-enquiries/marital/date', {
-    keyDetails,
     maritalStatus,
     details,
     backHref,
@@ -124,11 +115,9 @@ async function postChangeMaritalDate(req, res) {
       await saveDateAndRedirect(req, res, award, filteredRequest, maritalShortStatus);
     }
   } else {
-    const keyDetails = keyDetailsHelper.formatter(award);
     const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalShortStatus);
     const button = maritalStatusHelper.maritalDateButton(newMaritalShortStatus);
     res.render('pages/changes-enquiries/marital/date', {
-      keyDetails,
       maritalStatus: maritalShortStatus,
       backHref,
       button,
@@ -140,10 +129,8 @@ async function postChangeMaritalDate(req, res) {
 
 function getChangePartnerNino(req, res) {
   const award = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(award);
   const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
   res.render('pages/changes-enquiries/marital/nino', {
-    keyDetails,
     maritalStatus,
   });
 }
@@ -165,9 +152,7 @@ async function postChangePartnerNino(req, res) {
       errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/nino');
     }
   } else {
-    const keyDetails = keyDetailsHelper.formatter(award);
     res.render('pages/changes-enquiries/marital/nino', {
-      keyDetails,
       maritalStatus,
       details,
       errors,
@@ -177,10 +162,8 @@ async function postChangePartnerNino(req, res) {
 
 function getPartnerDateOfBirth(req, res) {
   const award = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(award);
   const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
   res.render('pages/changes-enquiries/marital/dob', {
-    keyDetails,
     maritalStatus,
   });
 }
@@ -202,9 +185,7 @@ async function postPartnerDateOfBirth(req, res) {
       errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date-of-birth');
     }
   } else {
-    const keyDetails = keyDetailsHelper.formatter(award);
     res.render('pages/changes-enquiries/marital/dob', {
-      keyDetails,
       maritalStatus,
       details,
       errors,
@@ -213,13 +194,10 @@ async function postPartnerDateOfBirth(req, res) {
 }
 
 function getPartnerDetails(req, res) {
-  const award = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(award);
   const newMaritalShortStatus = dataStore.get(req, 'maritalStatus', 'marital');
   const maritalStatus = maritalStatusHelper.transformToShortStatus(newMaritalShortStatus);
   res.render('pages/changes-enquiries/marital/partner', {
     formUrl: req.originalUrl,
-    keyDetails,
     maritalStatus,
   });
 }
@@ -241,10 +219,8 @@ async function postPartnerDetails(req, res) {
       errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.originalUrl);
     }
   } else {
-    const keyDetails = keyDetailsHelper.formatter(award);
     res.render('pages/changes-enquiries/marital/partner', {
       formUrl: req.originalUrl,
-      keyDetails,
       maritalStatus: maritalData.maritalStatus,
       details,
       errors,

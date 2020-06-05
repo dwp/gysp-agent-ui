@@ -9,7 +9,6 @@ const controller = require('../../../app/routes/changes-enquiries/payment-freque
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
-const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
@@ -21,12 +20,8 @@ const changePaymentFrequencyGetRequest = {
   },
 };
 const changePaymentFrequencyViewData = {
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: null, dateOfBirth: null,
-  },
   awardDetails: changePaymentFrequencyGetRequest.session.awardDetails,
   inputFrequency: false,
-  secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };

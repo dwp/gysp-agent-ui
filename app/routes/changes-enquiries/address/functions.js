@@ -4,8 +4,6 @@ const httpStatus = require('http-status-codes');
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
-const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const dataStore = require('../../../../lib/dataStore');
 const deleteSession = require('../../../../lib/deleteSession');
 
@@ -15,15 +13,8 @@ const addressDetailsObject = require('../../../../lib/objects/addressDetailsObje
 const postcodeLookupApiUri = 'addresses?postcode=';
 const awardDetailsUpdateApiUri = 'api/award/updateaddressdetails';
 
-const activeSecondaryNavigationSection = 'contact';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
-
 function getPostcodeLookup(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
-  res.render('pages/changes-enquiries/address/index', {
-    keyDetails,
-    secondaryNavigationList,
-  });
+  res.render('pages/changes-enquiries/address/index');
 }
 
 function postcodeLookupGlobalErrorMessage(error) {
@@ -42,14 +33,12 @@ function postcodeLookupGlobalErrorMessage(error) {
   return 'No address found with that postcode';
 }
 
-function postPostcodeLookupErrorHandler(error, req, res, keyDetails) {
+function postPostcodeLookupErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   const input = postcodeLookupObject.formatter(req.body);
   const lookupUri = postcodeLookupApiUri + input.postcode;
   requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger);
   res.render('pages/changes-enquiries/address/index', {
-    keyDetails,
-    secondaryNavigationList,
     details: req.body,
     globalError: postcodeLookupGlobalErrorMessage(error),
   });
@@ -58,7 +47,6 @@ function postPostcodeLookupErrorHandler(error, req, res, keyDetails) {
 function postPostcodeLookup(req, res) {
   const details = req.body;
   const errors = formValidator.addressPostcodeDetails(details);
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
     const getPostcodeLookupCall = requestHelper.generateGetCall(
@@ -74,12 +62,10 @@ function postPostcodeLookup(req, res) {
       dataStore.save(req, 'postcode', details);
       res.redirect('/changes-and-enquiries/address/select');
     }).catch((err) => {
-      postPostcodeLookupErrorHandler(err, req, res, keyDetails);
+      postPostcodeLookupErrorHandler(err, req, res);
     });
   } else {
     res.render('pages/changes-enquiries/address/index', {
-      keyDetails,
-      secondaryNavigationList,
       details: req.body,
       errors,
     });
@@ -88,12 +74,9 @@ function postPostcodeLookup(req, res) {
 
 function getSelectAddress(req, res) {
   if (req.session.addressLookup && dataStore.get(req, 'postcode')) {
-    const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
     const addressList = postcodeLookupObject.addressList(req.session.addressLookup);
     const postCodeDetails = dataStore.get(req, 'postcode');
     res.render('pages/changes-enquiries/address/select', {
-      keyDetails,
-      secondaryNavigationList,
       postCodeDetails,
       addressList,
     });
@@ -113,12 +96,10 @@ function selectAddressGlobalErrorMessage(error) {
   return 'Error - could not save data.';
 }
 
-function postSelectAddressErrorHandler(error, req, res, keyDetails) {
+function postSelectAddressErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, awardDetailsUpdateApiUri, traceID, res.locals.logger);
   res.render('pages/changes-enquiries/address/select', {
-    keyDetails,
-    secondaryNavigationList,
     details: req.body,
     globalError: selectAddressGlobalErrorMessage(error),
   });
@@ -127,7 +108,6 @@ function postSelectAddressErrorHandler(error, req, res, keyDetails) {
 function postSelectAddress(req, res) {
   const details = req.body;
   const errors = formValidator.addressDetails(details);
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   if (Object.keys(errors).length === 0) {
     const addressDetails = addressDetailsObject.formatter(req.body, req.session.awardDetails.nino, req.session.addressLookup);
     const putAddressDetailCall = requestHelper.generatePutCall(
@@ -140,14 +120,12 @@ function postSelectAddress(req, res) {
       deleteSession.deleteChangeAddress(req);
       redirectHelper.successAlertAndRedirect(req, res, 'address:success-message', '/changes-and-enquiries/contact');
     }).catch((err) => {
-      postSelectAddressErrorHandler(err, req, res, keyDetails);
+      postSelectAddressErrorHandler(err, req, res);
     });
   } else {
     const addressList = postcodeLookupObject.addressList(req.session.addressLookup);
     const postCodeDetails = dataStore.get(req, 'postcode');
     res.render('pages/changes-enquiries/address/select', {
-      keyDetails,
-      secondaryNavigationList,
       postCodeDetails,
       addressList,
       errors,

@@ -2,14 +2,9 @@ const request = require('request-promise');
 const httpStatus = require('http-status-codes');
 
 const formValidator = require('../../../../lib/formValidator');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
-const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const requestHelper = require('../../../../lib/requestHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const freqencyScheduleObject = require('../../../../lib/objects/freqencyScheduleObject');
-
-const activeSecondaryNavigationSection = 'payment';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const putChangePaymentFrequencyApiUri = 'api/award/frequencychangeupdate';
 
@@ -27,7 +22,6 @@ function selectedPaymentFrequency(value, currentFrequency, inputFrequency) {
 }
 
 function getChangePaymentFrequency(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails, false);
   const { awardDetails } = req.session;
   let inputFrequency = false;
   if (req.session['payment-frequency'] && req.session['payment-frequency'].frequency) {
@@ -35,10 +29,8 @@ function getChangePaymentFrequency(req, res) {
   }
 
   res.render('pages/changes-enquiries/payment-frequency/index', {
-    keyDetails,
     awardDetails,
     inputFrequency,
-    secondaryNavigationList,
     selectedPaymentFrequency,
   });
 }
@@ -64,7 +56,6 @@ function postChangePaymentFrequency(req, res) {
   const details = req.body;
   const { awardDetails } = req.session;
   const errors = formValidator.paymentFrequency(details);
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
     if (isFrequencySame(awardDetails, details.frequency)) {
       res.redirect('/changes-and-enquiries/payment');
@@ -87,9 +78,7 @@ function postChangePaymentFrequency(req, res) {
     }
   } else {
     res.render('pages/changes-enquiries/payment-frequency/index', {
-      keyDetails,
       awardDetails,
-      secondaryNavigationList,
       selectedPaymentFrequency,
       details,
       errors,

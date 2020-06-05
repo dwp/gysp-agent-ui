@@ -2,8 +2,6 @@ const request = require('request-promise');
 const httpStatus = require('http-status-codes');
 const requestHelper = require('../../../../lib/requestHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
-const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const dataStore = require('../../../../lib/dataStore');
 const paymentHistoryDetailViewObject = require('../../../../lib/objects/paymentHistoryDetailViewObject');
 const paymentStatusUpdate = require('../../../../lib/objects/paymentStatusUpdate');
@@ -17,9 +15,6 @@ const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 
 const reissuePaymentViewObject = require('../../../../lib/objects/view/reissuePaymentObject');
 const reissuePaymentApiObject = require('../../../../lib/objects/api/reissuePaymentObject');
-
-const activeSecondaryNavigationSection = 'payment';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 const returnPaymentApi = 'api/payment/return-payment';
 const reissuePaymentApi = 'api/payment/reissue-payment';
@@ -55,14 +50,11 @@ function isAllowedToUpdate(status, creditDate) {
 async function getPaymentHistoryDetail(req, res) {
   try {
     const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const { id } = req.params;
     const detail = await paymentDetail(req, res, id);
     const paymentHistoryDetail = paymentHistoryDetailViewObject.formatter(detail, id, awardDetails.awardStatus);
     const timelineDetails = await timelineHelper.getTimeline(req, res, 'PAYMENTDETAIL', id);
     res.render('pages/changes-enquiries/payment-history/detail', {
-      keyDetails,
-      secondaryNavigationList,
       paymentHistoryDetail,
       timelineDetails,
     });
@@ -76,8 +68,6 @@ async function getPaymentHistoryDetail(req, res) {
 
 async function getStatusUpdate(req, res) {
   try {
-    const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const { id } = req.params;
     const detail = await paymentDetail(req, res, id);
     if (!isAllowedToUpdate(detail.status, detail.creditDate)) {
@@ -86,7 +76,6 @@ async function getStatusUpdate(req, res) {
     } else {
       const statusDetail = paymentStatusUpdate.formatter(detail, id);
       res.render('pages/changes-enquiries/payment-history/change-status', {
-        keyDetails,
         statusDetail,
       });
     }
@@ -167,10 +156,7 @@ async function postStatusUpdate(req, res) {
       res.redirect(`/changes-and-enquiries/payment-history/${id}`);
     }
   } else {
-    const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     res.render('pages/changes-enquiries/payment-history/change-status', {
-      keyDetails,
       statusDetail,
       errors,
     });
@@ -188,7 +174,6 @@ async function getReissuePayment(req, res) {
   const { id } = req.params;
   try {
     const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const detail = await paymentDetail(req, res, id);
     if (!isAllowedToBeReissued(detail.status, awardDetails.awardStatus)) {
       req.flash('error', 'Error - this payment cannot be reissued.');
@@ -196,7 +181,6 @@ async function getReissuePayment(req, res) {
     } else {
       const details = reissuePaymentViewObject.formatter(detail, awardDetails);
       res.render('pages/changes-enquiries/payment-history/reissue', {
-        keyDetails,
         details,
         id,
       });

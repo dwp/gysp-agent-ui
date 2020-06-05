@@ -4,7 +4,6 @@ const httpStatus = require('http-status-codes');
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 const contactDetailsObject = require('../../../../lib/contactDetailsObject');
@@ -64,10 +63,9 @@ function getContactDetails(req, res) {
     .then(async (body) => {
       req.session.awardDetails = body;
       const details = contactDetailsOverview.formatter(body);
-      const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       const timelineDetails = await timelineHelper.getTimeline(req, res, 'CONTACT');
       res.render('pages/changes-enquiries/contact/overview', {
-        details, keyDetails, secondaryNavigationList, timelineDetails,
+        details, secondaryNavigationList, timelineDetails,
       });
     }).catch((err) => {
       const traceID = requestHelper.getTraceID(err);
@@ -79,25 +77,20 @@ function getContactDetails(req, res) {
 function getChangeContactDetails(req, res) {
   const { type } = req.params;
   const addOrChange = isAddOrChange(req.session.awardDetails.contactDetail, type);
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const viewPath = contactDetailsView(type);
   res.render(viewPath, {
     type,
     addOrChange,
-    keyDetails,
-    secondaryNavigationList,
   });
 }
 
-function postChangeContactDetailsErrorHandler(error, req, res, type, addOrChange, keyDetails) {
+function postChangeContactDetailsErrorHandler(error, req, res, type, addOrChange) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, contactDetailsUpdateUri, traceID, res.locals.logger);
   const viewPath = contactDetailsView(type);
   res.render(viewPath, {
     type,
     addOrChange,
-    keyDetails,
-    secondaryNavigationList,
     details: req.body,
     globalError: globalErrorMessage(error),
   });
@@ -107,22 +100,19 @@ function postChangeContactDetails(req, res) {
   const { type } = req.params;
   const addOrChange = isAddOrChange(req.session.awardDetails.contactDetail, type);
   const errors = formValidator.contactDetails(req.body, type, addOrChange);
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   if (Object.keys(errors).length === 0) {
     const contactDetails = contactDetailsObject.formatter(req.body, req.session.awardDetails, type);
     const putContactDetailCall = requestHelper.generatePutCall(res.locals.agentGateway + contactDetailsUpdateUri, contactDetails, 'batch', req.user);
     request(putContactDetailCall).then(() => {
       redirectHelper.successAlertAndRedirect(req, res, `contact-details:success-message.${type}.${addOrChange}`, '/changes-and-enquiries/contact');
     }).catch((err) => {
-      postChangeContactDetailsErrorHandler(err, req, res, type, addOrChange, keyDetails);
+      postChangeContactDetailsErrorHandler(err, req, res, type, addOrChange);
     });
   } else {
     const viewPath = contactDetailsView(type);
     res.render(viewPath, {
       type,
       addOrChange,
-      keyDetails,
-      secondaryNavigationList,
       details: req.body,
       errors,
     });
@@ -131,23 +121,18 @@ function postChangeContactDetails(req, res) {
 
 function getRemoveContactDetails(req, res) {
   const { type } = req.params;
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const viewPath = contactDetailsRemoveView(type);
   res.render(viewPath, {
     type,
-    keyDetails,
-    secondaryNavigationList,
   });
 }
 
-function postRemoveContactDetailsErrorHandler(error, req, res, type, keyDetails) {
+function postRemoveContactDetailsErrorHandler(error, req, res, type) {
   const traceID = requestHelper.getTraceID(error);
   requestHelper.loggingHelper(error, contactDetailsUpdateUri, traceID, res.locals.logger);
   const viewPath = contactDetailsRemoveView(type);
   res.render(viewPath, {
     type,
-    keyDetails,
-    secondaryNavigationList,
     details: req.body,
     globalError: globalErrorMessage(error),
   });
@@ -156,7 +141,6 @@ function postRemoveContactDetailsErrorHandler(error, req, res, type, keyDetails)
 function postRemoveContactDetails(req, res) {
   const { type } = req.params;
   const errors = formValidator.removeContact(req.body, type);
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   if (Object.keys(errors).length === 0) {
     const input = req.body;
     if (input.removeContact === 'yes' || input.removeContactNumber === 'yes') {
@@ -170,7 +154,7 @@ function postRemoveContactDetails(req, res) {
       request(putContactDetailCall).then(() => {
         redirectHelper.successAlertAndRedirect(req, res, `contact-details:success-message.${type}.remove`, '/changes-and-enquiries/contact');
       }).catch((err) => {
-        postRemoveContactDetailsErrorHandler(err, req, res, type, keyDetails);
+        postRemoveContactDetailsErrorHandler(err, req, res, type);
       });
     } else {
       res.redirect(`/changes-and-enquiries/contact/${type}`);
@@ -179,8 +163,6 @@ function postRemoveContactDetails(req, res) {
     const viewPath = contactDetailsRemoveView(type);
     res.render(viewPath, {
       type,
-      keyDetails,
-      secondaryNavigationList,
       details: req.body,
       errors,
     });

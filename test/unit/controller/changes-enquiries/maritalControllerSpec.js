@@ -159,14 +159,12 @@ describe('Change circumstances - marital controller', () => {
       nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(httpStatus.OK, claimData.validClaimMarried());
       await controller.getMaritalDetails(ninoRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/index');
-      assert.isObject(genericResponse.data.keyDetails);
       assert.isObject(genericResponse.data.maritalDetails);
     });
 
     it('should return view name and data when award cached', async () => {
       await controller.getMaritalDetails(ninoRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/index');
-      assert.isObject(genericResponse.data.keyDetails);
       assert.isObject(genericResponse.data.maritalDetails);
     });
   });

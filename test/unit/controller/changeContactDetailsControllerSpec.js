@@ -8,7 +8,6 @@ const changeContactDetailsController = require('../../../app/routes/changes-enqu
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
-const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
@@ -26,94 +25,54 @@ const homePhoneAddRequest = { params: { type: 'home' }, session: { awardDetails:
 const homePhoneAddResponse = {
   type: 'home',
   addOrChange: 'add',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const homePhoneChangeRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
 const homePhoneChangeResponse = {
   type: 'home',
   addOrChange: 'change',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const workPhoneAddRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaimContactNull('work') } };
 const workPhoneAddResponse = {
   type: 'work',
   addOrChange: 'add',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const workPhoneChangeRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() } };
 const workPhoneChangeResponse = {
   type: 'work',
   addOrChange: 'change',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const mobilePhoneAddRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaimContactNull('mobile') } };
 const mobilePhoneAddResponse = {
   type: 'mobile',
   addOrChange: 'add',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const mobilePhoneChangeRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() } };
 const mobilePhoneChangeResponse = {
   type: 'mobile',
   addOrChange: 'change',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emailAddRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaimContactNull('email') } };
 const emailAddResponse = {
   type: 'email',
   addOrChange: 'add',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 const emailChangeRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
 const emailChangeResponse = {
   type: 'email',
   addOrChange: 'change',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const homePhoneRemoveRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() } };
 const homePhoneRemoveViewData = {
   type: 'home',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emailRemoveRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() } };
 const emailRemoveViewData = {
   type: 'email',
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationContactSelected(),
 };
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };

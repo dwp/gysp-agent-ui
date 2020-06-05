@@ -32,7 +32,6 @@ const keyDetails = {
 
 const enterDateOfDeathRequest = { session: { awardDetails: claimData.validClaim() } };
 const enterDateOfDeathResponse = {
-  keyDetails,
   awardDetails: claimData.validClaim(),
 };
 

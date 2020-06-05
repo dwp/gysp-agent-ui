@@ -1,9 +1,9 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
 const requestHelper = require('../../../../lib/requestHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
 const timelineHelper = require('../../../../lib/helpers/timelineHelper');
+const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const dataStore = require('../../../../lib/dataStore');
 
 const changeCircumstancesPaymentObject = require('../../../../lib/objects/changeCircumstancesPaymentObject');
@@ -95,17 +95,17 @@ async function getPaymentOverview(req, res) {
       ]);
 
       req.session.awardDetails = awardDetails;
-      const keyDetails = keyDetailsHelper.formatter(awardDetails);
       const timelineDetails = await timelineHelper.getTimeline(req, res, 'PAYMENT');
       const details = changeCircumstancesPaymentObject.formatter(awardDetails);
+      const keyDetails = keyDetailsHelper.formatter(awardDetails);
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(paymentDetails);
       const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPaymentsDetails);
       const numberOfReturnedPayments = countPaymentsByStatus(recentPaymentsDetails, 'RETURNED');
       dataStore.save(req, 'number-returned-payments', numberOfReturnedPayments);
       res.render('pages/changes-enquiries/payment/index', {
         details,
-        paymentSummary,
         keyDetails,
+        paymentSummary,
         recentPaymentsTable,
         secondaryNavigationList,
         timelineDetails,

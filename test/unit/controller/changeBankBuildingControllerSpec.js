@@ -8,18 +8,11 @@ const changeAccountDetailsController = require('../../../app/routes/changes-enqu
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
-const navigationData = require('../../lib/navigationData');
 
 let testPromise;
 let genericResponse = {};
 
 const accountChangeRequest = { session: { awardDetails: claimData.validClaim() } };
-const accountChangeResponse = {
-  keyDetails: {
-    fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-  },
-  secondaryNavigationList: navigationData.validNavigationPaymentSelected(),
-};
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
 const validBankPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim() }, body: { accountName: 'Derek Trotter', accountNumber: '12345678', sortCode: '112233' } };
@@ -69,7 +62,6 @@ describe('Change circumstances contact controller ', () => {
   describe(' getChangeBankBuildingAccountDetails function (GET /changes-and-enquiries/payment/account)', () => {
     it('should display change bank or building account details page when requested', (done) => {
       changeAccountDetailsController.getChangeBankBuildingAccountDetails(accountChangeRequest, genericResponse);
-      assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(accountChangeResponse));
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/account/index');
       done();
     });

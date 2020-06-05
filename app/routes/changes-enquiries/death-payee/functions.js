@@ -6,7 +6,6 @@ i18n.init({ sendMissingTo: 'fallback' });
 
 const dataStore = require('../../../../lib/dataStore');
 const requestHelper = require('../../../../lib/requestHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
 const deathHelper = require('../../../../lib/helpers/deathHelper');
@@ -33,13 +32,11 @@ async function getCheckPayeeDetails(req, res) {
     deleteSession.deleteDeathDetail(req);
     const awardDetails = dataStore.get(req, 'awardDetails');
     const deathPayment = dataStore.get(req, 'death-payment-details');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const sessionData = updatedPayeeDetails(req);
     const detail = await deathHelper.payeeDetails(req, res, awardDetails.inviteKey, sessionData);
     const status = deathPayment ? deathHelper.deathPaymentStatus(deathPayment.amount) : null;
     const pageData = deathCheckPayeeDetailsObject.pageData(detail, status, sessionData);
     res.render('pages/changes-enquiries/death-payee/check-details', {
-      keyDetails,
       pageData,
     });
   } catch (err) {
@@ -51,23 +48,18 @@ async function getCheckPayeeDetails(req, res) {
 }
 
 function getAccountDetails(req, res) {
-  const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const pageData = deathPayeeAccountDetailsObject.pageData();
   const details = dataStore.get(req, 'death-payee-account', 'death');
   res.render('pages/changes-enquiries/death-payee/account-details', {
-    keyDetails,
     pageData,
     details,
   });
 }
 
 function getPayeeName(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-name', 'death');
   res.render('pages/changes-enquiries/death-payee/dap/name', {
-    keyDetails,
     awardDetails,
     details,
   });
@@ -82,9 +74,7 @@ function postPayeeName(req, res) {
     res.redirect('/changes-and-enquiries/personal/death/payee-details/phone-number');
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     res.render('pages/changes-enquiries/death-payee/dap/name', {
-      keyDetails,
       awardDetails,
       details,
       errors,
@@ -93,11 +83,9 @@ function postPayeeName(req, res) {
 }
 
 function getPayeePhoneNumber(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-phone-number', 'death');
   res.render('pages/changes-enquiries/death-payee/dap/phone-number', {
-    keyDetails,
     awardDetails,
     details,
   });
@@ -112,9 +100,7 @@ function postPayeePhoneNumber(req, res) {
     res.redirect('/changes-and-enquiries/personal/death/payee-details/address');
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     res.render('pages/changes-enquiries/death-payee/dap/phone-number', {
-      keyDetails,
       awardDetails,
       details,
       errors,
@@ -123,11 +109,9 @@ function postPayeePhoneNumber(req, res) {
 }
 
 function getPayeePostcodeLookup(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-postcode', 'death');
   res.render('pages/changes-enquiries/death-payee/dap/postcode', {
-    keyDetails,
     awardDetails,
     details,
   });
@@ -152,13 +136,11 @@ function postcodeLookupGlobalErrorMessage(error) {
 function postDapPostcodeLookupErrorHandler(error, req, res) {
   const details = req.body;
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const traceID = requestHelper.getTraceID(error);
   const input = postcodeLookupObject.formatter(req.body);
   const lookupUri = postcodeLookupApiUri + input.postcode;
   requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger);
   res.render('pages/changes-enquiries/death-payee/dap/postcode', {
-    keyDetails,
     awardDetails,
     details,
     globalError: postcodeLookupGlobalErrorMessage(error),
@@ -168,7 +150,6 @@ function postDapPostcodeLookupErrorHandler(error, req, res) {
 function postPayeePostcodeLookup(req, res) {
   const details = req.body;
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const errors = formValidator.addressPostcodeDetails(details);
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
@@ -187,7 +168,6 @@ function postPayeePostcodeLookup(req, res) {
     });
   } else {
     res.render('pages/changes-enquiries/death-payee/dap/postcode', {
-      keyDetails,
       awardDetails,
       details,
       errors,
@@ -200,11 +180,9 @@ function getPayeeAddressSelect(req, res) {
   const postcode = dataStore.get(req, 'dap-postcode', 'death');
   if (addressLookup && postcode) {
     const awardDetails = dataStore.get(req, 'awardDetails');
-    const keyDetails = keyDetailsHelper.formatter(awardDetails);
     const details = dataStore.get(req, 'dap-address', 'death');
     const addressList = postcodeLookupObject.addressList(addressLookup, details);
     res.render('pages/changes-enquiries/death-payee/dap/address-select', {
-      keyDetails,
       postCodeDetails: postcode,
       addressList,
       awardDetails,
@@ -224,8 +202,6 @@ function saveDataToSessionAndClearFormInput(req, selectedAddress) {
 function postPayeeAddressSelect(req, res) {
   const details = req.body;
   const errors = formValidator.addressDetails(details);
-  const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathPayeeAddress(), details);
     saveDataToSessionAndClearFormInput(req, filteredRequest);
@@ -235,7 +211,6 @@ function postPayeeAddressSelect(req, res) {
     const addressList = postcodeLookupObject.addressList(addressLookup);
     const postCodeDetails = dataStore.get(req, 'dap-postcode', 'death');
     res.render('pages/changes-enquiries/death-payee/dap/address-select', {
-      keyDetails,
       postCodeDetails,
       addressList,
       errors,
@@ -246,15 +221,12 @@ function postPayeeAddressSelect(req, res) {
 function postAccountDetails(req, res) {
   const details = req.body;
   const errors = formValidator.payeeAccountDetails(details);
-  const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'death-payee-account', details, 'death');
     res.redirect('/changes-and-enquiries/personal/death/payee-arrears');
   } else {
     const pageData = deathPayeeAccountDetailsObject.pageData();
     res.render('pages/changes-enquiries/death-payee/account-details', {
-      keyDetails,
       pageData,
       details,
       errors,
@@ -264,12 +236,10 @@ function postAccountDetails(req, res) {
 
 function getPayArrears(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
-  const keyDetails = keyDetailsHelper.formatter(awardDetails);
   const paymentDetails = dataStore.get(req, awardDetails.inviteKey, 'death-payee-details');
   const payeeAccountDetails = dataStore.get(req, 'death-payee-account', 'death');
   const pageData = deathPayeeArrearsObject.pageData(paymentDetails, payeeAccountDetails);
   res.render('pages/changes-enquiries/death-payee/pay-arrears', {
-    keyDetails,
     pageData,
   });
 }

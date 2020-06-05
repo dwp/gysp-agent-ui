@@ -33,11 +33,9 @@ const postcodeLookupApiUri = 'addresses?postcode=';
 const [CANNOT_CALCULATE, OVERPAYMENT, ARREARS, NOTHING_OWED, DEATH_NOT_VERIFIED] = ['CANNOT_CALCULATE', 'OVERPAYMENT', 'ARREARS', 'NOTHING_OWED', 'DEATH_NOT_VERIFIED'];
 
 function getAddDateDeath(req, res) {
-  const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
   const details = dataStore.get(req, 'date-of-death', 'death');
   res.render('pages/changes-enquiries/death/enter-date', {
-    keyDetails,
     awardDetails,
     details,
   });
