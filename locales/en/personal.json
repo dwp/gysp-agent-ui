@@ -12,9 +12,10 @@
       },
       "calc_triggered": {
         "arrears": "Arrears calculated - awaiting payee details",
-        "overpayment": "Final payment calculated- account closed",
-        "up_to_date": "Final payment calculated- account closed"
-      }
+        "overpayment": "Final payment calculated - account closed",
+        "up_to_date": "Final payment calculated - account closed"
+      },
+      "arrears_paid_account_closed": "Arrears paid - account closed"
     },
     "marital-status": "Marital status changed",
     "marital-partner": {
