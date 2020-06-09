@@ -1,3 +1,19 @@
+<a name="5.30.0"></a>
+# [5.30.0](https://github.com/dwp/gysp-agent-ui/compare/v5.29.0...v5.30.0) (2020-06-09)
+
+
+### Features
+
+* **death:** NV to V show nothing owned review payee ([0ee897f](https://github.com/dwp/gysp-agent-ui/commit/0ee897f))
+* **death:** NV to V show overpayment review payee ([2e805f5](https://github.com/dwp/gysp-agent-ui/commit/2e805f5))
+* **death:** remove secondary nav ([b16dee1](https://github.com/dwp/gysp-agent-ui/commit/b16dee1))
+* **death:** retriggered death nothing owed review screen ([0d4dd4f](https://github.com/dwp/gysp-agent-ui/commit/0d4dd4f))
+* Updated personal json to add new timeline events in ([e157ea5](https://github.com/dwp/gysp-agent-ui/commit/e157ea5))
+* **death:** retriggered death overpayment review screen ([2be851d](https://github.com/dwp/gysp-agent-ui/commit/2be851d))
+* **death:** update from NV to V show review payee ([9d6969c](https://github.com/dwp/gysp-agent-ui/commit/9d6969c))
+
+
+
 <a name="5.29.0"></a>
 # [5.29.0](https://github.com/dwp/gysp-agent-ui/compare/v5.28.0...v5.29.0) (2020-05-26)
 
@@ -21,6 +37,7 @@
 ### Features
 
 * **marital:** partner date of birth ([2520fa8](https://github.com/dwp/gysp-agent-ui/commit/2520fa8))
+* change style on personal table ([9f3108d](https://github.com/dwp/gysp-agent-ui/commit/9f3108d))
 
 
 
@@ -48,7 +65,6 @@
 ### Features
 
 * change style on personal table ([15084bf](https://github.com/dwp/gysp-agent-ui/commit/15084bf))
-* change style on personal table ([9f3108d](https://github.com/dwp/gysp-agent-ui/commit/9f3108d))
 * **marital:** add/update partner nino ([79e5d26](https://github.com/dwp/gysp-agent-ui/commit/79e5d26))
 * **marital:** change marital status for married and civil partnerdship ([6119d23](https://github.com/dwp/gysp-agent-ui/commit/6119d23))
 * **tasks:** enable return to queue ([2f32657](https://github.com/dwp/gysp-agent-ui/commit/2f32657))
@@ -209,6 +225,7 @@
 ### Features
 
 * **payment-detail:** view payment details by payment id ([cd489f3](https://github.com/dwp/gysp-agent-ui/commit/cd489f3))
+* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 
 
 
@@ -234,7 +251,6 @@
 * **payment:** don't display next payment when null ([8f003a1](https://github.com/dwp/gysp-agent-ui/commit/8f003a1))
 * **payment:** payment details message displayed if empty ([34e4f9c](https://github.com/dwp/gysp-agent-ui/commit/34e4f9c))
 * **payment-history:** more detailed payment history ([a1c569f](https://github.com/dwp/gysp-agent-ui/commit/a1c569f))
-* **payment-history:** more detailed payment history ([2742f84](https://github.com/dwp/gysp-agent-ui/commit/2742f84))
 * **personal:** add timeline feature to personal page ([953ecaa](https://github.com/dwp/gysp-agent-ui/commit/953ecaa))
 * **timeline:** contact timeline ([39d09f6](https://github.com/dwp/gysp-agent-ui/commit/39d09f6))
 
