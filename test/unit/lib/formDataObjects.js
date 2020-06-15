@@ -130,19 +130,17 @@ module.exports = {
         title: 'Second and regular payment',
         rows: [
           { key: { text: 'Total' }, value: { text: '£170.00' } },
-          { key: { text: 'Breakdown' }, value: { html: 'New State Pension £140.00<br />Protected payment £30.00' } },
-          { key: { text: 'Payment period dates' }, value: { html: '1 January 2019 to<br />12 December 2019' } },
+          { key: { text: 'Payment period' }, value: { html: '1 January 2019 to 12 December 2019' } },
         ],
       },
       firstPayment: {
         title: 'First payment',
         rows: [
           { key: { text: 'Total' }, value: { text: '£150.00' } },
-          { key: { text: 'Breakdown' }, value: { html: 'New State Pension £100.00<br />Protected payment £50.00' } },
-          { key: { text: 'Payment period dates' }, value: { html: '10 December 2018 to<br />31 December 2018' } },
+          { key: { text: 'Payment period' }, value: { html: '10 December 2018 to 31 December 2018' } },
         ],
       },
-      button: 'Save and send letter',
+      button: 'Send new award letter',
     };
   },
   validPaymentFormattedObjectWithoutReferenceNumber() {
@@ -152,29 +150,25 @@ module.exports = {
   },
   validPaymentFormattedObjectWithoutFirstPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    const [protectedPayment0] = object.firstPayment.rows[1].value.html.split('<br />');
-    object.firstPayment.rows[1].value.html = protectedPayment0;
-    object.button = 'Save and send letter';
+    object.button = 'Send new award letter';
     return object;
   },
   validPaymentFormattedObjectWithoutRegularPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    const [protectedPayment0] = object.regularPayment.rows[1].value.html.split('<br />');
-    object.regularPayment.rows[1].value.html = protectedPayment0;
-    object.button = 'Save and send letter';
+    object.button = 'Send new award letter';
     return object;
   },
   validPaymentFormattedObjectWithoutFirstPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     delete object.firstPayment;
     object.regularPayment.title = 'First and regular payment';
-    object.button = 'Save and send letter';
+    object.button = 'Send new award letter';
     return object;
   },
   validPaymentFormattedObjectWithFirstPaymentArrearsFalse() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     object.regularPayment.title = 'Second and regular payment';
-    object.button = 'Save and send letter';
+    object.button = 'Send new award letter';
     return object;
   },
   validPaymentFormattedObjectWithFirstPaymentArrearsTrue() {
