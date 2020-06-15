@@ -34,7 +34,7 @@ const responseNextSrb = {
         classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
       },
       value: {
-        text: '£100.00',
+        text: '£0.00',
       },
     }, {
       key: {
@@ -42,7 +42,7 @@ const responseNextSrb = {
         classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
       },
       value: {
-        text: '£200.00',
+        text: '£0.00',
       },
     }, {
       key: {
@@ -101,7 +101,7 @@ const responseReviewAwardDate = {
         classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
       },
       value: {
-        text: '£100.00',
+        text: '£0.00',
       },
     }, {
       key: {
@@ -109,7 +109,7 @@ const responseReviewAwardDate = {
         classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds',
       },
       value: {
-        text: '£200.00',
+        text: '£0.00',
       },
     }, {
       key: {
