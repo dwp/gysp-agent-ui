@@ -73,4 +73,24 @@ describe('process claim detail object formatter', () => {
     assert.equal(json.regularPayment.title, 'Next and regular payment');
     done();
   });
+
+  it('should return valid json when object is called with first payment and payments already made is not arrears', (done) => {
+    const json = object.formatter(dataObjects.validPaymentApiResponseWithFirstPaymentAndPaymentsAlreadyMade());
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithFirstPaymentArrearsFalseAndPaymentsMade()));
+    assert.equal(json.firstPayment.rows.length, 2);
+    assert.equal(json.regularPayment.rows.length, 2);
+    assert.equal(json.firstPayment.title, 'Next payment');
+    assert.equal(json.regularPayment.title, 'Next regular payment');
+    done();
+  });
+
+  it('should return valid json when object is called with first payment and payments already made and arrears payment present', (done) => {
+    const json = object.formatter(dataObjects.validPaymentApiResponseWithFirstPaymentArrearsTrueAndPaymentsAlreadyMade());
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithFirstPaymentArrearsTrueAndPaymentsMade()));
+    assert.equal(json.firstPayment.rows.length, 2);
+    assert.equal(json.regularPayment.rows.length, 2);
+    assert.equal(json.firstPayment.title, 'Arrears payment');
+    assert.equal(json.regularPayment.title, 'Next and regular payment');
+    done();
+  });
 });
