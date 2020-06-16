@@ -4,6 +4,7 @@ module.exports = {
   validPaymentApiResponse() {
     return {
       arrearsPayment: false,
+      paymentsAlreadyMade: false,
       firstPayment: {
         endDate: '2018-12-31T09:43:11.315Z',
         paymentCalculation: {
@@ -61,6 +62,17 @@ module.exports = {
   validPaymentApiResponseWithFirstPaymentArrearsTrue() {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     object.arrearsPayment = true;
+    return object;
+  },
+  validPaymentApiResponseWithFirstPaymentArrearsTrueAndPaymentsAlreadyMade() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
+    object.arrearsPayment = true;
+    object.paymentsAlreadyMade = true;
+    return object;
+  },
+  validPaymentApiResponseWithFirstPaymentAndPaymentsAlreadyMade() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
+    object.paymentsAlreadyMade = true;
     return object;
   },
   validProcessClaimPaymentRequest() {
@@ -176,6 +188,20 @@ module.exports = {
     object.firstPayment.title = 'Arrears payment';
     object.regularPayment.title = 'Next and regular payment';
     object.button = 'Pay arrears and send letter';
+    return object;
+  },
+  validPaymentFormattedObjectWithFirstPaymentArrearsTrueAndPaymentsMade() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    object.firstPayment.title = 'Arrears payment';
+    object.regularPayment.title = 'Next and regular payment';
+    object.button = 'Pay arrears and send letter';
+    return object;
+  },
+  validPaymentFormattedObjectWithFirstPaymentArrearsFalseAndPaymentsMade() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    object.firstPayment.title = 'Next payment';
+    object.regularPayment.title = 'Next regular payment';
+    object.button = 'Send new award letter';
     return object;
   },
   validProcessClaimPaymentFormRequest() {
