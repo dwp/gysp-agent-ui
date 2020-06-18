@@ -74,9 +74,9 @@ describe('process claim detail object formatter', () => {
     done();
   });
 
-  it('should return valid json when object is called with first payment and payments already made is not arrears', (done) => {
-    const json = object.formatter(dataObjects.validPaymentApiResponseWithFirstPaymentAndPaymentsAlreadyMade());
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithFirstPaymentArrearsFalseAndPaymentsMade()));
+  it('should return valid json when object is called when additional payment is present and not arrears', (done) => {
+    const json = object.formatter(dataObjects.validPaymentApiResponseWithAdditionalRegularPayment());
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithAdditionalRegularPaymentPresent()));
     assert.equal(json.firstPayment.rows.length, 2);
     assert.equal(json.regularPayment.rows.length, 2);
     assert.equal(json.firstPayment.title, 'Next payment');
@@ -84,12 +84,11 @@ describe('process claim detail object formatter', () => {
     done();
   });
 
-  it('should return valid json when object is called with first payment and payments already made and arrears payment present', (done) => {
-    const json = object.formatter(dataObjects.validPaymentApiResponseWithFirstPaymentArrearsTrueAndPaymentsAlreadyMade());
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithFirstPaymentArrearsTrueAndPaymentsMade()));
-    assert.equal(json.firstPayment.rows.length, 2);
+  it('should return valid json when object is called without first payment and payments already made and no arrears', (done) => {
+    const json = object.formatter(dataObjects.validPaymentApiResponseWithoutFirstPaymentAndPaymentsAlreadyMade());
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectWithNoFirstPaymentAndPaymentsMade()));
+    assert.equal(json.firstPayment, undefined);
     assert.equal(json.regularPayment.rows.length, 2);
-    assert.equal(json.firstPayment.title, 'Arrears payment');
     assert.equal(json.regularPayment.title, 'Next and regular payment');
     done();
   });
