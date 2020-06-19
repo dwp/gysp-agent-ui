@@ -751,6 +751,14 @@ describe('Form validation', () => {
       assert.equal(Object.keys(errors).length, 2);
       assert.equal(errors.date.text, 'review-award-date:fields.date.errors.format');
     });
+
+    it('should return error when entitlement date is in future', () => {
+      const errors = validator.reviewAwardEntitlementDateValidation(1583474400000, {
+        dateYear: '2199', dateMonth: '01', dateDay: '01',
+      });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.date.text, 'review-award-date:fields.date.errors.after');
+    });
   });
 
   describe('payeeAccountDetails validator', () => {
