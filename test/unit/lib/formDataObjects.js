@@ -167,14 +167,14 @@ module.exports = {
         title: 'Second and regular payment',
         rows: [
           { key: { text: 'Total' }, value: { text: '£170.00' } },
-          { key: { text: 'Payment period' }, value: { html: '1 January 2019 to 12 December 2019' } },
+          { key: { text: 'Payment period' }, value: { html: '1 January 2019 to<br/> 12 December 2019' } },
         ],
       },
       firstPayment: {
         title: 'First payment',
         rows: [
           { key: { text: 'Total' }, value: { text: '£150.00' } },
-          { key: { text: 'Payment period' }, value: { html: '10 December 2018 to 31 December 2018' } },
+          { key: { text: 'Payment period' }, value: { html: '10 December 2018 to<br/> 31 December 2018' } },
         ],
       },
       button: 'Send new award letter',
@@ -187,11 +187,15 @@ module.exports = {
   },
   validPaymentFormattedObjectWithoutFirstPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    const [protectedPayment0] = object.firstPayment.rows[1].value.html.split('<br />');
+    object.firstPayment.rows[1].value.html = protectedPayment0;
     object.button = 'Send new award letter';
     return object;
   },
   validPaymentFormattedObjectWithoutRegularPaymentProtectedPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    const [protectedPayment0] = object.firstPayment.rows[1].value.html.split('<br />');
+    object.firstPayment.rows[1].value.html = protectedPayment0;
     object.button = 'Send new award letter';
     return object;
   },
