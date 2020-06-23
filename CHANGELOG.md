@@ -1,3 +1,15 @@
+<a name="5.31.0"></a>
+# [5.31.0](https://github.com/dwp/gysp-agent-ui/compare/v5.30.0...v5.31.0) (2020-06-23)
+
+
+### Features
+
+* change caption text for srb review if payments made ([e2895f9](https://github.com/dwp/gysp-agent-ui/commit/e2895f9))
+* Don't display payment breakdowns on srb ([faa0b04](https://github.com/dwp/gysp-agent-ui/commit/faa0b04))
+* Ensure entitlement date not in future ([632232b](https://github.com/dwp/gysp-agent-ui/commit/632232b))
+
+
+
 <a name="5.30.0"></a>
 # [5.30.0](https://github.com/dwp/gysp-agent-ui/compare/v5.29.0...v5.30.0) (2020-06-09)
 
