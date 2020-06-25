@@ -20,7 +20,7 @@ const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObje
 
 const deathPayeeAccountDetailsUpdateApiUri = 'api/award/death-payee-account-details';
 const deathContactDetailsUpdateApiUri = 'api/award/death-contact-details';
-const postcodeLookupApiUri = 'addresses?postcode=';
+const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
 
 function updatedPayeeDetails(req) {
   const details = dataStore.get(req, 'death-payee-details-updated');
@@ -154,13 +154,14 @@ function postPayeePostcodeLookup(req, res) {
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
     const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
-    const getPostcodeLookupCall = requestHelper.generateGetCall(apiUri, {}, 'address');
+    const getPostcodeLookupCall = requestHelper.generateGetCallWithFullResponse(apiUri, {}, 'address');
     request(getPostcodeLookupCall).then((response) => {
-      if (response.error) {
-        throw response.error;
+      if (response.statusCode !== httpStatus.OK || (response.body.data !== undefined && response.body.data.length === 0)) {
+        throw response;
       }
+      const { body } = response;
       const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathPayeePostcode(), details);
-      dataStore.save(req, 'address-lookup', response, 'death');
+      dataStore.save(req, 'address-lookup', body, 'death');
       dataStore.save(req, 'dap-postcode', filteredRequest, 'death');
       res.redirect('/changes-and-enquiries/personal/death/payee-details/address-select');
     }).catch((err) => {

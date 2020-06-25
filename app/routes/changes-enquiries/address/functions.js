@@ -10,7 +10,7 @@ const deleteSession = require('../../../../lib/deleteSession');
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
 const addressDetailsObject = require('../../../../lib/objects/addressDetailsObject');
 
-const postcodeLookupApiUri = 'addresses?postcode=';
+const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
 const awardDetailsUpdateApiUri = 'api/award/updateaddressdetails';
 
 function getPostcodeLookup(req, res) {
@@ -49,15 +49,13 @@ function postPostcodeLookup(req, res) {
   const errors = formValidator.addressPostcodeDetails(details);
   if (Object.keys(errors).length === 0) {
     const input = postcodeLookupObject.formatter(details);
-    const getPostcodeLookupCall = requestHelper.generateGetCall(
-      res.locals.agentGateway + postcodeLookupApiUri + input.postcode,
-      {},
-      'address',
-    );
-    request(getPostcodeLookupCall).then((body) => {
-      if (body.error) {
-        throw body.error;
+    const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
+    const getPostcodeLookupCall = requestHelper.generateGetCallWithFullResponse(apiUri, {}, 'address');
+    request(getPostcodeLookupCall).then((response) => {
+      if (response.statusCode !== httpStatus.OK || (response.body.data !== undefined && response.body.data.length === 0)) {
+        throw response;
       }
+      const { body } = response;
       req.session.addressLookup = body;
       dataStore.save(req, 'postcode', details);
       res.redirect('/changes-and-enquiries/address/select');

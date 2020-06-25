@@ -37,11 +37,7 @@ const validSelectPostRequest = {
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '' } };
 
 const notFoundResponse = {
-  addressResults: null,
-  error: {
-    message: 'No addresses could be found using the postcode:W1J 7NT',
-    statusCode: 200,
-  },
+  data: [],
 };
 
 const errorMessage = {
@@ -57,7 +53,7 @@ const updateErrorMessages = {
 
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
-const postcodeLookupApiUri = '/addresses?postcode=W1J7NT';
+const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT';
 const awardDetailsUpdateApiUri = '/api/award/updateaddressdetails';
 
 describe('Change address controller ', () => {
@@ -118,7 +114,7 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/index');
-        assert.equal(genericResponse.locals.logMessage, '401 - 401 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '401 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -128,7 +124,7 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/index');
-        assert.equal(genericResponse.locals.logMessage, '403 - 403 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '403 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -138,7 +134,7 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/index');
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '400 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -148,7 +144,7 @@ describe('Change address controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.notFound);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/index');
-        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on addresses?postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '404 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
