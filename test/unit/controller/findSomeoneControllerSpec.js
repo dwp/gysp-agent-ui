@@ -27,6 +27,17 @@ const errorNoStatus = 'Can\'t connect to backend';
 
 const findSomeoneSearch = '/api/award';
 
+const validGetSearchResultRequest = {
+  session: {
+    awardDetails: {
+      nino: 'AA111111A',
+      firstName: 'Joe',
+      surname: 'Bloggs',
+      awardStatus: 'RECEIVING STATE PENSION',
+    },
+  },
+};
+
 describe('Find someone controller ', () => {
   describe(' getFindSomeone function ', () => {
     it('should return search view when requested by the user', () => {
@@ -96,15 +107,20 @@ describe('Find someone controller ', () => {
       });
     });
 
-    it('should return view when API returns data.', () => {
+    it('should return redirect back when API returns data.', () => {
       nock('http://test-url/').get(`${findSomeoneSearch}/${findSomeoneValidPost.body.nino}`).reply(httpStatus.OK, claimData.validClaim());
       findSomeoneController.postFindSomeone(findSomeoneValidPost, genericResponse);
       return testPromise.then(() => {
-        const data = claimData.validSearchViewData();
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(data)); // Breaking test expecting AA 11 22 33 C getting AA112233C
-        assert.equal(genericResponse.data.details.result.nino, data.result.nino);
-        assert.equal(genericResponse.viewName, 'pages/find-someone/search');
+        assert.equal(genericResponse.address, 'find-someone/search-result');
       });
+    });
+    it('should return the correct view name for getting search result', (done) => {
+      findSomeoneController.getSearchResult(validGetSearchResultRequest, genericResponse);
+      assert.equal(genericResponse.data.keyDetails.fullName, 'Joe Bloggs');
+      assert.equal(genericResponse.data.keyDetails.nino, 'AA 11 11 11 A');
+      assert.equal(genericResponse.data.keyDetails.status.text, 'RECEIVING STATE PENSION');
+      assert.equal(genericResponse.viewName, 'pages/find-someone/search-result');
+      done();
     });
   });
 });

@@ -48,11 +48,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-    {% if details.result %}
-      <h3 class="govuk-heading-m govuk-!-margin-top-0">Result</h3>
-      <a href="changes-and-enquiries/personal" class="govuk-link govuk-!-font-size-24 govuk-link--no-visited-state">{{ details.result.fullName }}</a>
-      <p id="gysp-citizen-nino" class="govuk-body govuk-!-font-size-24">{{details.result.nino}}</p>
-    {% elif details.noResult %}
+    {% if details.noResult %}
       <h3 class="govuk-heading-m govuk-!-margin-top-0">Result</h3>
       <p class="govuk-body govuk-!-font-size-24">No results found</p>
     {% endif %}

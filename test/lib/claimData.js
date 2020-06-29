@@ -689,14 +689,6 @@ module.exports = {
       }],
     };
   },
-  validSearchViewData() {
-    return {
-      result: {
-        fullName: 'Joe Bloggs',
-        nino: 'AA 37 07 73 A',
-      },
-    };
-  },
   validAddressWithThoroughfare() {
     return { ...this.validUkAddress().residentialAddress };
   },
