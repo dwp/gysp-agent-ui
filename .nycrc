@@ -10,5 +10,5 @@
     "text"
   ],
   "check-coverage": true,
-  "report-dir": "./coverage"
+  "report-dir": "./.coverage"
 }

@@ -11,11 +11,9 @@
     "npm": "6.14.5"
   },
   "scripts": {
-    "version": "./postversion.sh",
     "build": "gulp generateAssets",
-    "package": "gulp --gulpfile ./gulp-package.js",
-    "release": "npm install && npm test && npm run build && npm prune --production && npm run package && npm install",
-    "start": "node start | bunyan",
+    "prestart": "npm ci",
+    "start": "gulp | bunyan",
     "lint": "eslint .",
     "test": "CONFIG_LOCATION='./test/resource/' mocha test/unit/**/**",
     "test-coverage": "CONFIG_LOCATION='./test/resource/' BANK_FEATURE=false nyc mocha --reporter=mocha test/unit --recursive ",
@@ -23,18 +21,17 @@
     "security:audit": "npm audit || true",
     "security:snyk": "snyk test || true",
     "security:outdated": "npm outdated || true",
-    "compliance-tests": "npm run lint",
-    "ci": "npm run compliance-tests && npm run compliance-tests && npm run test && npm run test-coverage"
+    "compliance-tests": "npm run lint"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "0.0.17-alpha",
     "body-parser": "1.19.0",
     "bunyan": "1.8.12",
-    "bunyan-rotating-file-stream": "1.6.3",
     "compression": "1.7.4",
     "connect-redis": "4.0.4",
     "crypto-js": "4.0.0",
     "debug": "4.1.1",
+    "dotenv": "8.2.0",
     "express": "4.17.1",
     "express-flash": "0.0.2",
     "express-session": "1.17.1",
@@ -51,6 +48,7 @@
     "gulp-uglify": "3.0.2",
     "helmet": "3.22.0",
     "http-status-codes": "1.4.0",
+    "https": "1.0.0",
     "i18next": "1.10.6",
     "itemid": "1.1.0",
     "js-yaml": "3.13.1",

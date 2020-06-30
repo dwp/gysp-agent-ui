@@ -3,26 +3,24 @@ const express = require('express');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
-const redis = require('redis');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
 const i18n = require('i18next');
 const compression = require('compression');
 const flash = require('express-flash');
-const connectRedis = require('connect-redis');
-const encyption = require('./lib/encryption');
 const roles = require('./lib/middleware/roleAuth.js');
 const mockDateRoutes = require('./app/routes/mock-date/routes.js');
 const packageJson = require('./package.json');
 
+const redisClient = require('./bootstrap/redisClient');
+
 const app = express();
 
 // Config variables
-const config = require('./config/yaml');
+const config = require('./config/application');
 const i18nConfig = require('./config/i18n');
 const log = require('./config/logging')('agent-ui', config.application.logs);
 
-const templateCache = true;
 const { cacheLength } = config.application.assets;
 
 // Template setup for nunjucks
@@ -30,7 +28,11 @@ nunjucks.configure([
   'app/views',
   'node_modules/govuk-frontend/',
   'node_modules/@ministryofjustice/frontend/',
-], { autoescape: true, express: app, noCache: templateCache });
+], {
+  autoescape: true,
+  express: app,
+  noCache: config.application.noTemplateCache,
+});
 
 // Compression of assets
 app.use(compression());
@@ -40,9 +42,9 @@ app.disable('x-powered-by');
 
 // Middleware to serve static assets
 app.set('view engine', 'html');
-app.use('/assets', express.static('./public', { maxage: cacheLength }));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
-app.use('/assets', express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: cacheLength }));
+app.use(`${config.mountUrl}assets`, express.static('./public', { maxage: cacheLength }));
+app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
+app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: cacheLength }));
 app.use(favicon('./node_modules/govuk-frontend/govuk/assets/images/favicon.ico'));
 
 // Disable Etag for pages
@@ -64,6 +66,8 @@ app.use(helmet.contentSecurityPolicy({
   disableAndroid: false,
 }));
 
+app.set('trust proxy', 1);
+
 // Session settings
 const sessionConfig = {
   secret: config.application.session.secret,
@@ -75,28 +79,18 @@ const sessionConfig = {
   rolling: true,
   saveUninitialized: true,
 };
-
-app.set('trust proxy', 1);
-
 if (config.application.session.securecookies === true) {
   sessionConfig.cookie.secure = true;
 }
-
 if (config.application.session.store === 'redis') {
-  const RedisStore = connectRedis(session);
-  const redisConfig = config.application.redis;
-  redisConfig.host = process.env.REDIS_HOST || '127.0.0.1';
-  redisConfig.password = encyption.decrypt(redisConfig.password, config.secret);
-  const client = redis.createClient(redisConfig);
-  client.unref();
-  client.on('error', (err) => {
+  sessionConfig.store = redisClient(session);
+  sessionConfig.store.client.on('error', (err) => {
     log.error(`Redis error: ${err}`);
   });
-  sessionConfig.store = new RedisStore({ client });
 }
-
 app.use(session(sessionConfig));
 
+// Flash session middleware used for alerts
 app.use(flash());
 
 // Multilingual information
@@ -110,13 +104,6 @@ app.use(bodyParser.urlencoded({
   extended: false,
 }));
 
-function agentGateway(process, appConfig) {
-  if (process.env.GATEWAY) {
-    return process.env.GATEWAY;
-  }
-  return appConfig.application.urls.agentGateway;
-}
-
 app.use((req, res, next) => {
   // Send assetPath to all views
   res.locals.assetPath = '/assets';
@@ -127,7 +114,7 @@ app.use((req, res, next) => {
   res.locals.serviceName = i18n.t('app:service_name');
   res.locals.logger = log;
   /* Urls */
-  res.locals.agentGateway = agentGateway(process, config);
+  res.locals.agentGateway = config.application.urls.agentGateway;
   res.locals.robotKey = config.application.robot.key;
   res.locals.robotSecret = config.secret;
   res.locals.version = packageJson.version;
@@ -158,6 +145,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Heath end point before middleware to bypass kong auth
+app.use(config.mountUrl, require('./app/routes/health/routes.js'));
+
+// Middelware
 app.use(require('./lib/middleware/processClaim')(log));
 app.use(require('./lib/middleware/reviewAward')(log));
 app.use(require('./lib/middleware/changesEnquiries')(log));
@@ -165,36 +156,38 @@ app.use(require('./lib/middleware/tasks')(log));
 app.use(require('./lib/kongAuth'));
 
 // Route information
-app.use('/', require('./app/routes/general.js'));
-app.use('/', require('./app/routes/health/routes.js'));
+app.use(config.mountUrl, require('./app/routes/general.js'));
 
 app.use((req, res, next) => {
   if (config.application.urls.agentGateway === '' || config.application.urls.agentGateway === undefined) {
-    next(new Error('No backend URL supplied'));
+    return next(new Error('No backend URL supplied'));
   }
-  next();
+  if (!req.session) {
+    return next(new Error('Redis is down'));
+  }
+  return next();
 });
 
-if (config.env !== 'prod') {
-  app.use('/mock-date', mockDateRoutes);
+if (config.env !== 'production') {
+  app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
 }
 
-app.use('/customer', roles.permit('GYSP-TEST-SUPPORT-TEAM'), require('./app/routes/customer/routes.js'));
-app.use('/claims', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/next-claim/routes.js'));
-app.use('/claims', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/drop-out-claim/routes.js'));
-app.use('/claims', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/overseas-completed-claim/routes.js'));
-app.use('/robot', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/robot/routes.js'));
-app.use('/claim-information', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/claim-information/routes.js'));
-app.use('/find-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-claim/routes.js'));
-app.use('/find-someone', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-someone/routes.js'));
-app.use('/changes-and-enquiries', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/routes.js'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim/routes'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-detail/routes'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-payment/routes'));
-app.use('/process-claim', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-complete/routes'));
-app.use('/tasks', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/tasks/routes'));
-app.use('/review-award', roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/review-award/routes'));
+app.use(`${config.mountUrl}customer`, roles.permit('GYSP-TEST-SUPPORT-TEAM'), require('./app/routes/customer/routes.js'));
+app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/next-claim/routes.js'));
+app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/drop-out-claim/routes.js'));
+app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/overseas-completed-claim/routes.js'));
+app.use(`${config.mountUrl}robot`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/robot/routes.js'));
+app.use(`${config.mountUrl}claim-information`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/claim-information/routes.js'));
+app.use(`${config.mountUrl}find-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-claim/routes.js'));
+app.use(`${config.mountUrl}find-someone`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/find-someone/routes.js'));
+app.use(`${config.mountUrl}changes-and-enquiries`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/changes-enquiries/routes.js'));
+app.use(`${config.mountUrl}process-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim/routes'));
+app.use(`${config.mountUrl}process-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-detail/routes'));
+app.use(`${config.mountUrl}process-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-to-bau/routes'));
+app.use(`${config.mountUrl}process-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-payment/routes'));
+app.use(`${config.mountUrl}process-claim`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/process-claim-complete/routes'));
+app.use(`${config.mountUrl}tasks`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/tasks/routes'));
+app.use(`${config.mountUrl}review-award`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/review-award/routes'));
 
 // 404 catch
 app.use((req, res, next) => {
@@ -207,12 +200,10 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   const status = (err.status || 500);
   res.status(status);
-  if (config.application.env !== 'production') {
-    console.log(`${err.status}: ${err.message}`); // eslint-disable-line no-console
-    console.log('\n\n'); // eslint-disable-line no-console
-    console.log(err.stack); // eslint-disable-line no-console
+  if (config.env !== 'production') {
+    process.stdout.write(`\n${err.status}: ${err.message}\n\n`);
+    process.stdout.write(`${err.stack}\n\n`);
   }
-
   log.error(`${status} - ${err.message} - Requested on ${req.method} ${req.path}`);
 
   res.render('pages/error', {

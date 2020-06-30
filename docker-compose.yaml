@@ -5,23 +5,18 @@ services:
     command: redis-server --requirepass password
     expose:
       - 6379
-  agent_frontend:
-    build: ./
+  agentfrontend:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
     command: npm start
     depends_on:
       - redis
     volumes:
-      - nodemodules:/usr/src/app/node_modules
-      - ./:/usr/src/app
+      - ./:/home/node/agent-ui
+      - /home/node/agent-ui/node_modules/
     ports:
       - "3002:3002"
     environment:
-      REDIS_HOST: redis
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      CUSTOMERAPIGATEWAY: ${CUSTOMER_API_GATEWAY}
-      NODE_EXTRA_CA_CERTS: ${NODE_EXTRA_CA_CERTS}
-      WEB_APP: host.docker.internal
-volumes:
-  nodemodules:
-    external: true
+      CONTEXT_PATH: ${CONTEXT_PATH}
+      PORT: ${PORT}

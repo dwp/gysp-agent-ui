@@ -24,7 +24,7 @@ function getTasks(req, res) {
 
 async function postTasks(req, res) {
   try {
-    const workItemCall = requestHelper.generateGetCall(res.locals.agentGateway + getWorkItemEndPoint, {}, 'filter');
+    const workItemCall = requestHelper.generateGetCall(res.locals.agentGateway + getWorkItemEndPoint, {}, 'work-items');
     const workItem = await request(workItemCall);
     dataStore.save(req, 'work-item', workItem, 'tasks');
     res.redirect('/tasks/task');
@@ -36,7 +36,7 @@ async function postTasks(req, res) {
     } else {
       const traceID = requestHelper.getTraceID(err);
       requestHelper.loggingHelper(err, getWorkItemEndPoint, traceID, res.locals.logger);
-      errorHelper.flashErrorAndRedirect(req, res, err, 'filter', '/tasks');
+      errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks');
     }
   }
 }
@@ -53,11 +53,11 @@ async function getReturnTaskToQueue(req, res) {
   try {
     const workItem = dataStore.get(req, 'work-item', 'tasks');
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.workItem(), workItem);
-    const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusReturnedEndPoint, filteredRequest, 'filter', req.user);
+    const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusReturnedEndPoint, filteredRequest, 'work-items', req.user);
     await request(returnCall);
     redirectHelper.redirectAndClearSessionKey(req, res, 'tasks', '/tasks');
   } catch (err) {
-    errorHelper.flashErrorAndRedirect(req, res, err, 'filter', '/tasks/task');
+    errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task');
   }
 }
 
@@ -87,11 +87,11 @@ async function getEndTask(req, res) {
   try {
     const workItem = dataStore.get(req, 'work-item', 'tasks');
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.workItem(), workItem);
-    const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusCompleteEndPoint, filteredRequest, 'filter', req.user);
+    const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusCompleteEndPoint, filteredRequest, 'work-items', req.user);
     await request(returnCall);
     redirectHelper.redirectAndClearSessionKey(req, res, 'tasks', '/tasks');
   } catch (err) {
-    errorHelper.flashErrorAndRedirect(req, res, err, 'filter', '/tasks/task/complete');
+    errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task/complete');
   }
 }
 
