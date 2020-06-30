@@ -144,7 +144,7 @@ app.use((req, res, next) => {
 
 // Clear session
 app.use((req, res, next) => {
-  if (!req.url.includes('changes-and-enquiries')) {
+  if (!req.url.includes('changes-and-enquiries') && !req.url.includes('find-someone/search-result')) {
     if (req.session.awardDetails) {
       delete req.session.awardDetails;
     }

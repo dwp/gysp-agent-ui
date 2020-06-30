@@ -5,7 +5,7 @@ const dataStore = require('../../../lib/dataStore');
 const deleteSession = require('../../../lib/deleteSession');
 
 const formValidator = require('../../../lib/formValidator');
-const findSomeoneFormatter = require('../../../lib/findSomeoneDetailsObject');
+const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
 
 const noStausCodeErrorMessage = 'Error - could not get citizen data';
 const error500Message = 'Error - There has been an internal sever error, try again';
@@ -37,6 +37,12 @@ function getFindSomeone(req, res) {
   res.render('pages/find-someone/search');
 }
 
+function getSearchResult(req, res) {
+  const { awardDetails } = req.session;
+  const keyDetails = keyDetailsHelper.formatter(awardDetails);
+  res.render('pages/find-someone/search-result', { keyDetails });
+}
+
 async function postFindSomeone(req, res) {
   const details = req.body;
   const errors = formValidator.ninoDetails(req.body);
@@ -48,7 +54,8 @@ async function postFindSomeone(req, res) {
         return request(awardCall);
       });
       req.session.searchedNino = award.nino;
-      res.render('pages/find-someone/search', { details: { result: findSomeoneFormatter.formatter(award) } });
+      req.session.awardDetails = award;
+      res.redirect('find-someone/search-result');
     } catch (err) {
       deleteSession.deleteChangesEnquiries(req);
       if (err.statusCode === httpStatus.NOT_FOUND) {
@@ -67,3 +74,4 @@ async function postFindSomeone(req, res) {
 
 module.exports.getFindSomeone = getFindSomeone;
 module.exports.postFindSomeone = postFindSomeone;
+module.exports.getSearchResult = getSearchResult;
