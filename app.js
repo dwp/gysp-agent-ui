@@ -207,7 +207,7 @@ app.use((err, req, res, next) => {
     process.stdout.write(`\n${err.status}: ${err.message}\n\n`);
     process.stdout.write(`${err.stack}\n\n`);
   }
-  log.error(`${status} - ${err.message} - Requested on ${req.method} ${req.path}`);
+  log.error(`${status} - ${err.message} - Requested on ${req.method} ${req.fullUrl}`);
 
   res.render('pages/error', {
     status,
