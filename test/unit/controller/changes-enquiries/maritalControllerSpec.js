@@ -102,7 +102,7 @@ const validSpousePostRequest = {
     dobYear: '1960',
   },
   flash: flashMock,
-  originalUrl: '/changes-and-enquiries/marital-details/spouse-details',
+  fullUrl: '/changes-and-enquiries/marital-details/spouse-details',
 };
 
 const validPartnerPostRequest = {
@@ -125,7 +125,7 @@ const validPartnerPostRequest = {
     dobYear: '1960',
   },
   flash: flashMock,
-  originalUrl: '/changes-and-enquiries/marital-details/partner-details',
+  fullUrl: '/changes-and-enquiries/marital-details/partner-details',
 };
 
 // API Endpoints

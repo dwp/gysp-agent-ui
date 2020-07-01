@@ -197,7 +197,7 @@ function getPartnerDetails(req, res) {
   const newMaritalShortStatus = dataStore.get(req, 'maritalStatus', 'marital');
   const maritalStatus = maritalStatusHelper.transformToShortStatus(newMaritalShortStatus);
   res.render('pages/changes-enquiries/marital/partner', {
-    formUrl: req.originalUrl,
+    formUrl: req.fullUrl,
     maritalStatus,
   });
 }
@@ -216,11 +216,11 @@ async function postPartnerDetails(req, res) {
       req.flash('success', i18n.t('marital-status:success-message'));
       redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
     } catch (err) {
-      errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.originalUrl);
+      errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.fullUrl);
     }
   } else {
     res.render('pages/changes-enquiries/marital/partner', {
-      formUrl: req.originalUrl,
+      formUrl: res.fullUrl,
       maritalStatus: maritalData.maritalStatus,
       details,
       errors,
