@@ -100,5 +100,32 @@ describe('awardDetailsObject ', () => {
       const formatted = awardDetailsObject.formatter(details, 0);
       assert.deepEqual(formatted.header, 'award-detail:header.current');
     });
+    it('should return previous award header when srb award and end date is before todays date', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].inPayment = false;
+      details.awardAmounts[0].reasonCode = 'SRB';
+      details.awardAmounts[0].fromDate = moment().add(-5, 'd').toDate().getTime();
+      details.awardAmounts[0].toDate = moment().add(-2, 'd').toDate().getTime();
+      const formatted = awardDetailsObject.formatter(details, 0);
+      assert.deepEqual(formatted.header, 'award-detail:header.previous');
+    });
+    it('should return previous award header when srb award and end date is after todays date and before the start date', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].inPayment = false;
+      details.awardAmounts[0].reasonCode = 'SRB';
+      details.awardAmounts[0].fromDate = moment().add(6, 'd').toDate().getTime();
+      details.awardAmounts[0].toDate = moment().add(5, 'd').toDate().getTime();
+      const formatted = awardDetailsObject.formatter(details, 0);
+      assert.deepEqual(formatted.header, 'award-detail:header.previous');
+    });
+    it('should return current award header when srb award and end date is after todays date and after the start date', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].inPayment = false;
+      details.awardAmounts[0].reasonCode = 'SRB';
+      details.awardAmounts[0].fromDate = moment().add(6, 'd').toDate().getTime();
+      details.awardAmounts[0].toDate = moment().add(7, 'd').toDate().getTime();
+      const formatted = awardDetailsObject.formatter(details, 0);
+      assert.deepEqual(formatted.header, 'award-detail:header.current');
+    });
   });
 });
