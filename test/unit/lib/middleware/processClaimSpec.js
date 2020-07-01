@@ -14,21 +14,21 @@ const destroy = (callback) => {
 const emptySession = { url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: {} };
 const noMatchUrl = { url: 'http://localhost:3002', session: {} };
 const emptySessionRedirectTrue = {
-  url: 'http://localhost:3002/process-claim', path: '/process-claim', session: { }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: 'localhost',
+  url: 'http://localhost:3002/process-claim', fullUrl: '/process-claim', session: { }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: 'localhost',
 };
-const noClaimDetail = { url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: { processClaim: {} } };
-const complete = { url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: { processClaim: { userHasCompleted: true, claimDetail: true } } };
+const noClaimDetail = { url: 'http://localhost:3002/process-claim/payment', fullUrl: '/process-claim/payment', session: { processClaim: {} } };
+const complete = { url: 'http://localhost:3002/process-claim/payment', fullUrl: '/process-claim/payment', session: { processClaim: { userHasCompleted: true, claimDetail: true } } };
 const continueReferer = {
-  url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: { processClaim: { claimDetail: true } }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: 'localhost',
+  url: 'http://localhost:3002/process-claim/payment', fullUrl: '/process-claim/payment', session: { processClaim: { claimDetail: true } }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: 'localhost',
 };
 const continuePath = {
-  url: 'http://localhost:3002/process-claim/payment', path: '/process-claim', session: { processClaim: { claimDetail: true } }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: '',
+  url: 'http://localhost:3002/process-claim/payment', fullUrl: '/process-claim', session: { processClaim: { claimDetail: true } }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: '',
 };
 const somethingElse = {
-  url: 'http://localhost:3002/process-claim/payment', path: '/process-claim/payment', session: { processClaim: { claimDetail: true }, destroy }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: '', method: 'GET',
+  url: 'http://localhost:3002/process-claim/payment', fullUrl: '/process-claim/payment', session: { processClaim: { claimDetail: true }, destroy }, headers: { referer: 'http://localhost:3002/process-claim/payment' }, hostname: '', method: 'GET',
 };
 const continueRefererAllBau = {
-  url: 'http://localhost:3002/process-claim/all-claims-to-bau', path: '/process-claim/all-claims-to-bau', session: { }, headers: { referer: 'http://localhost:3002/process-claim' }, hostname: 'localhost',
+  url: 'http://localhost:3002/process-claim/all-claims-to-bau', fullUrl: '/process-claim/all-claims-to-bau', session: { }, headers: { referer: 'http://localhost:3002/process-claim' }, hostname: 'localhost',
 };
 
 describe('process claim middleware', () => {
