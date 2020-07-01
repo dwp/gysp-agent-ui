@@ -21,9 +21,9 @@ const emptyPost = { body: { accessKey: '' }, headers: { cookie: 'test=test;staff
 const nextClaimEmptyPost = { body: { accessKey: '' }, headers: { cookie: 'test=test;staff_id=test@test.com;' } };
 const nextClaimValidPost = { body: { accessKey: 'U2FsdGVkX1+dF1IUW1o0qywf8/3IGtoXEb9e5VlKlv4=' }, headers: { cookie: 'test=test;staff_id=test@test.com;' } };
 const nextClaimInvalidPost = { body: { accessKey: 'invalid' }, headers: { cookie: 'test=test;staff_id=test@test.com;' } };
-const claimInErrorEmptyPost = { body: { accessKey: '', inviteKey: '', message: 'Test' }, originalUrl: 'test' };
-const claimInErrorValidPost = { body: { accessKey: 'U2FsdGVkX1+dF1IUW1o0qywf8/3IGtoXEb9e5VlKlv4=', inviteKey: 'POTT1234', message: 'Test' }, originalUrl: 'test' };
-const claimInErrorInvalidPost = { body: { accessKey: 'invalid', inviteKey: 'POTT1234', message: 'Test' }, originalUrl: 'test' };
+const claimInErrorEmptyPost = { body: { accessKey: '', inviteKey: '', message: 'Test' }, fullUrl: 'test' };
+const claimInErrorValidPost = { body: { accessKey: 'U2FsdGVkX1+dF1IUW1o0qywf8/3IGtoXEb9e5VlKlv4=', inviteKey: 'POTT1234', message: 'Test' }, fullUrl: 'test' };
+const claimInErrorInvalidPost = { body: { accessKey: 'invalid', inviteKey: 'POTT1234', message: 'Test' }, fullUrl: 'test' };
 
 const error500Response = { message: 'This is an error message' };
 const error404ResponseHeader = { claimmessage: 'This is a claimmessage' };
