@@ -1,7 +1,7 @@
 {
   "field_names":
   {
-    "nino": "Enter a National Insurance number"
+    "nino": "National Insurance number"
   },
   "errors": {
     "nino": {
