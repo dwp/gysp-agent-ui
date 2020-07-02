@@ -152,6 +152,7 @@ app.use((req, res, next) => {
 app.use(config.mountUrl, require('./app/routes/health/routes.js'));
 
 // Middelware
+app.use(require('./lib/middleware/landing')());
 app.use(require('./lib/middleware/processClaim')(log));
 app.use(require('./lib/middleware/reviewAward')(log));
 app.use(require('./lib/middleware/changesEnquiries')(log));

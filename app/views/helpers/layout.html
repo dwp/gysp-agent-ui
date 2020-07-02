@@ -14,10 +14,38 @@
 {% block header %}
   <header role="banner" id="global-header" class="govuk-header dwp-global-header with-proposition">
     <div class="govuk-header__container govuk-width-container dwp-header__container">
+        {% if restrictedService === true %}
         <div class="govuk-header__content">
-            <nav id="proposition-menu">
+            {% if origin == 'full-service' %}
                 <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
-            </nav>
+            {% else %}
+                <span class="govuk-header__link govuk-header__link--service-name gysp-header-link" id="proposition-name">Get your State Pension</span>
+            {% endif %}
+            {% if activeTab !== null %}
+              <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+              <nav>
+                <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
+                  <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'change-and-enquiries' else ''}}">
+                    <a class="govuk-header__link" href="/find-someone">
+                      Changes and enquiries
+                    </a>
+                  </li>
+                  <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'tasks' else ''}}">
+                    <a class="govuk-header__link" href="/tasks">
+                      Tasks
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            {% endif %}
+          </div>
+          {% else %}
+          <div class="govuk-header__content">
+              <nav id="proposition-menu">
+                  <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
+              </nav>
+          </div>
+          {% endif %}
         </div>
     </div>
   </header>
