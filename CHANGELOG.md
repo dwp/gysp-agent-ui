@@ -1,3 +1,25 @@
+<a name="6.0.0"></a>
+# [6.0.0](https://github.com/dwp/gysp-agent-ui/compare/v5.31.0...v6.0.0) (2020-07-02)
+
+
+### Features
+
+* **docker:** support ECS with docker ([0a760f7](https://github.com/dwp/gysp-agent-ui/commit/0a760f7))
+* correct previous label on award details screen ([77d05af](https://github.com/dwp/gysp-agent-ui/commit/77d05af))
+* find someone page change to go to new page ([de5dc19](https://github.com/dwp/gysp-agent-ui/commit/de5dc19))
+* Moved to shared location service ([cda5f28](https://github.com/dwp/gysp-agent-ui/commit/cda5f28))
+
+
+### BREAKING CHANGES
+
+* **docker:** move to .env config within docker
+
+Closes Jira SA-2724
+
+Signed-off-by: Malcolm Hire <malcolm.hire@engineering.digital.dwp.gov.uk>
+
+
+
 <a name="5.31.0"></a>
 # [5.31.0](https://github.com/dwp/gysp-agent-ui/compare/v5.30.0...v5.31.0) (2020-06-23)
 
@@ -16,11 +38,11 @@
 
 ### Features
 
+* Updated personal json to add new timeline events in ([e157ea5](https://github.com/dwp/gysp-agent-ui/commit/e157ea5))
 * **death:** NV to V show nothing owned review payee ([0ee897f](https://github.com/dwp/gysp-agent-ui/commit/0ee897f))
 * **death:** NV to V show overpayment review payee ([2e805f5](https://github.com/dwp/gysp-agent-ui/commit/2e805f5))
 * **death:** remove secondary nav ([b16dee1](https://github.com/dwp/gysp-agent-ui/commit/b16dee1))
 * **death:** retriggered death nothing owed review screen ([0d4dd4f](https://github.com/dwp/gysp-agent-ui/commit/0d4dd4f))
-* Updated personal json to add new timeline events in ([e157ea5](https://github.com/dwp/gysp-agent-ui/commit/e157ea5))
 * **death:** retriggered death overpayment review screen ([2be851d](https://github.com/dwp/gysp-agent-ui/commit/2be851d))
 * **death:** update from NV to V show review payee ([9d6969c](https://github.com/dwp/gysp-agent-ui/commit/9d6969c))
 
@@ -48,8 +70,8 @@
 
 ### Features
 
-* **marital:** partner date of birth ([2520fa8](https://github.com/dwp/gysp-agent-ui/commit/2520fa8))
 * change style on personal table ([9f3108d](https://github.com/dwp/gysp-agent-ui/commit/9f3108d))
+* **marital:** partner date of birth ([2520fa8](https://github.com/dwp/gysp-agent-ui/commit/2520fa8))
 
 
 
@@ -76,10 +98,10 @@
 
 ### Features
 
-* change style on personal table ([15084bf](https://github.com/dwp/gysp-agent-ui/commit/15084bf))
 * **marital:** add/update partner nino ([79e5d26](https://github.com/dwp/gysp-agent-ui/commit/79e5d26))
 * **marital:** change marital status for married and civil partnerdship ([6119d23](https://github.com/dwp/gysp-agent-ui/commit/6119d23))
 * **tasks:** enable return to queue ([2f32657](https://github.com/dwp/gysp-agent-ui/commit/2f32657))
+* change style on personal table ([15084bf](https://github.com/dwp/gysp-agent-ui/commit/15084bf))
 
 
 
@@ -152,9 +174,9 @@
 
 ### Features
 
-* add calculation for NV death to V death ([1bdfdb8](https://github.com/dwp/gysp-agent-ui/commit/1bdfdb8))
 * **mockdate:** added ablity to mock the current date ([8cfff2e](https://github.com/dwp/gysp-agent-ui/commit/8cfff2e))
 * **performance:** improvements ([5a6d6df](https://github.com/dwp/gysp-agent-ui/commit/5a6d6df))
+* add calculation for NV death to V death ([1bdfdb8](https://github.com/dwp/gysp-agent-ui/commit/1bdfdb8))
 
 
 
@@ -164,11 +186,11 @@
 
 ### Features
 
-* remove link ([85aa416](https://github.com/dwp/gysp-agent-ui/commit/85aa416))
-* **award:** add uprate details ([536aa09](https://github.com/dwp/gysp-agent-ui/commit/536aa09))
 * Reissue a recalled payment ([1516538](https://github.com/dwp/gysp-agent-ui/commit/1516538))
+* **award:** add uprate details ([536aa09](https://github.com/dwp/gysp-agent-ui/commit/536aa09))
 * **award:** award list and details ([9260fba](https://github.com/dwp/gysp-agent-ui/commit/9260fba))
 * **scope:** remove payment schedule and hyperlink ([c70b499](https://github.com/dwp/gysp-agent-ui/commit/c70b499))
+* remove link ([85aa416](https://github.com/dwp/gysp-agent-ui/commit/85aa416))
 
 
 
@@ -178,9 +200,9 @@
 
 ### Features
 
-* **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
-* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
 * **death:** overpayment and arrears calculation ([197d441](https://github.com/dwp/gysp-agent-ui/commit/197d441))
+* death dap details ([25cf4f3](https://github.com/dwp/gysp-agent-ui/commit/25cf4f3))
+* **death:** recalculate death arrears ([663afad](https://github.com/dwp/gysp-agent-ui/commit/663afad))
 
 
 
