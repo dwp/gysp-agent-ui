@@ -1,5 +1,20 @@
+<a name="6.1.0"></a>
+# [6.1.0](https://github.com/dwp/gysp-agent-ui/compare/6.0.0...6.1.0) (2020-07-07)
+
+
+### Bug Fixes
+
+* fix nav link restricted service ([3abc514](https://github.com/dwp/gysp-agent-ui/commit/3abc514))
+
+
+### Features
+
+* add nav for agent service ([a9139e9](https://github.com/dwp/gysp-agent-ui/commit/a9139e9))
+
+
+
 <a name="6.0.0"></a>
-# [6.0.0](https://github.com/dwp/gysp-agent-ui/compare/v5.31.0...v6.0.0) (2020-07-02)
+# [6.0.0](https://github.com/dwp/gysp-agent-ui/compare/v5.31.0...6.0.0) (2020-07-02)
 
 
 ### Features
