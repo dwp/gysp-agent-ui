@@ -21,7 +21,7 @@
             {% else %}
                 <span class="govuk-header__link govuk-header__link--service-name gysp-header-link" id="proposition-name">Get your State Pension</span>
             {% endif %}
-            {% if activeTab !== null %}
+            {% if activeTab !== null and activeTab !== undefined %}
               <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
               <nav>
                 <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
