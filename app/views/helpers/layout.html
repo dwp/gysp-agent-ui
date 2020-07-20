@@ -27,14 +27,21 @@
                 <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
                   <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'change-and-enquiries' else ''}}">
                     <a class="govuk-header__link" href="/find-someone">
-                      Changes and enquiries
+                      {{ t("app:navigation.changes-and-enquiries") }}
                     </a>
                   </li>
                   <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'tasks' else ''}}">
                     <a class="govuk-header__link" href="/tasks">
-                      Tasks
+                      {{ t("app:navigation.tasks") }}
                     </a>
                   </li>
+                  {% if paperClaimFeature %}
+                    <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'paper' else ''}}">
+                      <a class="govuk-header__link" href="/agent-claim/paper">
+                        {{ t("app:navigation.paper-claim") }}
+                      </a>
+                    </li>
+                  {% endif %}
                 </ul>
               </nav>
             {% endif %}

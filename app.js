@@ -118,6 +118,7 @@ app.use((req, res, next) => {
   res.locals.robotKey = config.application.robot.key;
   res.locals.robotSecret = config.secret;
   res.locals.version = packageJson.version;
+  res.locals.paperClaimFeature = config.application.feature.paperClaimFeature;
 
   // Set a global fullUrl excluding mountUrl to overcome WAF proxy issues
   req.fullUrl = req.originalUrl.replace(new RegExp(config.mountUrl), '/');
