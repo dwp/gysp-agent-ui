@@ -47,5 +47,8 @@ module.exports = {
     kong: {
       enabled: (process.env.KONG_ENABLED === 'true') || false,
     },
+    feature: {
+      paperClaimFeature: (process.env.FEATURE_PAPER_CLAIM === 'true') || false,
+    },
   },
 };
