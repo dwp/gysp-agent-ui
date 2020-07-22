@@ -1,6 +1,6 @@
 {
   "name": "agent-ui",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "snapshot": "9.9.9-SNAPSHOT",
   "repository": {
     "type": "git",

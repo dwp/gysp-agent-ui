@@ -1,3 +1,8 @@
+<a name="6.2.0"></a>
+# [6.2.0](https://github.com/dwp/gysp-agent-ui/compare/6.1.0...6.2.0) (2020-07-22)
+
+
+
 <a name="6.1.0"></a>
 # [6.1.0](https://github.com/dwp/gysp-agent-ui/compare/6.0.0...6.1.0) (2020-07-07)
 
