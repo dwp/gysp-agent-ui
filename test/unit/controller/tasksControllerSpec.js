@@ -29,9 +29,19 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
+// Request Headers
+const user = {
+  cis: {
+    givenname: 'Test', surname: 'User', SLOC: '123456', dwp_staffid: '12345678',
+  },
+};
+
 // Requests
-const emptyRequest = { session: {} };
-const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock };
+const emptyRequest = { session: {}, user: { ...user }, flash: flashMock };
+const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock, user: { ...user } };
+
+// Headers
+const reqHeaders = { reqheaders: { agentRef: 'Test User', location: '123456', staffId: '12345678' } };
 
 let marriedTaskRequest;
 let civilTaskRequest;
@@ -55,7 +65,7 @@ describe('tasks controller ', () => {
 
   describe('postTasks function', () => {
     it('should return tasks view when requested with API response NOT_FOUND', async () => {
-      nock('http://test-url/').get(workItemUri).reply(httpStatus.NOT_FOUND, {});
+      nock('http://test-url/', reqHeaders).get(workItemUri).reply(httpStatus.NOT_FOUND, {});
       await controller.postTasks(emptyRequest, genericResponse);
       assert.isUndefined(emptyRequest.session.tasks);
       assert.equal(genericResponse.viewName, 'pages/tasks/index');
@@ -64,7 +74,7 @@ describe('tasks controller ', () => {
     });
 
     it('should return redirect with flash error when requested with API response INTERNAL_SERVER_ERROR', async () => {
-      nock('http://test-url/').get(workItemUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      nock('http://test-url/', reqHeaders).get(workItemUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.postTasks(tasksRequest, genericResponse);
       assert(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
@@ -73,7 +83,7 @@ describe('tasks controller ', () => {
     });
 
     it('should return redirect when requested with API response OK', async () => {
-      nock('http://test-url/').get(workItemUri).reply(httpStatus.OK, marriedWorkItem);
+      nock('http://test-url/', reqHeaders).get(workItemUri).reply(httpStatus.OK, marriedWorkItem);
       await controller.postTasks(emptyRequest, genericResponse);
       assert(genericResponse.address, '/tasks/task');
     });
