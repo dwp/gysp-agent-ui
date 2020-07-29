@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "married": {
+      "dateOfBirth": {
+        "legend": "Spouse's date of birth",
+        "errors": {
+          "required": "Enter a date of birth",
+          "incomplete": "Date of birth must include a day, month and year",
+          "format": "Enter a real date of birth, like 12 2 1950",
+          "future": "Date of birth must be in the past"
+        }
+      },
+      "verification": {
+        "options": {
+          "verified": "Verified",
+          "not-verified": "Not verified"
+        },
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
+      }
+    },
+    "civil": {
+      "dateOfBirth": {
+        "legend": "Partner's date of birth",
+        "errors": {
+          "required": "Enter a date of birth",
+          "incomplete": "Date of birth must include a day, month and year",
+          "format": "Enter a real date of birth, like 12 2 1950",
+          "future": "Date of birth must be in the past"
+        }
+      },
+      "verification": {
+        "options": {
+          "verified": "Verified",
+          "not-verified": "Not verified"
+        },
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
+      }
+    }
+  }
+}

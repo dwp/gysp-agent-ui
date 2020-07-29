@@ -189,4 +189,39 @@ describe('marital status helper', () => {
       assert.equal(helper.redirectUrlBasedOnStatusPartner('widowed'), 'date');
     });
   });
+  describe('maritalDateToComponents', () => {
+    it('should return marital date components when status is married and marriage date is available', () => {
+      assert.deepEqual(helper.maritalDateToComponents({ marriageDate: 1599368400000 }, 'Married'), { dateDay: '06', dateMonth: '09', dateYear: '2020' });
+    });
+    it('should return marital date components when status is civil partnership and civil partnership date is available', () => {
+      assert.deepEqual(helper.maritalDateToComponents({ civilPartnershipDate: 1599368400000 }, 'Civil Partnership'), { dateDay: '06', dateMonth: '09', dateYear: '2020' });
+    });
+    it('should return marital date components when status is divorced and divorced date is available', () => {
+      assert.deepEqual(helper.maritalDateToComponents({ divorcedDate: 1599368400000 }, 'Divorced'), { dateDay: '06', dateMonth: '09', dateYear: '2020' });
+    });
+    it('should return marital date components when status is dissolved and dissolved date is available', () => {
+      assert.deepEqual(helper.maritalDateToComponents({ dissolvedDate: 1599368400000 }, 'Dissolved'), { dateDay: '06', dateMonth: '09', dateYear: '2020' });
+    });
+    it('should return marital date components when status is widowed and widowed date is available', () => {
+      assert.deepEqual(helper.maritalDateToComponents({ widowedDate: 1599368400000 }, 'Widowed'), { dateDay: '06', dateMonth: '09', dateYear: '2020' });
+    });
+    it('should return false when status is married but date is undefined', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, 'Married'));
+    });
+    it('should return false when status is civil partnership but date is undefined', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, 'Civil Partnership'));
+    });
+    it('should return false when status is divorced but date is undefined', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, 'Divorced'));
+    });
+    it('should return false when status is dissolved but date is undefined', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, 'Dissolved'));
+    });
+    it('should return false when status is widowed but date is undefined', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, 'Widowed'));
+    });
+    it('should return false when status is null', () => {
+      assert.isFalse(helper.maritalDateToComponents({ }, null));
+    });
+  });
 });

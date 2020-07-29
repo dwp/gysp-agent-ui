@@ -155,7 +155,10 @@ module.exports = {
         surname: 'Bloogs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
+        dobVerified: false,
         marriageDate: '2000-03-19T00:00:00.000Z',
+        marriageDateVerified: false,
+        partnerNino: 'AA123456C',
       },
     };
   },
@@ -168,7 +171,9 @@ module.exports = {
         surname: 'Bloogs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
+        dobVerified: false,
         marriageDate: '2000-03-19T00:00:00.000Z',
+        marriageDateVerified: false,
       },
     };
   },
@@ -180,7 +185,10 @@ module.exports = {
         surname: 'Bloogs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
+        dobVerified: false,
         civilPartnershipDate: '2000-03-19T00:00:00.000Z',
+        civilPartnershipDateVerified: false,
+        partnerNino: 'AA123456C',
       },
     };
   },

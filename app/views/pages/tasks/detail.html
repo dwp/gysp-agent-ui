@@ -28,12 +28,14 @@
 
         <h2 class="govuk-heading-m">{{ details.partnerSummary.header }}</h2>
         {{ govukSummaryList({
-            rows: details.partnerSummary.rows
+            rows: details.partnerSummary.rows,
+            classes: 'gysp-partner-details-summary'
         }) }}
 
         <h2 class="govuk-heading-m">{{ details.claimantSummary.header }}</h2>
         {{ govukSummaryList({
-            rows: details.claimantSummary.rows
+            rows: details.claimantSummary.rows,
+            classes: 'gysp-partner-details-summary'
         }) }}
 
         {{ govukButton({

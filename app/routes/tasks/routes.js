@@ -12,4 +12,6 @@ router.get('/task/complete', functions.getTaskComplete);
 router.get('/task/end', functions.getEndTask);
 router.get('/task/return-to-queue', functions.getReturnTaskToQueue);
 
+router.use('/task/consider-entitlement', require('./entitlement/routes'));
+
 module.exports = router;

@@ -53,6 +53,10 @@
 
 .gysp-status,
 .gysp-payment {
+    float: right;
+    margin-top: 5px;
+    font-size: 15px;
+
     &::before {
         display: inline-block;
         width: 15px;
@@ -63,10 +67,11 @@
         background-size: 15px 15px;
         content: '';
         @include govuk-media-query($from: tablet) {
-            width: 17px;
-            height: 17px;
-            padding: 0 4px 0 0;
-            background-size: 17px 17px;
+            width: 16px;
+            height: 16px;
+            padding: 0;
+            background-size: 16px 16px;
+            margin-bottom: -2px;
         }
     }
 
@@ -100,6 +105,34 @@
         &__actions {
             @include govuk-media-query($from: tablet) {
                 width: 30%;
+            }
+        }
+    }
+}
+
+.gysp-partner-details-summary {
+    .govuk-summary-list {
+        &__key {
+            @include govuk-media-query($from: tablet) {
+                width: 36%;
+            }
+        }
+
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 50%;
+            }
+
+            &:last-child {
+                @include govuk-media-query($from: tablet) {
+                    width: 62%;
+                }
+            }
+        }
+
+        &__actions {
+            @include govuk-media-query($from: tablet) {
+                width: 10%;
             }
         }
     }

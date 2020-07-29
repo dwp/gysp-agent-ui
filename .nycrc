@@ -10,5 +10,9 @@
     "text"
   ],
   "check-coverage": true,
-  "report-dir": "./.coverage"
+  "report-dir": "./.coverage",
+  "include": [
+    "app/routes/**/*",
+    "lib/**/*"
+  ]
 }

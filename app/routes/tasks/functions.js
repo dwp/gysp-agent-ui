@@ -11,11 +11,22 @@ const deleteSession = require('../../../lib/deleteSession');
 
 const taskObject = require('../../../lib/objects/view/taskObject');
 const taskDetailObject = require('../../../lib/objects/view/taskDetailObject');
+const maritalDetailsEntitlementApiObject = require('../../../lib/objects/api/maritalDetailsEntitlementObject');
 
 const getWorkItemEndPoint = 'api/workitem/next-workitem';
 const putWorkItemUpdateStatusReturnedEndPoint = 'api/workitem/update-status-returned';
 const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
 const putWorkItemUpdateStatusCompleteEndPoint = 'api/workitem/update-status-complete';
+const putMaritalDetailsEndPoint = 'api/award/update-marital-details';
+
+async function awardDetails(req, res) {
+  const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
+  const detail = await dataStore.cacheRetriveAndStore(req, 'tasks', 'awardDetails', () => {
+    const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
+    return request(awardCall);
+  });
+  return detail;
+}
 
 function getTasks(req, res) {
   deleteSession.deleteSessionBySection(req, 'tasks');
@@ -66,7 +77,8 @@ async function getTaskDetail(req, res) {
     const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
     const award = await request(awardCall);
-    const details = taskDetailObject.formatter(award);
+    const updatedEntitlementDetails = dataStore.get(req, 'updated-entitlement-details');
+    const details = taskDetailObject.formatter(award, updatedEntitlementDetails);
     res.render('pages/tasks/detail', {
       details,
     });
@@ -83,13 +95,24 @@ function getTaskComplete(req, res) {
   });
 }
 
+async function updateAwardMaritalDetails(req, res, updatedEntitlementDetails) {
+  const award = await awardDetails(req, res);
+  const maritalDetails = maritalDetailsEntitlementApiObject.formatter(updatedEntitlementDetails, award);
+  const updateMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsEndPoint, maritalDetails, 'award', req.user);
+  return request(updateMaritalDetailsCall);
+}
+
 async function getEndTask(req, res) {
   try {
+    const updatedEntitlementDetails = dataStore.get(req, 'updated-entitlement-details');
+    if (updatedEntitlementDetails) {
+      await updateAwardMaritalDetails(req, res, updatedEntitlementDetails);
+    }
     const workItem = dataStore.get(req, 'work-item', 'tasks');
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.workItem(), workItem);
     const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusCompleteEndPoint, filteredRequest, 'work-items', req.user);
     await request(returnCall);
-    redirectHelper.redirectAndClearSessionKey(req, res, 'tasks', '/tasks');
+    redirectHelper.redirectAndClearSessionKey(req, res, ['tasks', 'updated-entitlement-details'], '/tasks');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task/complete');
   }

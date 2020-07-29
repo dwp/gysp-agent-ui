@@ -1,0 +1,44 @@
+{
+  "fields": {
+    "married": {
+      "date": {
+        "legend": "Date of marriage",
+        "errors": {
+          "required": "Enter a date of marriage",
+          "incomplete": "Date of marriage must include a day, month and year",
+          "format": "Enter a real date of marriage, like 12 2 1979",
+          "future": "Date of marriage must be in the past"
+        }
+      },
+      "verification": {
+        "options": {
+          "verified": "Verified",
+          "not-verified": "Not verified"
+        },
+        "errors": {
+          "required": "Select whether the date of marriage is verified or not verified"
+        }
+      }
+    },
+    "civil": {
+      "date": {
+        "legend": "Date of civil partnership",
+        "errors": {
+          "required": "Enter a date of civil partnership",
+          "incomplete": "Date of civil partnership must include a day, month and year",
+          "format": "Enter a real date of civil partnership, like 12 2 1979",
+          "future": "Date of civil partnership must be in the past"
+        }
+      },
+      "verification": {
+        "options": {
+          "verified": "Verified",
+          "not-verified": "Not verified"
+        },
+        "errors": {
+          "required": "Select whether the date of civil partnership is verified or not verified"
+        }
+      }
+    }
+  }
+}

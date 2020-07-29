@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "married": {
+      "partnerNino": {
+        "label": "Spouse's National Insurance number",
+        "errors": {
+          "required": "Enter a National Insurance number",
+          "format": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        }
+      }
+    },
+    "civil": {
+      "partnerNino": {
+        "label": "Partner's National Insurance number",
+        "errors": {
+          "required": "Enter a National Insurance number",
+          "format": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        }
+      }
+    }
+  }
+}
