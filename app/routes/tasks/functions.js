@@ -24,7 +24,7 @@ function getTasks(req, res) {
 
 async function postTasks(req, res) {
   try {
-    const workItemCall = requestHelper.generateGetCall(res.locals.agentGateway + getWorkItemEndPoint, {}, 'work-items');
+    const workItemCall = requestHelper.generateGetCall(res.locals.agentGateway + getWorkItemEndPoint, {}, 'work-items', req.user);
     const workItem = await request(workItemCall);
     dataStore.save(req, 'work-item', workItem, 'tasks');
     res.redirect('/tasks/task');
