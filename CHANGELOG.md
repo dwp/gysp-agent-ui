@@ -1,3 +1,13 @@
+<a name="6.3.0"></a>
+# [6.3.0](https://github.com/dwp/gysp-agent-ui/compare/6.2.0...6.3.0) (2020-08-03)
+
+
+### Features
+
+* extend work queue functionality for NI ([2637c81](https://github.com/dwp/gysp-agent-ui/commit/2637c81))
+
+
+
 <a name="6.2.0"></a>
 # [6.2.0](https://github.com/dwp/gysp-agent-ui/compare/6.1.0...6.2.0) (2020-07-22)
 
