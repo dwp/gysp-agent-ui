@@ -1,4 +1,9 @@
 {
+  "gitLabAutomerge": true,
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
   "packageRules": [
     {
       "packageNames": ["aws-sdk", "snyk"],
