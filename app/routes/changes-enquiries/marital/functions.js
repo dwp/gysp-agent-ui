@@ -12,8 +12,11 @@ const maritalValidation = require('../../../../lib/validation/maritalValidation'
 
 const maritalDetailsObject = require('../../../../lib/objects/view/maritalDetailsObject');
 const maritalDetailsApiObject = require('../../../../lib/objects/api/maritalDetailsObject');
+const maritalWidowDetailsApiObject = require('../../../../lib/objects/api/maritalWidowDetailsObject');
+const maritalStatePensionEntitlementObject = require('../../../../lib/objects/view/maritalStatePensionEntitlementObject');
 
 const putMaritalDetailsApiUri = 'api/award/update-marital-details';
+const putMaritalWidowDetailsApiUri = 'api/award/update-widow-details';
 
 async function awardDetails(req, res) {
   const detail = await dataStore.cacheRetriveAndStore(req, undefined, 'awardDetails', () => {
@@ -72,7 +75,7 @@ function getChangeMaritalDate(req, res) {
   const maritalStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalStatus);
   const details = dataStore.get(req, 'date', 'marital');
   const backHref = maritalStatusHelper.maritalDateBackHref(newMaritalStatus);
-  const button = maritalStatusHelper.maritalDateButton(newMaritalStatus);
+  const button = maritalStatusHelper.maritalDateButton(newMaritalStatus, res.locals.widowInheritanceFeature);
   res.render('pages/changes-enquiries/marital/date', {
     maritalStatus,
     details,
@@ -85,6 +88,20 @@ function saveSessionAndRedirectToPartnerDetails(req, res, filteredRequest, marit
   const redirectUrl = maritalStatusHelper.redirectUrlBasedOnStatusPartner(maritalShortStatus);
   dataStore.save(req, 'date', filteredRequest, 'marital');
   res.redirect(`/changes-and-enquiries/marital-details/${redirectUrl}`);
+}
+
+function saveSessionAndRedirectInheritableStatePension(req, res, filteredRequest) {
+  dataStore.save(req, 'date', filteredRequest, 'marital');
+  res.redirect('/changes-and-enquiries/marital-details/check-for-inheritable-state-pension');
+}
+
+function saveCheckInheritableStatePensionAndRedirect(req, res, filteredRequest) {
+  dataStore.save(req, 'check-for-inheritable-state-pension', filteredRequest, 'marital');
+  if (filteredRequest.checkInheritableStatePension === 'yes') {
+    res.redirect('/changes-and-enquiries/marital-details/consider-state-pension-entitlement');
+  } else {
+    res.redirect('/changes-and-enquiries/marital-details/save-and-create-task');
+  }
 }
 
 async function saveDateAndRedirect(req, res, award, filteredRequest, maritalShortStatus) {
@@ -101,6 +118,21 @@ async function saveDateAndRedirect(req, res, award, filteredRequest, maritalShor
   }
 }
 
+function saveWidowDetails(req, res, award, maritalFormDetails) {
+  const maritalDetails = maritalWidowDetailsApiObject.formatter(maritalFormDetails, award);
+  const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalWidowDetailsApiUri, maritalDetails, 'award', req.user);
+  return request(putMaritalDetailsCall);
+}
+
+async function saveDateWithInheritableCheckAndRedirect(req, res, award, maritalShortStatus) {
+  const maritalFormDetails = dataStore.get(req, 'marital');
+  const { maritalStatus: currentMaritalStatus } = award;
+  const { date: { verification } } = maritalFormDetails;
+  await saveWidowDetails(req, res, award, maritalFormDetails);
+  req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification));
+  redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+}
+
 async function postChangeMaritalDate(req, res) {
   const details = req.body;
   const award = dataStore.get(req, 'awardDetails');
@@ -111,6 +143,8 @@ async function postChangeMaritalDate(req, res) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalDate(), details);
     if (maritalStatusHelper.newMaritalStatusRequiresPartnerDetails(newMaritalShortStatus)) {
       saveSessionAndRedirectToPartnerDetails(req, res, filteredRequest, newMaritalShortStatus);
+    } else if (res.locals.widowInheritanceFeature && maritalStatusHelper.isWidowed(newMaritalShortStatus)) {
+      saveSessionAndRedirectInheritableStatePension(req, res, filteredRequest);
     } else {
       await saveDateAndRedirect(req, res, award, filteredRequest, maritalShortStatus);
     }
@@ -228,6 +262,89 @@ async function postPartnerDetails(req, res) {
   }
 }
 
+function getCheckForInheritableStatePension(req, res) {
+  const details = dataStore.get(req, 'check-for-inheritable-state-pension', 'marital');
+  res.render('pages/changes-enquiries/marital/check-for-inheritable-state-pension', {
+    formUrl: req.fullUrl,
+    backHref: '/marital-details/date',
+    details,
+  });
+}
+
+async function postCheckForInheritableStatePension(req, res) {
+  const details = req.body;
+  const errors = maritalValidation.checkForInheritableStatePensionValidator(details);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalCheckInheritableStatePension(), details);
+    saveCheckInheritableStatePensionAndRedirect(req, res, filteredRequest);
+  } else {
+    res.render('pages/changes-enquiries/marital/check-for-inheritable-state-pension', {
+      formUrl: req.fullUrl,
+      backHref: '/marital-details/date',
+      details,
+      errors,
+    });
+  }
+}
+
+function getConsiderStatePensionEntitlement(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const details = maritalStatePensionEntitlementObject.formatter(award);
+  res.render('pages/changes-enquiries/marital/state-pension-entitlement', {
+    nextPageHref: '/marital-details/entitled-to-any-inherited-state-pension',
+    backHref: '/marital-details/check-for-inheritable-state-pension',
+    details,
+  });
+}
+
+function getEntitledToInheritedStatePension(req, res) {
+  const details = dataStore.get(req, 'entitled-to-inherited-state-pension', 'marital');
+  res.render('pages/changes-enquiries/marital/entitled-to-inherited-state-pension', {
+    formUrl: req.fullUrl,
+    backHref: '/marital-details/consider-state-pension-entitlement',
+    details,
+  });
+}
+
+async function postEntitledToInheritedStatePension(req, res) {
+  const details = req.body;
+  const errors = maritalValidation.entitledToInheritedStatePensionValidator(details);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.maritalEntitledToInheritedStatePension(), details);
+    dataStore.save(req, 'entitled-to-inherited-state-pension', filteredRequest, 'marital');
+    if (filteredRequest.entitledInheritableStatePension === 'yes') {
+      res.redirect('/changes-and-enquiries/marital-details/yes-answer');
+    } else {
+      res.redirect('/changes-and-enquiries/marital-details/send-letter');
+    }
+  } else {
+    res.render('pages/changes-enquiries/marital/entitled-to-inherited-state-pension', {
+      formUrl: req.fullUrl,
+      backHref: '/marital-details/consider-state-pension-entitlement',
+      details,
+      errors,
+    });
+  }
+}
+
+function getSaveMaritalDetails(req, res) {
+  res.render('pages/changes-enquiries/marital/save-and-create-task', {
+    formUrl: req.fullUrl,
+    backHref: '/marital-details/check-for-inheritable-state-pension',
+  });
+}
+
+async function postSaveMaritalDetails(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const newMaritalShortStatus = dataStore.get(req, 'maritalStatus', 'marital');
+  try {
+    const maritalShortStatus = maritalStatusHelper.currentOrNewShortStatus(award.maritalStatus, newMaritalShortStatus);
+    await saveDateWithInheritableCheckAndRedirect(req, res, award, maritalShortStatus);
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.fullUrl);
+  }
+}
+
 module.exports.getMaritalDetails = getMaritalDetails;
 module.exports.getChangeMaritalStatus = getChangeMaritalStatus;
 module.exports.postChangeMaritalStatus = postChangeMaritalStatus;
@@ -239,3 +356,10 @@ module.exports.getPartnerDateOfBirth = getPartnerDateOfBirth;
 module.exports.postPartnerDateOfBirth = postPartnerDateOfBirth;
 module.exports.getPartnerDetails = getPartnerDetails;
 module.exports.postPartnerDetails = postPartnerDetails;
+module.exports.getCheckForInheritableStatePension = getCheckForInheritableStatePension;
+module.exports.postCheckForInheritableStatePension = postCheckForInheritableStatePension;
+module.exports.getSaveMaritalDetails = getSaveMaritalDetails;
+module.exports.postSaveMaritalDetails = postSaveMaritalDetails;
+module.exports.getConsiderStatePensionEntitlement = getConsiderStatePensionEntitlement;
+module.exports.getEntitledToInheritedStatePension = getEntitledToInheritedStatePension;
+module.exports.postEntitledToInheritedStatePension = postEntitledToInheritedStatePension;

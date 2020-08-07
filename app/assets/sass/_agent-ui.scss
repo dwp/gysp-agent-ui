@@ -202,6 +202,23 @@
     }
 }
 
+.gysp-entitlement-partner-summary,
+.gysp-entitlement-other-summary {
+    .govuk-summary-list {
+        &__key {
+            @include govuk-media-query($from: tablet) {
+                width: 48%;
+            }
+        }
+
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 52%;
+            }
+        }
+    }
+}
+
 .gysp-bank-building-table {
     @include govuk-media-query($from: tablet) {
         &__heading {

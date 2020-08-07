@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "entitledInheritableStatePension": {
+      "legend": "Is the claimant entitled to any inherited State Pension?",
+      "errors": {
+        "required": "Select 'Yes' if the claimant is entitled to any inherited State Pension"
+      }
+    }
+  }
+}

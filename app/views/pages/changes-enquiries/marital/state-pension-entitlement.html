@@ -1,0 +1,41 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{t('marital-state-pension-entitlement:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: t("app:link.back"),
+      href: '/changes-and-enquiries' + backHref,
+      classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+    }) }}
+  </div>
+{% endblock %}
+
+{% block innerContent %}
+
+    <h1 class="govuk-heading-l govuk-!-margin-bottom-8">{{ t('marital-state-pension-entitlement:header') }}</h1>
+
+    <p class="govuk-body govuk-hint">{{ t('marital-state-pension-entitlement:p') }}</p>
+
+    <h2 class="govuk-heading-m">{{ details.partnerSummary.header }}</h2>
+    {{ govukSummaryList({
+      rows: details.partnerSummary.rows,
+      classes: 'gysp-entitlement-partner-summary'
+    }) }}
+
+    <h2 class="govuk-heading-m">{{ details.otherDetailsSummary.header }}</h2>
+    {{ govukSummaryList({
+      rows: details.otherDetailsSummary.rows,
+      classes: 'gysp-entitlement-other-summary'
+    }) }}
+
+    {{ govukButton({
+      text: t('app:button.continue'),
+      href: '/changes-and-enquiries' + nextPageHref
+    }) }}
+
+{% endblock %}

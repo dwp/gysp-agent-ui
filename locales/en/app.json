@@ -11,6 +11,10 @@
     "add": "Add",
     "change": "Change"
   },
+  "options": {
+    "yes": "Yes",
+    "no": "No"
+  },
   "title": {
     "changes-enquiries": "Changes and enquiries"
   },

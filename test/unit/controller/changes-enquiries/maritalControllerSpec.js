@@ -53,6 +53,14 @@ const validSingleToMarriedDateAndStatusPostRequest = {
   flash: flashMock,
 };
 
+const validMarriedToWidowedDateAndStatusPostRequest = {
+  session: { awardDetails: claimData.validClaimSingle(), marital: { maritalStatus: 'widowed' } },
+  body: {
+    dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
+  },
+  flash: flashMock,
+};
+
 const emptyNinoPostRequest = { session: { awardDetails: claimData.validClaimMarried() }, body: {} };
 const validNinoPostRequest = {
   session: { awardDetails: claimData.validClaimMarried() },
@@ -128,9 +136,39 @@ const validPartnerPostRequest = {
   fullUrl: '/changes-and-enquiries/marital-details/partner-details',
 };
 
+// Check for inheritable state pension requests
+const checkForInheritableStatePensionRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed', 'check-for-inheritable-state-pension': { checkInheritableStatePension: 'yes' } } }, fullUrl: '/test-url' };
+const emptyCheckForInheritableStatePensionPostRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed' } }, fullUrl: '/test-url', body: { } };
+
+// Consider state pension entitlement state pension requests
+const considerStatePensionEntitlementRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed', 'check-for-inheritable-state-pension': { checkInheritableStatePension: 'yes' } } }, fullUrl: '/test-url' };
+
+// Save marital details requests
+const saveMaritalDetailsRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed', 'check-for-inheritable-state-pension': { checkInheritableStatePension: 'yes' } } }, fullUrl: '/changes-and-enquiries/marital-details/save-and-create-task' };
+const saveMaritalDetailsPostRequest = {
+  session: {
+    searchedNino: 'AA370773A',
+    awardDetails: claimData.validClaimMarried(),
+    marital: {
+      maritalStatus: 'widowed',
+      date: {
+        dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
+      },
+      'check-for-inheritable-state-pension': { checkInheritableStatePension: 'yes' },
+    },
+  },
+  fullUrl: '/changes-and-enquiries/marital-details/save-and-create-task',
+  flash: flashMock,
+};
+
+// Entitled to inherited state pension requests
+const entitledToInheritedStatePensionRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed', 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' } } }, fullUrl: '/test-url' };
+const emptyEntitledToInheritedStatePensionPostRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'widowed' } }, fullUrl: '/test-url', body: { } };
+
 // API Endpoints
 const changeCircumstancesDetailsUri = '/api/award';
 const putMaritalDetailsApiUri = '/api/award/update-marital-details';
+const putUpdateWidowDetails = '/api/award/update-widow-details';
 
 describe('Change circumstances - marital controller', () => {
   beforeEach(() => {
@@ -227,7 +265,7 @@ describe('Change circumstances - marital controller', () => {
       });
     });
 
-    describe('partner details not needed based on new status (divorced, dissolved, widowed)', () => {
+    describe('partner details not needed based on new status (divorced, dissolved)', () => {
       it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
         nock('http://test-url/').put(putMaritalDetailsApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
         await controller.postChangeMaritalDate(validDateAndStatusPostRequest, genericResponse);
@@ -262,6 +300,16 @@ describe('Change circumstances - marital controller', () => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'marital-date:success-message.married.verified');
         assert.isUndefined(validDatePostRequest.session.marital);
+      });
+    });
+
+    describe('should continue to collect more data when customer is widowed and widow feature enabled', () => {
+      it('should return a redirect to partner details when valid status present in session', async () => {
+        const widowFeatureResponse = { ...genericResponse };
+        widowFeatureResponse.locals.widowInheritanceFeature = true;
+        controller.postChangeMaritalDate(validMarriedToWidowedDateAndStatusPostRequest, widowFeatureResponse);
+        assert.deepEqual(validMarriedToWidowedDateAndStatusPostRequest.session.marital.date, validMarriedToWidowedDateAndStatusPostRequest.body);
+        assert.equal(widowFeatureResponse.address, '/changes-and-enquiries/marital-details/check-for-inheritable-state-pension');
       });
     });
   });
@@ -445,6 +493,119 @@ describe('Change circumstances - marital controller', () => {
       assert.equal(flash.type, 'success');
       assert.equal(flash.message, 'marital-status:success-message');
       assert.isUndefined(validPartnerPostRequest.session.marital);
+    });
+  });
+
+  describe('getCheckForInheritableStatePension function (GET /changes-enquiries/marital-details/check-for-inheritable-state-pension)', () => {
+    it('should return view when requested', () => {
+      controller.getCheckForInheritableStatePension(checkForInheritableStatePensionRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/check-for-inheritable-state-pension');
+      assert.equal(genericResponse.data.backHref, '/marital-details/date');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.deepEqual(genericResponse.data.details, checkForInheritableStatePensionRequest.session.marital['check-for-inheritable-state-pension']);
+    });
+  });
+
+  describe('postCheckForInheritableStatePension function (POST /changes-enquiries/marital-details/check-for-inheritable-state-pension)', () => {
+    it('should return view name with errors when called with empty post', () => {
+      controller.postCheckForInheritableStatePension(emptyCheckForInheritableStatePensionPostRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/check-for-inheritable-state-pension');
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
+      assert.equal(genericResponse.data.backHref, '/marital-details/date');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.deepEqual(genericResponse.data.details, {});
+    });
+
+    it('should return a redirect to consider state pension entitlement when answer to check Inheritable State Pension is yes', () => {
+      controller.postCheckForInheritableStatePension({ ...emptyCheckForInheritableStatePensionPostRequest, body: { checkInheritableStatePension: 'yes' } }, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/consider-state-pension-entitlement');
+      assert.equal(emptyCheckForInheritableStatePensionPostRequest.session.marital['check-for-inheritable-state-pension'].checkInheritableStatePension, 'yes');
+    });
+
+    it('should return a redirect to save and create task when answer to check Inheritable State Pension is no', () => {
+      controller.postCheckForInheritableStatePension({ ...emptyCheckForInheritableStatePensionPostRequest, body: { checkInheritableStatePension: 'no' } }, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/save-and-create-task');
+      assert.equal(emptyCheckForInheritableStatePensionPostRequest.session.marital['check-for-inheritable-state-pension'].checkInheritableStatePension, 'no');
+    });
+  });
+
+  describe('getConsiderStatePensionEntitlement function (GET /changes-enquiries/marital-details/consider-state-pension-entitlement)', () => {
+    it('should return view name with data', () => {
+      controller.getConsiderStatePensionEntitlement(considerStatePensionEntitlementRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/state-pension-entitlement');
+      assert.equal(genericResponse.data.backHref, '/marital-details/check-for-inheritable-state-pension');
+      assert.equal(genericResponse.data.nextPageHref, '/marital-details/entitled-to-any-inherited-state-pension');
+      assert.isObject(genericResponse.data.details);
+    });
+  });
+
+  describe('getSaveMaritalDetails function (GET /changes-enquiries/marital-details/save-and-create-task)', () => {
+    it('should return view name with data', () => {
+      controller.getSaveMaritalDetails(saveMaritalDetailsRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/save-and-create-task');
+      assert.equal(genericResponse.data.backHref, '/marital-details/check-for-inheritable-state-pension');
+    });
+  });
+
+  describe('postSaveMaritalDetails function (POST /changes-enquiries/marital-details/save-and-create-task)', () => {
+    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postSaveMaritalDetails(saveMaritalDetailsPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/save-and-create-task');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on ${putUpdateWidowDetails}`);
+    });
+
+    it('should be return a redirect with BAD_REQUEST message', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.BAD_REQUEST, {});
+      await controller.postSaveMaritalDetails(saveMaritalDetailsPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/save-and-create-task');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+      assert.equal(genericResponse.locals.logMessage, `400 - 400 - {} - Requested on ${putUpdateWidowDetails}`);
+    });
+
+    it('should be return a redirect with OK message and clear session', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.OK, {});
+      await controller.postSaveMaritalDetails(saveMaritalDetailsPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      assert.equal(flash.type, 'success');
+      assert.equal(flash.message, 'marital-status:success-message');
+      assert.isUndefined(saveMaritalDetailsPostRequest.session.marital);
+    });
+  });
+
+  describe('getEntitledToInheritedStatePension function (GET /changes-enquiries/marital-details/entitled-to-any-inherited-state-pension)', () => {
+    it('should return view when requested', () => {
+      controller.getEntitledToInheritedStatePension(entitledToInheritedStatePensionRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/entitled-to-inherited-state-pension');
+      assert.equal(genericResponse.data.backHref, '/marital-details/consider-state-pension-entitlement');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.deepEqual(genericResponse.data.details, entitledToInheritedStatePensionRequest.session.marital['entitled-to-inherited-state-pension']);
+    });
+  });
+
+  describe('postEntitledToInheritedStatePension function (POST /changes-enquiries/marital-details/entitled-to-any-inherited-state-pension)', () => {
+    it('should return view name with errors when called with empty post', () => {
+      controller.postEntitledToInheritedStatePension(emptyEntitledToInheritedStatePensionPostRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/entitled-to-inherited-state-pension');
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
+      assert.equal(genericResponse.data.backHref, '/marital-details/consider-state-pension-entitlement');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.deepEqual(genericResponse.data.details, {});
+    });
+
+    it('should return a redirect to yes answer when answer to check Inheritable State Pension is yes', () => {
+      controller.postEntitledToInheritedStatePension({ ...emptyEntitledToInheritedStatePensionPostRequest, body: { entitledInheritableStatePension: 'yes' } }, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/yes-answer');
+      assert.equal(emptyEntitledToInheritedStatePensionPostRequest.session.marital['entitled-to-inherited-state-pension'].entitledInheritableStatePension, 'yes');
+    });
+
+    it('should return a redirect to save and create task when answer to check Inheritable State Pension is no', () => {
+      controller.postEntitledToInheritedStatePension({ ...emptyEntitledToInheritedStatePensionPostRequest, body: { entitledInheritableStatePension: 'no' } }, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/send-letter');
+      assert.equal(emptyEntitledToInheritedStatePensionPostRequest.session.marital['entitled-to-inherited-state-pension'].entitledInheritableStatePension, 'no');
     });
   });
 });

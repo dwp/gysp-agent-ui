@@ -157,14 +157,23 @@ describe('marital status helper', () => {
     });
   });
   describe('maritalDateButton', () => {
-    it('should return continue button when status is married', () => {
-      assert.equal(helper.maritalDateButton('married'), 'app:button.continue');
+    it('should return continue button when status is married and widowInheritanceFeature is false', () => {
+      assert.equal(helper.maritalDateButton('married', false), 'app:button.continue');
     });
-    it('should return continue button when status is civil', () => {
-      assert.equal(helper.maritalDateButton('civil'), 'app:button.continue');
+    it('should return continue button when status is civil and widowInheritanceFeature is false', () => {
+      assert.equal(helper.maritalDateButton('civil', false), 'app:button.continue');
     });
-    it('should return save button when status is widowed', () => {
-      assert.equal(helper.maritalDateButton('widowed'), 'app:button.save');
+    it('should return save button when status is widowed and widowInheritanceFeature is false', () => {
+      assert.equal(helper.maritalDateButton('widowed', false), 'app:button.save');
+    });
+    it('should return continue button when status is married and widowInheritanceFeature is true', () => {
+      assert.equal(helper.maritalDateButton('married', true), 'app:button.continue');
+    });
+    it('should return continue button when status is civil and widowInheritanceFeature is true', () => {
+      assert.equal(helper.maritalDateButton('civil', true), 'app:button.continue');
+    });
+    it('should return save button when status is widowed and widowInheritanceFeature is true', () => {
+      assert.equal(helper.maritalDateButton('widowed', true), 'app:button.continue');
     });
   });
   describe('newMaritalStatusRequiresPartnerDetails', () => {
@@ -222,6 +231,41 @@ describe('marital status helper', () => {
     });
     it('should return false when status is null', () => {
       assert.isFalse(helper.maritalDateToComponents({ }, null));
+    });
+  });
+  describe('maritalDate', () => {
+    it('should return marital date when status is married and marriage date is available', () => {
+      assert.equal(helper.maritalDate({ marriageDate: 1599368400000 }, 'Married'), 1599368400000);
+    });
+    it('should return marital date when status is civil partnership and civil partnership date is available', () => {
+      assert.equal(helper.maritalDate({ civilPartnershipDate: 1599368400000 }, 'Civil Partnership'), 1599368400000);
+    });
+    it('should return marital date when status is divorced and divorced date is available', () => {
+      assert.equal(helper.maritalDate({ divorcedDate: 1599368400000 }, 'Divorced'), 1599368400000);
+    });
+    it('should return marital date when status is dissolved and dissolved date is available', () => {
+      assert.equal(helper.maritalDate({ dissolvedDate: 1599368400000 }, 'Dissolved'), 1599368400000);
+    });
+    it('should return marital date when status is widowed and widowed date is available', () => {
+      assert.equal(helper.maritalDate({ widowedDate: 1599368400000 }, 'Widowed'), 1599368400000);
+    });
+    it('should return false when status is married but date is undefined', () => {
+      assert.isFalse(helper.maritalDate({ }, 'Married'));
+    });
+    it('should return false when status is civil partnership but date is undefined', () => {
+      assert.isFalse(helper.maritalDate({ }, 'Civil Partnership'));
+    });
+    it('should return false when status is divorced but date is undefined', () => {
+      assert.isFalse(helper.maritalDate({ }, 'Divorced'));
+    });
+    it('should return false when status is dissolved but date is undefined', () => {
+      assert.isFalse(helper.maritalDate({ }, 'Dissolved'));
+    });
+    it('should return false when status is widowed but date is undefined', () => {
+      assert.isFalse(helper.maritalDate({ }, 'Widowed'));
+    });
+    it('should return false when status is null', () => {
+      assert.isFalse(helper.maritalDate({ }, null));
     });
   });
 });
