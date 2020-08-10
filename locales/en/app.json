@@ -33,5 +33,10 @@
     "changes-and-enquiries": "Changes and enquiries",
     "tasks": "Tasks",
     "paper-claim": "Paper claim"
+  },
+  "date": {
+    "day": "Day",
+    "month": "Month",
+    "year": "Year"
   }
 }

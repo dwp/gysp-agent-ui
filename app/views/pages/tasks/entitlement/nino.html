@@ -1,0 +1,48 @@
+{% extends 'helpers/layout.html' %}
+{% from 'helpers/form.html' import globalError as error %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("entitlement-partner-nino:fields." + maritalStatus + ".partnerNino.label") }}{% endblock %}
+
+{% block backLink %}
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: t('app:link.back'),
+      href: '/tasks/task/detail',
+      classes: 'govuk-!-margin-top-8 govuk-!-margin-bottom-0'
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        {% if messages.error %}
+          {{ error(messages.error) }}
+        {% endif %}
+
+        <form method="post" action="/tasks/task/consider-entitlement/partner-nino" autocomplete="off">
+          {{ govukInput({
+            label: {
+              text: t("entitlement-partner-nino:fields." + maritalStatus + ".partnerNino.label"),
+              classes: "govuk-label--xl govuk-!-margin-bottom-8",
+              isPageHeading: true
+            },
+            name: 'partnerNino',
+            value: details.partnerNino,
+            classes: "govuk-input--width-20",
+            errorMessage: errors.partnerNino
+          }) }}
+
+          {{ govukButton({
+            text: t("app:button.continue")
+          }) }}
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

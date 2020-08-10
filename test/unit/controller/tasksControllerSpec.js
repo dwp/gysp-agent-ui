@@ -16,6 +16,7 @@ let genericResponse;
 const workItemUri = '/api/workitem/next-workitem';
 const putWorkItemUpdateStatusReturnedUri = '/api/workitem/update-status-returned';
 const putWorkItemUpdateStatusCompleteUri = '/api/workitem/update-status-complete';
+const putMaritalDetailsUri = '/api/award/update-marital-details';
 const awardByInviteKeyUri = '/api/award/award-by-invite-key';
 
 // API Responses
@@ -43,8 +44,19 @@ const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock, us
 // Headers
 const reqHeaders = { reqheaders: { agentRef: 'Test User', location: '123456', staffId: '12345678' } };
 
+const updatedMaritalDetails = {
+  'partner-nino': { partnerNino: 'AA654321C' },
+  'date-of-birth': {
+    dateYear: '1952', dateMonth: '7', dateDay: '6', verification: 'V',
+  },
+  'marital-date': {
+    dateYear: '2000', dateMonth: '5', dateDay: '19', verification: 'V',
+  },
+};
+
 let marriedTaskRequest;
 let civilTaskRequest;
+let marriedTaskWithUpdatesRequest;
 
 describe('tasks controller ', () => {
   beforeEach(() => {
@@ -53,6 +65,7 @@ describe('tasks controller ', () => {
 
     marriedTaskRequest = { session: { tasks: { 'work-item': marriedWorkItem } }, flash: flashMock };
     civilTaskRequest = { session: { tasks: { 'work-item': civilWorkItem } }, flash: flashMock };
+    marriedTaskWithUpdatesRequest = { session: { tasks: { 'work-item': marriedWorkItem }, 'updated-entitlement-details': updatedMaritalDetails }, flash: flashMock };
   });
 
   describe('getTasks function', () => {
@@ -173,7 +186,7 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/tasks/detail');
       assert.isObject(genericResponse.data.details);
       assert.equal(genericResponse.data.details.partnerSummary.header, 'task-detail:partner-details.header.married');
-      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '4');
+      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
     });
 
     it('should return task view when requested with API response OK - Civil Partnership', async () => {
@@ -182,7 +195,7 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/tasks/detail');
       assert.isObject(genericResponse.data.details);
       assert.equal(genericResponse.data.details.partnerSummary.header, 'task-detail:partner-details.header.civil');
-      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '4');
+      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
     });
   });
 
@@ -204,39 +217,81 @@ describe('tasks controller ', () => {
       assert.isDefined(controller.getEndTask);
       assert.isFunction(controller.getEndTask);
     });
+    describe('no award to update', () => {
+      it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+        await controller.getEndTask(marriedTaskRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/workitem/update-status-complete');
+      });
 
-    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
-      nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      await controller.getEndTask(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.address, '/tasks/task/complete');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
-      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/workitem/update-status-complete');
+      it('should be return a redirect with BAD_REQUEST message', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.BAD_REQUEST, {});
+        await controller.getEndTask(marriedTaskRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on /api/workitem/update-status-complete');
+      });
+
+      it('should be return a redirect with NOT_FOUND message', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.NOT_FOUND, {});
+        await controller.getEndTask(marriedTaskRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/workitem/update-status-complete');
+      });
+
+      it('should be return a redirect with OK message', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        await controller.getEndTask(marriedTaskRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks');
+        assert.isUndefined(marriedTaskRequest.session.tasks);
+      });
     });
+    describe('award and task status update', () => {
+      it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+        nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
+        nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+        await controller.getEndTask(marriedTaskWithUpdatesRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+        assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on ${putMaritalDetailsUri}`);
+      });
 
-    it('should be return a redirect with BAD_REQUEST message', async () => {
-      nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.BAD_REQUEST, {});
-      await controller.getEndTask(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.address, '/tasks/task/complete');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
-      assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on /api/workitem/update-status-complete');
-    });
+      it('should be return a redirect with BAD_REQUEST message', async () => {
+        nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
+        nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.BAD_REQUEST, {});
+        await controller.getEndTask(marriedTaskWithUpdatesRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+        assert.equal(genericResponse.locals.logMessage, `400 - 400 - {} - Requested on ${putMaritalDetailsUri}`);
+      });
 
-    it('should be return a redirect with NOT_FOUND message', async () => {
-      nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.NOT_FOUND, {});
-      await controller.getEndTask(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.address, '/tasks/task/complete');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
-      assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/workitem/update-status-complete');
-    });
+      it('should be return a redirect with NOT_FOUND message', async () => {
+        nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
+        nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.NOT_FOUND, {});
+        await controller.getEndTask(marriedTaskWithUpdatesRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks/task/complete');
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+        assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on ${putMaritalDetailsUri}`);
+      });
 
-    it('should be return a redirect with OK message', async () => {
-      nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
-      await controller.getEndTask(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.address, '/tasks');
-      assert.isUndefined(marriedTaskRequest.session.tasks);
+      it('should be return a redirect with OK message', async () => {
+        nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
+        nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.OK, {});
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        await controller.getEndTask(marriedTaskWithUpdatesRequest, genericResponse);
+        assert.equal(genericResponse.address, '/tasks');
+        assert.isUndefined(marriedTaskWithUpdatesRequest.session.tasks);
+        assert.isUndefined(marriedTaskWithUpdatesRequest.session['updated-entitlement-details']);
+      });
     });
   });
 });

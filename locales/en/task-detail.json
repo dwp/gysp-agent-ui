@@ -9,10 +9,15 @@
       "civil": "Civil partner's details"
     },
     "summary-keys": {
+      "nino": "National Insurance number",
       "first-name": "First name",
-      "surname": "Surname",
+      "last-name": "Last name",
       "other-names": "Other names",
-      "dob": "Date of birth"
+      "dob": "Date of birth",
+      "marital-date": {
+        "married": "Date of marriage",
+        "civil": "Date of civil partnership"
+      }
     }
   },
   "claimant-details": {
