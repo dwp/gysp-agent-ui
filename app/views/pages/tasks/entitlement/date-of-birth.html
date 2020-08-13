@@ -24,7 +24,7 @@
         {{ error(messages.error) }}
       {% endif %}
 
-      <form method="post" action="/tasks/task/consider-entitlement/date-of-birth" autocomplete="off">
+      <form method="post" action="/tasks/task/consider-entitlement/date-of-birth" autocomplete="off" novalidate>
         {{ govukDateInput({
           id: "dateOfBirth",
           fieldset: {

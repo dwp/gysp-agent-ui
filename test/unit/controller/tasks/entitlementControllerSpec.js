@@ -153,6 +153,16 @@ describe('task entitlement controller ', () => {
       assert.equal(genericResponse.data.details.dateYear, '1952');
     });
 
+    it('should return task view when requested with API response OK - Married with no DOB', async () => {
+      const marriedPartnerNoDateOfBirth = { ...claimData.validClaimMarried() };
+      marriedPartnerNoDateOfBirth.partnerDetail.dob = null;
+      nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, marriedPartnerNoDateOfBirth);
+      await controller.getDateOfBirth(marriedTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/date-of-birth');
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.isNull(genericResponse.data.details, null);
+    });
+
     it('should return task view when requested with API response OK - Civil Partnership', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimCivilPartner());
       await controller.getDateOfBirth(civilTaskRequest, genericResponse);

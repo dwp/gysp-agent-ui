@@ -56,9 +56,10 @@ async function getDateOfBirth(req, res) {
   try {
     const { maritalStatus, partnerDetail: { dob } } = await awardDetails(req, res);
     const dateOfBirth = dataStore.get(req, 'date-of-birth', 'updated-entitlement-details');
+    const currentDateOfBirth = dob ? dateComponents(dob, null) : null;
     res.render('pages/tasks/entitlement/date-of-birth', {
       maritalStatus: transformToShortStatus(maritalStatus),
-      details: dateOfBirth || dateComponents(dob, null),
+      details: dateOfBirth || currentDateOfBirth,
     });
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/tasks/task');
