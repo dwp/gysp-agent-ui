@@ -16,11 +16,9 @@ const partnerDetail = {
   partnerNino: null,
   dobVerified: null,
   civilPartnershipDate: null,
-  civilPartnershipDateVerified: null,
   dissolvedDate: null,
   divorcedDate: null,
   marriageDate: null,
-  marriageDateVerified: null,
   widowedDate: null,
 };
 
@@ -69,7 +67,6 @@ const maritalFormatted = {
     partnerDetail: {
       ...partnerDetail,
       marriageDate: '2020-03-01T00:00:00.000Z',
-      marriageDateVerified: true,
     },
   },
   'married-date-not-verified': {
@@ -79,7 +76,6 @@ const maritalFormatted = {
     partnerDetail: {
       ...partnerDetail,
       marriageDate: '2020-03-01T00:00:00.000Z',
-      marriageDateVerified: false,
     },
   },
   'civil-date-verified': {
@@ -89,7 +85,6 @@ const maritalFormatted = {
     partnerDetail: {
       ...partnerDetail,
       civilPartnershipDate: '2020-03-01T00:00:00.000Z',
-      civilPartnershipDateVerified: true,
     },
   },
   'civil-date-not-verified': {
@@ -99,7 +94,6 @@ const maritalFormatted = {
     partnerDetail: {
       ...partnerDetail,
       civilPartnershipDate: '2020-03-01T00:00:00.000Z',
-      civilPartnershipDateVerified: false,
     },
   },
 };
@@ -143,11 +137,9 @@ const award = {
     partnerNino: null,
     dobVerified: null,
     civilPartnershipDate: null,
-    civilPartnershipDateVerified: null,
     dissolvedDate: null,
     divorcedDate: null,
     marriageDate: null,
-    marriageDateVerified: null,
     widowedDate: null,
   },
 };

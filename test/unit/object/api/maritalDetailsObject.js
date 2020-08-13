@@ -18,7 +18,6 @@ const marriedToDivorcedVerifiedFormatted = {
     marriageDate: null,
     divorcedDate: '2020-03-01T00:00:00.000Z',
     dobVerified: false,
-    marriageDateVerified: false,
     partnerNino: 'AA123456C',
   },
 };
@@ -38,7 +37,6 @@ const marriedToWidowedVerifiedFormatted = {
     dob: '1952-03-19T00:00:00.000Z',
     marriageDate: null,
     widowedDate: '2020-03-01T00:00:00.000Z',
-    marriageDateVerified: false,
     partnerNino: 'AA123456C',
     dobVerified: false,
   },
@@ -59,7 +57,6 @@ const civilToDissolvedVerifiedFormatted = {
     dob: '1952-03-19T00:00:00.000Z',
     civilPartnershipDate: null,
     dissolvedDate: '2020-03-01T00:00:00.000Z',
-    civilPartnershipDateVerified: false,
     partnerNino: 'AA123456C',
     dobVerified: false,
   },
@@ -80,7 +77,6 @@ const civilToWidowedVerifiedFormatted = {
     dob: '1952-03-19T00:00:00.000Z',
     civilPartnershipDate: null,
     widowedDate: '2020-03-01T00:00:00.000Z',
-    civilPartnershipDateVerified: false,
     partnerNino: 'AA123456C',
     dobVerified: false,
   },
@@ -101,7 +97,6 @@ const ninoAddFormatted = {
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: false,
     marriageDate: '2000-03-19T00:00:00.000Z',
-    marriageDateVerified: false,
     partnerNino: 'AA123456A',
   },
 };
@@ -121,7 +116,6 @@ const dobAddFormatted = {
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: false,
     marriageDate: '2000-03-19T00:00:00.000Z',
-    marriageDateVerified: false,
   },
 };
 const dobChangeFormatted = Object.assign(JSON.parse(JSON.stringify(dobAddFormatted)), { eventType: 'CHANGE' });
@@ -187,7 +181,6 @@ const maritalDateFormatted = {
     partnerDetail: {
       ...partnerDetail,
       marriageDate: '2020-03-01T00:00:00.000Z',
-      marriageDateVerified: false,
       dobVerified: false,
       partnerNino: 'AA123456C',
     },
@@ -200,7 +193,6 @@ const maritalDateFormatted = {
     partnerDetail: {
       ...partnerDetail,
       civilPartnershipDate: '2020-03-01T00:00:00.000Z',
-      civilPartnershipDateVerified: false,
       dobVerified: false,
       partnerNino: 'AA123456C',
     },

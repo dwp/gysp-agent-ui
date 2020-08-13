@@ -6,56 +6,62 @@ const claimData = require('../../../lib/claimData');
 const optionalNullPartnerDetails = {
   ...claimData.validClaim(),
   maritalStatus: 'Married',
+  maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
+    marriageDate: 946684800000,
     allOtherNames: null,
     dob: null,
     partnerNino: null,
-    marriageDate: null,
   },
 };
 const optionalNullPartnerDetailsCivil = {
   ...claimData.validClaim(),
   maritalStatus: 'Civil Partnership',
+  maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
+    civilPartnershipDate: 946684800000,
     allOtherNames: null,
     dob: null,
     partnerNino: null,
-    civilPartnershipDate: null,
   },
 };
 
 const optionalMissingPartnerDetails = {
   ...claimData.validClaim(),
   maritalStatus: 'Married',
+  maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
+    marriageDate: 946684800000,
   },
 };
 
 const optionalMissingPartnerDetailsCivil = {
   ...claimData.validClaim(),
   maritalStatus: 'Civil Partnership',
+  maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
+    civilPartnershipDate: 946684800000,
   },
 };
 
 const partnerAllElementsVerified = {
   ...claimData.validClaim(),
   maritalStatus: 'Married',
+  maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: true,
-    marriageDate: '2000-03-19T00:00:00.000Z',
-    marriageDateVerified: true,
+    marriageDate: 946684800000,
     partnerNino: 'AA123456C',
   },
 };
@@ -157,7 +163,7 @@ const verifiedPartnerDetailRows = (status) => [{
   value: { html: '19 March 1952 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    app:verification-status.verified\n  </span>' },
 }, {
   key: { text: `task-detail:partner-details.summary-keys.marital-date.${status}` },
-  value: { html: '19 March 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    app:verification-status.verified\n  </span>' },
+  value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    app:verification-status.verified\n  </span>' },
 }];
 
 const baseClaimantDetailRows = [{
@@ -196,7 +202,7 @@ const blankPartnerDetailRows = (status) => [{
   value: { html: '' },
 }, {
   key: { text: `task-detail:partner-details.summary-keys.marital-date.${status}` },
-  value: { html: '' },
+  value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    app:verification-status.verified\n  </span>' },
 }];
 
 const validObjects = {
