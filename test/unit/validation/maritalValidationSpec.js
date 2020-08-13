@@ -273,4 +273,38 @@ describe('marital validator', () => {
       });
     });
   });
+  describe('checkForInheritableStatePensionValidator', () => {
+    it('should return errors when with empty post', () => {
+      const errors = validator.checkForInheritableStatePensionValidator(emptyPostRequest);
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.checkInheritableStatePension.text, 'marital-check-for-inheritable-state-pension:fields.checkInheritableStatePension.errors.required');
+    });
+    it('should return errors when with blank post', () => {
+      const errors = validator.checkForInheritableStatePensionValidator({ checkInheritableStatePension: '' });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.checkInheritableStatePension.text, 'marital-check-for-inheritable-state-pension:fields.checkInheritableStatePension.errors.required');
+    });
+    it('should return errors when with invalid post', () => {
+      const errors = validator.checkForInheritableStatePensionValidator({ checkInheritableStatePension: 'bob' });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.checkInheritableStatePension.text, 'marital-check-for-inheritable-state-pension:fields.checkInheritableStatePension.errors.required');
+    });
+  });
+  describe('entitledToInheritedStatePensionValidator', () => {
+    it('should return errors when with empty post', () => {
+      const errors = validator.entitledToInheritedStatePensionValidator(emptyPostRequest);
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.entitledInheritableStatePension.text, 'marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.errors.required');
+    });
+    it('should return errors when with blank post', () => {
+      const errors = validator.entitledToInheritedStatePensionValidator({ entitledInheritableStatePension: '' });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.entitledInheritableStatePension.text, 'marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.errors.required');
+    });
+    it('should return errors when with invalid post', () => {
+      const errors = validator.entitledToInheritedStatePensionValidator({ entitledInheritableStatePension: 'bob' });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.entitledInheritableStatePension.text, 'marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.errors.required');
+    });
+  });
 });

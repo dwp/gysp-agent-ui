@@ -25,4 +25,19 @@ router.route(/\/marital-details\/(spouse|partner)-details/)
   .get(functions.getPartnerDetails)
   .post(functions.postPartnerDetails);
 
+router.route('/marital-details/check-for-inheritable-state-pension')
+  .get(functions.getCheckForInheritableStatePension)
+  .post(functions.postCheckForInheritableStatePension);
+
+router.route('/marital-details/consider-state-pension-entitlement')
+  .get(functions.getConsiderStatePensionEntitlement);
+
+router.route('/marital-details/entitled-to-any-inherited-state-pension')
+  .get(functions.getEntitledToInheritedStatePension)
+  .post(functions.postEntitledToInheritedStatePension);
+
+router.route('/marital-details/save-and-create-task')
+  .get(functions.getSaveMaritalDetails)
+  .post(functions.postSaveMaritalDetails);
+
 module.exports = router;

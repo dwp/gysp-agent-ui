@@ -13,6 +13,7 @@
   "report-dir": "./.coverage",
   "include": [
     "app/routes/**/*",
-    "lib/**/*"
+    "lib/**/*",
+    "utils/**/*"
   ]
 }

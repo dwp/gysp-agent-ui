@@ -1,0 +1,24 @@
+{
+  "header": "Consider State Pension entitlement",
+  "p": "Check the record of the late spouse to see if any State Pension can be inherited.",
+  "summary-header-1": {
+    "married": "Late spouse's details",
+    "civil": "Late partner's details"
+  },
+  "summary-header-2": {
+    "married": "Other details to help find spouse",
+    "civil": "Other details to help find partner"
+  },
+  "summary-keys": {
+    "nino": "National Insurance number",
+    "first-name": "First name",
+    "last-name": "Last name",
+    "other-names": "Other names",
+    "dob": "Date of birth",
+    "marital-date": {
+      "married": "Date of marriage",
+      "civil": "Date of civil partnership"
+    },
+    "address": "Claimant's address"
+  }
+}

@@ -49,6 +49,7 @@ module.exports = {
     },
     feature: {
       paperClaimFeature: (process.env.FEATURE_PAPER_CLAIM === 'true') || false,
+      widowInheritanceFeature: (process.env.FEATURE_WIDOW_INHERITANCE === 'true') || false,
     },
   },
 };

@@ -1,0 +1,10 @@
+{
+  "fields": {
+    "checkInheritableStatePension": {
+      "legend": "Are you able to check for any inheritable State Pension?",
+      "errors": {
+        "required": "Select 'Yes' if you are able to check for any inheritable State Pension"
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('marital-check-for-inheritable-state-pension:fields.checkInheritableStatePension.legend') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries' + backHref,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off">
+
+    <h1 class="govuk-heading-l">{{ t('marital-save-and-create-task:header') }}</h1>
+
+    <p class="govuk-body">{{ t('marital-save-and-create-task:p') }}</p>
+
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
+{% endblock %}

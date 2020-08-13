@@ -1,0 +1,44 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.legend') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries' + backHref,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off">
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "entitledInheritableStatePension",
+      fieldset: {
+        legend: {
+          text: t('marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.legend'),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-5"
+        }
+      },
+      items: [{
+        value: "yes",
+        text: t("app:options.yes"),
+        checked: true if details.entitledInheritableStatePension == 'yes' else false
+      }, {
+        value: "no",
+        text: t("app:options.no"),
+        checked: true if details.entitledInheritableStatePension == 'no' else false
+      }],
+      errorMessage: errors.entitledInheritableStatePension
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}
