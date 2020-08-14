@@ -14,46 +14,43 @@
 {% block header %}
   <header role="banner" id="global-header" class="govuk-header dwp-global-header with-proposition">
     <div class="govuk-header__container govuk-width-container dwp-header__container">
+      <div class="govuk-header__content">
         {% if restrictedService === true %}
-        <div class="govuk-header__content">
-            {% if origin == 'full-service' %}
-                <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
-            {% else %}
-                <span class="govuk-header__link govuk-header__link--service-name gysp-header-link" id="proposition-name">Get your State Pension</span>
-            {% endif %}
-            {% if activeTab !== null and activeTab !== undefined %}
-              <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
-              <nav>
-                <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
-                  <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'change-and-enquiries' else ''}}">
-                    <a class="govuk-header__link" href="/find-someone">
-                      {{ t("app:navigation.changes-and-enquiries") }}
-                    </a>
-                  </li>
-                  <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'tasks' else ''}}">
-                    <a class="govuk-header__link" href="/tasks">
-                      {{ t("app:navigation.tasks") }}
-                    </a>
-                  </li>
-                  {% if paperClaimFeature %}
-                    <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'paper' else ''}}">
-                      <a class="govuk-header__link" href="/agent-claim/paper">
-                        {{ t("app:navigation.paper-claim") }}
-                      </a>
-                    </li>
-                  {% endif %}
-                </ul>
-              </nav>
-            {% endif %}
-          </div>
+          {% if origin == 'full-service' %}
+              <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
           {% else %}
-          <div class="govuk-header__content">
-              <nav id="proposition-menu">
-                  <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
-              </nav>
-          </div>
+              <span class="govuk-header__link govuk-header__link--service-name gysp-header-link" id="proposition-name">Get your State Pension</span>
           {% endif %}
-        </div>
+          {% if activeTab !== null and activeTab !== undefined %}
+            <button type="button" class="govuk-header__menu-button govuk-js-header-toggle" aria-controls="navigation" aria-label="Show or hide Top Level Navigation">Menu</button>
+            <nav>
+              <ul id="navigation" class="govuk-header__navigation " aria-label="Top Level Navigation">
+                <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'change-and-enquiries' else ''}}">
+                  <a class="govuk-header__link" href="/find-someone">
+                    {{ t("app:navigation.changes-and-enquiries") }}
+                  </a>
+                </li>
+                <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'tasks' else ''}}">
+                  <a class="govuk-header__link" href="/tasks">
+                    {{ t("app:navigation.tasks") }}
+                  </a>
+                </li>
+                {% if paperClaimFeature %}
+                  <li class="govuk-header__navigation-item {{'govuk-header__navigation-item--active' if activeTab == 'paper' else ''}}">
+                    <a class="govuk-header__link" href="/agent-claim/paper">
+                      {{ t("app:navigation.paper-claim") }}
+                    </a>
+                  </li>
+                {% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+        {% else %}
+          <nav id="proposition-menu">
+            <a href="/" class="govuk-header__link govuk-header__link--service-name" id="proposition-name">Get your State Pension</a>
+          </nav>
+        {% endif %}
+      </div>
     </div>
   </header>
 {% endblock %}
