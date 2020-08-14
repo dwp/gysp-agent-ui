@@ -28,13 +28,13 @@ const detailsNegative = {
 };
 const detailsPositiveFormatted = {
   ...baseFormattedObject,
-  widowedDate: '2020-03-01',
+  widowedDate: '2020-03-01T00:00:00.000Z',
   widowedDateVerified: true,
   checkInheritableStatePension: true,
 };
 const detailsNegativeFormatted = {
   ...baseFormattedObject,
-  widowedDate: '2020-03-01',
+  widowedDate: '2020-03-01T00:00:00.000Z',
   widowedDateVerified: false,
   checkInheritableStatePension: false,
 };
