@@ -1,3 +1,20 @@
+<a name="6.4.0"></a>
+# [6.4.0](https://github.com/dwp/gysp-agent-ui/compare/6.3.0...6.4.0) (2020-08-18)
+
+
+### Bug Fixes
+
+* **html:** tidy up html ([2be5457](https://github.com/dwp/gysp-agent-ui/commit/2be5457))
+* **navigation:** fixed issue with GySP link is disabled ([6236dd9](https://github.com/dwp/gysp-agent-ui/commit/6236dd9))
+
+
+### Features
+
+* **status-change:** extended journey for widow inheritance ([372ffef](https://github.com/dwp/gysp-agent-ui/commit/372ffef))
+* **tasks:** add/change partner details entitlement ([11e1e52](https://github.com/dwp/gysp-agent-ui/commit/11e1e52))
+
+
+
 <a name="6.3.0"></a>
 # [6.3.0](https://github.com/dwp/gysp-agent-ui/compare/6.2.0...6.3.0) (2020-08-03)
 
