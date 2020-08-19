@@ -22,9 +22,14 @@
   </div>
 
   {% endif %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
   <h1 class="govuk-heading-m">{{ t("award-list:header") }}</h1>
 
   {{ govukTable(details.table) }}
+
+  </div>
+</div>
 
 {% endblock %}

@@ -3,8 +3,7 @@ const awardListObject = require('../../../../lib/objects/view/awardListObject');
 const claimData = require('../../../lib/claimData');
 
 const head = [
-  { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-quarter' },
-  { text: 'award-list:table.head.to', classes: 'govuk-!-width-one-quarter' },
+  { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-third' },
   { text: 'award-list:table.head.weekly-amount' },
   { text: '' },
   { text: '' },
@@ -13,7 +12,6 @@ const head = [
 const rowsWithPayment = [
   [
     { text: '6 March 2019' },
-    { text: '' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
     { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
@@ -22,7 +20,6 @@ const rowsWithPayment = [
 const rowsWithoutPayment = [
   [
     { text: '6 March 2019' },
-    { text: '' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
     { text: '' },
@@ -30,7 +27,6 @@ const rowsWithoutPayment = [
 ];
 const rowsWithToDate = [
   [
-    { text: '6 March 2019' },
     { text: '6 March 2019' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
@@ -40,7 +36,6 @@ const rowsWithToDate = [
 const rowsWithFutureUprating = [
   [
     { text: '6 March 2019' },
-    { text: '6 March 2019' },
     { text: '£110.00' },
     { html: '<a href="/changes-and-enquiries/award/1" class="govuk-link">Details</a>' },
     { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
@@ -49,7 +44,6 @@ const rowsWithFutureUprating = [
 const rowsWithCurrentUprating = [
   [
     { text: '6 March 2019' },
-    { text: '' },
     { text: '£160.00' },
     { html: '<a href="/changes-and-enquiries/award/0" class="govuk-link">Details</a>' },
     { html: '<span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-payment gysp-payment--active">In payment</span>' },
