@@ -23,6 +23,24 @@ const verifiedDetails = {
   'address-lookup': addressData.multipleAddressesNoneEmpty(),
 };
 
+
+const verifiedDetailsForAddressWithNoDepThorough = {
+  'date-of-death': {
+    dateYear: '2000',
+    dateMonth: '01',
+    dateDay: '01',
+    verification: 'V',
+  },
+  'dap-name': {
+    name: 'Margaret Meldrew',
+  },
+  'dap-phone-number': {
+    phoneNumber: '0000 000 000',
+  },
+  'dap-address': detailsUprn,
+  'address-lookup': addressData.addressWithNoDepThoroughAndTownNameFieldPresent(),
+};
+
 const deathPayment = {
   startDate: null,
   endDate: null,
@@ -43,6 +61,29 @@ const verifiedResponse = {
       thoroughfareName: 'PICCADILLY',
       dependentThoroughfareName: 'dependentThoroughfareName',
       postTown: 'LONDON',
+      postCode: 'W1J 7NT',
+      singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
+      uprn: 10091853817,
+    },
+    fullName: 'Margaret Meldrew',
+    phoneNumber: '0000 000 000',
+  },
+};
+
+const verifiedResponseForAddressWithNoDepThorough = {
+  dateOfDeath: '2000-01-01T00:00:00.000Z',
+  dateOfDeathVerification: 'V',
+  nino: 'AA370773A',
+  amountDetails: deathPayment,
+  deathPayeeDetails: {
+    address: {
+      buildingName: 'buildingName',
+      subBuildingName: 'subBuildingName',
+      buildingNumber: 148,
+      dependentLocality: 'dependentLocality',
+      thoroughfareName: 'PICCADILLY',
+      dependentThoroughfareName: null,
+      postTown: 'BRIDGE OF WEIR',
       postCode: 'W1J 7NT',
       singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
       uprn: 10091853817,
@@ -97,7 +138,11 @@ describe('deathObject object', () => {
       assert.deepEqual(json, verifiedResponse);
       done();
     });
-
+    it('should return valid json object when with verifed data when verification is set to V for address with no Dependent Thoroughfare', (done) => {
+      const json = object.formatter(verifiedDetailsForAddressWithNoDepThorough, deathPayment, claimData.validClaim());
+      assert.deepEqual(json, verifiedResponseForAddressWithNoDepThorough);
+      done();
+    });
     it('should return valid json object when with verifed data when verification is set to NV', (done) => {
       const json = object.formatter(notVerifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, notVerifiedResponse);

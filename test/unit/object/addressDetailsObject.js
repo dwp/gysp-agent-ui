@@ -13,7 +13,11 @@ describe('addressDetails object', () => {
       assert.equal(JSON.stringify(json), JSON.stringify(claimData.validClaimAllAddressNotNull()));
       done();
     });
-
+    it('should return valid json object with null for dependent Thoroughfare all rest of address present', (done) => {
+      const json = addressDetailsObject.formatter(detailsUprn, claimData.validClaim().nino, addressData.addressWithNoDepThoroughAndTownNameFieldPresent());
+      assert.equal(JSON.stringify(json), JSON.stringify(claimData.validClaimDependentThoroughNullOnly()));
+      done();
+    });
     it('should return valid json object with all nulls in address when address exists in data set', (done) => {
       const json = addressDetailsObject.formatter(detailsUprn, claimData.validClaim().nino, addressData.addressBaseAllEmpty());
       assert.equal(JSON.stringify(json), JSON.stringify(claimData.validClaimAllAddressNull()));
