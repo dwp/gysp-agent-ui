@@ -72,7 +72,7 @@ const maritalFormatted = {
   'married-date-not-verified': {
     ...maritalDateBaseFormatted,
     maritalStatus: 'Married',
-    maritalStatusVerified: true,
+    maritalStatusVerified: false,
     partnerDetail: {
       ...partnerDetail,
       marriageDate: '2020-03-01T00:00:00.000Z',
@@ -90,7 +90,7 @@ const maritalFormatted = {
   'civil-date-not-verified': {
     ...maritalDateBaseFormatted,
     maritalStatus: 'Civil Partnership',
-    maritalStatusVerified: true,
+    maritalStatusVerified: false,
     partnerDetail: {
       ...partnerDetail,
       civilPartnershipDate: '2020-03-01T00:00:00.000Z',
