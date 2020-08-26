@@ -1,0 +1,52 @@
+{
+  "header": "Enter the relevant inherited amounts",
+  "fields": {
+    "inputs": {
+      "errors": {
+        "required": "Enter at least one inherited amount"
+      }
+    },
+    "additionalPension": {
+      "label": "Additional pension",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Additional pension amount must be 6 characters or less"
+      }
+    },
+    "graduatedBenefit": {
+      "label": "Graduated benefit",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Graduated benefit amount must be 6 characters or less"
+      }
+    },
+    "basicExtraStatePension": {
+      "label": "Basic pension - extra State Pension",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Basic pension - extra State Pension amount must be 6 characters or less"
+      }
+    },
+    "additionalExtraStatePension": {
+      "label": "Additional extra State Pension",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Additional extra State Pension amount must be 6 characters or less"
+      }
+    },
+    "graduatedBenefitExtraStatePension": {
+      "label": "Graduated benefit - extra State Pension",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Graduated benefit - extra State Pension amount must be 6 characters or less"
+      }
+    },
+    "protectedPayment": {
+      "label": "Protected payment",
+      "errors": {
+        "format": "Enter a real amount of additional pension, like 123.45",
+        "length": "Protected payment amount must be 6 characters or less"
+      }
+    }
+  }
+}

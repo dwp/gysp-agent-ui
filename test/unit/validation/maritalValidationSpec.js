@@ -307,4 +307,132 @@ describe('marital validator', () => {
       assert.equal(errors.entitledInheritableStatePension.text, 'marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.errors.required');
     });
   });
+
+  describe('relevantInheritedAmountsValidator', () => {
+    it('should return error when with empty post', () => {
+      const errors = validator.relevantInheritedAmountsValidator(emptyPostRequest);
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.inputs.text, 'marital-relevant-inherited-amounts:fields.inputs.errors.required');
+    });
+    it('should return error when with blank post', () => {
+      const errors = validator.relevantInheritedAmountsValidator({
+        additionalPension: '',
+        graduatedBenefit: '',
+        basicExtraStatePension: '',
+        additionalExtraStatePension: '',
+        graduatedBenefitExtraStatePension: '',
+        protectedPayment: '',
+      });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.inputs.text, 'marital-relevant-inherited-amounts:fields.inputs.errors.required');
+    });
+    describe('field: additionalPension', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalPension: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.additionalPension.text, 'marital-relevant-inherited-amounts:fields.additionalPension.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalPension: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.additionalPension.text, 'marital-relevant-inherited-amounts:fields.additionalPension.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalPension: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+    describe('field: graduatedBenefit', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefit: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.graduatedBenefit.text, 'marital-relevant-inherited-amounts:fields.graduatedBenefit.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefit: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.graduatedBenefit.text, 'marital-relevant-inherited-amounts:fields.graduatedBenefit.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefit: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+    describe('field: basicExtraStatePension', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ basicExtraStatePension: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.basicExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.basicExtraStatePension.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ basicExtraStatePension: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.basicExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.basicExtraStatePension.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ basicExtraStatePension: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+    describe('field: additionalExtraStatePension', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalExtraStatePension: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.additionalExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.additionalExtraStatePension.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalExtraStatePension: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.additionalExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.additionalExtraStatePension.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ additionalExtraStatePension: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+    describe('field: graduatedBenefitExtraStatePension', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefitExtraStatePension: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.graduatedBenefitExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.graduatedBenefitExtraStatePension.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefitExtraStatePension: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.graduatedBenefitExtraStatePension.text, 'marital-relevant-inherited-amounts:fields.graduatedBenefitExtraStatePension.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ graduatedBenefitExtraStatePension: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+    describe('field: protectedPayment', () => {
+      it('should fail validation when value is invalid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ protectedPayment: 'bob' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.protectedPayment.text, 'marital-relevant-inherited-amounts:fields.protectedPayment.errors.format');
+      });
+
+      it('should fail validation when value is to long', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ protectedPayment: '1000.00' });
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.protectedPayment.text, 'marital-relevant-inherited-amounts:fields.protectedPayment.errors.length');
+      });
+
+      it('should pass validation when value is valid', () => {
+        const errors = validator.relevantInheritedAmountsValidator({ protectedPayment: '100.00' });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
+  });
 });
