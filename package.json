@@ -59,7 +59,7 @@
     "request-promise": "4.2.6",
     "serve-favicon": "2.5.0",
     "validator": "13.1.1",
-    "winston": "3.2.1"
+    "winston": "3.3.3"
   },
   "devDependencies": {
     "@commitlint/cli": "9.1.2",
