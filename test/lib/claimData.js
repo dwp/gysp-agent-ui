@@ -93,10 +93,6 @@ module.exports = {
     const { nino } = this.validBase();
     return { ...this.validUkAddressNotNull(), nino, ...this.validAddressEventChangeTimeline() };
   },
-  validClaimDependentThoroughNullOnly() {
-    const { nino } = this.validBase();
-    return { ...this.validUkAddressDependentThorughNullOnly(), nino, ...this.validAddressEventChangeTimeline() };
-  },
   validClaimAllAddressNull() {
     const { nino } = this.validBase();
     return { ...this.validUkAddressNull(), nino, ...this.validAddressEventChangeTimeline() };
@@ -327,20 +323,6 @@ module.exports = {
       thoroughfareName: 'PICCADILLY',
       dependentThoroughfareName: 'dependentThoroughfareName',
       postTown: 'LONDON',
-      postCode: 'W1J 7NT',
-      singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
-      uprn: '10091853817',
-    };
-  },
-  validUkAddressDependentThorughNullOnly() {
-    return {
-      buildingName: 'buildingName',
-      subBuildingName: 'subBuildingName',
-      buildingNumber: 148,
-      dependentLocality: 'dependentLocality',
-      thoroughfareName: 'PICCADILLY',
-      dependentThoroughfareName: null,
-      postTown: 'BRIDGE OF WEIR',
       postCode: 'W1J 7NT',
       singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
       uprn: '10091853817',
