@@ -125,4 +125,38 @@ describe('General Helper ', () => {
       assert.isTrue(helper.checkNameCharacters('Joe Test-tester The First.'));
     });
   });
+  describe('isValidCurrency', () => {
+    const invalid = ['1.1', '1.111', '.0', '1', '-1.00', '+1.00', 'aaa', '1,000.00'];
+    invalid.forEach((value) => {
+      it(`should return false when value is ${value}`, () => {
+        assert.isFalse(helper.isValidCurrency(value));
+      });
+    });
+    const valid = ['1.10', '0.11', '111.00', '123456.00'];
+    valid.forEach((value) => {
+      it(`should return true when value is ${value}`, () => {
+        assert.isTrue(helper.isValidCurrency(value));
+      });
+    });
+  });
+  describe('isGreaterThenFiveCharacterExcludingPoint', () => {
+    it('should return true when value is greater then 5 without point', () => {
+      assert.isTrue(helper.isGreaterThenFiveCharacterExcludingPoint('123456'));
+    });
+    it('should return true when value is greater then 5 with point', () => {
+      assert.isTrue(helper.isGreaterThenFiveCharacterExcludingPoint('1234.56'));
+    });
+    it('should return false when value is 5 with point', () => {
+      assert.isFalse(helper.isGreaterThenFiveCharacterExcludingPoint('123.66'));
+    });
+    it('should return false when value is 5 without point', () => {
+      assert.isFalse(helper.isGreaterThenFiveCharacterExcludingPoint('12345'));
+    });
+    it('should return false when value is less than 5 with point', () => {
+      assert.isFalse(helper.isGreaterThenFiveCharacterExcludingPoint('12.66'));
+    });
+    it('should return false when value is less than 5 without point', () => {
+      assert.isFalse(helper.isGreaterThenFiveCharacterExcludingPoint('1234'));
+    });
+  });
 });

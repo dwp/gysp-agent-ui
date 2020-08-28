@@ -1,0 +1,19 @@
+.gysp {
+    &-label {
+        &__currency {
+            padding: 9.5px 9px;
+            border-right: 0;
+            background: none;
+            color: $govuk-text-colour;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+    }
+
+    &-input {
+        &__currency {
+            padding-left: 23px;
+        }
+    }
+}

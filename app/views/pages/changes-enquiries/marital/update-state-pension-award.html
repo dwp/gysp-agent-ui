@@ -1,0 +1,34 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('marital-update-state-pension-award:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries' + backHref,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+
+  <h1 class="govuk-heading-l">{{ t('marital-update-state-pension-award:header') }}</h1>
+
+  <p class="govuk-body govuk-hint govuk-!-margin-bottom-7">{{ t('marital-update-state-pension-award:p') }}</p>
+
+  {{ govukSummaryList({
+      rows: details.summaryOne
+  }) }}
+
+  {{ govukSummaryList({
+      rows: details.summaryTwo
+  }) }}
+
+  {{ govukButton({
+    text: t("app:button.continue"),
+    href: '/changes-and-enquiries' + nextPageHref
+  }) }}
+{% endblock %}

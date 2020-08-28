@@ -1,0 +1,123 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "moj/components/currency-input/macro.njk" import mojCurrencyInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "components/input-group/macro.njk" import gyspInputGroup %}
+
+{% block pageTitle %}{{ t('marital-relevant-inherited-amounts:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block sectionBackLink %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: '/changes-and-enquiries' + backHref,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+  }) }}
+{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
+    {% set inputHtml %}
+      {{ mojCurrencyInput({
+        name: "additionalPension",
+        id: "additionalPension",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.additionalPension.label')
+        },
+        value: details.additionalPension,
+        errorMessage: errors.additionalPension
+      }) }}
+
+      {{ mojCurrencyInput({
+        name: "graduatedBenefit",
+        id: "graduatedBenefit",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.graduatedBenefit.label')
+        },
+        value: details.graduatedBenefit,
+        errorMessage: errors.graduatedBenefit
+      }) }}
+
+      {{ mojCurrencyInput({
+        name: "basicExtraStatePension",
+        id: "basicExtraStatePension",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.basicExtraStatePension.label')
+        },
+        value: details.basicExtraStatePension,
+        errorMessage: errors.basicExtraStatePension
+      }) }}
+
+      {{ mojCurrencyInput({
+        name: "additionalExtraStatePension",
+        id: "additionalExtraStatePension",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.additionalExtraStatePension.label')
+        },
+        value: details.additionalExtraStatePension,
+        errorMessage: errors.additionalExtraStatePension
+      }) }}
+
+      {{ mojCurrencyInput({
+        name: "graduatedBenefitExtraStatePension",
+        id: "graduatedBenefitExtraStatePension",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.graduatedBenefitExtraStatePension.label')
+        },
+        value: details.graduatedBenefitExtraStatePension,
+        errorMessage: errors.graduatedBenefitExtraStatePension
+      }) }}
+
+      {{ mojCurrencyInput({
+        name: "protectedPayment",
+        id: "protectedPayment",
+        classes: "govuk-input--width-10 gysp-input__currency",
+        currencyLabel: {
+          classes: "gysp-label__currency"
+        },
+        label: {
+          text: t('marital-relevant-inherited-amounts:fields.protectedPayment.label')
+        },
+        value: details.protectedPayment,
+        errorMessage: errors.protectedPayment
+      }) }}
+    {% endset %}
+
+    {{ gyspInputGroup({
+      name: "inputs",
+      fieldset: {
+        legend: {
+          text: t('marital-relevant-inherited-amounts:header'),
+          classes: "govuk-fieldset__legend--l",
+          isPageHeading: true
+        }
+      },
+      html: inputHtml,
+      errorMessage: errors.inputs
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+
+  </form>
+{% endblock %}

@@ -36,6 +36,13 @@ router.route('/marital-details/entitled-to-any-inherited-state-pension')
   .get(functions.getEntitledToInheritedStatePension)
   .post(functions.postEntitledToInheritedStatePension);
 
+router.route('/marital-details/relevant-inherited-amounts')
+  .get(functions.getRelevantInheritedAmounts)
+  .post(functions.postRelevantInheritedAmounts);
+
+router.route('/marital-details/update-state-pension-award')
+  .get(functions.getUpdateStatePensionAward);
+
 router.route('/marital-details/save-and-create-task')
   .get(functions.getSaveMaritalDetails)
   .post(functions.postSaveMaritalDetails);
