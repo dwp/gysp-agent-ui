@@ -7,7 +7,7 @@
     }
   },
   "banner": {
-    "text": "This award will increase on __date__",
+    "text": "This award will increase on {{date}}",
     "link": "View new award"
   }
 }

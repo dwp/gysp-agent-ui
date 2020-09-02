@@ -35,6 +35,7 @@ describe('Process claim payment controller', () => {
       }, 50);
     });
   });
+
   describe('getProcessClaimPayment function (GET /process-claim/payment)', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -79,6 +80,7 @@ describe('Process claim payment controller', () => {
       });
     });
   });
+
   describe('postProcessClaimPayment function (POST /process-claim/payment)', () => {
     const validPostRequest = dataObjects.validProcessClaimPaymentFormRequest();
     const invalidPostRequest = dataObjects.invalidProcessClaimPaymentFormRequest();
@@ -113,6 +115,7 @@ describe('Process claim payment controller', () => {
         assert.equal(genericResponse.viewName, 'pages/process-claim-payment/index');
       });
     });
+
     it('should return view with error when API returns no status code.', () => {
       nock('http://test-url/').post(awardCreateScheduleUri);
       nock('http://test-url/').get(`${awardPaymentUri}/${validPostRequest.session.processClaim.claimDetail.inviteKey}`)

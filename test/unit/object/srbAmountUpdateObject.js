@@ -40,14 +40,17 @@ describe('srb amount update put object', () => {
     const json = srbAmountUpdateObject.putObject('SMI078957', { entitlementDate: '2020-01-01', newStatePensionAmount: 100.0, protectedPaymentAmount: 50.0 });
     assert.deepEqual(json, validJson);
   });
+
   it('should return valid json when object is called with string values', () => {
     const json = srbAmountUpdateObject.putObject('SMI078957', { entitlementDate: '2020-01-01', newStatePensionAmount: '100.00', protectedPaymentAmount: '50.00' });
     assert.deepEqual(json, validJson);
   });
+
   it('should return valid json when object is called with null values', () => {
     const json = srbAmountUpdateObject.putObject('SMI078957', { entitlementDate: null, newStatePensionAmount: null, protectedPaymentAmount: null });
     assert.deepEqual(json, validNullJson);
   });
+
   it('should return valid json when object is called and includes asserted entitlement date ', () => {
     const json = srbAmountUpdateObject.putObject('SMI078957', { entitlementDate: '2020-01-01', newStatePensionAmount: 100.0, protectedPaymentAmount: 50.0 }, reviewAwardDate);
     assert.deepEqual(json, validJsonWithAssertedEntitlementDate);

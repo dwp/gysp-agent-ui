@@ -2,8 +2,6 @@ const request = require('request-promise');
 const i18n = require('i18next');
 const httpStatus = require('http-status-codes');
 
-i18n.init({ sendMissingTo: 'fallback' });
-
 const dataStore = require('../../../../lib/dataStore');
 const requestHelper = require('../../../../lib/requestHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');

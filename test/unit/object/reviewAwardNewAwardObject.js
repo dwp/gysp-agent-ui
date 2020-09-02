@@ -157,14 +157,17 @@ describe('review new award object', () => {
       const response = reviewAwardNewAwardObject.formatter();
       assert.isFalse(response);
     });
+
     it('should return false when details is null', () => {
       const response = reviewAwardNewAwardObject.formatter(null);
       assert.isFalse(response);
     });
+
     it('should return valid summary list object', () => {
       const response = reviewAwardNewAwardObject.formatter(validNextSrb);
       assert.equal(JSON.stringify(response), JSON.stringify(responseNextSrb));
     });
+
     it('should return valid summary list object with asserted entitlement date', () => {
       const response = reviewAwardNewAwardObject.formatter(validNextSrb, reviewAwardDate);
       assert.equal(JSON.stringify(response), JSON.stringify(responseReviewAwardDate));

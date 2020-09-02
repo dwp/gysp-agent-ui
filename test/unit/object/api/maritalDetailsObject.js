@@ -305,19 +305,24 @@ describe('maritalDetailsObject', () => {
         });
       });
     });
+
     describe('marital date', () => {
       it('should return formatted married marital details object when status has not changed', () => {
         assert.deepEqual(maritalDetailsObject.formatter(dateDetailsVerified, 'married', claimData.validClaimMarried()), maritalDateFormatted['married-verified']);
       });
+
       it('should return formatted civil partner marital details object when status has not changed', () => {
         assert.deepEqual(maritalDetailsObject.formatter(dateDetailsVerified, 'civil', claimData.validClaimCivilPartner()), maritalDateFormatted['civil-verified']);
       });
+
       it('should return formatted divorced marital details object when status has not changed', () => {
         assert.deepEqual(maritalDetailsObject.formatter(dateDetailsVerified, 'divorced', claimData.validClaimDivorced()), maritalDateFormatted['divorced-verified']);
       });
+
       it('should return formatted dissolved marital details object when status has not changed', () => {
         assert.deepEqual(maritalDetailsObject.formatter(dateDetailsVerified, 'dissolved', claimData.validClaimDissolved()), maritalDateFormatted['dissolved-verified']);
       });
+
       it('should return formatted widowed marital details object when status has not changed', () => {
         assert.deepEqual(maritalDetailsObject.formatter(dateDetailsVerified, 'widowed', claimData.validClaimWidowed()), maritalDateFormatted['widowed-verified']);
       });
@@ -329,18 +334,21 @@ describe('maritalDetailsObject', () => {
       it('should return formatted add object with nino updated when nino supplied but not complete in partner details', () => {
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', claimData.validClaimMarriedVerified()), ninoAddFormatted);
       });
+
       it('should return formatted change object with nino updated when nino supplied and complete in partner details', () => {
         const award = claimData.validClaimMarriedVerified();
         award.partnerDetail.partnerNino = 'AA654321C';
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', award), ninoChangeFormatted);
       });
     });
+
     describe('dob', () => {
       it('should return formatted add object with dob updated when dob day, month and year supplied but not complete in partner details', () => {
         const award = claimData.validClaimMarriedVerified();
         award.partnerDetail.dob = null;
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerDobDetails, 'married', award), dobAddFormatted);
       });
+
       it('should return formatted change object with dob updated when dob day, month and year supplied and complete in partner details', () => {
         const award = claimData.validClaimMarriedVerified();
         award.partnerDetail.dob = '1960-01-01T00:00:00.000Z';
@@ -348,21 +356,26 @@ describe('maritalDetailsObject', () => {
       });
     });
   });
+
   describe('partnerDetailFormatter', () => {
     it('should return verified formatted object with all optional field present when all data is supplied', () => {
       assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerAllDetails, maritalDataMarriedVerified, claimData.validClaimSingle()), fullMaritalStatusAllDataChangeFormattedVerified);
     });
+
     it('should return non verified formatted object with no optional field present when optional fields are blank', () => {
       assert.deepEqual(maritalDetailsObject.partnerDetailFormatter(partnerOptionalNotCompleteDetails, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified);
     });
+
     it('should return formatted object with all required partner fields present plus otherName when all required partner fields and otherName are complete', () => {
       assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({ ...partnerOptionalNotCompleteDetails, otherName: 'Middle' }, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), otherName);
     });
+
     it('should return formatted object with all required partner fields present plus dob when all required partner fields and dob are complete', () => {
       assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({
         ...partnerOptionalNotCompleteDetails, dobYear: '1952', dobMonth: '03', dobDay: '19',
       }, maritalDataMarriedNoneVerified, claimData.validClaimSingle()), dob);
     });
+
     it('should return formatted object with all required partner fields present plus partnerNino when all required partner fields and partnerNino are complete', () => {
       assert.deepEqual(maritalDetailsObject.partnerDetailFormatter({
         ...partnerOptionalNotCompleteDetails, partnerNino: 'AA123456A',

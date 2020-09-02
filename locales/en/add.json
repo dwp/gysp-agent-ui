@@ -34,7 +34,7 @@
         "postcode": "Post code"
       },
       "overseas": {
-        "address_line": "Address Line __number__",
+        "address_line": "Address Line {{number}}",
         "country": "Country"
       }
     }

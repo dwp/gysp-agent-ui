@@ -17,6 +17,7 @@ describe('deathPaymentObject ', () => {
       assert.equal(formatted.endDate, '1 March 2020');
     });
   });
+
   describe('pageData', () => {
     it('should return default object when section is undefined and status is null', () => {
       const formatted = deathPaymentObject.pageData(undefined, null);
@@ -31,12 +32,14 @@ describe('deathPaymentObject ', () => {
         assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verify');
         assert.equal(formatted.button, '/changes-and-enquiries/personal/death/record');
       });
+
       it(`should return object when section is reVerifiedDateOfDeath with ${status} status`, () => {
         const formatted = deathPaymentObject.pageData('reVerifiedDateOfDeath', status);
         assert.isObject(formatted);
         assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verified-date');
         assert.equal(formatted.button, '/changes-and-enquiries/personal/death/record');
       });
+
       it(`should return object when section is retryCalc with ${status} status`, () => {
         const formatted = deathPaymentObject.pageData('retryCalc', status);
         assert.isObject(formatted);
@@ -52,12 +55,14 @@ describe('deathPaymentObject ', () => {
         assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verify');
         assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
       });
+
       it(`should return object when section is reVerifiedDateOfDeath with ${status} status`, () => {
         const formatted = deathPaymentObject.pageData('reVerifiedDateOfDeath', status);
         assert.isObject(formatted);
         assert.equal(formatted.back, '/changes-and-enquiries/personal/death/verified-date');
         assert.equal(formatted.button, '/changes-and-enquiries/personal/death/review-payee');
       });
+
       it(`should return object when section is retryCalc with ${status} status`, () => {
         const formatted = deathPaymentObject.pageData('retryCalc', status);
         assert.isObject(formatted);

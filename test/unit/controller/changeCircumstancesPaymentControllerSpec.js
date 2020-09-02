@@ -1,6 +1,11 @@
 const { assert } = require('chai');
 const nock = require('nock');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 nock.disableNetConnect();
 
 const changeCircumstancesPaymentController = require('../../../app/routes/changes-enquiries/payment/functions');
@@ -21,12 +26,12 @@ const paymentViewDataWithReference = {
 
 const paymentSummaryViewDataFirstPaymentPaid = {
   paymentOne: {
-    label: 'payment:payment_table.first_payment',
+    label: 'First payment',
     creditDate: '11 April 2019',
     amount: '£203.57',
   },
   paymentTwo: {
-    label: 'payment:payment_table.next_payment',
+    label: 'Next payment',
     creditDate: '19 April 2019',
     amount: '£101.83',
   },
@@ -34,12 +39,12 @@ const paymentSummaryViewDataFirstPaymentPaid = {
 
 const paymentSummaryViewDataFirstPaymentNotPaid = {
   paymentOne: {
-    label: 'payment:payment_table.first_payment',
+    label: 'First payment',
     creditDate: '11 April 2019',
     amount: '£203.57',
   },
   paymentTwo: {
-    label: 'payment:payment_table.next_payment',
+    label: 'Next payment',
     creditDate: '19 April 2019',
     amount: '£101.83',
   },
@@ -87,6 +92,12 @@ const paymentSummaryUri = '/api/payment/paymentsummary';
 const recentPaymentsUri = '/api/payment/recentpayments';
 
 describe('Change circumstances payment controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {

@@ -1,8 +1,8 @@
 {
-  "header": "Is the date of death __DATE__?",
+  "header": "Is the date of death {{DATE}}?",
   "fields": {
     "verify": {
-      "legend": "Is the date of death __DATE__?",
+      "legend": "Is the date of death {{DATE}}?",
       "options": {
         "yes": "Yes",
         "no": "No"
