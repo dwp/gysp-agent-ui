@@ -1,6 +1,11 @@
 const assert = require('assert');
 const nock = require('nock');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/changes-enquiries/award/functions');
@@ -26,6 +31,12 @@ const ninoRequestWithFutureUpratingNotInPayment = { session: { searchedNino: 'AA
 const changeCircumstancesDetailsUri = '/api/award';
 
 describe('Change circumstances award controller', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {

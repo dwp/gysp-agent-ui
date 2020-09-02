@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 nock.disableNetConnect();
 
 const addressController = require('../../../app/routes/changes-enquiries/address/functions');
@@ -57,6 +62,12 @@ const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&
 const awardDetailsUpdateApiUri = '/api/award/updateaddressdetails';
 
 describe('Change address controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -77,6 +88,7 @@ describe('Change address controller ', () => {
       }, 100);
     });
   });
+
   afterEach(() => {
     nock.cleanAll();
   });
@@ -94,7 +106,7 @@ describe('Change address controller ', () => {
       addressController.postPostcodeLookup(postcodeInvalidPost, genericResponse);
       return testPromise.then(() => {
         assert.equal(Object.keys(genericResponse.data.errors).length, 1);
-        assert.equal(genericResponse.data.errors.postcode.text, 'address:fields.postcode.errors.required');
+        assert.equal(genericResponse.data.errors.postcode.text, 'You must enter a postcode');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/index');
       });
     });
@@ -194,7 +206,7 @@ describe('Change address controller ', () => {
       addressController.postSelectAddress(invalidSelectPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(Object.keys(genericResponse.data.errors).length, 1);
-        assert.equal(genericResponse.data.errors.address.text, 'address:fields.address.errors.required');
+        assert.equal(genericResponse.data.errors.address.text, 'Select an address from the list');
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/select');
       });
     });
@@ -236,7 +248,7 @@ describe('Change address controller ', () => {
         assert.equal(validSelectPostRequest.session.addressLookup, undefined);
         assert.equal(validSelectPostRequest.session.postcode, undefined);
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'address:success-message');
+        assert.equal(flash.message, 'Address changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });

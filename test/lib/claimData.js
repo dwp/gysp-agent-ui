@@ -395,7 +395,7 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
-      maritalStatus: 'marital-details:details.summary.values.status.single',
+      maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
     };
   },
@@ -405,7 +405,7 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
-      maritalStatus: 'marital-details:details.summary.values.status.married',
+      maritalStatus: 'Married',
       showMaritalStatusDetails: true,
     };
   },
@@ -415,7 +415,7 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
-      maritalStatus: 'marital-details:details.summary.values.status.single',
+      maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Verified',
@@ -427,7 +427,7 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
-      maritalStatus: 'marital-details:details.summary.values.status.single',
+      maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Not verified',
@@ -439,7 +439,7 @@ module.exports = {
       nino: 'AA 37 07 73 A',
       dob: '9 November 1953',
       statePensionDate: '9 November 2018',
-      maritalStatus: 'marital-details:details.summary.values.status.single',
+      maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
       dateOfDeath: '1 January 2019',
       deathArrearsAmount: '£100.00',
@@ -448,57 +448,57 @@ module.exports = {
   },
   validContactDetailsViewData() {
     return [{
-      key: { text: 'contact-details-overview:summary.keys.address', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Address', classes: 'govuk-!-width-two-thirds' },
       value: { html: 'Sub Building Name, Building Name<br />Building Number Dependent Thoroughfare Name<br />Thoroughfare Name<br />Dependent Locality<br />Post Town<br />Post Code' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/address',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.address',
+          text: 'Change',
+          visuallyHiddenText: 'address',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.home-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Home phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '0000000000' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/home',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.home-phone-number',
+          text: 'Change',
+          visuallyHiddenText: 'home phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.work-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Work phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '2222222222' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/work',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.work-phone-number',
+          text: 'Change',
+          visuallyHiddenText: 'work phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.mobile-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Mobile phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '1111111111' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/mobile',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.mobile-phone-number',
+          text: 'Change',
+          visuallyHiddenText: 'mobile phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.email', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Email address', classes: 'govuk-!-width-two-thirds' },
       value: { text: 'a@b.com' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/email',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.email',
+          text: 'Change',
+          visuallyHiddenText: 'email address',
           classes: 'govuk-link--no-visited-state',
         }],
       },
@@ -506,70 +506,71 @@ module.exports = {
   },
   validContactDetailsAddViewData() {
     return [{
-      key: { text: 'contact-details-overview:summary.keys.address', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Address', classes: 'govuk-!-width-two-thirds' },
       value: { html: 'Sub Building Name, Building Name<br />Building Number Dependent Thoroughfare Name<br />Thoroughfare Name<br />Dependent Locality<br />Post Town<br />Post Code' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/address',
-          text: 'contact-details-overview:summary.actions.change',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.address',
+          text: 'Change',
+          visuallyHiddenText: 'address',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.home-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Home phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/home',
-          text: 'contact-details-overview:summary.actions.add',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.home-phone-number',
+          text: 'Add',
+          visuallyHiddenText: 'home phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.work-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Work phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/work',
-          text: 'contact-details-overview:summary.actions.add',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.work-phone-number',
+          text: 'Add',
+          visuallyHiddenText: 'work phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.mobile-phone-number', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Mobile phone number', classes: 'govuk-!-width-two-thirds' },
       value: { text: '' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/mobile',
-          text: 'contact-details-overview:summary.actions.add',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.mobile-phone-number',
+          text: 'Add',
+          visuallyHiddenText: 'mobile phone number',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }, {
-      key: { text: 'contact-details-overview:summary.keys.email', classes: 'govuk-!-width-two-thirds' },
+      key: { text: 'Email address', classes: 'govuk-!-width-two-thirds' },
       value: { text: '' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/contact/email',
-          text: 'contact-details-overview:summary.actions.add',
-          visuallyHiddenText: 'contact-details-overview:summary.keys.email',
+          text: 'Add',
+          visuallyHiddenText: 'email address',
           classes: 'govuk-link--no-visited-state',
         }],
       },
     }];
   },
+
   validAwardListViewData() {
     return {
       banner: null,
       table: {
         firstCellIsHeader: false,
         head: [
-          { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-third' },
-          { text: 'award-list:table.head.weekly-amount' },
+          { text: 'From', classes: 'govuk-!-width-one-third' },
+          { text: 'Weekly amount' },
           { text: '' },
           { text: '' },
         ],
@@ -584,17 +585,15 @@ module.exports = {
       },
     };
   },
+
   validAwardListViewDataWithFutureUprating() {
     return {
-      banner: {
-        text: 'award-list:banner.text',
-        link: 'award-list:banner.link',
-      },
+      banner: { text: 'This award will increase on 6 March 2019', link: 'View new award' },
       table: {
         firstCellIsHeader: false,
         head: [
-          { text: 'award-list:table.head.from', classes: 'govuk-!-width-one-third' },
-          { text: 'award-list:table.head.weekly-amount' },
+          { text: 'From', classes: 'govuk-!-width-one-third' },
+          { text: 'Weekly amount' },
           { text: '' },
           { text: '' },
         ],
@@ -609,94 +608,124 @@ module.exports = {
       },
     };
   },
+
   validAwardDetailsViewData() {
     return {
       isNewAward: false,
-      header: 'award-detail:header.current',
-      detailsSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
-        value: { text: '6 March 2019' },
-      }, {
-        key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
-        value: { text: 'award-detail:summary-values.reason.first-award' },
-      }],
-      amountSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
-        value: { text: '£110.00 a week', classes: 'govuk-!-font-weight-bold' },
-      }, {
-        key: { text: 'award-detail:summary-keys.new-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£100.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£10.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.inherited-extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }],
+      header: 'Current State Pension award',
+      detailsSummaryRows: [
+        {
+          key: { text: 'From', classes: 'govuk-!-width-two-thirds' },
+          value: { text: '6 March 2019' },
+        },
+        {
+          key: { text: 'Reason', classes: 'govuk-!-width-two-thirds' },
+          value: { text: 'First award' },
+        },
+      ],
+      amountSummaryRows: [
+        {
+          key: { text: 'Total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
+          value: { text: '£110.00 a week', classes: 'govuk-!-font-weight-bold' },
+        },
+        {
+          key: { text: 'New State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£100.00' },
+        },
+        {
+          key: { text: 'Protected payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£10.00' },
+        },
+        {
+          key: { text: 'Extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+        {
+          key: { text: 'Inherited extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+      ],
     };
   },
+
   validAwardDetailsViewDataWithUprating() {
     return {
       isNewAward: true,
-      header: 'award-detail:header.new',
-      detailsSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
-        value: { text: '6 March 2019' },
-      }, {
-        key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
-        value: { text: 'award-detail:summary-values.reason.annual-uprating' },
-      }],
-      amountSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
-        value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
-      }, {
-        key: { text: 'award-detail:summary-keys.new-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£150.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£20.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.inherited-extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }],
+      header: 'New State Pension award',
+      detailsSummaryRows: [
+        {
+          key: { text: 'From', classes: 'govuk-!-width-two-thirds' },
+          value: { text: '6 March 2019' },
+        },
+        {
+          key: { text: 'Reason', classes: 'govuk-!-width-two-thirds' },
+          value: { text: 'Annual uprating' },
+        }],
+      amountSummaryRows: [
+        {
+          key: { text: 'Total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
+          value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
+        },
+        {
+          key: { text: 'New State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£150.00' },
+        },
+        {
+          key: { text: 'Protected payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£20.00' },
+        },
+        {
+          key: { text: 'Extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+        {
+          key: { text: 'Inherited extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+      ],
     };
   },
+
   validAwardDetailsViewDataWithUpratingWithFrequencyAmount() {
     return {
       isNewAward: true,
-      header: 'award-detail:header.new',
-      detailsSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.from', classes: 'govuk-!-width-two-thirds' },
-        value: { text: '6 March 2019' },
-      }, {
-        key: { text: '4 award-detail:summary-keys.weekly-amount', classes: 'govuk-!-width-two-thirds' },
-        value: { text: '£640.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.reason', classes: 'govuk-!-width-two-thirds' },
-        value: { text: 'award-detail:summary-values.reason.annual-uprating' },
-      }],
-      amountSummaryRows: [{
-        key: { text: 'award-detail:summary-keys.total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
-        value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
-      }, {
-        key: { text: 'award-detail:summary-keys.new-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£150.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.protected-payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£20.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }, {
-        key: { text: 'award-detail:summary-keys.inherited-extra-state-pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
-        value: { text: '£0.00' },
-      }],
+      header: 'New State Pension award',
+      detailsSummaryRows: [
+        {
+          key: { text: 'From', classes: 'govuk-!-width-two-thirds' },
+          value: { text: '6 March 2019' },
+        },
+        {
+          key: { text: '4 weekly amount', classes: 'govuk-!-width-two-thirds' },
+          value: { text: '£640.00' },
+        },
+        {
+          key: { text: 'Reason', classes: 'govuk-!-width-two-thirds' },
+          value: { text: 'Annual uprating' },
+        },
+      ],
+      amountSummaryRows: [
+        {
+          key: { text: 'Total', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-bold' },
+          value: { text: '£160.00 a week', classes: 'govuk-!-font-weight-bold' },
+        },
+        {
+          key: { text: 'New State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£150.00' },
+        },
+        {
+          key: { text: 'Protected payment', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£20.00' },
+        },
+        {
+          key: { text: 'Extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+        {
+          key: { text: 'Inherited extra State Pension', classes: 'govuk-!-width-two-thirds govuk-!-font-weight-regular' },
+          value: { text: '£0.00' },
+        },
+      ],
     };
   },
   validAddressWithThoroughfare() {

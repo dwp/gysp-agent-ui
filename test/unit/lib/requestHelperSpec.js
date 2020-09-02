@@ -17,6 +17,7 @@ describe('Request helper ', () => {
       assert.equal(pdfCall.headers.agentRef, 'Test User');
     });
   });
+
   describe('generatePostCall  ', () => {
     it('should return valid object when url and body is supplied', () => {
       const postCall = requestHelper.generatePostCall('http://url.com/', { value1: 1 });
@@ -30,6 +31,7 @@ describe('Request helper ', () => {
       assert.equal(postCall.headers['Content-Type'], 'application/json');
     });
   });
+
   describe('Request helper ', () => {
     describe('generateGetCall  ', () => {
       it('should return valid object when url and body is supplied', () => {

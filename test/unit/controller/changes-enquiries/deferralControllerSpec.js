@@ -55,9 +55,9 @@ const getUpdateRequest = {
 };
 
 const errorMessages = {
-  400: 'app:errors.api.bad-request',
-  404: 'app:errors.api.not-found',
-  500: 'app:errors.api.internal-server-error',
+  400: 'There has been a problem with the service, please go back and try again. This has been logged.',
+  404: 'There has been a problem - award not found. This has been logged.',
+  500: 'There has been a problem with the service, please try again. This has been logged.',
 };
 
 describe('Deferral controller', () => {
@@ -198,7 +198,7 @@ describe('Deferral controller', () => {
       return testPromise.then(() => {
         assert.isUndefined(getUpdateRequest.session.deferral);
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'deferral-update:messages.success');
+        assert.equal(flash.message, 'State pension deferred - payments stopped');
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       });
     });

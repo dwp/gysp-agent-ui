@@ -5,6 +5,11 @@ nock.disableNetConnect();
 
 const { assert } = require('chai');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 const controller = require('../../../app/routes/changes-enquiries/payment-frequency/functions');
 
 const responseHelper = require('../../lib/responseHelper');
@@ -57,6 +62,12 @@ const paymentSchedulePostRequest = {
 };
 
 describe('Change payment frequency controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -110,7 +121,7 @@ describe('Change payment frequency controller ', () => {
       controller.postChangePaymentFrequency(paymentSchedulePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'payment-frequency:success-message');
+        assert.equal(flash.message, 'Frequency changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
     });

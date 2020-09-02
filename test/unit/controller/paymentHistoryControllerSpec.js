@@ -2,13 +2,18 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const httpStatus = require('http-status-codes');
 const moment = require('moment');
+const nock = require('nock');
+
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
 
 const creditDate5DaysAgo = moment().subtract(5, 'd');
 const creditDate15DaysAgo = moment().subtract(15, 'd');
 
 chai.use(chaiAsPromised);
 
-const nock = require('nock');
 
 nock.disableNetConnect();
 
@@ -55,20 +60,20 @@ const paymentDetailFormatted = {
   sortCode: '40 05 00',
   detailsSummaryRows: [
     {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.total' },
+      key: { classes: 'govuk-!-width-one-third', text: 'Total' },
       value: { classes: 'govuk-!-font-weight-bold', text: '£100.00' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
       value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
       value: { text: 'Sent' },
       actions: {
         items: [{
           href: '/changes-and-enquiries/payment-history/123/status-update',
-          text: 'payment-detail:summary-keys.statusLink.recall.text',
+          text: 'Recall payment',
         }],
       },
     },
@@ -94,21 +99,21 @@ const paymentDetailWithReferenceNumberFormatted = {
   accountNumber: '98765432',
   detailsSummaryRows: [
     {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.total' },
+      key: { classes: 'govuk-!-width-one-third', text: 'Total' },
       value: { classes: 'govuk-!-font-weight-bold', text: '£100.00' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
       value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
       value: { text: 'Sent' },
       actions: {
         items: [
           {
             href: '/changes-and-enquiries/payment-history/321/status-update',
-            text: 'payment-detail:summary-keys.statusLink.recall.text',
+            text: 'Recall payment',
           },
         ],
       },
@@ -141,15 +146,15 @@ const paymentDetailPaidFormattedAfter14Days = {
   accountNumber: '98765432',
   detailsSummaryRows: [
     {
-      key: { classes: 'govuk-!-width-one-third', text: 'payment-detail:summary-keys.total' },
+      key: { classes: 'govuk-!-width-one-third', text: 'Total' },
       value: { classes: 'govuk-!-font-weight-bold', text: '£100.00' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.period' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
       value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
     },
     {
-      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'payment-detail:summary-keys.status' },
+      key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
       value: { text: 'Paid' },
     },
   ],
@@ -167,25 +172,25 @@ const reissuePaymentDetailsFormatted = {
     {
       key: {
         classes: 'govuk-!-width-one-third',
-        text: 'reissue-payment:account-details.account-holder',
+        text: 'Account holder',
       },
       value: { text: 'Joe Bloggs' },
     }, {
       key: {
         classes: 'govuk-!-width-one-third',
-        text: 'reissue-payment:account-details.account-number',
+        text: 'Account number',
       },
       value: { text: '12345678' },
     }, {
       key: {
         classes: 'govuk-!-width-one-third',
-        text: 'reissue-payment:account-details.sort-code',
+        text: 'Sort code',
       },
       value: { text: '11 22 33' },
     }, {
       key: {
         classes: 'govuk-!-width-one-third',
-        text: 'reissue-payment:account-details.roll-number',
+        text: 'Roll number',
       },
       value: { text: '231231232' },
     },
@@ -194,7 +199,7 @@ const reissuePaymentDetailsFormatted = {
     {
       key: {
         classes: 'govuk-!-width-one-third govuk-!-font-weight-bold',
-        text: 'reissue-payment:payment-details.total',
+        text: 'Total',
       },
       value: {
         classes: 'govuk-!-font-weight-bold',
@@ -203,7 +208,7 @@ const reissuePaymentDetailsFormatted = {
     }, {
       key: {
         classes: 'govuk-!-width-one-third govuk-!-font-weight-regular',
-        text: 'reissue-payment:payment-details.period',
+        text: 'Period',
       },
       value: { text: '30/07/2019 to 27/08/2019' },
     },
@@ -240,12 +245,20 @@ const yesPostRequestPaid = Object.assign(JSON.parse(JSON.stringify(baseRequest))
 yesPostRequestPaid.params.id = 1111;
 
 describe('Payment history controller', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     flash = { type: '', message: '' };
   });
+
   afterEach(() => {
     nock.cleanAll();
   });
+
   describe('getPaymentHistoryDetail function (GET /changes-and-enquiries/payment-history/detail)', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -411,7 +424,7 @@ describe('Payment history controller', () => {
         await controller.postStatusUpdate(yesPostRequest, genericResponse);
         assert.isUndefined(yesPostRequest.session['payment-history']['123']);
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'payment-status:success-message.returned');
+        assert.equal(flash.message, 'Payment returned - payments stopped');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
 
@@ -492,7 +505,7 @@ describe('Payment history controller', () => {
         await controller.postStatusUpdate(yesPostRequestRecalling, genericResponse);
         assert.isUndefined(yesPostRequestRecalling.session['payment-history']['1111']);
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'payment-status:success-message.recall');
+        assert.equal(flash.message, 'Recalling payment');
         assert.equal(genericResponse.address, '/changes-and-enquiries/payment');
       });
 
@@ -688,6 +701,7 @@ describe('Payment history controller', () => {
         session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
       };
     });
+
     it('should return redirect and display alert when payment status is not updatable - SENT', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailSent);
       validReissueRequest.params.id = 12345678;

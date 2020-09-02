@@ -150,6 +150,7 @@ describe('maritalWidowDetailsObject', () => {
     it('should return formatted verified widow object with check inheritable state pension as yes', () => {
       assert.deepEqual(maritalDetailsObject.formatter(detailsPositive, claimData.validClaimMarried()), detailsPositiveFormatted);
     });
+
     it('should return formatted not verified widow object with check inheritable state pension as no', () => {
       assert.deepEqual(maritalDetailsObject.formatter(detailsNegative, claimData.validClaimMarried()), detailsNegativeFormatted);
     });

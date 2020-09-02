@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../../config/i18next');
+
 const claimData = require('../../../lib/claimData');
 
 nock.disableNetConnect();
@@ -51,6 +56,12 @@ let civilTaskRequest;
 let civilTaskUpdatedRequest;
 
 describe('task entitlement controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -72,7 +83,7 @@ describe('task entitlement controller ', () => {
       await controller.getPartnerNino(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
       assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
     });
 
@@ -130,7 +141,7 @@ describe('task entitlement controller ', () => {
       await controller.getDateOfBirth(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
       assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
     });
 
@@ -203,7 +214,7 @@ describe('task entitlement controller ', () => {
       await controller.getMaritalDate(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
       assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
     });
 
