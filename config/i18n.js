@@ -32,6 +32,8 @@ module.exports = {
       'marital-save-and-create-task',
       'marital-state-pension-entitlement',
       'marital-status',
+      'marital-update-and-send-letter',
+      'marital-update-award-amount',
       'marital-update-state-pension-award',
       'remove-contact-details',
       'enter-amounts',

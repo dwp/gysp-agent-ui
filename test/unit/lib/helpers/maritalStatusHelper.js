@@ -141,6 +141,9 @@ describe('marital status helper', () => {
     it('should return success alert key for marital status changed when current and new status are different', () => {
       assert.equal(helper.maritalDateSuccessAlert('married', 'divorced', 'V'), 'marital-status:success-message');
     });
+    it('should return success alert key for marital status changed and award updated', () => {
+      assert.equal(helper.maritalDateSuccessAlert('married', 'widowed', 'V', true), 'marital-status:success-message-award');
+    });
     it('should return success alert key for verified marital date changed when current and new status are the same', () => {
       assert.equal(helper.maritalDateSuccessAlert('married', 'married', 'V'), 'marital-date:success-message.married.verified');
     });

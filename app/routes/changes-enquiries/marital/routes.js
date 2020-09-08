@@ -43,6 +43,14 @@ router.route('/marital-details/relevant-inherited-amounts')
 router.route('/marital-details/update-state-pension-award')
   .get(functions.getUpdateStatePensionAward);
 
+router.route('/marital-details/update-state-pension-award/:type(new-state-pension|protected-payment|inherited-extra-state-pension)')
+  .get(functions.getUpdateStatePensionAwardAmount)
+  .post(functions.postUpdateStatePensionAwardAmount);
+
+router.route('/marital-details/update-and-send-letter')
+  .get(functions.getUpdateAndSendLetter)
+  .post(functions.postUpdateAndSendLetter);
+
 router.route('/marital-details/save-and-create-task')
   .get(functions.getSaveMaritalDetails)
   .post(functions.postSaveMaritalDetails);

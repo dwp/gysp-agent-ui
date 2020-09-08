@@ -1,0 +1,31 @@
+{
+  "fields": {
+    "amount": {
+      "new-state-pension": {
+        "label": "New State Pension",
+        "errors": {
+          "required": "Enter the new State Pension amount",
+          "invalid": "Enter the new State Pension amount in the correct format, like 164.35",
+          "length": "New State Pension amount must be 6 characters or less",
+          "max-amount": "New State Pension amount must be __AMOUNT__ or less"
+        }
+      },
+      "protected-payment": {
+        "label": "Protected payment",
+        "errors": {
+          "required": "Enter the protected payment amount",
+          "invalid": "Enter the protected payment amount in the correct format, like 0.99, 12.00 or 123.40",
+          "length": "Protected payment amount must be 6 characters or less"
+        }
+      },
+      "inherited-extra-state-pension": {
+        "label": "Inherited extra State Pension",
+        "errors": {
+          "required": "Enter the inherited extra State Pension amount",
+          "invalid": "Enter the inherited extra State Pension amount in the correct format, like 0.99, 12.00 or 123.40",
+          "length": "Inherited extra State Pension amount must be 6 characters or less"
+        }
+      }
+    }
+  }
+}
