@@ -32,7 +32,7 @@
 		{% if status %}
 			{{ govukTag({
 				text: status.text,
-				classes: 'govuk-!-margin-bottom-9 key-details-section__status key-details-section__status--' + status.class
+				classes: 'govuk-!-margin-bottom-9 ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
 			}) }}
 		{% endif %}
 	</section>
@@ -50,7 +50,7 @@
 				{% if status %}
 					{{ govukTag({
 						text: status.text,
-						classes: 'govuk-!-margin-bottom-3 key-details-slim-section__status key-details-section__status--' + status.class
+						classes: 'govuk-!-margin-bottom-3 key-details-slim-section__status ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
 					}) }}
 				{% endif %}
 			</div>

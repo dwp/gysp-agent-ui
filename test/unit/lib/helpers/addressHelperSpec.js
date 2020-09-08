@@ -18,8 +18,8 @@ describe('address helper', () => {
 
   describe('addressWhereThoroughfareIsNullButPostTownExists ', () => {
     it('should return formatted address array the when only subBuildingName, buildingName, postTown and postCode are present', () => {
-      const address = helper.address(claimData.validAddressSubBuildingNamebuildingName());
-      assert.equal(JSON.stringify(address), JSON.stringify(claimData.validAddressSubBuildingNamebuildingNameResult()));
+      const address = helper.address(claimData.validAddressSubBuildingNameBuildingName());
+      assert.equal(JSON.stringify(address), JSON.stringify(claimData.validAddressSubBuildingNameBuildingNameResult()));
     });
 
     it('should return formatted address array the when only subBuildingName, postTown and postCode are present', () => {

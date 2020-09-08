@@ -6,7 +6,7 @@ const formValidator = require('../../../lib/formValidator');
 const encryption = require('../../../lib/encryption');
 const claimInErrorObject = require('../../../lib/claimInErrorObject');
 
-const noStausCodeErrorMessage = 'Error - could not get claim data';
+const noStatusCodeErrorMessage = 'Error - could not get claim data';
 const backendErrorMessage = 'Can\'t connect to backend';
 
 function getClaim(req, res) {
@@ -23,8 +23,8 @@ function postClaimErrorHandle(err, req, res) {
       details.result = JSON.stringify({ message: err.response.body.message });
       res.render('pages/robot/claim', { details, globalError: err.response.body.message });
     } else {
-      details.result = JSON.stringify({ message: noStausCodeErrorMessage });
-      res.render('pages/robot/claim', { details, globalError: noStausCodeErrorMessage });
+      details.result = JSON.stringify({ message: noStatusCodeErrorMessage });
+      res.render('pages/robot/claim', { details, globalError: noStatusCodeErrorMessage });
     }
   } else {
     details.result = JSON.stringify({ message: backendErrorMessage });

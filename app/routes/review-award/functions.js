@@ -11,7 +11,7 @@ const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
 const srbAmountUpdateObject = require('../../../lib/objects/srbAmountUpdateObject');
 const formValidator = require('../../../lib/formValidator');
 
-async function cacheRetriveAndStore(req, key, apiCall) {
+async function cacheRetrieveAndStore(req, key, apiCall) {
   if (dataStore.get(req, key)) {
     return dataStore.get(req, key);
   }
@@ -38,12 +38,12 @@ function getReviewAward(req, res) {
 
 async function getReviewReason(req, res) {
   try {
-    const reviewAward = await cacheRetriveAndStore(req, 'review-award', () => {
+    const reviewAward = await cacheRetrieveAndStore(req, 'review-award', () => {
       const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation');
       return request(reviewAwardCall);
     });
 
-    const award = await cacheRetriveAndStore(req, 'award', () => {
+    const award = await cacheRetrieveAndStore(req, 'award', () => {
       const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${reviewAward.nino}`, {}, 'batch');
       return request(awardCall);
     });

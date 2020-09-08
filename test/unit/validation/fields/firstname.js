@@ -5,7 +5,7 @@ const customerData = require('../../../lib/customerData');
 
 const testDataField = customerData.fieldData();
 
-describe('Form validation firstname', () => {
+describe('Form validation firstName', () => {
   it('Should return error if field is empty', () => {
     const error = validator.isValidFirstName(testDataField.empty);
     assert.equal(error, 'add:errors.firstname.required');

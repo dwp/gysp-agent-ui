@@ -6,15 +6,15 @@ describe('contactDetailsOverview ', () => {
   describe('formatter', () => {
     it('should return formatted object with array', () => {
       const formatted = contactDetailsOverview.formatter(claimData.validClaim());
-      assert.isArray(formatted.conatctDetailsSummaryRows);
+      assert.isArray(formatted.contactDetailsSummaryRows);
     });
     it('should return formatted object with array change links', () => {
       const formatted = contactDetailsOverview.formatter(claimData.validClaim());
-      assert.deepEqual(formatted.conatctDetailsSummaryRows, claimData.validContactDetailsViewData());
+      assert.deepEqual(formatted.contactDetailsSummaryRows, claimData.validContactDetailsViewData());
     });
     it('should return formatted object with array add links', () => {
       const formatted = contactDetailsOverview.formatter(claimData.validClaimNullContact());
-      assert.deepEqual(formatted.conatctDetailsSummaryRows, claimData.validContactDetailsAddViewData());
+      assert.deepEqual(formatted.contactDetailsSummaryRows, claimData.validContactDetailsAddViewData());
     });
   });
 });

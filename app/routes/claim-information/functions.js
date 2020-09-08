@@ -7,7 +7,7 @@ const formValidator = require('../../../lib/formValidator');
 const errorMessage500 = 'Error - could not get claim data';
 const errorMessage404 = 'Error - could not get claim data';
 const errorMessage400 = 'Error - could not get claim data';
-const noStausCodeErrorMessage = 'Error - could not get claim data';
+const noStatusCodeErrorMessage = 'Error - could not get claim data';
 const backendErrorMessage = 'Can\'t connect to backend';
 
 function convertDates(req) {
@@ -45,7 +45,7 @@ function postClaimErrorHandle(err, req, res) {
     } else if (err.statusCode === httpStatus.BAD_REQUEST) {
       res.render('pages/claim-information/claim', { details: req.body, globalError: errorMessage400 });
     } else {
-      res.render('pages/claim-information/claim', { details: req.body, globalError: noStausCodeErrorMessage });
+      res.render('pages/claim-information/claim', { details: req.body, globalError: noStatusCodeErrorMessage });
     }
   } else {
     res.render('pages/claim-information/claim', { details: req.body, globalError: backendErrorMessage });

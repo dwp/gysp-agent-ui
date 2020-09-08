@@ -11,7 +11,7 @@ const blankSession = { session: {} };
 
 const deathPayeeDetailsApiUri = '/api/award/death-payee-details';
 
-const payeDetailsValidResponse = {
+const payeeDetailsValidResponse = {
   address: {
     buildingNumber: '1',
     postCode: 'Post code',
@@ -49,11 +49,11 @@ describe('death helper', () => {
       }
     });
     it('should return object when state code is 200 ', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
-      assert.deepEqual(await helper.payeeDetails(blankSession, genericResponse, 'BLOG123456'), payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
+      assert.deepEqual(await helper.payeeDetails(blankSession, genericResponse, 'BLOG123456'), payeeDetailsValidResponse);
     });
     it('should return cached object when already exists in session', async () => {
-      assert.deepEqual(await helper.payeeDetails(blankSession, genericResponse, 'BLOG123456'), payeDetailsValidResponse);
+      assert.deepEqual(await helper.payeeDetails(blankSession, genericResponse, 'BLOG123456'), payeeDetailsValidResponse);
     });
   });
   describe('deathPaymentStatus', () => {
@@ -196,42 +196,42 @@ describe('death helper', () => {
       assert.equal(helper.statusLocalesKey('OVERPAYMENT'), 'overpayment');
     });
   });
-  describe('successMesssage', () => {
+  describe('successMessage', () => {
     it('should return not-verified when all is undefined', () => {
-      assert.equal(helper.successMesssage(), 'death-record:messages.success.not-verified');
+      assert.equal(helper.successMessage(), 'death-record:messages.success.not-verified');
     });
     it('should return not-verified when all is null', () => {
-      assert.equal(helper.successMesssage(null, null), 'death-record:messages.success.not-verified');
+      assert.equal(helper.successMessage(null, null), 'death-record:messages.success.not-verified');
     });
     it('should return arrears when verification is V and status ARREARS', () => {
-      assert.equal(helper.successMesssage('V', 'ARREARS'), 'death-record:messages.success.arrears');
+      assert.equal(helper.successMessage('V', 'ARREARS'), 'death-record:messages.success.arrears');
     });
     it('should return arrears when verification is NV and status ARREARS', () => {
-      assert.equal(helper.successMesssage('NV', 'ARREARS'), 'death-record:messages.success.arrears');
+      assert.equal(helper.successMessage('NV', 'ARREARS'), 'death-record:messages.success.arrears');
     });
     it('should return overpayment when verification is V and status OVERPAYMENT', () => {
-      assert.equal(helper.successMesssage('V', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
+      assert.equal(helper.successMessage('V', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
     });
     it('should return overpayment when verification is NV and status OVERPAYMENT', () => {
-      assert.equal(helper.successMesssage('NV', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
+      assert.equal(helper.successMessage('NV', 'OVERPAYMENT'), 'death-record:messages.success.overpayment');
     });
     it('should return arrears when verification is V, status OVERPAYMENT and section retryCalc', () => {
-      assert.equal(helper.successMesssage('V', 'OVERPAYMENT', 'retryCalc'), 'death-record:messages.retryCalc.success.overpayment');
+      assert.equal(helper.successMessage('V', 'OVERPAYMENT', 'retryCalc'), 'death-record:messages.retryCalc.success.overpayment');
     });
     it('should return overpayment when verification is V and status NOTHING_OWED', () => {
-      assert.equal(helper.successMesssage('V', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
+      assert.equal(helper.successMessage('V', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
     });
     it('should return overpayment when verification is NV and status NOTHING_OWED', () => {
-      assert.equal(helper.successMesssage('NV', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
+      assert.equal(helper.successMessage('NV', 'NOTHING_OWED'), 'death-record:messages.success.nothing-owed');
     });
     it('should return arrears when verification is V, status NOTHING_OWED and section retryCalc', () => {
-      assert.equal(helper.successMesssage('V', 'NOTHING_OWED', 'retryCalc'), 'death-record:messages.retryCalc.success.nothing-owed');
+      assert.equal(helper.successMessage('V', 'NOTHING_OWED', 'retryCalc'), 'death-record:messages.retryCalc.success.nothing-owed');
     });
     it('should return verified when verification is V and status is undefined', () => {
-      assert.equal(helper.successMesssage('V'), 'death-record:messages.success.verified');
+      assert.equal(helper.successMessage('V'), 'death-record:messages.success.verified');
     });
     it('should return verified when verification is NV and status is undefined', () => {
-      assert.equal(helper.successMesssage('NV'), 'death-record:messages.success.not-verified');
+      assert.equal(helper.successMessage('NV'), 'death-record:messages.success.not-verified');
     });
   });
   describe('deathPaymentView', () => {

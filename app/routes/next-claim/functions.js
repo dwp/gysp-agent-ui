@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const requestHelper = require('../../../lib/requestHelper');
 const nextClaimObject = require('../../../lib/nextClaimObject');
 
-const noStausCodeErrorMessage = 'Error - could not get claim data';
+const noStatusCodeErrorMessage = 'Error - could not get claim data';
 const backendErrorMessage = 'Can\'t connect to backend';
 
 const goodHTTPstatus = 200;
@@ -16,7 +16,7 @@ function postClaimErrorHandle(err, req, res) {
     } else if (err.statusCode === httpStatus.INTERNAL_SERVER_ERROR) {
       res.render('pages/next-claim/claim', { globalError: err.response.body.message });
     } else {
-      res.render('pages/next-claim/claim', { globalError: noStausCodeErrorMessage });
+      res.render('pages/next-claim/claim', { globalError: noStatusCodeErrorMessage });
     }
   } else {
     res.render('pages/next-claim/claim', { globalError: backendErrorMessage });

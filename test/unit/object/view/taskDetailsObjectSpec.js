@@ -82,7 +82,7 @@ const basePartnerDetailRows = (status) => [{
   value: { text: 'Jane' },
 }, {
   key: { text: 'task-detail:partner-details.summary-keys.last-name' },
-  value: { text: 'Bloogs' },
+  value: { text: 'Bloggs' },
 }, {
   key: { text: 'task-detail:partner-details.summary-keys.other-names' },
   value: { text: 'Middle' },
@@ -126,7 +126,7 @@ const updatedPartnerDetailRows = (status) => [{
   value: { text: 'Jane' },
 }, {
   key: { text: 'task-detail:partner-details.summary-keys.last-name' },
-  value: { text: 'Bloogs' },
+  value: { text: 'Bloggs' },
 }, {
   key: { text: 'task-detail:partner-details.summary-keys.other-names' },
   value: { text: 'Middle' },

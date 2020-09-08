@@ -12,7 +12,7 @@ const marriedToDivorcedVerifiedFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     marriageDate: null,
@@ -32,7 +32,7 @@ const marriedToWidowedVerifiedFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     marriageDate: null,
@@ -52,7 +52,7 @@ const civilToDissolvedVerifiedFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     civilPartnershipDate: null,
@@ -72,7 +72,7 @@ const civilToWidowedVerifiedFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     civilPartnershipDate: null,
@@ -92,7 +92,7 @@ const ninoAddFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: false,
@@ -111,7 +111,7 @@ const dobAddFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: false,
@@ -129,7 +129,7 @@ const fullMaritalStatusAllDataChangeFormattedVerified = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     marriageDate: '2020-03-01T00:00:00.000Z',
@@ -146,7 +146,7 @@ const fullMaritalStatusOnlyRequiredDataChangeFormattedNonVerified = {
   maritalStatusVerified: false,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloogs',
+    surname: 'Bloggs',
     marriageDate: '2020-03-01T00:00:00.000Z',
   },
 };
@@ -167,7 +167,7 @@ const maritalDateBaseFormatted = {
 
 const partnerDetail = {
   firstName: 'Jane',
-  surname: 'Bloogs',
+  surname: 'Bloggs',
   allOtherNames: 'Middle',
   dob: '1952-03-19T00:00:00.000Z',
 };
@@ -242,7 +242,7 @@ const partnerDobDetails = { dobYear: '1952', dobMonth: '03', dobDay: '19' };
 
 const partnerAllDetails = {
   firstName: 'Jane',
-  lastName: 'Bloogs',
+  lastName: 'Bloggs',
   otherName: 'Middle',
   dobYear: '1952',
   dobMonth: '03',
@@ -252,7 +252,7 @@ const partnerAllDetails = {
 
 const partnerOptionalNotCompleteDetails = {
   firstName: 'Jane',
-  lastName: 'Bloogs',
+  lastName: 'Bloggs',
   otherName: '',
   dobYear: '',
   dobMonth: '',
@@ -341,7 +341,7 @@ describe('maritalDetailsObject', () => {
         award.partnerDetail.dob = null;
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerDobDetails, 'married', award), dobAddFormatted);
       });
-      it('should return formatted change object with dob updated when nindob day, month and year supplied and complete in partner details', () => {
+      it('should return formatted change object with dob updated when dob day, month and year supplied and complete in partner details', () => {
         const award = claimData.validClaimMarriedVerified();
         award.partnerDetail.dob = '1960-01-01T00:00:00.000Z';
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerDobDetails, 'married', award), dobChangeFormatted);

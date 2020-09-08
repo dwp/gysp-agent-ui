@@ -225,7 +225,7 @@ const validReissueDeathRequest = {
   session: { awardDetails: claimData.validClaimWithDeathVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
 };
 
-const validReissueDeathNotVerifedRequest = {
+const validReissueDeathNotVerifiedRequest = {
   session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
 };
 
@@ -293,7 +293,7 @@ describe('Payment history controller', () => {
       assert.deepEqual(genericResponse.data.paymentHistoryDetail, paymentDetailWithReferenceNumberFormatted);
     });
 
-    it('should return view with no link to change payment staus when status is not paid', async () => {
+    it('should return view with no link to change payment status when status is not paid', async () => {
       nock('http://test-url/').get(`${paymentUri}/1234`).reply(httpStatus.OK, paymentDetailWithReferenceNumber);
       paymentDetailWithReferenceNumberFormattedNotPaid.id = 1234;
       paymentDetailWithReferenceNumberFormattedNotPaid.detailsSummaryRows[2].actions.items[0].href = '/changes-and-enquiries/payment-history/1234/status-update';
@@ -303,7 +303,7 @@ describe('Payment history controller', () => {
       assert.deepEqual(genericResponse.data.paymentHistoryDetail, paymentDetailWithReferenceNumberFormattedNotPaid);
     });
 
-    it('should return view with no link to change payment staus when credit data is greater than 14 days ago', async () => {
+    it('should return view with no link to change payment status when credit data is greater than 14 days ago', async () => {
       paymentDetailPaid.creditDate = creditDate15DaysAgo;
       nock('http://test-url/').get(`${paymentUri}/12345`).reply(httpStatus.OK, paymentDetailPaid);
       validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 12345 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
@@ -670,10 +670,10 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
     });
 
-    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFED', async () => {
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFIED', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
-      validReissueDeathNotVerifedRequest.params.id = 12345678;
-      await controller.getReissuePayment(validReissueDeathNotVerifedRequest, genericResponse);
+      validReissueDeathNotVerifiedRequest.params.id = 12345678;
+      await controller.getReissuePayment(validReissueDeathNotVerifiedRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'Error - this payment cannot be reissued.');
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
@@ -706,10 +706,10 @@ describe('Payment history controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');
     });
 
-    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFED', async () => {
+    it('should return redirect and display alert when payment status is not updatable - RETURNED DEAD NOTVERIFIED', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
-      validReissueDeathNotVerifedRequest.params.id = 12345678;
-      await controller.postReissuePayment(validReissueDeathNotVerifedRequest, genericResponse);
+      validReissueDeathNotVerifiedRequest.params.id = 12345678;
+      await controller.postReissuePayment(validReissueDeathNotVerifiedRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'Error - this payment cannot be reissued.');
       assert.equal(genericResponse.address, '/changes-and-enquiries/payment-history/12345678');

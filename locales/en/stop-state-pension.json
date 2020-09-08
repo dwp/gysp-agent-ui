@@ -1,0 +1,15 @@
+{
+  "header": "Stop State Pension",
+  "h2": "Reason for stopping the State Pension",
+  "fields": {
+    "reason": {
+      "options": {
+        "death": "Death",
+        "deferral": "Deferral"
+      },
+      "errors": {
+        "required": "Select a reason for stopping the State Pension"
+      }
+    }
+  }
+}

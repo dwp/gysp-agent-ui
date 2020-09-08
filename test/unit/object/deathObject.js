@@ -92,13 +92,13 @@ const notVerifiedResponse = {
 
 describe('deathObject object', () => {
   describe('formatter', () => {
-    it('should return valid json object when with verifed data when verification is set to V', (done) => {
+    it('should return valid json object when with verified data when verification is set to V', (done) => {
       const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, verifiedResponse);
       done();
     });
 
-    it('should return valid json object when with verifed data when verification is set to NV', (done) => {
+    it('should return valid json object when with verified data when verification is set to NV', (done) => {
       const json = object.formatter(notVerifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, notVerifiedResponse);
       done();

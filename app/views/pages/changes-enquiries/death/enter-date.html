@@ -9,13 +9,13 @@
 {% block sectionBackLink %}
   {{ govukBackLink({
     text: t("app:link.back"),
-    href: "/changes-and-enquiries/personal",
+    href: "/changes-and-enquiries/personal/stop-state-pension",
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
   }) }}
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="/changes-and-enquiries/personal/death" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/personal/death" autocomplete="off" novalidate>
 
     {{ govukDateInput({
       id: "date",

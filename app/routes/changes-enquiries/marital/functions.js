@@ -28,7 +28,7 @@ const getEntitlementDateApiUri = (entitleDate, claimFromDate, ninoDigits) => `ap
 const getValidateNspApiUri = (entitleDate, amount) => `api/paymentcalc/validatensp?entitlement-date=${entitleDate}&amount=${amount}`;
 
 async function awardDetails(req, res) {
-  const detail = await dataStore.cacheRetriveAndStore(req, undefined, 'awardDetails', () => {
+  const detail = await dataStore.cacheRetrieveAndStore(req, undefined, 'awardDetails', () => {
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
     return request(awardCall);
   });
@@ -376,7 +376,7 @@ function buildEntitlementDateApiUri(req) {
 
 function getEntitlementDate(req, res) {
   const { url, cacheKey } = buildEntitlementDateApiUri(req);
-  return dataStore.cacheRetriveAndStore(req, 'marital', cacheKey, () => {
+  return dataStore.cacheRetrieveAndStore(req, 'marital', cacheKey, () => {
     const awardCall = requestHelper.generateGetCall(res.locals.agentGateway + url, {}, 'award');
     return request(awardCall) || Object.create(null);
   });

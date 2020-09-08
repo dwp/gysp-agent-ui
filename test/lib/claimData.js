@@ -25,6 +25,13 @@ module.exports = {
       ...base, ...this.validDeathNotVerified(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
     };
   },
+  validClaimWithDeferral() {
+    const base = { ...this.validBase() };
+    base.awardStatus = 'DEFERRED';
+    return {
+      ...base, ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalSingle(),
+    };
+  },
   validClaimSingle() {
     return {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalSingle(),
@@ -153,7 +160,7 @@ module.exports = {
       maritalStatusVerified: false,
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         dobVerified: false,
@@ -168,7 +175,7 @@ module.exports = {
       maritalStatusVerified: true,
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         dobVerified: false,
@@ -182,7 +189,7 @@ module.exports = {
       maritalStatusVerified: false,
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         dobVerified: false,
@@ -196,7 +203,7 @@ module.exports = {
       maritalStatus: 'Divorced',
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         divorcedDate: '2000-03-19T00:00:00.000Z',
@@ -208,7 +215,7 @@ module.exports = {
       maritalStatus: 'Dissolved',
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         dissolvedDate: '2000-03-19T00:00:00.000Z',
@@ -220,7 +227,7 @@ module.exports = {
       maritalStatus: 'Widowed',
       partnerDetail: {
         firstName: 'Jane',
-        surname: 'Bloogs',
+        surname: 'Bloggs',
         allOtherNames: 'Middle',
         dob: '1952-03-19T00:00:00.000Z',
         widowedDate: '2000-03-19T00:00:00.000Z',
@@ -718,7 +725,7 @@ module.exports = {
       'Post Code',
     ];
   },
-  validAddressSubBuildingNamebuildingName() {
+  validAddressSubBuildingNameBuildingName() {
     const address = { ...this.validUkAddress().residentialAddress };
     address.buildingNumber = null;
     address.dependentLocality = null;
@@ -726,7 +733,7 @@ module.exports = {
     address.thoroughfareName = null;
     return address;
   },
-  validAddressSubBuildingNamebuildingNameResult() {
+  validAddressSubBuildingNameBuildingNameResult() {
     return [
       'Sub Building Name, Building Name',
       'Post Town',

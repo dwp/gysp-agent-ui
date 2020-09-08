@@ -21,13 +21,13 @@ const reissuePaymentApi = 'api/payment/reissue-payment';
 const reissueRecalledPaymentApi = 'api/payment/reissue-recalled-payment';
 const paymentUpdateStatusApi = 'api/payment/update-status';
 const awardStatusUpdateApi = 'api/award/update-status';
-const maxDaysAllowedToChangePaidStaus = 14;
+const maxDaysAllowedToChangePaidStatus = 14;
 
 // Payment and award statues
 const [PAID, SENT, PAYMENTS_STOPPED, RECALLING, RETURNED, INPAYMENT, RECALLED] = ['PAID', 'SENT', 'PAYMENTSSTOPPED', 'RECALLING', 'RETURNED', 'INPAYMENT', 'RECALLED'];
 
 async function paymentDetail(req, res, id) {
-  const detail = await dataStore.cacheRetriveAndStore(req, 'payment-history', id, () => {
+  const detail = await dataStore.cacheRetrieveAndStore(req, 'payment-history', id, () => {
     const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/payment/${id}`, {}, 'payment');
     return request(reviewAwardCall);
   });
@@ -35,7 +35,7 @@ async function paymentDetail(req, res, id) {
 }
 
 function isAllowedToUpdate(status, creditDate) {
-  if (status === PAID && dateHelper.daysBetweenNowDate(creditDate) <= maxDaysAllowedToChangePaidStaus) {
+  if (status === PAID && dateHelper.daysBetweenNowDate(creditDate) <= maxDaysAllowedToChangePaidStatus) {
     return true;
   }
   if (status === SENT) {

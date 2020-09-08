@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 
 const requestHelper = require('../../../lib/requestHelper');
 
-const noStausCodeErrorMessage = 'Error - could not get claim data';
+const noStatusCodeErrorMessage = 'Error - could not get claim data';
 const error500Message = 'Error - There has been an internal sever error, try again';
 const backendErrorMessage = 'Can\'t connect to backend';
 
@@ -47,7 +47,7 @@ function postFindClaimErrorHandle(err, req, res) {
     if (err.statusCode === httpStatus.INTERNAL_SERVER_ERROR) {
       res.render('pages/find-claim/search', { details, globalError: error500Message });
     } else {
-      res.render('pages/find-claim/search', { details, globalError: noStausCodeErrorMessage });
+      res.render('pages/find-claim/search', { details, globalError: noStatusCodeErrorMessage });
     }
   } else {
     res.render('pages/find-claim/search', { details, globalError: backendErrorMessage });

@@ -386,9 +386,9 @@ function getRecordDeath(req, res) {
   request(putDeathDetailsCall).then(() => {
     if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
       const status = deathPaymentStatus(deathPayment.amount);
-      req.flash('success', deathHelper.successMesssage(death['date-of-death'].verification, status));
+      req.flash('success', deathHelper.successMessage(death['date-of-death'].verification, status));
     } else {
-      req.flash('success', deathHelper.successMesssage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
+      req.flash('success', deathHelper.successMessage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
     }
     deleteSession.deleteAllDeathSession(req);
     deleteSession.deleteChangesEnquiries(req);
@@ -415,7 +415,7 @@ function getUpdateDeath(req, res) {
     const status = deathPaymentStatus(deathPayment.amount);
     request(putDeathUpdateDetailsCall).then(() => {
       if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
-        req.flash('success', deathHelper.successMesssage('V', status, deathStage));
+        req.flash('success', deathHelper.successMessage('V', status, deathStage));
       }
       deleteSession.deleteAllDeathSession(req);
       deleteSession.deleteChangesEnquiries(req);
@@ -467,7 +467,7 @@ function postVerifyDeath(req, res) {
   }
 }
 
-function getAddVerifedDeath(req, res) {
+function getAddVerifiedDeath(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
   const details = dataStore.get(req, 'date-of-death', 'death');
@@ -480,10 +480,10 @@ function getAddVerifedDeath(req, res) {
   });
 }
 
-function postAddVerifedDeath(req, res) {
+function postAddVerifiedDeath(req, res) {
   const details = req.body;
   const { awardDetails } = req.session;
-  const errors = formValidator.dateOfDeathVerifedValidation(details);
+  const errors = formValidator.dateOfDeathVerifiedValidation(details);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
     details.verification = 'V';
@@ -534,8 +534,8 @@ module.exports.getRecordDeath = getRecordDeath;
 
 module.exports.getVerifyDeath = getVerifyDeath;
 module.exports.postVerifyDeath = postVerifyDeath;
-module.exports.getAddVerifedDeath = getAddVerifedDeath;
-module.exports.postAddVerifedDeath = postAddVerifedDeath;
+module.exports.getAddVerifiedDeath = getAddVerifiedDeath;
+module.exports.postAddVerifiedDeath = postAddVerifiedDeath;
 
 module.exports.getRetryCalculation = getRetryCalculation;
 module.exports.getUpdateDeath = getUpdateDeath;
