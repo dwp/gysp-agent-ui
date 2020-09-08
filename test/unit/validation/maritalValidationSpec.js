@@ -6,6 +6,9 @@ const validPostRequest = { firstName: 'Joe', lastName: 'Bloggs' };
 
 const maritalStatus = ['married', 'civil', 'divorced', 'widowed', 'dissolved'];
 
+const apiValidationValidCallback = () => ({ valid: true, validation: { max: 0 } });
+const apiValidationInvalidCallback = () => ({ valid: false, validation: { max: 160 } });
+
 describe('marital validator', () => {
   describe('partnerValidator', () => {
     it('should return errors when with empty spouse post', () => {
@@ -433,6 +436,36 @@ describe('marital validator', () => {
         const errors = validator.relevantInheritedAmountsValidator({ protectedPayment: '100.00' });
         assert.equal(Object.keys(errors).length, 0);
       });
+    });
+  });
+  describe('updateStatePensionAwardAmountValidator', () => {
+    it('should return error when with empty post', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator(emptyPostRequest, 'type');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.amount.text, 'marital-update-award-amount:fields.amount.type.errors.required');
+    });
+    it('should return error when with invalid post', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator({ amount: '0.001' }, 'type');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.amount.text, 'marital-update-award-amount:fields.amount.type.errors.invalid');
+    });
+    it('should return error when with to long post', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator({ amount: '11111.00' }, 'type');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.amount.text, 'marital-update-award-amount:fields.amount.type.errors.length');
+    });
+    it('should return error when post is more than max amount and type is new-state-pension', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator({ amount: '170.00' }, 'new-state-pension', apiValidationInvalidCallback);
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.amount.text, 'marital-update-award-amount:fields.amount.new-state-pension.errors.max-amount');
+    });
+    it('should return no error when post is valid when type new-state-pension and api call is valid', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator({ amount: '150.00' }, 'new-state-pension', apiValidationValidCallback);
+      assert.equal(Object.keys(errors).length, 0);
+    });
+    it('should return no error when post is valid', async () => {
+      const errors = await validator.updateStatePensionAwardAmountValidator({ amount: '111.00' }, 'type');
+      assert.equal(Object.keys(errors).length, 0);
     });
   });
 });

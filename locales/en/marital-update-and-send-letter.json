@@ -1,0 +1,8 @@
+{
+    "header": "Update award and send letter",
+    "p": "A letter will be sent to the claimant telling them that:",
+    "bullets": {
+      "one": "we have updated their marital status",
+      "two": "their State Pension has increased based on this change"
+    }
+}
