@@ -185,6 +185,22 @@ const updateStatePensionAwardRequest = {
   fullUrl: '/test-url',
   flash: flashMock,
 };
+const emptyUpdateStatePensionAwardPostRequest = {
+  session: {
+    searchedNino: 'AA370773A',
+    awardDetails: claimData.validClaimMarried(),
+    marital: {
+      date: {
+        dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
+      },
+    },
+  },
+  fullUrl: '/test-url',
+  flash: flashMock,
+};
+const validUpdateStatePensionAwardPostRequest = JSON.parse(JSON.stringify(emptyUpdateStatePensionAwardPostRequest));
+validUpdateStatePensionAwardPostRequest.session.marital['update-state-pension-award-new-state-pension'] = { amount: '110.00' };
+
 
 // UpdateStatePensionAwardAmount requests
 const updateStatePensionAwardAmountWithoutDetailsRequest = (type) => ({ params: { type }, session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { } }, fullUrl: '/test-url' });
@@ -721,8 +737,52 @@ describe('Change circumstances - marital controller', () => {
       await controller.getUpdateStatePensionAward(updateStatePensionAwardRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
       assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
-      assert.equal(genericResponse.data.nextPageHref, '/marital-details/update-and-send-letter');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
       assert.isObject(genericResponse.data.details);
+    });
+
+    it('should be return a view cached api date', async () => {
+      await controller.getUpdateStatePensionAward(updateStatePensionAwardRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
+      assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.isObject(genericResponse.data.details);
+    });
+  });
+
+  describe('postUpdateStatePensionAward function (GET /changes-enquiries/marital-details/update-state-pension-award)', () => {
+    const getEntitlementDateUri = getEntitlementDateApiUri('2020-01-01', '2018-11-09', '73');
+    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postUpdateStatePensionAward(emptyUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/relevant-inherited-amounts');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on ${getEntitlementDateUri}`);
+    });
+
+    it('should be return a redirect with BAD_REQUEST message', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.BAD_REQUEST, {});
+      await controller.postUpdateStatePensionAward(emptyUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/relevant-inherited-amounts');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+      assert.equal(genericResponse.locals.logMessage, `400 - 400 - {} - Requested on ${getEntitlementDateUri}`);
+    });
+
+    it('should return view when requested with errors with empty post and call API', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, { entitlementDate: 1580968800000 });
+      await controller.postUpdateStatePensionAward(emptyUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
+      assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+      assert.isObject(genericResponse.data.details);
+    });
+
+    it('should return redirect when validation has passed', async () => {
+      await controller.postUpdateStatePensionAward(validUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/update-and-send-letter');
     });
   });
 

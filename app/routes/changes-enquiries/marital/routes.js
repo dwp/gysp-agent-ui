@@ -41,7 +41,8 @@ router.route('/marital-details/relevant-inherited-amounts')
   .post(functions.postRelevantInheritedAmounts);
 
 router.route('/marital-details/update-state-pension-award')
-  .get(functions.getUpdateStatePensionAward);
+  .get(functions.getUpdateStatePensionAward)
+  .post(functions.postUpdateStatePensionAward);
 
 router.route('/marital-details/update-state-pension-award/:type(new-state-pension|protected-payment|inherited-extra-state-pension)')
   .get(functions.getUpdateStatePensionAwardAmount)
