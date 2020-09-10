@@ -368,21 +368,53 @@ function buildEntitlementDateApiUri(req) {
   const claimFromDate = dateHelper.timestampToDateDash(cfd || spd);
   const entitlementDate = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
   const lastTwoNinoDigits = stringHelper.extractNumbers(nino).slice(-2);
-  return getEntitlementDateApiUri(entitlementDate, claimFromDate, lastTwoNinoDigits);
+  return {
+    url: getEntitlementDateApiUri(entitlementDate, claimFromDate, lastTwoNinoDigits),
+    cacheKey: `${entitlementDate}:${claimFromDate}:${lastTwoNinoDigits}`,
+  };
+}
+
+function getEntitlementDate(req, res) {
+  const { url, cacheKey } = buildEntitlementDateApiUri(req);
+  return dataStore.cacheRetriveAndStore(req, 'marital', cacheKey, () => {
+    const awardCall = requestHelper.generateGetCall(res.locals.agentGateway + url, {}, 'award');
+    return request(awardCall) || Object.create(null);
+  });
 }
 
 async function getUpdateStatePensionAward(req, res) {
   try {
-    const getEntitlementDateCall = requestHelper.generateGetCall(res.locals.agentGateway + buildEntitlementDateApiUri(req), {}, 'award');
-    const { entitlementDate } = await request(getEntitlementDateCall) || Object.create(null);
+    const { entitlementDate } = await getEntitlementDate(req, res);
     const { awardAmounts } = dataStore.get(req, 'awardDetails') || Object.create(null);
     const maritalSession = dataStore.get(req, 'marital');
     const details = maritalUpdateStatePensionAwardObject.formatter(awardAmounts, entitlementDate, maritalSession);
     res.render('pages/changes-enquiries/marital/update-state-pension-award', {
+      formUrl: req.fullUrl,
       backHref: '/marital-details/relevant-inherited-amounts',
-      nextPageHref: '/marital-details/update-and-send-letter',
       details,
     });
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/relevant-inherited-amounts');
+  }
+}
+
+async function postUpdateStatePensionAward(req, res) {
+  try {
+    const maritalSession = dataStore.get(req, 'marital');
+    const errors = maritalValidation.updateStatePensionAwardValidator(maritalSession);
+    if (Object.keys(errors).length === 0) {
+      res.redirect('/changes-and-enquiries/marital-details/update-and-send-letter');
+    } else {
+      const { entitlementDate } = await getEntitlementDate(req, res);
+      const { awardAmounts } = dataStore.get(req, 'awardDetails') || Object.create(null);
+      const details = maritalUpdateStatePensionAwardObject.formatter(awardAmounts, entitlementDate, maritalSession);
+      res.render('pages/changes-enquiries/marital/update-state-pension-award', {
+        formUrl: req.fullUrl,
+        backHref: '/marital-details/relevant-inherited-amounts',
+        details,
+        errors,
+      });
+    }
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/relevant-inherited-amounts');
   }
@@ -492,6 +524,7 @@ module.exports.postEntitledToInheritedStatePension = postEntitledToInheritedStat
 module.exports.getRelevantInheritedAmounts = getRelevantInheritedAmounts;
 module.exports.postRelevantInheritedAmounts = postRelevantInheritedAmounts;
 module.exports.getUpdateStatePensionAward = getUpdateStatePensionAward;
+module.exports.postUpdateStatePensionAward = postUpdateStatePensionAward;
 module.exports.getUpdateStatePensionAwardAmount = getUpdateStatePensionAwardAmount;
 module.exports.postUpdateStatePensionAwardAmount = postUpdateStatePensionAwardAmount;
 module.exports.getUpdateAndSendLetter = getUpdateAndSendLetter;

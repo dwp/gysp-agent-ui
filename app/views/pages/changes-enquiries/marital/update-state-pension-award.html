@@ -1,6 +1,7 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "components/input-group/macro.njk" import gyspInputGroup %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ t('marital-update-state-pension-award:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
@@ -14,21 +15,37 @@
 {% endblock %}
 
 {% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
+    {% set summaryOneHtml %}
+      {{ govukSummaryList({
+        rows: details.summaryOne,
+        classes: "govuk-!-margin-bottom-0"
+      }) }}
+    {% endset %}
 
-  <h1 class="govuk-heading-l">{{ t('marital-update-state-pension-award:header') }}</h1>
+    {{ gyspInputGroup({
+      name: "statePensionComponents",
+      fieldset: {
+        legend: {
+          text: t('marital-update-state-pension-award:header'),
+          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-6",
+          isPageHeading: true
+        }
+      },
+      hint: {
+        text: t('marital-update-state-pension-award:p'),
+        classes: "govuk-!-margin-bottom-7"
+      },
+      html: summaryOneHtml,
+      errorMessage: errors.statePensionComponents
+    }) }}
 
-  <p class="govuk-body govuk-hint govuk-!-margin-bottom-7">{{ t('marital-update-state-pension-award:p') }}</p>
-
-  {{ govukSummaryList({
-      rows: details.summaryOne
-  }) }}
-
-  {{ govukSummaryList({
+    {{ govukSummaryList({
       rows: details.summaryTwo
-  }) }}
+    }) }}
 
-  {{ govukButton({
-    text: t("app:button.continue"),
-    href: '/changes-and-enquiries' + nextPageHref
-  }) }}
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
 {% endblock %}

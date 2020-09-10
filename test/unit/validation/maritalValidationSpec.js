@@ -310,7 +310,51 @@ describe('marital validator', () => {
       assert.equal(errors.entitledInheritableStatePension.text, 'marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.errors.required');
     });
   });
-
+  describe('updateStatePensionAwardValidator', () => {
+    it('should return error when session is empty', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({});
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.statePensionComponents.text, 'marital-update-state-pension-award:errors.statePensionComponents');
+    });
+    it('should return error when session does not contain relevant session key', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({ foo: 'bar' });
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors.statePensionComponents.text, 'marital-update-state-pension-award:errors.statePensionComponents');
+    });
+    it('should return no error when session contains one relevant session key', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({ 'update-state-pension-award-new-state-pension': { foo: 'bar' } });
+      assert.equal(Object.keys(errors).length, 0);
+      assert.isUndefined(errors.statePensionComponents);
+    });
+    it('should return no error when session contains two relevant session keys', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({
+        'update-state-pension-award-new-state-pension': { foo: 'bar' },
+        'update-state-pension-award-protected-payment': { foo: 'bar' },
+      });
+      assert.equal(Object.keys(errors).length, 0);
+      assert.isUndefined(errors.statePensionComponents);
+    });
+    it('should return no error when session contains all relevant session keys', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({
+        'update-state-pension-award-new-state-pension': { foo: 'bar' },
+        'update-state-pension-award-protected-payment': { foo: 'bar' },
+        'update-state-pension-award-inherited-extra-state-pension': { foo: 'bar' },
+      });
+      assert.equal(Object.keys(errors).length, 0);
+      assert.isUndefined(errors.statePensionComponents);
+    });
+    it('should return no error when session contains all relevant session keys with multiple keys', async () => {
+      const errors = await validator.updateStatePensionAwardValidator({
+        foo: 'bar',
+        'update-state-pension-award-new-state-pension': { foo: 'bar' },
+        bar: 'foo',
+        'update-state-pension-award-protected-payment': { foo: 'bar' },
+        'update-state-pension-award-inherited-extra-state-pension': { foo: 'bar' },
+      });
+      assert.equal(Object.keys(errors).length, 0);
+      assert.isUndefined(errors.statePensionComponents);
+    });
+  });
   describe('relevantInheritedAmountsValidator', () => {
     it('should return error when with empty post', () => {
       const errors = validator.relevantInheritedAmountsValidator(emptyPostRequest);
