@@ -115,7 +115,7 @@ describe('General Helper ', () => {
     it('should return true when contains a valid characters with space', () => {
       assert.isTrue(helper.checkNameCharacters('Test tester'));
     });
-    it('should return true when contains a valid characters with fullstop', () => {
+    it('should return true when contains a valid characters with full stop', () => {
       assert.isTrue(helper.checkNameCharacters('Test.'));
     });
     it('should return true when contains a valid characters with dash', () => {

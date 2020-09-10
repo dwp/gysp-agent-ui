@@ -1,0 +1,12 @@
+{
+  "header": "Defer from State Pension date?",
+  "h2": "Does the claimant want to defer from their State Pension date?",
+  "insetText": "State Pension date: __DATE__",
+  "fields": {
+    "defaultDate": {
+      "errors": {
+        "required": "Select 'yes' if the claimant wants to defer from their State Pension date"
+      }
+    }
+  }
+}

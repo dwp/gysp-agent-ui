@@ -1,0 +1,41 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("stop-state-pension:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block innerContent %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: backLink,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
+  }) }}
+
+  <h2 class="govuk-heading-l">{{ t("stop-state-pension:h2") }}</h2>
+
+  <form method="post" action={{ formAction }} autocomplete="off" novalidate>
+    {{ govukRadios({
+      idPrefix: "reason",
+      name: "reason",
+      items: [
+        {
+          value: "death",
+          text: t("stop-state-pension:fields.reason.options.death"),
+          checked: true if reason == "death" else false
+        },
+        {
+          value: "deferral",
+          text: t("stop-state-pension:fields.reason.options.deferral"),
+          checked: true if reason == "deferral" else false
+        }
+      ],
+      errorMessage: errors.reason
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

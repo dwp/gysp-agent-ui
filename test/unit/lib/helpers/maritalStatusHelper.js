@@ -53,7 +53,7 @@ describe('marital status helper', () => {
   });
   describe('newStatusOptions', () => {
     it('should return null when status is invalid', () => {
-      const result = helper.newStatusOptions('invaild');
+      const result = helper.newStatusOptions('invalid');
       assert.isNull(result);
     });
     ['single', 'dissolved', 'divorced', 'widowed'].forEach((s) => {

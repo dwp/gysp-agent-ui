@@ -79,8 +79,8 @@
       </tbody>
     </table>
 
-    {% if not details.dateOfDeath %}
-      <p class="govuk-body"><a href="/changes-and-enquiries/personal/death" class="govuk-link govuk-link--no-visited-state">Add a date of death</a></p>
+    {% if not (keyDetails.status.text == "DEAD") and not (keyDetails.status.text == "DEFERRED") %}
+      <p class="govuk-body"><a href="/changes-and-enquiries/personal/stop-state-pension" class="govuk-link govuk-link--no-visited-state">Stop State Pension</a></p>
     {% endif %}
   {% else %}
     <p class="govuk-body">Sorry, no personal details found.</p>

@@ -31,6 +31,7 @@ const keyDetails = {
 };
 
 const enterDateOfDeathRequest = { session: { awardDetails: claimData.validClaim() } };
+
 const enterDateOfDeathResponse = {
   awardDetails: claimData.validClaim(),
 };
@@ -392,8 +393,8 @@ const updateDeathNullPaymentRequest = {
   flash: flashMock,
 };
 
-const emptyAddVerifedDeathPostRequest = { session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, body: {} };
-const validAddVerifedDeathPostRequest = {
+const emptyAddVerifiedDeathPostRequest = { session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, body: {} };
+const validAddVerifiedDeathPostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
   session: { awardDetails: claimData.validClaimWithDeathNotVerified() },
   body: {
@@ -467,7 +468,7 @@ const deathArrearsResponses = {
   },
 };
 
-const payeDetailsValidResponse = {
+const payeeDetailsValidResponse = {
   address: {
     buildingNumber: '1',
     postCode: 'Post code',
@@ -520,7 +521,7 @@ const reviewPayeeRetryValidPageData = {
     buttonText: 'app:button.send-letter',
   },
   nothingOwed: {
-    header: 'death-check-payee-details:header.nothin-ownd',
+    header: 'death-check-payee-details:header.nothing-owed',
     status: 'NOTHING_OWED',
     ...reviewPayeeRetryValidBase,
     buttonText: 'app:button.send-letter',
@@ -1015,7 +1016,7 @@ describe('Change circumstances date of death controller ', () => {
   });
 
   describe('getCheckDetails function (GET /changes-and-enquiries/personal/death/check-details)', () => {
-    it('should return check details page for cannnot calculate', () => {
+    it('should return check details page for cannot calculate', () => {
       controller.getCheckDetails(paymentRequest, genericResponse);
       assert.equal(genericResponse.data.pageData.header, 'death-check-details:header.cannot-calculate');
       assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/payment');
@@ -1103,18 +1104,18 @@ describe('Change circumstances date of death controller ', () => {
     });
   });
 
-  describe('getAddVerifedDeath function (GET /changes-and-enquiries/personal/death/verified-date)', () => {
+  describe('getAddVerifiedDeath function (GET /changes-and-enquiries/personal/death/verified-date)', () => {
     it('should display form when requested', (done) => {
-      controller.getAddVerifedDeath(verifyDeathRequest, genericResponse);
+      controller.getAddVerifiedDeath(verifyDeathRequest, genericResponse);
       assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(verifiedResponse));
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
       done();
     });
   });
 
-  describe('postAddVerifedDeath function (POST /changes-and-enquiries/personal/death/verified-date)', () => {
+  describe('postAddVerifiedDeath function (POST /changes-and-enquiries/personal/death/verified-date)', () => {
     it('should return view name when called with empty post with errors', () => {
-      controller.postAddVerifedDeath(emptyAddVerifedDeathPostRequest, genericResponse);
+      controller.postAddVerifiedDeath(emptyAddVerifiedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(Object.keys(genericResponse.data.errors).length, 4);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/enter-date-verified');
@@ -1122,7 +1123,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 state with valid post', () => {
-      controller.postAddVerifedDeath(validAddVerifedDeathPostRequest, genericResponse);
+      controller.postAddVerifiedDeath(validAddVerifiedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
       });
@@ -1384,28 +1385,28 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view and page data for arrears and retryCal when receiving a 200 response from API', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsRetryCal, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, reviewPayeeRetryValidPageData.arrears);
     });
 
     it('should return view and page data for arrears and verifiedDateOfDeathYes when receiving a 200 response from API', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsVerifiedDateOfDeathYes, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, reviewPayeeRecordValidPageData.arrears);
     });
 
     it('should return view with page data for arrears and reVerifiedDateOfDeathYes when receiving a 200 response from API', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.arrearsReVerifiedDateOfDeath, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, reviewPayeeRecordValidPageData.arrears);
     });
 
     it('should return view and page data for overpayment and retryCal when receiving a 200 response from API', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getReviewPayeeDetails(reviewPayeeDetailsRequests.overpaymentRetryCal, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, reviewPayeeRetryValidPageData.overpayment);

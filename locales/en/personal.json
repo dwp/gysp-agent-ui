@@ -17,6 +17,7 @@
       },
       "arrears_paid_account_closed": "Arrears paid - account closed"
     },
+    "state-pension-deferred": "State Pension deferred",
     "marital-status": "Marital status changed",
     "marital-partner": {
       "married": "Spouse details updated",

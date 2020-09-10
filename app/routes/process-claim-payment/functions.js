@@ -6,7 +6,7 @@ const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
 const deleteSession = require('../../../lib/deleteSession');
 const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
 
-const noStausCodeErrorMessage = 'Error - could not create letter.';
+const noStatusCodeErrorMessage = 'Error - could not create letter.';
 const error500Message = 'Try again or send claim to BAU';
 const backendErrorMessage = 'Error - connection refused.';
 
@@ -59,7 +59,7 @@ function postProcessClaimPaymentErrorHandler(err, req, res) {
       error.message = backendErrorMessage;
     }
   } else {
-    error.message = noStausCodeErrorMessage;
+    error.message = noStatusCodeErrorMessage;
   }
   getPayment(req, res, error);
 }

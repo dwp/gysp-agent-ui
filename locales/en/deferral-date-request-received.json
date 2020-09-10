@@ -1,0 +1,13 @@
+{
+  "header": "Date request received",
+  "h2": "Date the request was received",
+  "fields": {
+    "date": {
+      "errors": {
+        "required": "Enter the date the request was received",
+        "invalid": "Enter a real date, like 12 3 2020",
+        "future": "Date the request was received cannot be in the future"
+      }
+    }
+  }
+}

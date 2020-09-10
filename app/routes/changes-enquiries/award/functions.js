@@ -12,7 +12,7 @@ const secondaryNavigationList = secondaryNavigationHelper.navigationItems(active
 
 async function getAwardList(req, res) {
   try {
-    const award = await dataStore.cacheRetriveAndStore(req, null, 'awardDetails', () => {
+    const award = await dataStore.cacheRetrieveAndStore(req, null, 'awardDetails', () => {
       const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
       return request(awardCall);
     });
@@ -32,7 +32,7 @@ async function getAwardList(req, res) {
 
 async function getAwardDetails(req, res) {
   try {
-    const award = await dataStore.cacheRetriveAndStore(req, null, 'awardDetails', () => {
+    const award = await dataStore.cacheRetrieveAndStore(req, null, 'awardDetails', () => {
       const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${req.session.searchedNino}`, {}, 'batch');
       return request(awardCall);
     });

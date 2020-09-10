@@ -29,6 +29,13 @@ const keyDetailsDeadNotVerified = {
   dateOfBirth: null,
 };
 
+const keyDetailsDeferred = {
+  fullName: 'Joe Bloggs',
+  nino: 'AA 37 07 73 A',
+  status: { text: 'DEFERRED', class: 'deferred' },
+  dateOfBirth: null,
+};
+
 let testPromise;
 let genericResponse = {};
 const ninoRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
@@ -55,6 +62,10 @@ describe('Change circumstances personal controller', () => {
         resolve();
       }, 100);
     });
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   describe(' getCustomerOverview function (GET /changes-enquiries/personal)', () => {
@@ -95,6 +106,16 @@ describe('Change circumstances personal controller', () => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathNotVerifiedData()));
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
+      });
+    });
+
+    it('should return view name and deferral view data when called nino exists in session and exists on API', () => {
+      nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(200, claimData.validClaimWithDeferral());
+      controller.getPersonalDetails(ninoRequest, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validPersonalDetailsViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeferred));
       });
     });
 

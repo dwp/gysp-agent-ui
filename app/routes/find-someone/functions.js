@@ -7,7 +7,7 @@ const deleteSession = require('../../../lib/deleteSession');
 const formValidator = require('../../../lib/formValidator');
 const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
 
-const noStausCodeErrorMessage = 'Error - could not get citizen data';
+const noStatusCodeErrorMessage = 'Error - could not get citizen data';
 const error500Message = 'Error - There has been an internal sever error, try again';
 const backendErrorMessage = 'Can\'t connect to backend';
 
@@ -26,7 +26,7 @@ function postFindSomeoneErrorHandle(err, req, res) {
     if (err.statusCode === httpStatus.INTERNAL_SERVER_ERROR) {
       res.render('pages/find-someone/search', { details, globalError: error500Message });
     } else {
-      res.render('pages/find-someone/search', { details, globalError: noStausCodeErrorMessage });
+      res.render('pages/find-someone/search', { details, globalError: noStatusCodeErrorMessage });
     }
   } else {
     res.render('pages/find-someone/search', { details, globalError: backendErrorMessage });
@@ -49,7 +49,7 @@ async function postFindSomeone(req, res) {
   if (Object.keys(errors).length === 0) {
     const search = bodyOrReturnedStatus(req);
     try {
-      const award = await dataStore.cacheRetriveAndStore(req, null, 'awardDetails', () => {
+      const award = await dataStore.cacheRetrieveAndStore(req, null, 'awardDetails', () => {
         const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${citizenAPIEndpoint}${search}`, {}, 'batch');
         return request(awardCall);
       });

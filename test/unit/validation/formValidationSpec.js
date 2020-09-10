@@ -656,28 +656,28 @@ describe('Form validation', () => {
     });
   });
 
-  describe('dateOfDeathVerifed validator', () => {
+  describe('dateOfDeathVerified validator', () => {
     it('should return no error when valid data is supplied', () => {
-      const errors = validator.dateOfDeathVerifedValidation({
+      const errors = validator.dateOfDeathVerifiedValidation({
         dateYear: '2019', dateMonth: '01', dateDay: '01', verification: 'V',
       });
       assert.equal(Object.keys(errors).length, 0);
     });
 
     it('should return all errors when empty', () => {
-      const errors = validator.dateOfDeathVerifedValidation({ });
+      const errors = validator.dateOfDeathVerifiedValidation({ });
       assert.equal(Object.keys(errors).length, 4);
     });
 
     it('should return all errors when blank', () => {
-      const errors = validator.dateOfDeathVerifedValidation({
+      const errors = validator.dateOfDeathVerifiedValidation({
         dateYear: '', dateMonth: '', dateDay: '',
       });
       assert.equal(Object.keys(errors).length, 4);
     });
 
     it('should return error when date in the future', () => {
-      const errors = validator.dateOfDeathVerifedValidation({
+      const errors = validator.dateOfDeathVerifiedValidation({
         dateYear: '2099', dateMonth: '01', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 1);
@@ -685,7 +685,7 @@ describe('Form validation', () => {
     });
 
     it('should return error when month is invalid', () => {
-      const errors = validator.dateOfDeathVerifedValidation({
+      const errors = validator.dateOfDeathVerifiedValidation({
         dateYear: '2018', dateMonth: '20', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 2);
@@ -693,7 +693,7 @@ describe('Form validation', () => {
     });
 
     it('should return error when day is invalid', () => {
-      const errors = validator.dateOfDeathVerifedValidation({
+      const errors = validator.dateOfDeathVerifiedValidation({
         dateYear: '2018', dateMonth: '01', dateDay: '40',
       });
       assert.equal(Object.keys(errors).length, 2);

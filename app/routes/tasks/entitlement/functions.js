@@ -16,7 +16,7 @@ const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
 
 async function awardDetails(req, res) {
   const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
-  const detail = await dataStore.cacheRetriveAndStore(req, 'tasks', 'awardDetails', () => {
+  const detail = await dataStore.cacheRetrieveAndStore(req, 'tasks', 'awardDetails', () => {
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
     return request(awardCall);
   });

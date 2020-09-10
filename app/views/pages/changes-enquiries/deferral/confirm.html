@@ -1,0 +1,24 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("deferral-confirm:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block innerContent %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: backLink,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
+  }) }}
+
+  <h2 class="govuk-heading-l">{{ t("deferral-confirm:h2") }}</h2>
+
+  <p class="govuk-body">{{ t("deferral-confirm:p1") }}</p>
+  <p class="govuk-body">{{ t("deferral-confirm:p2") }}</p>
+
+  {{ govukButton({
+    text: t("app:button.confirm"),
+    href: button
+  }) }}
+{% endblock %}

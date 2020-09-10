@@ -40,7 +40,7 @@ describe('Process claim payment controller', () => {
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     const validRequest = dataObjects.validProcessClaimPaymentRequest();
 
-    it('should return view with data when a 200 reponse from the API is received', () => {
+    it('should return view with data when a 200 response from the API is received', () => {
       nock('http://test-url/').get(`${awardPaymentUri}/${validRequest.session.processClaim.claimDetail.inviteKey}`)
         .reply(200, dataObjects.validPaymentApiResponse());
       controller.getProcessClaimPayment(validRequest, genericResponse);

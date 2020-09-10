@@ -1,0 +1,51 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("deferral-date-request-received:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block innerContent %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: backLink,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
+  }) }}
+
+  <h2 class="govuk-heading-l">{{ t("deferral-date-request-received:h2") }}</h2>
+
+  <form method="post" action={{ formAction }} autocomplete="off" novalidate>
+    {{ govukDateInput({
+      id: "date",
+      items: [
+        {
+          label: t("app:date.day"),
+          name: "day",
+          value: details.day,
+          classes: "govuk-input--width-2" + (" govuk-input--error" if errors.day),
+          attributes: { maxlength: '2' }
+        },
+        {
+          label: t("app:date.month"),
+          name: "month",
+          value: details.month,
+          classes: "govuk-input--width-2" + (" govuk-input--error" if errors.month),
+          attributes: { maxlength: '2' }
+        },
+        {
+          label: t("app:date.year"),
+          name: "year",
+          value: details.year,
+          classes: "govuk-input--width-4" + (" govuk-input--error" if errors.year),
+          attributes: { maxlength: '4' }
+        }
+      ],
+      errorMessage: errors.date
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

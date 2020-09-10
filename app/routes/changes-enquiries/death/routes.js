@@ -37,8 +37,8 @@ router.route('/personal/death/verify')
   .post(functions.postVerifyDeath);
 
 router.route('/personal/death/verified-date')
-  .get(functions.getAddVerifedDeath)
-  .post(functions.postAddVerifedDeath);
+  .get(functions.getAddVerifiedDeath)
+  .post(functions.postAddVerifiedDeath);
 
 router.route('/personal/death/retry-calculation')
   .get(functions.getRetryCalculation);

@@ -18,7 +18,7 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
-const payeDetailsValidResponse = {
+const payeeDetailsValidResponse = {
   address: {
     buildingNumber: '1',
     postCode: 'Post code',
@@ -62,7 +62,7 @@ const accountDetailsRequest = {
   session: {
     awardDetails: claimData.validClaim(),
     death: {
-      'death-payee-account': payeDetailsValidResponse,
+      'death-payee-account': payeeDetailsValidResponse,
     },
   },
 };
@@ -83,7 +83,7 @@ const payArrearsRequest = {
       'death-payee-account': accountDetails,
     },
     'death-payee-details': {
-      BLOG123456: payeDetailsValidResponse,
+      BLOG123456: payeeDetailsValidResponse,
     },
   },
   flash: flashMock,
@@ -96,7 +96,7 @@ const payArrearsWithUpdatedContactDetailsRequest = {
       'death-payee-account': accountDetails,
     },
     'death-payee-details': {
-      BLOG123456: payeDetailsValidResponse,
+      BLOG123456: payeeDetailsValidResponse,
     },
     'death-payee-details-updated': contactDetails,
   },
@@ -243,14 +243,14 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view when receive 200 response from API', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getCheckPayeeDetails(checkPayeeDetailsRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidPageData);
     });
 
     it('should return view when receive 200 response from API with arrears payment status', async () => {
-      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeDetailsValidResponse);
+      nock('http://test-url/').get(`${deathPayeeDetailsApiUri}/BLOG123456`).reply(httpStatus.OK, payeeDetailsValidResponse);
       await controller.getCheckPayeeDetails(checkPayeeDetailsWithArrearsPaymentStatusRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/check-details');
       assert.deepEqual(genericResponse.data.pageData, payeeDetailsValidArrearsPageData);
