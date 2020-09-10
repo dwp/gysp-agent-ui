@@ -46,9 +46,11 @@ describe('deathPayeeDetailsObject', () => {
     it('should return formatted bank object when sort code is supplied with dashes', () => {
       assert.deepEqual(deathPayeeDetailsObject.formatter(bankRequest, awardDetails), deathPayeeDetailsFormatted);
     });
+
     it('should return formatted bank object when sort code is supplied without dashes', () => {
       assert.deepEqual(deathPayeeDetailsObject.formatter(bankRequestSortCodeDash, awardDetails), deathPayeeDetailsFormatted);
     });
+
     it('should return formatted building society object when referenceNumber is supplied ', () => {
       assert.deepEqual(deathPayeeDetailsObject.formatter(buildingSocietyRequest, awardDetails), buildingSocietyFormatted);
     });

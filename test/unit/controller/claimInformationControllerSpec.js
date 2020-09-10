@@ -1,10 +1,15 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
-chai.use(chaiAsPromised);
+const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
-const nock = require('nock');
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
+chai.use(chaiAsPromised);
 
 nock.disableNetConnect();
 
@@ -125,6 +130,12 @@ const validFilterReasonQuery = {
 };
 
 describe('Claim information controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.csvResponse();
     genericResponse.locals = {
@@ -158,9 +169,9 @@ describe('Claim information controller ', () => {
       claimInformationController.postClaimInformation(emptyPost, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, validationErrorMessage);
-        assert.equal(genericResponse.data.errors.fromDate.text, 'claim-information:errors.fromDate.required');
-        assert.equal(genericResponse.data.errors.toDate.text, 'claim-information:errors.toDate.required');
-        assert.equal(genericResponse.data.errors.type.text, 'claim-information:errors.generic.required');
+        assert.equal(genericResponse.data.errors.fromDate.text, 'From date is required');
+        assert.equal(genericResponse.data.errors.toDate.text, 'To date is required');
+        assert.equal(genericResponse.data.errors.type.text, 'Please complete.');
         assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
       });
     });
@@ -215,9 +226,9 @@ describe('Claim information controller ', () => {
       claimInformationController.postClaimInformation(claimInformationEmptyPost, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, validationErrorMessage);
-        assert.equal(genericResponse.data.errors.fromDate.text, 'claim-information:errors.fromDate.required');
-        assert.equal(genericResponse.data.errors.toDate.text, 'claim-information:errors.toDate.required');
-        assert.equal(genericResponse.data.errors.type.text, 'claim-information:errors.generic.required');
+        assert.equal(genericResponse.data.errors.fromDate.text, 'From date is required');
+        assert.equal(genericResponse.data.errors.toDate.text, 'To date is required');
+        assert.equal(genericResponse.data.errors.type.text, 'Please complete.');
         assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
       });
     });
@@ -226,8 +237,8 @@ describe('Claim information controller ', () => {
       claimInformationController.postClaimInformation(claimInformationInvalidDates, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, validationErrorMessage);
-        assert.equal(genericResponse.data.errors.fromDate.text, 'claim-information:errors.fromDate.format');
-        assert.equal(genericResponse.data.errors.toDate.text, 'claim-information:errors.toDate.format');
+        assert.equal(genericResponse.data.errors.fromDate.text, 'From date must be a valid date');
+        assert.equal(genericResponse.data.errors.toDate.text, 'To date must be a valid date');
         assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
       });
     });
@@ -236,8 +247,8 @@ describe('Claim information controller ', () => {
       claimInformationController.postClaimInformation(claimInformationInvalidDatesToDateBeforeFrom, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, validationErrorMessage);
-        assert.equal(genericResponse.data.errors.fromDate.text, 'claim-information:errors.fromDate.after');
-        assert.equal(genericResponse.data.errors.toDate.text, 'claim-information:errors.toDate.before');
+        assert.equal(genericResponse.data.errors.fromDate.text, 'From date is after To date');
+        assert.equal(genericResponse.data.errors.toDate.text, 'To date is before From date');
         assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
       });
     });
@@ -246,17 +257,18 @@ describe('Claim information controller ', () => {
       claimInformationController.postClaimInformation(claimInformationInvalidDatesToDateBeforeFrom, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, validationErrorMessage);
-        assert.equal(genericResponse.data.errors.fromDate.text, 'claim-information:errors.fromDate.after');
-        assert.equal(genericResponse.data.errors.toDate.text, 'claim-information:errors.toDate.before');
+        assert.equal(genericResponse.data.errors.fromDate.text, 'From date is after To date');
+        assert.equal(genericResponse.data.errors.toDate.text, 'To date is before From date');
         assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
       });
     });
+
     describe('citizen information', () => {
       it('should return view with errors when date is is more then 28 days', () => {
         claimInformationController.postClaimInformation(invalidCitizenPostPeriod, genericResponse);
         return testPromise.then(() => {
           assert.equal(genericResponse.data.globalError, validationErrorMessage);
-          assert.equal(genericResponse.data.errors.maximumPeriod, 'claim-information:errors.toDate.maximumPeriod');
+          assert.equal(genericResponse.data.errors.maximumPeriod, 'Maximum search period is 28 days');
           assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
         });
       });
@@ -277,7 +289,7 @@ describe('Claim information controller ', () => {
         claimInformationController.postClaimInformation(invalidClaimPostPeriod, genericResponse);
         return testPromise.then(() => {
           assert.equal(genericResponse.data.globalError, validationErrorMessage);
-          assert.equal(genericResponse.data.errors.maximumPeriod, 'claim-information:errors.toDate.maximumPeriod');
+          assert.equal(genericResponse.data.errors.maximumPeriod, 'Maximum search period is 28 days');
           assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
         });
       });
@@ -298,7 +310,7 @@ describe('Claim information controller ', () => {
         claimInformationController.postClaimInformation(invalidFilterReasonPostPeriod, genericResponse);
         return testPromise.then(() => {
           assert.equal(genericResponse.data.globalError, validationErrorMessage);
-          assert.equal(genericResponse.data.errors.maximumPeriod, 'claim-information:errors.toDate.maximumPeriod');
+          assert.equal(genericResponse.data.errors.maximumPeriod, 'Maximum search period is 28 days');
           assert.equal(genericResponse.viewName, 'pages/claim-information/claim');
         });
       });

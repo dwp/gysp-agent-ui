@@ -1,9 +1,9 @@
 {
 
   "header": {
-    "name": "Name of the person dealing with __NAME__'s estate",
-    "phone-number": "Phone number of the person dealing with __NAME__'s estate",
-    "address": "Address of the person dealing with __NAME__'s estate"
+    "name": "Name of the person dealing with {{NAME}}'s estate",
+    "phone-number": "Phone number of the person dealing with {{NAME}}'s estate",
+    "address": "Address of the person dealing with {{NAME}}'s estate"
   },
   "fields": {
     "name": {

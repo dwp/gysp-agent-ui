@@ -186,6 +186,7 @@ describe('Overseas completed claim controller ', () => {
     afterEach(() => {
       nock.cleanAll();
     });
+
     it('should redirect when post is valid with CREATED status and API returns 200', () => {
       nock('http://test-url/').put(updateNotUploadedClaimStatus).reply(200, {});
       overseasCompletedClaimController.postOverseasCompletedClaimUpdateStatus(validCreatedStatusUpdatePost, genericResponse);

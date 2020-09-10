@@ -1,12 +1,17 @@
 const { assert } = require('chai');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 const paymentSummaryObject = require('../../../lib/objects/changeCircumstancesPaymentSummaryObject');
 
 const paymentSummaryData = require('../../lib/paymentSummaryData');
 
 const paymentSummaryViewDataFirstPaymentSent = {
   paymentTwo: {
-    label: 'payment:payment_table.next_payment',
+    label: 'Next payment',
     creditDate: '19 April 2019',
     amount: '£101.83',
   },
@@ -14,12 +19,12 @@ const paymentSummaryViewDataFirstPaymentSent = {
 
 const paymentSummaryViewDataFirstPaymentNotSent = {
   paymentOne: {
-    label: 'payment:payment_table.first_payment',
+    label: 'First payment',
     creditDate: '11 April 2019',
     amount: '£203.57',
   },
   paymentTwo: {
-    label: 'payment:payment_table.next_payment',
+    label: 'Next payment',
     creditDate: '19 April 2019',
     amount: '£101.83',
   },
@@ -28,6 +33,12 @@ const paymentSummaryViewDataFirstPaymentNotSent = {
 const paymentSummaryViewDataFirstPaymentSentNextAmountNull = { };
 
 describe('Payment summary object formatter', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   it('should return false when object is null', (done) => {
     assert.isFalse(paymentSummaryObject.formatter(null));
     done();

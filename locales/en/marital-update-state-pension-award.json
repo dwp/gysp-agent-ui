@@ -10,7 +10,7 @@
     "entitlement-date": "Entitlement date"
   },
   "summary-values": {
-    "total": "__value__ per week"
+    "total": "{{value}} per week"
   },
   "errors": {
     "statePensionComponents": "You must change at least one of the State Pension components"

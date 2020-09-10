@@ -118,6 +118,7 @@ describe('timeline helper', () => {
       },
     };
   });
+
   describe('contact', () => {
     it('should return formatted timeline with list', async () => {
       nock('http://test-url/').get(auditApiUri).query({
@@ -152,6 +153,7 @@ describe('timeline helper', () => {
       assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get FAKE timeline');
     });
   });
+
   describe('payment', () => {
     it('should return formatted timeline with list', async () => {
       nock('http://test-url/').get(auditApiUri).query({
@@ -186,6 +188,7 @@ describe('timeline helper', () => {
       assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on cannot get FAKE timeline');
     });
   });
+
   describe('payment details', () => {
     it('should return formatted timeline with list', async () => {
       nock('http://test-url/').get(auditSearchApiUri).query({

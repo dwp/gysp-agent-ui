@@ -87,6 +87,7 @@ describe('Customer object formatter overseas ', () => {
     assert.equal(JSON.stringify(json), JSON.stringify(validJson));
     done();
   });
+
   it('should return valid json with no address lines 2-7, when address lines 2-7 are empty', (done) => {
     const json = customerObject.formatter(detailsNoAddressLine2to7, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoAddressLine2to7));

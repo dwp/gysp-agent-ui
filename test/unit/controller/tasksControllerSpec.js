@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 const claimData = require('../../lib/claimData');
 
 nock.disableNetConnect();
@@ -59,6 +64,12 @@ let civilTaskRequest;
 let marriedTaskWithUpdatesRequest;
 
 describe('tasks controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -108,6 +119,7 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/tasks/task');
       assert.equal(genericResponse.data.details.reason, 'married');
     });
+
     it('should return civil partner task view when requested', () => {
       controller.getTask(civilTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/task');
@@ -144,7 +156,7 @@ describe('tasks controller ', () => {
       await controller.getReturnTaskToQueue(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'work items' }));
       assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/workitem/update-status-returned');
     });
 
@@ -167,7 +179,7 @@ describe('tasks controller ', () => {
       await controller.getTaskDetail(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
       assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
     });
 
@@ -185,7 +197,7 @@ describe('tasks controller ', () => {
       await controller.getTaskDetail(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/detail');
       assert.isObject(genericResponse.data.details);
-      assert.equal(genericResponse.data.details.partnerSummary.header, 'task-detail:partner-details.header.married');
+      assert.equal(genericResponse.data.details.partnerSummary.header, "Spouse's details");
       assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
     });
 
@@ -194,7 +206,7 @@ describe('tasks controller ', () => {
       await controller.getTaskDetail(civilTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/detail');
       assert.isObject(genericResponse.data.details);
-      assert.equal(genericResponse.data.details.partnerSummary.header, 'task-detail:partner-details.header.civil');
+      assert.equal(genericResponse.data.details.partnerSummary.header, "Civil partner's details");
       assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
     });
   });
@@ -205,6 +217,7 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/tasks/complete');
       assert.equal(genericResponse.data.details.reason, 'married');
     });
+
     it('should return civil partner task view when requested', () => {
       controller.getTaskComplete(civilTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/complete');
@@ -217,6 +230,7 @@ describe('tasks controller ', () => {
       assert.isDefined(controller.getEndTask);
       assert.isFunction(controller.getEndTask);
     });
+
     describe('no award to update', () => {
       it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
@@ -241,7 +255,7 @@ describe('tasks controller ', () => {
         await controller.getEndTask(marriedTaskRequest, genericResponse);
         assert.equal(genericResponse.address, '/tasks/task/complete');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+        assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'work items' }));
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/workitem/update-status-complete');
       });
 
@@ -252,6 +266,7 @@ describe('tasks controller ', () => {
         assert.isUndefined(marriedTaskRequest.session.tasks);
       });
     });
+
     describe('award and task status update', () => {
       it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
         nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
@@ -279,7 +294,7 @@ describe('tasks controller ', () => {
         await controller.getEndTask(marriedTaskWithUpdatesRequest, genericResponse);
         assert.equal(genericResponse.address, '/tasks/task/complete');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, errorHelper.errorMessage(httpStatus.NOT_FOUND));
+        assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'work items' }));
         assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on ${putMaritalDetailsUri}`);
       });
 

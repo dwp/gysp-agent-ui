@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const session = require('express-session');
 const nunjucks = require('nunjucks');
-const i18n = require('i18next');
+const i18next = require('i18next');
+const i18nextHttpMiddleware = require('i18next-http-middleware');
+const i18nextFsBackend = require('i18next-fs-backend');
 const compression = require('compression');
 const flash = require('express-flash');
 const roles = require('./lib/middleware/roleAuth.js');
@@ -18,7 +20,7 @@ const app = express();
 
 // Config variables
 const config = require('./config/application');
-const i18nConfig = require('./config/i18n');
+const i18nextConfig = require('./config/i18next');
 const log = require('./config/logging')('agent-ui', config.application.logs);
 
 const { cacheLength } = config.application.assets;
@@ -94,9 +96,12 @@ app.use(session(sessionConfig));
 app.use(flash());
 
 // Multilingual information
-i18n.init(i18nConfig);
-app.use(i18n.handle);
-i18n.registerAppHelper(app);
+i18next
+  .use(i18nextFsBackend)
+  .use(i18nextHttpMiddleware.LanguageDetector)
+  .init(i18nextConfig);
+
+app.use(i18nextHttpMiddleware.handle(i18next, { ignoreRoutes: ['/public'] }));
 
 // Add post middleware
 app.use(bodyParser.json());
@@ -111,7 +116,7 @@ app.use((req, res, next) => {
   res.locals.globalHeaderText = 'Agent UI';
   res.locals.homepageUrl = '/';
   res.locals.skipLinkMessage = 'Skip to main content';
-  res.locals.serviceName = i18n.t('app:service_name');
+  res.locals.serviceName = i18next.t('app:service_name');
   res.locals.logger = log;
   /* Urls */
   res.locals.agentGateway = config.application.urls.agentGateway;
