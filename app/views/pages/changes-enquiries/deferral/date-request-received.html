@@ -13,11 +13,16 @@
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
   }) }}
 
-  <h2 class="govuk-heading-l">{{ t("deferral-date-request-received:h2") }}</h2>
-
   <form method="post" action={{ formAction }} autocomplete="off" novalidate>
     {{ govukDateInput({
       id: "date",
+      fieldset: {
+        legend: {
+          text: t('deferral-date-request-received:header'),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-6"
+        }
+      },
       items: [
         {
           label: t("app:date.day"),

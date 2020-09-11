@@ -3,7 +3,7 @@ const request = require('request-promise');
 
 const dataStore = require('../../../../lib/dataStore');
 const dateHelper = require('../../../../lib/dateHelper');
-const deferralObject = require('../../../../lib/objects/deferralObject');
+const deferralObject = require('../../../../lib/objects/api/deferralObject');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const requestHelper = require('../../../../lib/requestHelper');
@@ -12,7 +12,7 @@ const validator = require('../../../../lib/validation/deferralValidation');
 const root = '/changes-and-enquiries/personal';
 
 const dateRequestReceivedUrl = `${root}/deferral/date-request-received`;
-const defaultDateUrl = `${root}/deferral/default-date`;
+const defaultDateUrl = `${root}/deferral/deferral-date`;
 const stopStatePensionUrl = `${root}/stop-state-pension`;
 
 function getDateRequestReceived(req, res) {
@@ -29,7 +29,7 @@ function postDateRequestReceived(req, res) {
   const errors = validator.dateRequestReceived(details);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'date-request-received', details, 'deferral');
-    res.redirect(`${root}/deferral/default-date`);
+    res.redirect(`${root}/deferral/deferral-date`);
   } else {
     res.render('pages/changes-enquiries/deferral/date-request-received', {
       backLink: stopStatePensionUrl,
@@ -82,8 +82,11 @@ function getConfirm(req, res) {
 
 async function getUpdate(req, res) {
   const { nino } = dataStore.get(req, 'awardDetails');
-  const fromDate = dataStore.get(req, 'from-date', 'deferral');
-  const deferralDetails = deferralObject.formatter(nino, fromDate);
+  const {
+    'from-date': fromDate,
+    'date-request-received': dateRequestReceived,
+  } = dataStore.get(req, 'deferral');
+  const deferralDetails = deferralObject.formatter(nino, fromDate, dateRequestReceived);
   const recordDeferralApiUri = 'api/award/record-deferral';
   const putCall = requestHelper.generatePutCall(res.locals.agentGateway + recordDeferralApiUri, deferralDetails, 'award', req.user);
   try {

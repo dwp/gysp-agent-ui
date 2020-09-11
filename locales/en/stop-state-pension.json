@@ -1,6 +1,5 @@
 {
-  "header": "Stop State Pension",
-  "h2": "Reason for stopping the State Pension",
+  "header": "Reason for stopping the State Pension",
   "fields": {
     "reason": {
       "options": {
