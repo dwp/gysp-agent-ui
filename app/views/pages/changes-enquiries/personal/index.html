@@ -79,7 +79,7 @@
       </tbody>
     </table>
 
-    {% if not (keyDetails.status.text == "DEAD") and not (keyDetails.status.text == "DEFERRED") %}
+    {% if not (keyDetails.status.text == "DEAD") and not (keyDetails.status.text == "DEADNOTVERIFIED") and not (keyDetails.status.text == "DEFERRED") %}
       <p class="govuk-body"><a href="/changes-and-enquiries/personal/stop-state-pension" class="govuk-link govuk-link--no-visited-state">Stop State Pension</a></p>
     {% endif %}
   {% else %}

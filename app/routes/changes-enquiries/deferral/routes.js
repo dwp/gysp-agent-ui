@@ -7,7 +7,7 @@ router.route('/deferral/date-request-received')
   .get(functions.getDateRequestReceived)
   .post(functions.postDateRequestReceived);
 
-router.route('/deferral/default-date')
+router.route('/deferral/deferral-date')
   .get(functions.getDefaultDate)
   .post(functions.postDefaultDate);
 

@@ -26,7 +26,7 @@ const postDateRequestReceivedRequestDate = { ...awardDetails, body: { day: '1', 
 
 const getDefaultDateResponse = {
   backLink: '/changes-and-enquiries/personal/deferral/date-request-received',
-  formAction: '/changes-and-enquiries/personal/deferral/default-date',
+  formAction: '/changes-and-enquiries/personal/deferral/deferral-date',
   statePensionDate: '9 November 2018',
 };
 
@@ -35,7 +35,7 @@ const postDefaultDateRequestYes = { ...awardDetails, body: { 'default-date': 'ye
 const postDefaultDateRequestNo = { ...awardDetails, body: { 'default-date': 'no' } };
 
 const getConfirmResponse = {
-  backLink: '/changes-and-enquiries/personal/deferral/default-date',
+  backLink: '/changes-and-enquiries/personal/deferral/deferral-date',
   button: '/changes-and-enquiries/personal/deferral/update',
 };
 
@@ -46,7 +46,13 @@ const recordDeferralApiUri = '/api/award/record-deferral';
 let flash = { type: '', message: '' };
 
 const getUpdateRequest = {
-  ...awardDetails,
+  session: {
+    awardDetails: claimData.validClaim(),
+    deferral: {
+      'from-date': Date.now(),
+      'date-request-received': { year: '2020', month: '1', day: '1' },
+    },
+  },
   user: { cis: { surname: 'User', givenname: 'Test' } },
   flash: (type, message) => {
     flash.type = type;
@@ -112,7 +118,7 @@ describe('Deferral controller', () => {
         assert.equal(day, postDateRequestReceivedRequestDate.body.day);
         assert.equal(month, postDateRequestReceivedRequestDate.body.month);
         assert.equal(year, postDateRequestReceivedRequestDate.body.year);
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/default-date');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/deferral-date');
       });
     });
   });

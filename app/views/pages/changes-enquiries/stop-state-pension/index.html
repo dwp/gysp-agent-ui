@@ -13,12 +13,17 @@
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
   }) }}
 
-  <h2 class="govuk-heading-l">{{ t("stop-state-pension:h2") }}</h2>
-
   <form method="post" action={{ formAction }} autocomplete="off" novalidate>
     {{ govukRadios({
       idPrefix: "reason",
       name: "reason",
+      fieldset: {
+        legend: {
+          text: t('stop-state-pension:header'),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-6"
+        }
+      },
       items: [
         {
           value: "death",

@@ -1,6 +1,5 @@
 {
-  "header": "Date request received",
-  "h2": "Date the request was received",
+  "header": "Date the request was received",
   "fields": {
     "date": {
       "errors": {

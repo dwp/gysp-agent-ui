@@ -14,16 +14,22 @@
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
   }) }}
 
-  <h2 class="govuk-heading-l">{{ t("deferral-default-date:h2") }}</h2>
-
-  {{ govukInsetText({
-    text: t("deferral-default-date:insetText", { DATE: statePensionDate })
-  }) }}
-
   <form method="post" action={{ formAction }} autocomplete="off" novalidate>
     {{ govukRadios({
       idPrefix: "default-date",
       name: "default-date",
+      fieldset: {
+        legend: {
+          text: t('deferral-default-date:header'),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-2"
+        }
+      },
+      hint: {
+        html: govukInsetText({
+          text: t("deferral-default-date:insetText", { DATE: statePensionDate })
+        })
+      },
       items: [
         {
           value: "yes",
