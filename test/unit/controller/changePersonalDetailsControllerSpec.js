@@ -114,7 +114,7 @@ describe('Change circumstances personal controller', () => {
       controller.getPersonalDetails(ninoRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validPersonalDetailsViewData()));
+        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeferred));
       });
     });

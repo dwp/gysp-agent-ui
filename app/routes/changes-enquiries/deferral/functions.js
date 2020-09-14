@@ -95,7 +95,7 @@ async function getUpdate(req, res) {
     const sessionKeys = ['stop-state-pension', 'deferral'];
     redirectHelper.redirectAndClearSessionKey(req, res, sessionKeys, root);
   } catch (err) {
-    errorHelper.flashErrorAndRedirect(req, res, err, 'award', `${root}/deferral/update`);
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', `${root}/deferral/confirm`);
   }
 }
 
