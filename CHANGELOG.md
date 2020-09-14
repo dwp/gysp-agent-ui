@@ -1,3 +1,13 @@
+# [6.6.0](https://github.com/dwp/gysp-agent-ui/compare/6.5.0...6.6.0) (2020-09-14)
+
+
+### Features
+
+* **deferral:** created deferral journey ([3235d51](https://github.com/dwp/gysp-agent-ui/commit/3235d51adf815de9dfc0fc9026eb2bf15bb75243))
+* **widow:** change award amounts ([fe33a8f](https://github.com/dwp/gysp-agent-ui/commit/fe33a8fe9eba49ebde374040007db486b3e365bb))
+
+
+
 # [6.5.0](https://github.com/dwp/gysp-agent-ui/compare/6.4.0...6.5.0) (2020-09-02)
 
 
