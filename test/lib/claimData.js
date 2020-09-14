@@ -397,6 +397,7 @@ module.exports = {
       statePensionDate: '9 November 2018',
       maritalStatus: 'marital-details:details.summary.values.status.single',
       showMaritalStatusDetails: false,
+      enableStopStatePension: true,
     };
   },
   validPersonalDetailsMarriedViewData() {
@@ -407,6 +408,7 @@ module.exports = {
       statePensionDate: '9 November 2018',
       maritalStatus: 'marital-details:details.summary.values.status.married',
       showMaritalStatusDetails: true,
+      enableStopStatePension: true,
     };
   },
   validClaimWithDeathVerifiedData() {
@@ -417,6 +419,7 @@ module.exports = {
       statePensionDate: '9 November 2018',
       maritalStatus: 'marital-details:details.summary.values.status.single',
       showMaritalStatusDetails: false,
+      enableStopStatePension: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Verified',
     };
@@ -429,6 +432,7 @@ module.exports = {
       statePensionDate: '9 November 2018',
       maritalStatus: 'marital-details:details.summary.values.status.single',
       showMaritalStatusDetails: false,
+      enableStopStatePension: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Not verified',
     };
@@ -441,6 +445,7 @@ module.exports = {
       statePensionDate: '9 November 2018',
       maritalStatus: 'marital-details:details.summary.values.status.single',
       showMaritalStatusDetails: false,
+      enableStopStatePension: false,
       dateOfDeath: '1 January 2019',
       deathArrearsAmount: '£100.00',
       dateOfDeathVerification: 'Verified',

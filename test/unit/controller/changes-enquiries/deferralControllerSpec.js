@@ -174,7 +174,7 @@ describe('Deferral controller', () => {
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, errorMessages[400]);
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/update');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/confirm');
       });
     });
 
@@ -184,7 +184,7 @@ describe('Deferral controller', () => {
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, errorMessages[404]);
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/update');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/confirm');
       });
     });
 
@@ -194,7 +194,7 @@ describe('Deferral controller', () => {
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
         assert.equal(flash.message, errorMessages[500]);
-        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/update');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/confirm');
       });
     });
 

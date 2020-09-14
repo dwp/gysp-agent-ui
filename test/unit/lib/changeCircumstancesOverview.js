@@ -23,5 +23,25 @@ describe('change of circumstances overview ', () => {
       const formatter = changeCircumstancesOverview.formatter(claimData.validClaimMarried());
       assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validPersonalDetailsMarriedViewData()));
     });
+
+    it('should return formatted object with payment stopped link enabled - INPAYMENT', () => {
+      const formatter = changeCircumstancesOverview.formatter({ ...claimData.validClaim(), awardStatus: 'INPAYMENT' });
+      assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validPersonalDetailsViewData()));
+    });
+
+    it('should return formatted object with payment stopped link enabled - DEAD', () => {
+      const formatter = changeCircumstancesOverview.formatter({ ...claimData.validClaim(), awardStatus: 'DEAD' });
+      assert.equal(JSON.stringify(formatter), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
+    });
+
+    it('should return formatted object with payment stopped link enabled - DEADNOTVERIFIED', () => {
+      const formatter = changeCircumstancesOverview.formatter({ ...claimData.validClaim(), awardStatus: 'DEADNOTVERIFIED' });
+      assert.equal(JSON.stringify(formatter), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
+    });
+
+    it('should return formatted object with payment stopped link enabled - DEFERRED', () => {
+      const formatter = changeCircumstancesOverview.formatter({ ...claimData.validClaim(), awardStatus: 'DEFERRED' });
+      assert.equal(JSON.stringify(formatter), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
+    });
   });
 });
