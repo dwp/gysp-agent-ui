@@ -41,8 +41,8 @@ There are various system variables that need to be set for the application to ru
 
 #### Requirements
 
-* Node.JS 10.16.0+
-* npm v6.4.1+
+* Node.JS v12.0.0+
+* npm v6.9.0+
 
 There is a few options for testing within the application, these have been configured on jenkins. Testing uses [mocha](https://github.com/mochajs/mocha), [chai](https://github.com/chaijs/chai) and [nyc](https://github.com/istanbuljs/nyc).
 
