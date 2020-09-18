@@ -1,7 +1,7 @@
 {
   "header": {
-    "add": "Add __TYPE__ phone number",
-    "change": "Change __TYPE__ phone number"
+    "add": "Add {{TYPE}} phone number",
+    "change": "Change {{TYPE}} phone number"
   },
   "fields": {
     "home_phone_number": {

@@ -95,26 +95,31 @@ describe('Customer object formatter in the UK ', () => {
     assert.equal(JSON.stringify(json), JSON.stringify(validJson));
     done();
   });
+
   it('should return valid json with no sub building name, when sub building name is empty', (done) => {
     const json = customerObject.formatter(detailsNoSubBuildingNameUK, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoSubBuildingNameUK));
     done();
   });
+
   it('should return valid json with no building name, when building name is empty', (done) => {
     const json = customerObject.formatter(detailsNoBuildingNameUK, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoBuildingNameUK));
     done();
   });
+
   it('should return valid json with no building number, when building number is empty', (done) => {
     const json = customerObject.formatter(detailsNoBuildingNumberUK, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoBuildingNumberUK));
     done();
   });
+
   it('should return valid json with no dependent thoroughfare name, when dependent thoroughfare name is empty', (done) => {
     const json = customerObject.formatter(detailsNoDependentThoroughfareNameUK, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoDependentThoroughfareNameUK));
     done();
   });
+
   it('should return valid json with no post town, when post town is empty', (done) => {
     const json = customerObject.formatter(detailsNoPostTownUK, agentRefObject);
     assert.equal(JSON.stringify(json), JSON.stringify(validJsonNoPostTownUK));

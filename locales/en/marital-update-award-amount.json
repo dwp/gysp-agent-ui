@@ -7,7 +7,7 @@
           "required": "Enter the new State Pension amount",
           "invalid": "Enter the new State Pension amount in the correct format, like 164.35",
           "length": "New State Pension amount must be 6 characters or less",
-          "max-amount": "New State Pension amount must be __AMOUNT__ or less"
+          "max-amount": "New State Pension amount must be {{AMOUNT}} or less"
         }
       },
       "protected-payment": {

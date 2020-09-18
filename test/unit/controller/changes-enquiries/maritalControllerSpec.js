@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../../config/i18next');
+
 nock.disableNetConnect();
 
 const controller = require('../../../../app/routes/changes-enquiries/marital/functions');
@@ -247,6 +252,12 @@ const getEntitlementDateApiUri = (entitlementDate, claimFromDate, ninoDigits) =>
 const getValidateNspApiUri = (entitlementDate, amount) => `/api/paymentcalc/validatensp?entitlement-date=${entitlementDate}&amount=${amount}`;
 
 describe('Change circumstances - marital controller', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
@@ -258,7 +269,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.getMaritalDetails(ninoRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/{NINO}');
-      assert.include(genericResponse.data.status, 'app:errors.api.not-found');
+      assert.include(genericResponse.data.status, 'There has been a problem - award not found. This has been logged.');
     });
 
     it('should return error view name when API returns a INTERNAL_SERVER_ERROR response', async () => {
@@ -266,7 +277,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.getMaritalDetails(ninoRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/{NINO}');
-      assert.include(genericResponse.data.status, 'app:errors.api.internal-server-error');
+      assert.include(genericResponse.data.status, 'There has been a problem with the service, please try again. This has been logged.');
     });
 
     it('should return view name and data when called nino exists in session and API return OK response', async () => {
@@ -365,7 +376,7 @@ describe('Change circumstances - marital controller', () => {
         await controller.postChangeMaritalDate(validDateAndStatusPostRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'marital-status:success-message');
+        assert.equal(flash.message, 'Marital status changed');
         assert.isUndefined(validDateAndStatusPostRequest.session.marital);
       });
 
@@ -374,7 +385,7 @@ describe('Change circumstances - marital controller', () => {
         await controller.postChangeMaritalDate(validDatePostRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'marital-date:success-message.married.verified');
+        assert.equal(flash.message, 'Date of marriage verified');
         assert.isUndefined(validDatePostRequest.session.marital);
       });
     });
@@ -431,7 +442,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postChangePartnerNino(validNinoPostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-detail:married.fields.nino.success-message');
+      assert.equal(flash.message, 'Spouse details updated');
       assert.isUndefined(validNinoPostRequest.session.marital);
     });
   });
@@ -477,7 +488,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postPartnerDateOfBirth(validDobPostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-detail:married.fields.dob.success-message');
+      assert.equal(flash.message, 'Spouse details updated');
       assert.isUndefined(validNinoPostRequest.session.marital);
     });
   });
@@ -530,7 +541,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postPartnerDetails(validSpousePostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-status:success-message');
+      assert.equal(flash.message, 'Marital status changed');
       assert.isUndefined(validSpousePostRequest.session.marital);
     });
   });
@@ -567,7 +578,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postPartnerDetails(validPartnerPostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-status:success-message');
+      assert.equal(flash.message, 'Marital status changed');
       assert.isUndefined(validPartnerPostRequest.session.marital);
     });
   });
@@ -647,7 +658,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postSaveMaritalDetails(saveMaritalDetailsPostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-status:success-message');
+      assert.equal(flash.message, 'Marital status changed');
       assert.isUndefined(saveMaritalDetailsPostRequest.session.marital);
     });
   });
@@ -927,7 +938,7 @@ describe('Change circumstances - marital controller', () => {
       await controller.postUpdateAndSendLetter(updateAndSendLetterPostRequest, genericResponse);
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
-      assert.equal(flash.message, 'marital-status:success-message-award');
+      assert.equal(flash.message, 'Marital status changed - award updated');
       assert.isUndefined(saveMaritalDetailsPostRequest.session.marital);
     });
   });

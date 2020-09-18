@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/changes-enquiries/death-payee/functions');
@@ -34,10 +39,10 @@ const payeeDetailsValidResponse = {
 };
 
 const accountDetailsPageData = {
-  header: 'payee-account:header',
+  header: 'Payee bank or building society account details',
   formAction: '/changes-and-enquiries/personal/death/account-details',
   back: '/changes-and-enquiries/personal/death/payee-details',
-  buttonText: 'app:button.continue',
+  buttonText: 'Continue',
 };
 
 let checkPayeeDetailsRequest = { session: { awardDetails: claimData.validClaim() } };
@@ -133,10 +138,10 @@ const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim
 const validSelectPostSession = { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' }, 'dap-address': { address: '10091853817' } };
 
 const payeeDetailsValidPageData = {
-  header: 'death-check-payee-details:header.default',
+  header: 'Check payee details',
   back: '/changes-and-enquiries/personal',
   button: '/changes-and-enquiries/personal/death/account-details',
-  buttonText: 'app:button.continue',
+  buttonText: 'Continue',
   name: 'Full name',
   phoneNumber: 'Phone number',
   address: '1 Thoroughfare name<br />Post town<br />Post code',
@@ -144,10 +149,10 @@ const payeeDetailsValidPageData = {
 };
 
 const payeeDetailsUpdaterValidPageData = {
-  header: 'death-check-payee-details:header.default',
+  header: 'Check payee details',
   back: '/changes-and-enquiries/personal',
   button: '/changes-and-enquiries/personal/death/account-details',
-  buttonText: 'app:button.continue',
+  buttonText: 'Continue',
   name: 'Rodney Trotter',
   phoneNumber: '000000',
   address: '148 PICCADILLY<br /> LONDON<br /> W1J 7NT',
@@ -155,10 +160,10 @@ const payeeDetailsUpdaterValidPageData = {
 };
 
 const payeeDetailsValidArrearsPageData = {
-  header: 'death-check-payee-details:header.arrears',
+  header: 'Send BR330 form',
   back: '/changes-and-enquiries/personal/death/retry-calculation',
   button: '/changes-and-enquiries/personal/death/update',
-  buttonText: 'app:button.confirm',
+  buttonText: 'Confirm',
   name: 'Full name',
   phoneNumber: 'Phone number',
   address: '1 Thoroughfare name<br />Post town<br />Post code',
@@ -166,10 +171,10 @@ const payeeDetailsValidArrearsPageData = {
 };
 
 const payArrearsDetailsValidPageData = {
-  header: 'death-pay-arrears:header',
+  header: 'Pay the arrears',
   back: '/changes-and-enquiries/personal/death/account-details',
   buttonHref: '/changes-and-enquiries/personal/death/process-arrears',
-  buttonText: 'death-pay-arrears:button',
+  buttonText: 'Pay arrears',
   paymentDetails: {
     amount: '£157.63',
     startDate: '28 January 2020',
@@ -177,13 +182,13 @@ const payArrearsDetailsValidPageData = {
   },
   accountDetails: {
     rows: [{
-      key: { text: 'death-pay-arrears:accountDetails.account_holder' },
+      key: { text: 'Account holder name' },
       value: { text: 'Derek Trotter' },
     }, {
-      key: { text: 'death-pay-arrears:accountDetails.account_number' },
+      key: { text: 'Account number' },
       value: { text: '12345678' },
     }, {
-      key: { text: 'death-pay-arrears:accountDetails.sort_code' },
+      key: { text: 'Sort code' },
       value: { text: '11 22 33' },
     }],
   },
@@ -206,6 +211,12 @@ const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&
 let testPromise;
 
 describe('Change circumstances date of death controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -230,6 +241,7 @@ describe('Change circumstances date of death controller ', () => {
       }, 30);
     });
   });
+
   afterEach(() => {
     nock.cleanAll();
   });
@@ -311,7 +323,7 @@ describe('Change circumstances date of death controller ', () => {
         await controller.getProcessArrears(payArrearsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.not-found');
+        assert.equal(flash.message, 'There has been a problem - death payee details not found. This has been logged.');
       });
 
       it('should return view when receive 400 response from API', async () => {
@@ -319,7 +331,7 @@ describe('Change circumstances date of death controller ', () => {
         await controller.getProcessArrears(payArrearsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.bad-request');
+        assert.equal(flash.message, 'There has been a problem with the service, please go back and try again. This has been logged.');
       });
 
       it('should return view when receive 500 response from API', async () => {
@@ -327,7 +339,7 @@ describe('Change circumstances date of death controller ', () => {
         await controller.getProcessArrears(payArrearsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.internal-server-error');
+        assert.equal(flash.message, 'There has been a problem with the service, please try again. This has been logged.');
       });
 
       it('should return view when receive 200 response from API', async () => {
@@ -335,11 +347,12 @@ describe('Change circumstances date of death controller ', () => {
         await controller.getProcessArrears(payArrearsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'death-process-arrears:messages.success');
+        assert.equal(flash.message, 'Arrears paid - account closed');
         assert.isUndefined(payArrearsRequest.session.death);
         assert.isUndefined(payArrearsRequest.session['death-payee-details']);
       });
     });
+
     describe('updated payee contact details', () => {
       it('should return view when receive 404 response from contact update from API', async () => {
         nock('http://test-url/').put(deathPayeeContactDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND);
@@ -347,31 +360,34 @@ describe('Change circumstances date of death controller ', () => {
         await controller.getProcessArrears(payArrearsWithUpdatedContactDetailsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.not-found');
+        assert.equal(flash.message, 'There has been a problem - death payee details not found. This has been logged.');
       });
+
       it('should return view when receive 400 response from contact update from API', async () => {
         nock('http://test-url/').put(deathPayeeContactDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST);
         nock('http://test-url/').put(deathPayeeAccountDetailsUpdateApiUri).reply(httpStatus.OK);
         await controller.getProcessArrears(payArrearsWithUpdatedContactDetailsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.bad-request');
+        assert.equal(flash.message, 'There has been a problem with the service, please go back and try again. This has been logged.');
       });
+
       it('should return view when receive 500 response from contact update from API', async () => {
         nock('http://test-url/').put(deathPayeeContactDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
         nock('http://test-url/').put(deathPayeeAccountDetailsUpdateApiUri).reply(httpStatus.OK);
         await controller.getProcessArrears(payArrearsWithUpdatedContactDetailsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payee-arrears');
         assert.equal(flash.type, 'error');
-        assert.equal(flash.message, 'app:errors.api.internal-server-error');
+        assert.equal(flash.message, 'There has been a problem with the service, please try again. This has been logged.');
       });
+
       it('should return view when receive 200 response from contact update from API', async () => {
         nock('http://test-url/').put(deathPayeeContactDetailsUpdateApiUri).reply(httpStatus.OK);
         nock('http://test-url/').put(deathPayeeAccountDetailsUpdateApiUri).reply(httpStatus.OK);
         await controller.getProcessArrears(payArrearsWithUpdatedContactDetailsRequest, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'death-process-arrears:messages.success');
+        assert.equal(flash.message, 'Arrears paid - account closed');
         assert.isUndefined(payArrearsWithUpdatedContactDetailsRequest.session.death);
         assert.isUndefined(payArrearsWithUpdatedContactDetailsRequest.session['death-payee-details-updated']);
         assert.isUndefined(payArrearsWithUpdatedContactDetailsRequest.session['death-payee-details']);
@@ -387,6 +403,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/name');
       done();
     });
+
     it('should display populated form when requested', (done) => {
       controller.getPayeeName(dapGetNamePopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
@@ -400,7 +417,7 @@ describe('Change circumstances date of death controller ', () => {
     it('should return form again with error when invalid data supplied', (done) => {
       controller.postPayeeName(dapPostNameInvalidRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.errors.name.text, 'death-dap:fields.name.errors.required');
+      assert.deepEqual(genericResponse.data.errors.name.text, 'Enter the full name of the person dealing with the estate');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/name');
       done();
     });
@@ -435,7 +452,7 @@ describe('Change circumstances date of death controller ', () => {
     it('should return form again with error when invalid data supplied', (done) => {
       controller.postPayeePhoneNumber(dapPostPhoneNumberInvalidRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
-      assert.deepEqual(genericResponse.data.errors.phoneNumber.text, 'death-dap:fields.phone-number.errors.required');
+      assert.deepEqual(genericResponse.data.errors.phoneNumber.text, 'Enter a phone number');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/phone-number');
       done();
     });
@@ -456,6 +473,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
       done();
     });
+
     it('display populated form when requested', (done) => {
       controller.getPayeePostcodeLookup(dapGetPostcodeLookupPopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
@@ -469,7 +487,7 @@ describe('Change circumstances date of death controller ', () => {
     it('should return validation error when postcode is empty', () => {
       controller.postPayeePostcodeLookup(dapPostDapPostcodeLookupInvalidPost, genericResponse);
       assert.equal(Object.keys(genericResponse.data.errors).length, 1);
-      assert.equal(genericResponse.data.errors.postcode.text, 'address:fields.postcode.errors.required');
+      assert.equal(genericResponse.data.errors.postcode.text, 'You must enter a postcode');
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/postcode');
     });
@@ -569,7 +587,7 @@ describe('Change circumstances date of death controller ', () => {
     it('should return validation error when address is empty', () => {
       controller.postPayeeAddressSelect(invalidSelectPostRequest, genericResponse);
       assert.equal(Object.keys(genericResponse.data.errors).length, 1);
-      assert.equal(genericResponse.data.errors.address.text, 'address:fields.address.errors.required');
+      assert.equal(genericResponse.data.errors.address.text, 'Select an address from the list');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death-payee/dap/address-select');
     });
 

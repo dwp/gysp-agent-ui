@@ -31,6 +31,7 @@ describe('postcodeLookup object', () => {
       assert.equal(json[0].text, '2 addresses found');
       done();
     });
+
     it('should return valid json array in correct format and count for select box when a single address is supplied', (done) => {
       const json = removeContactDetailsObject.addressList(addressData.singleAddress());
       assert.equal(JSON.stringify(json), JSON.stringify(addressData.singleAddressesList()));

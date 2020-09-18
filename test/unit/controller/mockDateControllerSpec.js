@@ -42,18 +42,21 @@ describe('mock date controller ', () => {
       assert.equal(genericResponse.data.status, '- Datetime format invalid, please use YYYY-MM-DDTHH:MM:SS (2020-02-06T10:10:00)');
       assert.equal(genericResponse.locals.logMessage, 'MockSetDate - Datetime format invalid');
     });
+
     it('should return error as datetime is invalid', () => {
       controller.getMockSetDate(invalidDateTime, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
       assert.equal(genericResponse.data.status, '- Datetime format invalid, please use YYYY-MM-DDTHH:MM:SS (2020-02-06T10:10:00)');
       assert.equal(genericResponse.locals.logMessage, 'MockSetDate - Datetime format invalid');
     });
+
     it('should return redirect and set the date when valid datetime is supplied', () => {
       controller.getMockSetDate(validDateTime, genericResponse);
       assert.include(new Date().toString(), 'Thu Oct 01 2020 10:00:00');
       assert.equal(genericResponse.address, '/');
     });
   });
+
   describe('getMockResetDate function', () => {
     it('should return redirect and set the date when valid datetime is supplied', () => {
       controller.getMockResetDate(validRequest, genericResponse);

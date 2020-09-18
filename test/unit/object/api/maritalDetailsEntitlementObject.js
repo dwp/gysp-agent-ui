@@ -151,28 +151,36 @@ describe('maritalDetailsEntitlementObject', () => {
     marriedAward = { ...JSON.parse(JSON.stringify(award)), ...{ maritalStatus: 'Married' } };
     civilAward = { ...JSON.parse(JSON.stringify(award)), ...{ maritalStatus: 'Civil Partnership' } };
   });
+
   describe('formatter', () => {
     it('should return marital details object with event as null when update object undefined', () => {
       assert.deepEqual(maritalDetailsObject.formatter(undefined, marriedAward), maritalFormatted.undefined);
     });
+
     it('should return formatted marital details with partner date of birth updated and verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(dateOfBirthVerified, marriedAward), maritalFormatted['dob-verified']);
     });
+
     it('should return formatted marital details with partner date of birth updated and not verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(dateOfBirthNotVerified, marriedAward), maritalFormatted['dob-not-verified']);
     });
+
     it('should return formatted marital details with partner nino updated', () => {
       assert.deepEqual(maritalDetailsObject.formatter(partnerNinoDetails, marriedAward), maritalFormatted['partner-nino']);
     });
+
     it('should return formatted marital details with date of marriage updated and verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(maritalDateVerified, marriedAward), maritalFormatted['married-date-verified']);
     });
+
     it('should return formatted marital details with date of marriage updated and not verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(maritalDateNotVerified, marriedAward), maritalFormatted['married-date-not-verified']);
     });
+
     it('should return formatted marital details with date of civil partnership updated and verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(maritalDateVerified, civilAward), maritalFormatted['civil-date-verified']);
     });
+
     it('should return formatted marital details with date of civil partnership updated and not verified', () => {
       assert.deepEqual(maritalDetailsObject.formatter(maritalDateNotVerified, civilAward), maritalFormatted['civil-date-not-verified']);
     });

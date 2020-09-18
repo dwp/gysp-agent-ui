@@ -1,8 +1,5 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
-const i18n = require('i18next');
-
-i18n.init({ sendMissingTo: 'fallback' });
 
 const formValidator = require('../../../../lib/formValidator');
 const dataStore = require('../../../../lib/dataStore');

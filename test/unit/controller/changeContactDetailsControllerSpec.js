@@ -2,6 +2,11 @@ const assert = require('assert');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 nock.disableNetConnect();
 
 const changeContactDetailsController = require('../../../app/routes/changes-enquiries/contact/functions');
@@ -127,6 +132,12 @@ const errorMessages = {
 };
 
 describe('Change circumstances contact controller', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -149,6 +160,7 @@ describe('Change circumstances contact controller', () => {
       }, 30);
     });
   });
+
   afterEach(() => {
     nock.cleanAll();
   });
@@ -232,7 +244,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validAddHomePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.home.add');
+        assert.equal(flash.message, 'Home number added');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -242,7 +254,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validHomePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.home.change');
+        assert.equal(flash.message, 'Home number changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -308,7 +320,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validAddWorkPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.work.add');
+        assert.equal(flash.message, 'Work number added');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -318,7 +330,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validWorkPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.work.change');
+        assert.equal(flash.message, 'Work number changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -384,7 +396,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validAddMobilePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.mobile.add');
+        assert.equal(flash.message, 'Mobile number added');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -394,7 +406,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validMobilePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.mobile.change');
+        assert.equal(flash.message, 'Mobile number changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -460,7 +472,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validAddEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.email.add');
+        assert.equal(flash.message, 'Email address added');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -470,7 +482,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postChangeContactDetails(validEmailPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.email.change');
+        assert.equal(flash.message, 'Email address changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -537,7 +549,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postRemoveContactDetails(validYesHomeRemovePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.home.remove');
+        assert.equal(flash.message, 'Home number removed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });
@@ -604,7 +616,7 @@ describe('Change circumstances contact controller', () => {
       changeContactDetailsController.postRemoveContactDetails(validYesEmailRemovePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
-        assert.equal(flash.message, 'contact-details:success-message.email.remove');
+        assert.equal(flash.message, 'Email address removed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
       });
     });

@@ -114,6 +114,7 @@ describe('Find someone controller ', () => {
         assert.equal(genericResponse.address, 'find-someone/search-result');
       });
     });
+
     it('should return the correct view name for getting search result', (done) => {
       findSomeoneController.getSearchResult(validGetSearchResultRequest, genericResponse);
       assert.equal(genericResponse.data.keyDetails.fullName, 'Joe Bloggs');

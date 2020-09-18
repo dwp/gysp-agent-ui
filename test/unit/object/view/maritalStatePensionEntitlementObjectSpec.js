@@ -1,4 +1,10 @@
 const { assert } = require('chai');
+
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../../config/i18next');
+
 const maritalStatePensionEntitlementObject = require('../../../../lib/objects/view/maritalStatePensionEntitlementObject');
 
 const allPartnerDetails = {
@@ -26,31 +32,31 @@ const allPartnerDetails = {
 };
 const allPartnerDetailsFormatted = {
   partnerSummary: {
-    header: 'marital-state-pension-entitlement:summary-header-1.married',
+    header: "Late spouse's details",
     rows: [{
-      key: { text: 'marital-state-pension-entitlement:summary-keys.nino' },
+      key: { text: 'National Insurance number' },
       value: { text: 'AA 11 11 11 B' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.first-name' },
+      key: { text: 'First name' },
       value: { text: 'Joe' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.last-name' },
+      key: { text: 'Last name' },
       value: { text: 'Bloggs' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.other-names' },
+      key: { text: 'Other names' },
       value: { text: 'Kelvin' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.dob' },
+      key: { text: 'Date of birth' },
       value: { text: '19 March 1953' },
     }],
   },
   otherDetailsSummary: {
-    header: 'marital-state-pension-entitlement:summary-header-2.married',
+    header: 'Other details to help find spouse',
     rows: [{
-      key: { text: 'marital-state-pension-entitlement:summary-keys.marital-date.married' },
-      value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n      app:verification-status.verified\n  </span>', classes: 'govuk-!-padding-right-0' },
+      key: { text: 'Date of marriage' },
+      value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n      Verified\n  </span>', classes: 'govuk-!-padding-right-0' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.address' },
+      key: { text: "Claimant's address" },
       value: { html: '1 Test Street<br />NE1 1AA' },
     }],
   },
@@ -81,38 +87,47 @@ const mandatoryPartnerDetails = {
 };
 const mandatoryPartnerDetailsFormatted = {
   partnerSummary: {
-    header: 'marital-state-pension-entitlement:summary-header-1.married',
+    header: "Late spouse's details",
     rows: [{
-      key: { text: 'marital-state-pension-entitlement:summary-keys.first-name' },
+      key: { text: 'First name' },
       value: { text: 'Joe' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.last-name' },
+      key: { text: 'Last name' },
       value: { text: 'Bloggs' },
     }],
   },
   otherDetailsSummary: {
-    header: 'marital-state-pension-entitlement:summary-header-2.married',
+    header: 'Other details to help find spouse',
     rows: [{
-      key: { text: 'marital-state-pension-entitlement:summary-keys.marital-date.married' },
-      value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n      app:verification-status.verified\n  </span>', classes: 'govuk-!-padding-right-0' },
+      key: { text: 'Date of marriage' },
+      value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n      Verified\n  </span>', classes: 'govuk-!-padding-right-0' },
     }, {
-      key: { text: 'marital-state-pension-entitlement:summary-keys.address' },
+      key: { text: "Claimant's address" },
       value: { html: '1 Test Street<br />NE1 1AA' },
     }],
   },
 };
 
 describe('maritalStatePensionEntitlementObject ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   describe('formatter', () => {
     it('should be a function', () => {
       assert.isFunction(maritalStatePensionEntitlementObject.formatter);
     });
+
     it('should return null when partner details are null', () => {
       assert.isNull(maritalStatePensionEntitlementObject.formatter({}));
     });
+
     it('should return object with all details', () => {
       assert.deepEqual(maritalStatePensionEntitlementObject.formatter(allPartnerDetails), allPartnerDetailsFormatted);
     });
+
     it('should return object with only mandatory details', () => {
       assert.deepEqual(maritalStatePensionEntitlementObject.formatter(mandatoryPartnerDetails), mandatoryPartnerDetailsFormatted);
     });

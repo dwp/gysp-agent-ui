@@ -3,6 +3,11 @@ const nock = require('nock');
 
 nock.disableNetConnect();
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 const controller = require('../../../app/routes/changes-enquiries/personal/functions');
 
 const responseHelper = require('../../lib/responseHelper');
@@ -69,6 +74,12 @@ describe('Change circumstances personal controller', () => {
   });
 
   describe(' getCustomerOverview function (GET /changes-enquiries/personal)', () => {
+    before(async () => {
+      await i18next
+        .use(i18nextFsBackend)
+        .init(i18nextConfig);
+    });
+
     it('should return view name and view data when called nino exists in session and exists on API', () => {
       nock('http://test-url/').get(`${changeCircumstancesDetailsUri}/${ninoRequest.session.searchedNino}`).reply(200, claimData.validClaim());
       controller.getPersonalDetails(ninoRequest, genericResponse);

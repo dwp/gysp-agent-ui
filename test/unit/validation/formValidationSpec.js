@@ -1,4 +1,10 @@
 const assert = require('assert');
+
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../config/i18next');
+
 const validator = require('../../../lib/formValidator');
 const customerData = require('../../lib/customerData');
 
@@ -97,6 +103,12 @@ const invalidPaymentFrequencyPostData = { frequency: 'bob' };
 const titles = customerData.validTitles();
 
 describe('Form validation', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   describe('customer validator', () => {
     it('Should return 13 errors when empty object is supplied', () => {
       const errors = validator.customerDetails(emptyCustomerData, titles);
@@ -113,50 +125,54 @@ describe('Form validation', () => {
       fullCustomerData.dobMonth = 13;
       const errors = validator.customerDetails(fullCustomerData, titles);
       assert.equal(Object.keys(errors).length, 3);
-      assert.equal(errors.dob.text, 'add:errors.dob.format');
+      assert.equal(errors.dob.text, 'Date of birth must be a valid date');
       assert.equal(errors.dobDay, true);
       assert.equal(errors.dobMonth, true);
     });
+
     it('Should return date error when invalid year date supplied (1 digit)', () => {
       fullCustomerData.dobDay = 10;
       fullCustomerData.dobMonth = 10;
       fullCustomerData.dobYear = 1;
       const errors = validator.customerDetails(fullCustomerData, titles);
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.dob.text, 'add:errors.dob.format');
+      assert.equal(errors.dob.text, 'Date of birth must be a valid date');
       assert.equal(errors.dobDay, undefined);
       assert.equal(errors.dobMonth, undefined);
       assert.equal(errors.dobYear, true);
     });
+
     it('Should return date error when invalid year date supplied (2 digit)', () => {
       fullCustomerData.dobDay = 10;
       fullCustomerData.dobMonth = 10;
       fullCustomerData.dobYear = 13;
       const errors = validator.customerDetails(fullCustomerData, titles);
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.dob.text, 'add:errors.dob.format');
+      assert.equal(errors.dob.text, 'Date of birth must be a valid date');
       assert.equal(errors.dobDay, undefined);
       assert.equal(errors.dobMonth, undefined);
       assert.equal(errors.dobYear, true);
     });
+
     it('Should return date error when invalid year date supplied (3 digit)', () => {
       fullCustomerData.dobDay = 10;
       fullCustomerData.dobMonth = 10;
       fullCustomerData.dobYear = 134;
       const errors = validator.customerDetails(fullCustomerData, titles);
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.dob.text, 'add:errors.dob.format');
+      assert.equal(errors.dob.text, 'Date of birth must be a valid date');
       assert.equal(errors.dobDay, undefined);
       assert.equal(errors.dobMonth, undefined);
       assert.equal(errors.dobYear, true);
     });
+
     it('Should return State Pension Date error when invalid date supplied', () => {
       fullCustomerData.dobDay = 12;
       fullCustomerData.dobMonth = 12;
       fullCustomerData.dobYear = 1950;
       const errors = validator.customerDetails(fullCustomerData, titles);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.statePensionDate.text, 'add:errors.state_pension_date.date');
+      assert.equal(errors.statePensionDate.text, 'State Pension age can not be calculated. No customer record created');
     });
   });
 
@@ -165,200 +181,207 @@ describe('Form validation', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyHomePostData, contactTypeHome, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a home phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyHomePostData, contactTypeHome, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a home phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedHomePostInvalidRequest, contactTypeHome, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.add.errors.format`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedHomePostLongRequest, contactTypeHome, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.add.errors.length`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Phone number must be 70 characters or less');
       });
     });
+
     describe('change home phone number', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyHomePostData, contactTypeHome, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a new home phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyHomePostData, contactTypeHome, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a new home phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedHomePostInvalidRequest, contactTypeHome, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.change.errors.format`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedHomePostLongRequest, contactTypeHome, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, `contact-details:fields.${contactTypeHome}_phone_number.change.errors.length`);
+        assert.equal(errors[`${contactTypeHome}PhoneNumber`].text, 'Phone number must be 70 characters or less');
       });
     });
+
     describe('add work phone number', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyWorkPostData, contactTypeWork, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a work phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyWorkPostData, contactTypeWork, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a work phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedWorkPostInvalidRequest, contactTypeWork, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.add.errors.format`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedWorkPostLongRequest, contactTypeWork, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.add.errors.length`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Phone number must be 70 characters or less');
       });
     });
+
     describe('change work phone number', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyWorkPostData, contactTypeWork, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a new work phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyWorkPostData, contactTypeWork, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a new work phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedWorkPostInvalidRequest, contactTypeWork, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.change.errors.format`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedWorkPostLongRequest, contactTypeWork, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, `contact-details:fields.${contactTypeWork}_phone_number.change.errors.length`);
+        assert.equal(errors[`${contactTypeWork}PhoneNumber`].text, 'Phone number must be 70 characters or less');
       });
     });
+
     describe('add mobile phone number', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyMobilePostData, contactTypeMobile, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a mobile phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyMobilePostData, contactTypeMobile, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.add.errors.required`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a mobile phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedMobilePostInvalidRequest, contactTypeMobile, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.add.errors.format`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedMobilePostLongRequest, contactTypeMobile, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.add.errors.length`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Mobile phone number must be 70 characters or less');
       });
     });
+
     describe('change mobile phone number', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyMobilePostData, contactTypeMobile, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a new mobile phone number');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyMobilePostData, contactTypeMobile, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.change.errors.required`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a new mobile phone number');
       });
 
       it('should return error if phone number is not valid', () => {
         const errors = validator.contactDetails(populatedMobilePostInvalidRequest, contactTypeMobile, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.change.errors.format`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982');
       });
 
       it('should return error if phone number is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedMobilePostLongRequest, contactTypeMobile, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, `contact-details:fields.${contactTypeMobile}_phone_number.change.errors.length`);
+        assert.equal(errors[`${contactTypeMobile}PhoneNumber`].text, 'Mobile phone number must be 70 characters or less');
       });
     });
+
     describe('add email', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyEmailPostData, contactTypeEmail, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.add.errors.required`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter an email address');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyEmailPostData, contactTypeEmail, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.add.errors.required`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter an email address');
       });
 
       it('should return error if email is not valid', () => {
         const errors = validator.contactDetails(populatedEmailPostInvalidRequest, contactTypeEmail, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.add.errors.format`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter an email address in the correct format, like name@example.com');
       });
 
       it('should return error if email is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedEmailPostLongRequest, contactTypeEmail, contactAdd);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.add.errors.length`);
+        assert.equal(errors[contactTypeEmail].text, 'Email address must be 100 characters or less');
       });
     });
+
     describe('change email', () => {
       it('should return error when empty object is supplied', () => {
         const errors = validator.contactDetails(emptyEmailPostData, contactTypeEmail, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.change.errors.required`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter a new email address');
       });
 
       it('should return error when invalid format object is supplied', () => {
         const errors = validator.contactDetails(emptyEmailPostData, contactTypeEmail, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.change.errors.required`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter a new email address');
       });
 
       it('should return error if email is not valid', () => {
         const errors = validator.contactDetails(populatedEmailPostInvalidRequest, contactTypeEmail, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.change.errors.format`);
+        assert.equal(errors[contactTypeEmail].text, 'Enter an email address in the correct format, like name@example.com');
       });
 
       it('should return error if email is to long (above 100 characters)', () => {
         const errors = validator.contactDetails(populatedEmailPostLongRequest, contactTypeEmail, contactChange);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors[contactTypeEmail].text, `contact-details:fields.${contactTypeEmail}.change.errors.length`);
+        assert.equal(errors[contactTypeEmail].text, 'Email address must be 100 characters or less');
       });
 
       it('should return no errors when email address is valid', () => {
@@ -387,19 +410,19 @@ describe('Form validation', () => {
     it('should return error when empty object is supplied', () => {
       const errors = validator.addressPostcodeDetails(emptyPostcodePostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.postcode.text, 'address:fields.postcode.errors.required');
+      assert.equal(errors.postcode.text, 'You must enter a postcode');
     });
 
     it('should return error when blank object is supplied', () => {
       const errors = validator.addressPostcodeDetails(blankPostcodePostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.postcode.text, 'address:fields.postcode.errors.required');
+      assert.equal(errors.postcode.text, 'You must enter a postcode');
     });
 
     it('should return error when invalid format object is supplied', () => {
       const errors = validator.addressPostcodeDetails(formatPostcodePostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.postcode.text, 'address:fields.postcode.errors.format');
+      assert.equal(errors.postcode.text, 'Enter a postcode in the correct format, like AA1 1AA');
     });
   });
 
@@ -407,13 +430,13 @@ describe('Form validation', () => {
     it('should return error when empty object is supplied', () => {
       const errors = validator.addressDetails(emptyAddressPostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.address.text, 'address:fields.address.errors.required');
+      assert.equal(errors.address.text, 'Select an address from the list');
     });
 
     it('should return error when blank object is supplied', () => {
       const errors = validator.addressDetails(blankAddressPostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.address.text, 'address:fields.address.errors.required');
+      assert.equal(errors.address.text, 'Select an address from the list');
     });
   });
 
@@ -431,67 +454,78 @@ describe('Form validation', () => {
     describe(' accountName ', () => {
       it('should return error if empty ', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.accountName.text, 'account:fields.accountName.errors.required');
+        assert.equal(accountValidationResponse.accountName.text, 'Enter the account holder’s full name');
       });
+
       it('should return error if to long (greater then 70 characters) ', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.longTextObject);
-        assert.equal(accountValidationResponse.accountName.text, 'account:fields.accountName.errors.length');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must be 70 characters or less');
       });
+
       it('should return error if text includes none alpha ', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.nonAlphaName);
-        assert.equal(accountValidationResponse.accountName.text, 'account:fields.accountName.errors.format');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must start with a letter and not contain numbers');
       });
+
       it('should return no error if text includes a & ', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.includesAnd);
         assert.equal(accountValidationResponse.accountName, undefined);
       });
+
       it('should return error if text does not start with alpha ', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.startNotAlphaName);
-        assert.equal(accountValidationResponse.accountName.text, 'account:fields.accountName.errors.format');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must start with a letter and not contain numbers');
       });
     });
 
     describe('account number ', () => {
       it('should return error if empty', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.accountNumber.text, 'account:fields.accountNumber.errors.required');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Enter an account number');
       });
+
       it('should return error if less then 8 numbers', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.shortAccount);
-        assert.equal(accountValidationResponse.accountNumber.text, 'account:fields.accountNumber.errors.length');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Account number must be 8 numbers');
       });
 
       it('should return error if more then 8 numbers', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.longAccount);
-        assert.equal(accountValidationResponse.accountNumber.text, 'account:fields.accountNumber.errors.length');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Account number must be 8 numbers');
       });
     });
 
     describe('sort code ', () => {
       it('should return error if empty', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.sortCode.text, 'account:fields.sortCode.errors.required');
+        assert.equal(accountValidationResponse.sortCode.text, 'Enter a sort code');
       });
+
       it('should return error if not numbers', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.textAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'account:fields.sortCode.errors.format');
+        assert.equal(accountValidationResponse.sortCode.text, 'Enter a sort code in the correct format, like 112233');
       });
+
       it('should return error if one numbers', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.shortAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'account:fields.sortCode.errors.length');
+        assert.equal(accountValidationResponse.sortCode.text, 'Sort code must be 6 numbers');
       });
+
       it('should return error if length greater then 6', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.longAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'account:fields.sortCode.errors.length');
+        assert.equal(accountValidationResponse.sortCode.text, 'Sort code must be 6 numbers');
       });
+
       it('should return no errors when sort code is valid and contains spaces', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.validObjectWithSpaces);
         assert.equal(accountValidationResponse.length, 0);
       });
+
       it('should return no errors when sort code valid and contains hyphens', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.validObjectWithHyphens);
         assert.equal(accountValidationResponse.length, 0);
       });
+
       it('should return no errors when sort code valid, contains hyphens and spaces', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(bankObjects.validObjectWithHyphensAndSpaces);
         assert.equal(accountValidationResponse.length, 0);
@@ -503,17 +537,20 @@ describe('Form validation', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(buildingObjects.emptyRoll);
         assert.equal(accountValidationResponse.referenceNumber, undefined);
       });
+
       it('should return no error if roll is valid', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(buildingObjects.validRoll);
         assert.equal(accountValidationResponse.referenceNumber, undefined);
       });
+
       it('should return error if contains $$', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(buildingObjects.invalidRoll);
-        assert.equal(accountValidationResponse.referenceNumber.text, 'account:fields.referenceNumber.errors.format');
+        assert.equal(accountValidationResponse.referenceNumber.text, 'Enter a roll number in the correct format');
       });
+
       it('should return error if to long', () => {
         const accountValidationResponse = validator.bankBuildingAccountDetails(buildingObjects.longRoll);
-        assert.equal(accountValidationResponse.referenceNumber.text, 'account:fields.referenceNumber.errors.length');
+        assert.equal(accountValidationResponse.referenceNumber.text, 'Roll number must be 18 characters or less');
       });
     });
   });
@@ -522,19 +559,19 @@ describe('Form validation', () => {
     it('should return error when empty object is supplied', () => {
       const errors = validator.paymentFrequency(emptyPaymentFrequencyPostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.frequency.text, 'payment-frequency:fields.frequency.errors.required');
+      assert.equal(errors.frequency.text, 'Select a new payment frequency');
     });
 
     it('should return error when blank object is supplied', () => {
       const errors = validator.paymentFrequency(blankPaymentFrequencyPostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.frequency.text, 'payment-frequency:fields.frequency.errors.required');
+      assert.equal(errors.frequency.text, 'Select a new payment frequency');
     });
 
     it('should return error when invalid frequency is supplied', () => {
       const errors = validator.paymentFrequency(invalidPaymentFrequencyPostData);
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.frequency.text, 'payment-frequency:fields.frequency.errors.required');
+      assert.equal(errors.frequency.text, 'Select a new payment frequency');
     });
 
     it('should return no error when valid frequency is supplied - 1W', () => {
@@ -590,7 +627,7 @@ describe('Form validation', () => {
         dateYear: '2099', dateMonth: '01', dateDay: '01', verification: 'V',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.future');
+      assert.equal(errors.date.text, 'Date of death must be today or in the past');
     });
 
     it('should return error when month is invalid', () => {
@@ -598,7 +635,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '20', dateDay: '01', verification: 'V',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
 
     it('should return error when day is invalid', () => {
@@ -606,7 +643,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '01', dateDay: '40', verification: 'V',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'date-of-death:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
 
     it('should return error when verification is invalid', () => {
@@ -614,7 +651,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '01', dateDay: '01', verification: 'bob',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.verification.text, 'date-of-death:fields.verification.errors.required');
+      assert.equal(errors.verification.text, 'Select whether the date of death is verified or not verified');
     });
   });
 
@@ -636,7 +673,7 @@ describe('Form validation', () => {
     it('should return error when empty', () => {
       const errors = validator.dateOfDeathVerify({ });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.verify.text, 'verify-date-of-death:fields.verify.errors.required');
+      assert.equal(errors.verify.text, 'Select whether the date of death is correct');
     });
 
     it('should return error when blank', () => {
@@ -644,7 +681,7 @@ describe('Form validation', () => {
         verify: '',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.verify.text, 'verify-date-of-death:fields.verify.errors.required');
+      assert.equal(errors.verify.text, 'Select whether the date of death is correct');
     });
 
     it('should return error when not yes or no', () => {
@@ -652,7 +689,7 @@ describe('Form validation', () => {
         verify: 'bob',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.verify.text, 'verify-date-of-death:fields.verify.errors.required');
+      assert.equal(errors.verify.text, 'Select whether the date of death is correct');
     });
   });
 
@@ -681,7 +718,7 @@ describe('Form validation', () => {
         dateYear: '2099', dateMonth: '01', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.date.text, 'verified-date-of-death:fields.date.errors.future');
+      assert.equal(errors.date.text, 'Date of death must be today or in the past');
     });
 
     it('should return error when month is invalid', () => {
@@ -689,7 +726,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '20', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'verified-date-of-death:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
 
     it('should return error when day is invalid', () => {
@@ -697,7 +734,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '01', dateDay: '40',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'verified-date-of-death:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
   });
 
@@ -726,7 +763,7 @@ describe('Form validation', () => {
         dateYear: '2017', dateMonth: '01', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.date.text, 'review-award-date:fields.date.errors.before');
+      assert.equal(errors.date.text, 'Entitlement date cannot be before State Pension date');
     });
 
     it('should return no error when date in sp data', () => {
@@ -741,7 +778,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '20', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'review-award-date:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date');
     });
 
     it('should return error when day is invalid', () => {
@@ -749,7 +786,7 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '01', dateDay: '40',
       });
       assert.equal(Object.keys(errors).length, 2);
-      assert.equal(errors.date.text, 'review-award-date:fields.date.errors.format');
+      assert.equal(errors.date.text, 'Enter a real date');
     });
 
     it('should return error when entitlement date is in future', () => {
@@ -757,7 +794,7 @@ describe('Form validation', () => {
         dateYear: '2199', dateMonth: '01', dateDay: '01',
       });
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.date.text, 'review-award-date:fields.date.errors.after');
+      assert.equal(errors.date.text, 'Entitlement date cannot be in the future');
     });
   });
 
@@ -775,71 +812,83 @@ describe('Form validation', () => {
     describe(' accountName ', () => {
       it('should return error if empty ', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.required');
+        assert.equal(accountValidationResponse.accountName.text, 'Enter the account holder’s full name');
       });
+
       it('should return error if to long (greater then 70 characters) ', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longTextObject);
-        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.length');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must be 70 characters or less');
       });
+
       it('should return no error if 70 characters long', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.maxTextObject);
         assert.equal(accountValidationResponse.accountName, undefined);
       });
+
       it('should return error if text includes none alpha ', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.nonAlphaName);
-        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.format');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must start with a letter and not contain numbers');
       });
+
       it('should return no error if text includes a & ', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.includesAnd);
         assert.equal(accountValidationResponse.accountName, undefined);
       });
+
       it('should return error if text does not start with alpha ', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.startNotAlphaName);
-        assert.equal(accountValidationResponse.accountName.text, 'payee-account:fields.accountName.errors.format');
+        assert.equal(accountValidationResponse.accountName.text, 'Name must start with a letter and not contain numbers');
       });
     });
 
     describe('account number ', () => {
       it('should return error if empty', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.required');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Enter an account number');
       });
+
       it('should return error if less then 8 numbers', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.shortAccount);
-        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.length');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Account number must be 8 numbers');
       });
 
       it('should return error if more then 8 numbers', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longAccount);
-        assert.equal(accountValidationResponse.accountNumber.text, 'payee-account:fields.accountNumber.errors.length');
+        assert.equal(accountValidationResponse.accountNumber.text, 'Account number must be 8 numbers');
       });
     });
 
     describe('sort code ', () => {
       it('should return error if empty', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.emptyObject);
-        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.required');
+        assert.equal(accountValidationResponse.sortCode.text, 'Enter a sort code');
       });
+
       it('should return error if not numbers', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.textAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.format');
+        assert.equal(accountValidationResponse.sortCode.text, 'Enter a sort code in the correct format, like 112233');
       });
+
       it('should return error if one numbers', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.shortAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.length');
+        assert.equal(accountValidationResponse.sortCode.text, 'Sort code must be 6 numbers');
       });
+
       it('should return error if length greater then 6', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.longAccount);
-        assert.equal(accountValidationResponse.sortCode.text, 'payee-account:fields.sortCode.errors.length');
+        assert.equal(accountValidationResponse.sortCode.text, 'Sort code must be 6 numbers');
       });
+
       it('should return no errors when sort code is valid and contains spaces', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithSpaces);
         assert.equal(accountValidationResponse.length, 0);
       });
+
       it('should return no errors when sort code valid and contains hyphens', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithHyphens);
         assert.equal(accountValidationResponse.length, 0);
       });
+
       it('should return no errors when sort code valid, contains hyphens and spaces', () => {
         const accountValidationResponse = validator.payeeAccountDetails(bankObjects.validObjectWithHyphensAndSpaces);
         assert.equal(accountValidationResponse.length, 0);
@@ -851,17 +900,20 @@ describe('Form validation', () => {
         const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.emptyRoll);
         assert.equal(accountValidationResponse.referenceNumber, undefined);
       });
+
       it('should return no error if roll is valid', () => {
         const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.validRoll);
         assert.equal(accountValidationResponse.referenceNumber, undefined);
       });
+
       it('should return error if contains $$', () => {
         const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.invalidRoll);
-        assert.equal(accountValidationResponse.referenceNumber.text, 'payee-account:fields.referenceNumber.errors.format');
+        assert.equal(accountValidationResponse.referenceNumber.text, 'Enter a roll number in the correct format');
       });
+
       it('should return error if to long', () => {
         const accountValidationResponse = validator.payeeAccountDetails(buildingObjects.longRoll);
-        assert.equal(accountValidationResponse.referenceNumber.text, 'payee-account:fields.referenceNumber.errors.length');
+        assert.equal(accountValidationResponse.referenceNumber.text, 'Roll number must be 18 characters or less');
       });
     });
   });
@@ -869,32 +921,39 @@ describe('Form validation', () => {
   describe('deathDapNameValidation validator', () => {
     it('should return error if empty', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.emptyObject);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.required');
+      assert.equal(response.name.text, 'Enter the full name of the person dealing with the estate');
     });
+
     it('should return error if blank', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.blankObject);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.required');
+      assert.equal(response.name.text, 'Enter the full name of the person dealing with the estate');
     });
+
     it('should return error if to long (greater then 140 characters)', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.longTextObject);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.length');
+      assert.equal(response.name.text, 'Full name must be 140 characters or less');
     });
+
     it('should return error if to long with space (greater then 140 characters)', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.longTextWithSpaceObject);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.length');
+      assert.equal(response.name.text, 'Full name must be 140 characters or less');
     });
+
     it('should return error if text includes none alpha', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.nonAlpha);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.invalid');
+      assert.equal(response.name.text, 'Full name must start with a letter and not contain numbers');
     });
+
     it('should return error if text does not start with alpha', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.startNotAlphaName);
-      assert.equal(response.name.text, 'death-dap:fields.name.errors.invalid');
+      assert.equal(response.name.text, 'Full name must start with a letter and not contain numbers');
     });
+
     it('should return no error when name has dashes', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.alphaAndDash);
       assert.equal(response.length, 0);
     });
+
     it('should return no error when name is 140 characters', () => {
       const response = validator.deathDapNameValidation(dapNameObjects.longValidObject);
       assert.equal(response.length, 0);
@@ -934,7 +993,7 @@ describe('Form validation', () => {
           dateYear: '2099', dateMonth: '01', dateDay: '01', verification: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.future`);
+        assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.future`));
       });
 
       it(`should return error when year is invalid - ${status}`, () => {
@@ -942,7 +1001,7 @@ describe('Form validation', () => {
           dateYear: '20', dateMonth: '01', dateDay: '01', verification: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+        assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.format`));
       });
 
       it(`should return error when month is invalid - ${status}`, () => {
@@ -950,7 +1009,7 @@ describe('Form validation', () => {
           dateYear: '2018', dateMonth: '20', dateDay: '01', verification: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+        assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.format`));
       });
 
       it(`should return error when day is invalid - ${status}`, () => {
@@ -958,7 +1017,7 @@ describe('Form validation', () => {
           dateYear: '2018', dateMonth: '01', dateDay: '40', verification: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.date.text, `marital-date:fields.date.errors.${status}.format`);
+        assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.format`));
       });
 
       it(`should return error when verification is invalid - ${status}`, () => {
@@ -966,7 +1025,7 @@ describe('Form validation', () => {
           dateYear: '2018', dateMonth: '01', dateDay: '01', verification: 'bob',
         }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.verification.text, `marital-date:fields.verification.errors.${status}.required`);
+        assert.equal(errors.verification.text, i18next.t(`marital-date:fields.verification.errors.${status}.required`));
       });
     });
   });
@@ -975,13 +1034,15 @@ describe('Form validation', () => {
     it('should return error when data is undefined', () => {
       const errors = validator.maritalStatus();
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+      assert.equal(errors.maritalStatus.text, 'Select a new marital status');
     });
+
     it('should return error when status is undefined', () => {
       const errors = validator.maritalStatus({});
       assert.equal(Object.keys(errors).length, 1);
-      assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+      assert.equal(errors.maritalStatus.text, 'Select a new marital status');
     });
+
     it('should return no error when valid data is supplied - Married', () => {
       const errors = validator.maritalStatus({
         maritalStatus: 'divorced',
@@ -992,17 +1053,19 @@ describe('Form validation', () => {
       it(`should return error when status is undefined - ${currentMaritalStatus}`, () => {
         const errors = validator.maritalStatus({}, currentMaritalStatus);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+        assert.equal(errors.maritalStatus.text, 'Select a new marital status');
       });
+
       it(`should return error when status is blank - ${currentMaritalStatus}`, () => {
         const errors = validator.maritalStatus({ maritalStatus: '' }, currentMaritalStatus);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+        assert.equal(errors.maritalStatus.text, 'Select a new marital status');
       });
+
       it(`should return error when status is invalid status - ${currentMaritalStatus}`, () => {
         const errors = validator.maritalStatus({ maritalStatus: 'bob' }, currentMaritalStatus);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.maritalStatus.text, 'marital-status:fields.status.errors.required');
+        assert.equal(errors.maritalStatus.text, 'Select a new marital status');
       });
     });
   });
@@ -1012,28 +1075,33 @@ describe('Form validation', () => {
       it(`should return error when data is undefined - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
       });
+
       it(`should return error when partnerNino is blank - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ partnerNino: '' }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
       });
+
       it(`should return error when partnerNino is invalid - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ partnerNino: 'ZZ123456C' }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.invalid`);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
       });
+
       it(`should return error when partnerNino length is 7 - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345' }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.length`);
+        assert.equal(errors.partnerNino.text, 'National Insurance number must be 9 characters or less');
       });
+
       it(`should return error when partnerNino length is 10 - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345678' }, status);
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.partnerNino.text, `marital-detail:${status}.fields.nino.errors.length`);
+        assert.equal(errors.partnerNino.text, 'National Insurance number must be 9 characters or less');
       });
+
       it(`should return no errors when partnerNino valid - ${status}`, () => {
         const errors = validator.maritalPartnerNino({ partnerNino: 'AA123456C' }, status);
         assert.equal(Object.keys(errors).length, 0);

@@ -186,6 +186,7 @@ describe('Drop out claim controller ', () => {
     afterEach(() => {
       nock.cleanAll();
     });
+
     it('should redirect when post is valid with queue status and API returns 200 with valid queue status', () => {
       nock('http://test-url/').put(claimDropOutQueueError).reply(200, {});
       dropOutClaimController.postDropOutClaimUpdateStatus(validQueueStatusUpdatePost, genericResponse);

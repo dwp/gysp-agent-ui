@@ -20,12 +20,15 @@ describe('payment status update object formatter', () => {
   it('should return valid recalling json when object is called with SENT status and yes update', () => {
     assert.deepEqual(object.formatter(id, SENT, 'yes', inviteKey), detailsStatusRecalling);
   });
+
   it('should return valid recalled json when object is called with RECALLING status and yes update', () => {
     assert.deepEqual(object.formatter(id, RECALLING, 'yes', inviteKey), detailsStatusRecalled);
   });
+
   it('should return valid paid json when object is called with RECALLING status and no update', () => {
     assert.deepEqual(object.formatter(id, RECALLING, 'no', inviteKey), detailsStatusPaid);
   });
+
   it('should return valid json when object does not match with any condition', () => {
     assert.deepEqual(object.formatter(id, RECALLED, 'yes', inviteKey), detailsStatusRecalled);
   });
