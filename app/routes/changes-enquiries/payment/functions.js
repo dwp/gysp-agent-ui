@@ -11,7 +11,6 @@ const changeCircumstancesPaymentSummaryObject = require('../../../../lib/objects
 const recentPaymentsTableObject = require('../../../../lib/objects/recentPaymentsTableObject');
 
 const activeSecondaryNavigationSection = 'payment';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function requestAwardService(res, req) {
   return new Promise((resolve, reject) => {
@@ -100,6 +99,7 @@ async function getPaymentOverview(req, res) {
       const keyDetails = keyDetailsHelper.formatter(awardDetails);
       const paymentSummary = changeCircumstancesPaymentSummaryObject.formatter(paymentDetails);
       const recentPaymentsTable = recentPaymentsTableObject.formatter(recentPaymentsDetails);
+      const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
       const numberOfReturnedPayments = countPaymentsByStatus(recentPaymentsDetails, 'RETURNED');
       dataStore.save(req, 'number-returned-payments', numberOfReturnedPayments);
       res.render('pages/changes-enquiries/payment/index', {

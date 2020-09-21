@@ -32,7 +32,7 @@
             {% endif %}
 
             {% if keyDetails %}
-                {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
+                {{ keyDetailsSection(t, keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
             {% endif %}
             {% block topContent %}{% endblock %}
             {% if secondaryNavigationList %}

@@ -43,6 +43,14 @@
     "month": "Month",
     "year": "Year"
   },
+  "key-details": {
+    "title": "Section showing claimant's details",
+    "labels": {
+      "name": "Claimant's name:",
+      "nino": "National Insurance number:",
+      "status": "Account status:"
+    }
+  },
   "footer": {
     "links-title": "Support links",
     "links": {

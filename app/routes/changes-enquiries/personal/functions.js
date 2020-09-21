@@ -8,7 +8,6 @@ const deleteSession = require('../../../../lib/deleteSession');
 const changeCircumstancesOverview = require('../../../../lib/changeCircumstancesOverview');
 
 const activeSecondaryNavigationSection = 'personal';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function getPersonalDetails(req, res) {
   deleteSession.deleteChangesEnquiries(req);
@@ -19,6 +18,7 @@ function getPersonalDetails(req, res) {
       const details = changeCircumstancesOverview.formatter(body);
       const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
       const timelineDetails = await timelineHelper.getTimeline(req, res, 'PERSONAL');
+      const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
       res.render('pages/changes-enquiries/personal/index', {
         details,
         keyDetails,

@@ -8,7 +8,6 @@ const awardListObject = require('../../../../lib/objects/view/awardListObject');
 const awardDetailsObject = require('../../../../lib/objects/view/awardDetailsObject');
 
 const activeSecondaryNavigationSection = 'award';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 async function getAwardList(req, res) {
   try {
@@ -18,6 +17,7 @@ async function getAwardList(req, res) {
     });
     const details = awardListObject.formatter(award);
     const keyDetails = keyDetailsHelper.formatter(award);
+    const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
     res.render('pages/changes-enquiries/award/index', {
       details,
       keyDetails,
