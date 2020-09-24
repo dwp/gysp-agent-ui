@@ -25,16 +25,25 @@
 	</section>
 {% endmacro %}
 
-{% macro keyDetailsSection(name, nino, status) %}
-	<section class="key-details-section">
-		<h2 class="govuk-heading-xl govuk-!-margin-bottom-1 key-details-section__name">{{ name }}</h2>
-		<span class="govuk-caption-xl govuk-!-margin-bottom-6 key-details-section__nino">{{ nino }}</span>
-		{% if status %}
-			{{ govukTag({
-				text: status.text,
-				classes: 'govuk-!-margin-bottom-9 ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
-			}) }}
-		{% endif %}
+{% macro keyDetailsSection(t, name, nino, status) %}
+	<section class="key-details-section" aria-label="{{ t("app:key-details.title") }}">
+		<dl class="gysp-definition-list">
+			<dt class="gysp-definition-list__key govuk-visually-hidden govuk-body">{{ t("app:key-details.title") }}</dt>
+			<dd class="gysp-definition-list__value govuk-heading-xl govuk-!-margin-bottom-1 key-details-section__name">
+				<span class="govuk-visually-hidden">{{ t("app:key-details.labels.name") }}&nbsp;</span> {{ name }}
+			</dd>
+			<dd class="gysp-definition-list__value govuk-caption-xl govuk-!-margin-bottom-6 key-details-section__nino">
+				<span class="govuk-visually-hidden">{{ t("app:key-details.labels.nino") }}&nbsp;</span>{{ nino }}
+			</dd>
+			{% if status %}
+				<dd class="gysp-definition-list__value">
+					{{ govukTag({
+						html: '<span class="govuk-visually-hidden">' + t("app:key-details.labels.status") + '&nbsp;</span>' + status.text,
+						classes: 'govuk-!-margin-bottom-9 ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
+					}) }}
+				</dd>
+			{% endif %}
+		</dl>
 	</section>
 {% endmacro %}
 

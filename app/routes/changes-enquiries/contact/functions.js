@@ -13,7 +13,6 @@ const contactDetailsOverview = require('../../../../lib/objects/view/contactDeta
 const contactDetailsUpdateUri = 'api/award/updatecontactdetails';
 
 const activeSecondaryNavigationSection = 'contact';
-const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
 
 function isAddOrChange(details, type) {
   const telephone = new RegExp('^(?:home|mobile|work)$');
@@ -64,6 +63,7 @@ function getContactDetails(req, res) {
       req.session.awardDetails = body;
       const details = contactDetailsOverview.formatter(body);
       const timelineDetails = await timelineHelper.getTimeline(req, res, 'CONTACT');
+      const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
       res.render('pages/changes-enquiries/contact/overview', {
         details, secondaryNavigationList, timelineDetails,
       });

@@ -9,7 +9,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         {% if keyDetails %}
-            {{ keyDetailsSection(keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
+            {{ keyDetailsSection(t, keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
         {% endif %}
 
         <p class="govuk-body govuk-!-font-weight-bold">Reason the award needs to be reviewed</p>

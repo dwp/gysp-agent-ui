@@ -10,6 +10,15 @@
     line-height: 1.25;
 }
 
+.sr-only {
+    position: absolute;
+    top: auto;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .gysp-claims-drop-outs {
     &__button-form {
         display: inline;

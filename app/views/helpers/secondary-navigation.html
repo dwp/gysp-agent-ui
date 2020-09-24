@@ -2,7 +2,13 @@
     <nav class="navigation-secondary govuk-!-margin-bottom-6" aria-label="Secondary navigation">
         <ul>
             {% for item in itemList %}
-                <li><a href="{{ item.href }}"{{ ' class=active aria-current=page' if item.selected }}>{{ item.text }}</a></li>
+                <li>
+                    <a href="{{ item.href }}"{{ (' class="active" aria-current="page"') | safe if item.selected }}>
+                        {{ ('<span class="sr-only">' + item.visuallyHiddenTextStart + ' </span>') | safe if item.visuallyHiddenTextStart  }}
+                        {{ item.text }}
+                        {{ ('<span class="govuk-visually-hidden">' + item.visuallyHiddenTextEnd + '</span>') | safe if item.visuallyHiddenTextStart }}
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </nav>

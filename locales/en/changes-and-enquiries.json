@@ -1,0 +1,24 @@
+{
+  "secondary-nav": {
+    "personal": {
+      "text": "Personal",
+      "visuallyHiddenTextStart": "Navigate to",
+      "visuallyHiddenTextEnd": "details"
+    },
+    "contact": {
+      "text": "Contact",
+      "visuallyHiddenTextStart": "Navigate to",
+      "visuallyHiddenTextEnd": "details"
+    },
+    "award": {
+      "text": "Award",
+      "visuallyHiddenTextStart": "Navigate to State Pension",
+      "visuallyHiddenTextEnd": "details"
+    },
+    "payment": {
+      "text": "Payment",
+      "visuallyHiddenTextStart": "Navigate to",
+      "visuallyHiddenTextEnd": "details"
+    }
+  }
+}
