@@ -1,0 +1,86 @@
+{% extends "../helpers/layout.html" %}
+
+{% block pageTitle %}{{ t("accessibility-statement:header") }} - {{ t("app:service_name") }}{% endblock %}
+
+{% block content %}
+	<div class="govuk-grid-row">
+		<div class="govuk-grid-column-one-quarter">
+			<nav>
+				<h4 class="govuk-heading-s">{{ t("accessibility-statement:nav-h4") }}</h4>
+
+				<ul class="govuk-list govuk-list--spaced govuk-!-font-size-16">
+					<li><a class="govuk-link" href="#h2-1">{{ t("accessibility-statement:h2-1") }}</a>
+					<li><a class="govuk-link" href="#h2-2">{{ t("accessibility-statement:h2-2") }}</a>
+					<li><a class="govuk-link" href="#h2-3">{{ t("accessibility-statement:h2-3") }}</a>
+					<li><a class="govuk-link" href="#h2-4">{{ t("accessibility-statement:h2-4") }}</a>
+					<li><a class="govuk-link" href="#h2-5">{{ t("accessibility-statement:h2-5") }}</a>
+					<li><a class="govuk-link" href="#h2-6">{{ t("accessibility-statement:h2-6") }}</a>
+					<li><a class="govuk-link" href="#h2-7">{{ t("accessibility-statement:h2-7") }}</a>
+					<li><a class="govuk-link" href="#h2-8">{{ t("accessibility-statement:h2-8") }}</a>
+					<li><a class="govuk-link" href="#h2-9">{{ t("accessibility-statement:h2-9") }}</a>
+				</ul>
+			</nav>
+		</div>
+
+		<div class="govuk-grid-column-three-quarters">
+			<h1 class="govuk-heading-xl">{{ t("accessibility-statement:header") }}</h1>
+			<h2 id="h2-1" class="govuk-heading-m">{{ t("accessibility-statement:h2-1") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p1") }}</p>
+			<ul class="govuk-list govuk-list--bullet">
+				<li>{{ t("accessibility-statement:p1-li1") }}</li>
+				<li>{{ t("accessibility-statement:p1-li2") }}</li>
+				<li>{{ t("accessibility-statement:p1-li3") }}</li>
+				<li>{{ t("accessibility-statement:p1-li4") }}</li>
+				<li>{{ t("accessibility-statement:p1-li5") }}</li>
+			</ul>
+			<p class="govuk-body">{{ t("accessibility-statement:p2") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p3", { URL: "https://mcmw.abilitynet.org.uk" }) | safe }}</p>
+
+			<h2 id="h2-2" class="govuk-heading-m">{{ t("accessibility-statement:h2-2") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p4") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p5") }}</p>
+			<ul class="govuk-list govuk-list--bullet">
+				<li>{{ t("accessibility-statement:p5-li1") }}</li>
+				<li>{{ t("accessibility-statement:p5-li2") }}</li>
+				<li>{{ t("accessibility-statement:p5-li3") }}</li>
+				<li>{{ t("accessibility-statement:p5-li4") }}</li>
+				<li>{{ t("accessibility-statement:p5-li5") }}</li>
+			</ul>
+
+			<h2 id="h2-3" class="govuk-heading-m">{{ t("accessibility-statement:h2-3") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p6") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p7", { URL: "https://www.w3.org/TR/WCAG21/" }) | safe }}</p>
+
+			<h2 id="h2-4" class="govuk-heading-m">{{ t("accessibility-statement:h2-4") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p8") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p9") }}</p>
+			<ul class="govuk-list govuk-list--bullet">
+				<li>{{ t("accessibility-statement:p9-li1") }}</li>
+				<li>{{ t("accessibility-statement:p9-li2") }}</li>
+				<li>{{ t("accessibility-statement:p9-li3") }}</li>
+				<li>{{ t("accessibility-statement:p9-li4") }}</li>
+				<li>{{ t("accessibility-statement:p9-li5") }}</li>
+				<li>{{ t("accessibility-statement:p9-li6") }}</li>
+			</ul>
+
+			<h2 id="h2-5" class="govuk-heading-m">{{ t("accessibility-statement:h2-5") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p10") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p11") }}</p>
+
+			<h2 id="h2-6" class="govuk-heading-m">{{ t("accessibility-statement:h2-6") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p12") }}</p>
+
+			<h2 id="h2-7" class="govuk-heading-m">{{ t("accessibility-statement:h2-7") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p13") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p14") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p15", { EMAIL: "statepension.accessibility@dwp.gov.uk" }) | safe }}</p>
+
+			<h2 id="h2-8" class="govuk-heading-m">{{ t("accessibility-statement:h2-8") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p16", { URL: "https://www.equalityadvisoryservice.com" }) | safe }}</p>
+
+			<h2 id="h2-9" class="govuk-heading-m">{{ t("accessibility-statement:h2-9") }}</h2>
+			<p class="govuk-body">{{ t("accessibility-statement:p17") }}</p>
+			<p class="govuk-body">{{ t("accessibility-statement:p18") }}</p>
+		</div>
+	</div>
+{% endblock %}

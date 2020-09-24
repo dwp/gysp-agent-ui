@@ -42,5 +42,11 @@
     "day": "Day",
     "month": "Month",
     "year": "Year"
+  },
+  "footer": {
+    "links-title": "Support links",
+    "links": {
+      "accessibilityStatement": "Accessibility statement"
+    }
   }
 }

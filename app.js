@@ -166,7 +166,7 @@ app.use(require('./lib/middleware/tasks')(log));
 app.use(require('./lib/kongAuth'));
 
 // Route information
-app.use(config.mountUrl, require('./app/routes/general.js'));
+app.use(config.mountUrl, require('./app/routes/general/routes.js'));
 
 app.use((req, res, next) => {
   if (config.application.urls.agentGateway === '' || config.application.urls.agentGateway === undefined) {
