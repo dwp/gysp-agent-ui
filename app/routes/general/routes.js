@@ -1,12 +1,10 @@
 const express = require('express');
 
 const router = new express.Router();
+const functions = require('./functions');
 
-function landingPage(req, res) {
-  res.render('pages/landing');
-}
-
-router.get('/', landingPage);
+router.get('/', functions.landingPage);
+router.get('/accessibility-statement', functions.accessibilityStatement);
 
 router.all('/endpoint', (req, res) => {
   res.status(200).send({ status: 'okay' });
