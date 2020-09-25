@@ -20,6 +20,9 @@ const detailsSummaryRowsBase = [{
 const detailsSummaryRowsAnnualUprating = JSON.parse(JSON.stringify(detailsSummaryRowsBase));
 detailsSummaryRowsAnnualUprating[1].value.text = 'Annual uprating';
 
+const detailsSummaryRowsInherited = JSON.parse(JSON.stringify(detailsSummaryRowsBase));
+detailsSummaryRowsInherited[1].value.text = 'Inherited from late spouse';
+
 const detailsSummaryRowsAnnualUpratingWith4Weekly = [{
   key: { text: 'From', classes: 'govuk-!-width-two-thirds' },
   value: { text: '6 March 2019' },
@@ -74,6 +77,14 @@ describe('awardDetailsObject ', () => {
       details.paymentFrequency = '1W';
       const formatted = awardDetailsObject.formatter(details, '0');
       assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsAnnualUprating);
+    });
+
+    it('should return formatted object with annual inherited', () => {
+      const details = claimData.validAwardAmountDetails();
+      details.awardAmounts[0].reasonCode = 'INHERITED';
+      details.paymentFrequency = '1W';
+      const formatted = awardDetailsObject.formatter(details, '0');
+      assert.deepEqual(formatted.detailsSummaryRows, detailsSummaryRowsInherited);
     });
 
     it('should return formatted object with correct amountSummaryRows', () => {
