@@ -17,7 +17,8 @@
   "summary-values": {
     "reason": {
       "first-award": "First award",
-      "annual-uprating": "Annual uprating"
+      "annual-uprating": "Annual uprating",
+      "inherited": "Inherited from late spouse"
     }
   }
 }
