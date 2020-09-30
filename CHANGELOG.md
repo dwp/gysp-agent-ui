@@ -1,3 +1,32 @@
+# [6.7.0](https://github.com/dwp/gysp-agent-ui/compare/6.6.0...6.7.0) (2020-09-30)
+
+
+* chore!: upgrade node to 12.8.4 ([02f0cda](https://github.com/dwp/gysp-agent-ui/commit/02f0cdab6831e0e41d18c140ecac5b1b7f877f05))
+
+
+### Bug Fixes
+
+* **key-details:** make key details and nav more accessible ([131aabe](https://github.com/dwp/gysp-agent-ui/commit/131aabe7f9110d4ae50928bb2596515aecc2ce6b))
+
+
+### Features
+
+* **content:** add accessibility-statement page ([ac18eac](https://github.com/dwp/gysp-agent-ui/commit/ac18eac1475d2f5694030b479ca567300a98ff7e))
+
+
+### BREAKING CHANGES
+
+* * Drop support for node < 12.0.0
+* Update alpine Docker image
+* Delete .node-version file as Travis now can use .nvmrc
+* Update Travis config
+
+Jira SA-3112
+
+Signed-off-by: Malcolm Hire <malcolm.hire@engineering.digital.dwp.gov.uk>
+
+
+
 # [6.6.0](https://github.com/dwp/gysp-agent-ui/compare/6.5.0...6.6.0) (2020-09-14)
 
 
