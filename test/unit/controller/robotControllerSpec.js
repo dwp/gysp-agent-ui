@@ -63,7 +63,7 @@ describe('Robot controller ', () => {
       testPromise = new Promise((resolve) => {
         setTimeout(() => {
           resolve();
-        }, 20);
+        }, 100);
       });
     });
 

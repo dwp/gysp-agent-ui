@@ -95,8 +95,9 @@ describe('Deferral Validation', () => {
 
     it('should return error when date is in the future', () => {
       const date = new Date();
+      date.setDate(date.getDate() + 1);
       const errors = validator.dateRequestReceived({
-        day: `${date.getDate() + 1}`,
+        day: `${date.getDate()}`,
         month: `${date.getMonth() + 1}`,
         year: `${date.getFullYear()}`,
       });
