@@ -26,6 +26,18 @@
 {% endmacro %}
 
 {% macro keyDetailsSection(t, name, nino, status) %}
+
+	{% switch status.class %}
+		{% case "active" %}
+			{% set govukTagClass = "govuk-tag--blue" %}
+		{% case "deferred" %}
+			{% set govukTagClass = "govuk-tag--red" %}
+		{% case "payments-stopped" %}
+			{% set govukTagClass = "govuk-tag--red" %}
+		{% default %}
+			{% set govukTagClass = "govuk-tag--grey" %}
+	{% endswitch %}
+
 	<section class="key-details-section" aria-label="{{ t("app:key-details.title") }}">
 		<dl class="gysp-definition-list">
 			<dt class="gysp-definition-list__key govuk-visually-hidden govuk-body">{{ t("app:key-details.title") }}</dt>
@@ -39,7 +51,7 @@
 				<dd class="gysp-definition-list__value">
 					{{ govukTag({
 						html: '<span class="govuk-visually-hidden">' + t("app:key-details.labels.status") + '&nbsp;</span>' + status.text,
-						classes: 'govuk-!-margin-bottom-9 ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
+						classes: 'govuk-!-margin-bottom-9 ' + govukTagClass
 					}) }}
 				</dd>
 			{% endif %}
@@ -48,6 +60,18 @@
 {% endmacro %}
 
 {% macro keyDetailsSlimSection(name, nino, status, spDate) %}
+
+	{% switch status.class %}
+		{% case "active" %}
+			{% set govukTagClass = "govuk-tag--blue" %}
+		{% case "deferred" %}
+			{% set govukTagClass = "govuk-tag--red" %}
+		{% case "payments-stopped" %}
+			{% set govukTagClass = "govuk-tag--red" %}
+		{% default %}
+			{% set govukTagClass = "govuk-tag--grey" %}
+	{% endswitch %}
+
 	<section class="key-details-slim-section" role="contentinfo" aria-labelledby="key-details-label">
 		<div class="govuk-grid-row">
 			<div class="govuk-grid-column-one-half">
@@ -59,7 +83,7 @@
 				{% if status %}
 					{{ govukTag({
 						text: status.text,
-						classes: 'govuk-!-margin-bottom-3 key-details-slim-section__status ' + ('govuk-tag--red' if status.class == 'deferred' else 'key-details-section__status--' + status.class)
+						classes: 'govuk-!-margin-bottom-3 key-details-slim-section__status ' + govukTagClass
 					}) }}
 				{% endif %}
 			</div>
