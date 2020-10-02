@@ -21,7 +21,7 @@
       id: "accountName",
       name: "accountName",
       type: "text",
-      classes: "govuk-!-width-two-thirds",
+      classes: "govuk-!-width-full",
       label: {
         text: t("account:fields.accountName.label"),
         attributes: {
@@ -33,25 +33,10 @@
     }) }}
 
     {{ govukInput({
-      id: "accountNumber",
-      name: "accountNumber",
-      type: "text",
-      classes: "govuk-!-width-two-thirds",
-      label: {
-        text: t("account:fields.accountNumber.label"),
-        attributes: {
-          id: "accountNumber-label"
-        }
-      },
-      value: details.accountNumber,
-      errorMessage: errors.accountNumber
-    }) }}
-
-    {{ govukInput({
       id: "sortCode",
       name: "sortCode",
       type: "text",
-      classes: "govuk-!-width-one-third",
+      classes: "govuk-input--width-5",
       label: {
         text: t("account:fields.sortCode.label"),
         attributes: {
@@ -63,10 +48,25 @@
     }) }}
 
     {{ govukInput({
+      id: "accountNumber",
+      name: "accountNumber",
+      type: "text",
+      classes: "govuk-input--width-10",
+      label: {
+        text: t("account:fields.accountNumber.label"),
+        attributes: {
+          id: "accountNumber-label"
+        }
+      },
+      value: details.accountNumber,
+      errorMessage: errors.accountNumber
+    }) }}
+
+    {{ govukInput({
       id: "referenceNumber",
       name: "referenceNumber",
       type: "text",
-      classes: "govuk-!-width-one-third",
+      classes: "govuk-input--width-10",
       label: {
         text: t("account:fields.referenceNumber.label"),
         attributes: {
