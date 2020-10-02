@@ -8,6 +8,11 @@
     "roll_number": "Roll number"
   },
   "payment_table": {
+    "amount": "Amount",
+    "date": "Date",
+    "next_payment_amount": "Next payment amount",
+    "next_payment_date": "Next payment date",
+    "sequence": "Sequence",
     "caption": "Payment details",
     "payment_frequency": "Payment frequency",
     "payment_amount": "Payment amount",

@@ -228,11 +228,9 @@
     }
 }
 
-.gysp-bank-building-table {
+.gysp-payment-tab-table {
     @include govuk-media-query($from: tablet) {
-        &__heading {
-            width: 44.99%;
-        }
+        width: 44.99%;
     }
 }
 
