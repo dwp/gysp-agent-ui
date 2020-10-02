@@ -26,8 +26,8 @@
       classes: 'account-details-summary',
       rows: [
         { key: { text: t("payment-detail:summary-keys.account-holder"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountHolder } },
-        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountNumber } },
         { key: { text: t("payment-detail:summary-keys.sort-code"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.sortCode } },
+        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountNumber } },
         { key: { text: t("payment-detail:summary-keys.roll-number"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.rollNumber } }
       ]
     }) }}
@@ -35,8 +35,8 @@
     {{ govukSummaryList({
       rows: [
         { key: { text: t("payment-detail:summary-keys.account-holder"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountHolder } },
-        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountNumber } },
-        { key: { text: t("payment-detail:summary-keys.sort-code"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.sortCode } }
+        { key: { text: t("payment-detail:summary-keys.sort-code"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.sortCode } },
+        { key: { text: t("payment-detail:summary-keys.account-number"), classes: 'govuk-!-width-one-third' }, value: { text: paymentHistoryDetail.accountNumber } }
       ]
     }) }}
   {% endif %}

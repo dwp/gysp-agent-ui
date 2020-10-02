@@ -65,7 +65,7 @@ const paymentDetailFormatted = {
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
-      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
+      value: { html: '30 July 2019 to<br />27 August 2019', classes: 'payment-detail__period' },
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
@@ -104,7 +104,7 @@ const paymentDetailWithReferenceNumberFormatted = {
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
-      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
+      value: { html: '30 July 2019 to<br />27 August 2019', classes: 'payment-detail__period' },
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
@@ -151,7 +151,7 @@ const paymentDetailPaidFormattedAfter14Days = {
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Period' },
-      value: { html: '30/07/2019 to<br />27/08/2019', classes: 'payment-detail__period' },
+      value: { html: '30 July 2019 to<br />27 August 2019', classes: 'payment-detail__period' },
     },
     {
       key: { classes: 'govuk-!-width-one-third govuk-!-font-weight-regular', text: 'Status' },
