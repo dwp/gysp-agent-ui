@@ -6,6 +6,9 @@
     "continue": "Continue",
     "send-letter": "Send letter"
   },
+  "warning-text": {
+    "icon-fallback-text": "Warning"
+  },
   "link": {
     "back": "Back",
     "add": "Add",
