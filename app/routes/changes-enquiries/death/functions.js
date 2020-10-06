@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const httpStatus = require('http-status-codes');
+const querystring = require('querystring');
 
 const formValidator = require('../../../../lib/formValidator');
 const dataStore = require('../../../../lib/dataStore');
@@ -29,6 +30,11 @@ const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&p
 
 const [CANNOT_CALCULATE, OVERPAYMENT, ARREARS, NOTHING_OWED, DEATH_NOT_VERIFIED] = ['CANNOT_CALCULATE', 'OVERPAYMENT', 'ARREARS', 'NOTHING_OWED', 'DEATH_NOT_VERIFIED'];
 
+const baseUrl = '/changes-and-enquiries/personal';
+const deathDateUrl = `${baseUrl}/death`;
+const dapNameUrl = `${deathDateUrl}/name`;
+const checkDetailsUrl = `${deathDateUrl}/check-details`;
+
 function getAddDateDeath(req, res) {
   const { awardDetails } = req.session;
   const details = dataStore.get(req, 'date-of-death', 'death');
@@ -56,17 +62,32 @@ function postAddDateDeath(req, res) {
   }
 }
 
+function getRedirectToDapDetails(req, res) {
+  dataStore.save(req, 'dapOnly', true, 'death');
+  res.redirect(dapNameUrl);
+}
+
+function dapNameBackLink(req) {
+  if (checkChangeHelper.isEditMode(req, 'dap-name')) {
+    return checkDetailsUrl;
+  }
+  if (deathHelper.isDapOnly(req)) {
+    return baseUrl;
+  }
+  return deathDateUrl;
+}
+
 function getDapName(req, res) {
   checkChangeHelper.checkAndSetEditMode(req, 'dap-name');
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const awardDetails = dataStore.get(req, 'awardDetails');
   const details = dataStore.get(req, 'dap-name', 'death');
-  const editMode = checkChangeHelper.isEditMode(req, 'dap-name');
+  const backLink = dapNameBackLink(req);
   res.render('pages/changes-enquiries/death/dap/name', {
+    backLink,
     keyDetails,
     awardDetails,
     details,
-    editMode,
   });
 }
 
@@ -83,12 +104,13 @@ function postDapName(req, res) {
   } else {
     const awardDetails = dataStore.get(req, 'awardDetails');
     const keyDetails = keyDetailsHelper.formatter(awardDetails);
+    const backLink = dapNameBackLink(req);
     res.render('pages/changes-enquiries/death/dap/name', {
       keyDetails,
       awardDetails,
       details,
       errors,
-      editMode,
+      backLink,
     });
   }
 }
@@ -289,15 +311,31 @@ function getDeathPaymentErrorHandler(error, req, res, keyDetails) {
   });
 }
 
+function buildGetDeathArrearsUrl(req, res) {
+  const { nino, deathDetail } = dataStore.get(req, 'awardDetails');
+  const dateOfDeathPage = dataStore.get(req, 'date-of-death', 'death');
+  let dateOfDeathFormatted;
+  if (dateOfDeathPage) {
+    const { dateYear, dateMonth, dateDay } = dateOfDeathPage;
+    dateOfDeathFormatted = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
+  } else {
+    dateOfDeathFormatted = dateHelper.timestampToDateDash(deathDetail.dateOfDeath);
+  }
+  const urlQuerystring = querystring.stringify({
+    nino,
+    dateOfDeath: dateOfDeathFormatted,
+  });
+
+  return `${res.locals.agentGateway}${deathArrearsApiUri}?${urlQuerystring}`;
+}
+
 function getDeathPayment(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const deathStage = dataStore.get(req, 'death-stage', 'death');
-  const { verification } = dataStore.get(req, 'date-of-death', 'death');
+  const { verification } = dataStore.get(req, 'date-of-death', 'death') || Object.create(null);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
-  if (verification === 'V') {
-    const { dateYear, dateMonth, dateDay } = dataStore.get(req, 'date-of-death', 'death');
-    const dateOfDeath = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
-    const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
+  if (verification === 'V' || deathHelper.isDeathVerified(awardDetails)) {
+    const getDeathArrearsCall = requestHelper.generateGetCall(buildGetDeathArrearsUrl(req, res), {}, 'payment');
     request(getDeathArrearsCall).then((details) => {
       dataStore.save(req, 'death-payment-details', details);
       const formattedDetails = deathPaymentObject.formatter(details);
@@ -349,7 +387,7 @@ function getRetryCalculationErrorHandler(error, req, res) {
 function getRetryCalculation(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
-  const dateOfDeath = dateHelper.timestampToDateDash(awardDetails.dateOfDeath);
+  const dateOfDeath = dateHelper.timestampToDateDash(awardDetails.deathDetail.dateOfDeath);
   const getDeathArrearsCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${deathArrearsApiUri}?nino=${awardDetails.nino}&dateOfDeath=${dateOfDeath}`, {}, 'payment');
   request(getDeathArrearsCall).then((details) => {
     dataStore.save(req, 'death-stage', 'retryCalc', 'death');
@@ -383,9 +421,9 @@ function getRecordDeath(req, res) {
   request(putDeathDetailsCall).then(() => {
     if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
       const status = deathPaymentStatus(deathPayment.amount);
-      req.flash('success', deathHelper.successMessage(death['date-of-death'].verification, status));
+      req.flash('success', deathHelper.successMessage(deathDetails.dateOfDeathVerification, status));
     } else {
-      req.flash('success', deathHelper.successMessage(death['date-of-death'].verification, DEATH_NOT_VERIFIED));
+      req.flash('success', deathHelper.successMessage(deathDetails.dateOfDeathVerification, DEATH_NOT_VERIFIED));
     }
     deleteSession.deleteAllDeathSession(req);
     deleteSession.deleteChangesEnquiries(req);
@@ -433,7 +471,7 @@ function getVerifyDeath(req, res) {
     keyDetails,
     awardDetails,
     details,
-    dateOfDeath: dateHelper.longDate(awardDetails.dateOfDeath),
+    dateOfDeath: dateHelper.longDate(awardDetails.deathDetail.dateOfDeath),
   });
 }
 
@@ -512,6 +550,8 @@ async function getReviewPayeeDetails(req, res) {
 
 module.exports.getAddDateDeath = getAddDateDeath;
 module.exports.postAddDateDeath = postAddDateDeath;
+
+module.exports.getRedirectToDapDetails = getRedirectToDapDetails;
 
 module.exports.getDapName = getDapName;
 module.exports.postDapName = postDapName;

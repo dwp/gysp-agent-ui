@@ -121,21 +121,29 @@ module.exports = {
   },
   validDeathVerified() {
     return {
-      dateOfDeath: '2019-01-01T00:00:00.000Z',
-      dateOfDeathVerification: 'V',
+      deathDetail: {
+        dateOfDeath: 1546300800000,
+        dateOfDeathVerification: 'V',
+      },
     };
   },
   validDeathNotVerified() {
     return {
-      dateOfDeath: '2019-01-01T00:00:00.000Z',
-      dateOfDeathVerification: 'NV',
+      deathDetail: {
+        dateOfDeath: '2019-01-01T00:00:00.000Z',
+        dateOfDeathVerification: 'NV',
+      },
     };
   },
   validDeathVerifiedArrears() {
     return {
-      dateOfDeath: '2019-01-01T00:00:00.000Z',
-      dateOfDeathVerification: 'V',
-      deathArrearsAmount: 100.0,
+      deathDetail: {
+        dateOfDeath: '2019-01-01T00:00:00.000Z',
+        dateOfDeathVerification: 'V',
+        amountDetails: {
+          amount: 100.0,
+        },
+      },
     };
   },
   validAccountDetails() {
@@ -398,6 +406,7 @@ module.exports = {
       maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
       enableStopStatePension: true,
+      warning: null,
     };
   },
   validPersonalDetailsMarriedViewData() {
@@ -409,6 +418,7 @@ module.exports = {
       maritalStatus: 'Married',
       showMaritalStatusDetails: true,
       enableStopStatePension: true,
+      warning: null,
     };
   },
   validClaimWithDeathVerifiedData() {
@@ -422,6 +432,7 @@ module.exports = {
       enableStopStatePension: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Verified',
+      warning: null,
     };
   },
   validClaimWithDeathNotVerifiedData() {
@@ -435,6 +446,9 @@ module.exports = {
       enableStopStatePension: false,
       dateOfDeath: '1 January 2019',
       dateOfDeathVerification: 'Not verified',
+      warning: {
+        html: 'Date of death awaiting verification<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;verify" class="govuk-link govuk-link--no-visited-state">Verify date of death</a>',
+      },
     };
   },
   validClaimWithDeathVerifiedArrearsData() {
@@ -446,6 +460,7 @@ module.exports = {
       maritalStatus: 'Never been married',
       showMaritalStatusDetails: false,
       enableStopStatePension: false,
+      warning: null,
       dateOfDeath: '1 January 2019',
       deathArrearsAmount: '£100.00',
       dateOfDeathVerification: 'Verified',

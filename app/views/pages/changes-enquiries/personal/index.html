@@ -4,23 +4,9 @@
 {% block pageTitle %}Personal details - Changes and enquiries{% endblock %}
 
 {% block topContent %}
-  {% if details.dateOfDeathVerification == 'Verified' and details.deathCalculationPerformed == false %}
-    {{ govukWarningText({
-      html: 'Final payment has not been calculated<br /><a href="/changes-and-enquiries/personal/death/retry-calculation" class="govuk-link govuk-link--no-visited-state">Calculate final payment</a>',
-      iconFallbackText: t('app:warning-text.icon-fallback-text')
-    }) }}
-  {% endif %}
-
-  {% if details.deathAllActionsPerformed == false and details.deathArrearsAmount and details.deathCalculationPerformed == true  %}
-    {{ govukWarningText({
-      html: details.deathArrearsAmount + ' arrears payment due<br /><a href="/changes-and-enquiries/personal/death/payee-details" class="govuk-link govuk-link--no-visited-state">Enter payee details</a>',
-      iconFallbackText: t('app:warning-text.icon-fallback-text')
-    }) }}
-  {% endif %}
-
-    {% if details.dateOfDeathVerification == 'Not verified' %}
+    {% if details.warning %}
       {{ govukWarningText({
-        html: 'Date of death awaiting verification<br /><a href="/changes-and-enquiries/personal/death/verify" class="govuk-link govuk-link--no-visited-state">Verify date of death</a>',
+        html: details.warning.html,
         iconFallbackText: t('app:warning-text.icon-fallback-text')
       }) }}
     {% endif %}

@@ -95,8 +95,8 @@ describe('Change circumstances personal controller', () => {
       controller.getPersonalDetails(ninoRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathVerifiedData()));
-        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDead));
+        assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathVerifiedData());
+        assert.deepEqual(genericResponse.data.keyDetails, keyDetailsDead);
       });
     });
 
@@ -105,7 +105,7 @@ describe('Change circumstances personal controller', () => {
       controller.getPersonalDetails(ninoRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathNotVerifiedData()));
+        assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathNotVerifiedData());
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
       });
     });
@@ -115,7 +115,7 @@ describe('Change circumstances personal controller', () => {
       controller.getPersonalDetails(ninoRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
-        assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validClaimWithDeathNotVerifiedData()));
+        assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathNotVerifiedData());
         assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
       });
     });

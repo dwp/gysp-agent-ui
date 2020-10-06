@@ -23,12 +23,12 @@ describe('change of circumstances overview ', () => {
 
     it('should return formatted object with populated values with dateOfDeath verified', () => {
       const formatter = changeCircumstancesOverview.formatter(claimData.validClaimWithDeathVerified());
-      assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validClaimWithDeathVerifiedData()));
+      assert.deepEqual(formatter, claimData.validClaimWithDeathVerifiedData());
     });
 
     it('should return formatted object with populated values with deathArrearsAmount arrears due', () => {
       const formatter = changeCircumstancesOverview.formatter(claimData.validClaimWithDeathArrearsDue());
-      assert.equal(JSON.stringify(formatter), JSON.stringify(claimData.validClaimWithDeathVerifiedArrearsData()));
+      assert.deepEqual(formatter, claimData.validClaimWithDeathVerifiedArrearsData());
     });
 
     it('should return formatted object with populated values show link true when marital status is not Single', () => {
@@ -54,6 +54,50 @@ describe('change of circumstances overview ', () => {
     it('should return formatted object with payment stopped link enabled - DEFERRED', () => {
       const formatter = changeCircumstancesOverview.formatter({ ...claimData.validClaim(), awardStatus: 'DEFERRED' });
       assert.equal(JSON.stringify(formatter), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
+    });
+
+    context('warnings', () => {
+      it('should return final payment is not calculated warning', () => {
+        const details = {
+          ...claimData.validClaim(),
+          deathAllActionsPerformed: false,
+          deathCalculationPerformed: false,
+          deathDetail: { dateOfDeathVerification: 'V' },
+        };
+        const formatter = changeCircumstancesOverview.formatter(details);
+        assert.equal(formatter.warning.html, 'Final payment has not been calculated<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;retry-calculation" class="govuk-link govuk-link--no-visited-state">Calculate final payment</a>');
+      });
+
+      it('should return arrears payment due warning', () => {
+        const details = {
+          ...claimData.validClaim(),
+          deathAllActionsPerformed: false,
+          deathCalculationPerformed: true,
+          deathDetail: { amountDetails: { amount: 100.0 } },
+        };
+        const formatter = changeCircumstancesOverview.formatter(details);
+        assert.equal(formatter.warning.html, '£100.00 arrears payment due<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;payee-details" class="govuk-link govuk-link--no-visited-state">Enter payee details</a>');
+      });
+
+      it('should return date of death not verified warning', () => {
+        const details = {
+          ...claimData.validClaim(),
+          deathDetail: { dateOfDeathVerification: 'NV' },
+        };
+        const formatter = changeCircumstancesOverview.formatter(details);
+        assert.equal(formatter.warning.html, 'Date of death awaiting verification<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;verify" class="govuk-link govuk-link--no-visited-state">Verify date of death</a>');
+      });
+
+      it('should return awaiting dap details warning', () => {
+        const details = {
+          ...claimData.validClaim(),
+          awardStatus: 'DEAD',
+          deathAllActionsPerformed: false,
+          deathDetail: { dateOfDeathVerification: 'V' },
+        };
+        const formatter = changeCircumstancesOverview.formatter(details);
+        assert.equal(formatter.warning.html, 'Awaiting details of the person dealing with the estate<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;enter-person-dealing-with-the-estate-details" class="govuk-link govuk-link--no-visited-state">Enter details</a>');
+      });
     });
   });
 });

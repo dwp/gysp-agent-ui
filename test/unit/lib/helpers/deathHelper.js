@@ -328,4 +328,102 @@ describe('death helper', () => {
       assert.equal(helper.deathPaymentView('NOTHING_OWED'), 'pages/changes-enquiries/death/payment/nothing-owed');
     });
   });
+
+  describe('isDapOnly', () => {
+    it('should return false when no request passed', () => {
+      assert.isFalse(helper.isDapOnly());
+    });
+
+    it('should return false when null request passed', () => {
+      assert.isFalse(helper.isDapOnly(null));
+    });
+
+    it('should return false when blank object passed', () => {
+      assert.isFalse(helper.isDapOnly({ }));
+    });
+
+    it('should return false when blank session passed', () => {
+      assert.isFalse(helper.isDapOnly({ session: { } }));
+    });
+
+    it('should return false when death not in session', () => {
+      assert.isFalse(helper.isDapOnly({ session: { foo: 'bar' } }));
+    });
+
+    it('should return false when dap only not in session', () => {
+      assert.isFalse(helper.isDapOnly({ session: { death: { foo: 'bar' } } }));
+    });
+
+    it('should return false when dap only is in session but is string', () => {
+      assert.isFalse(helper.isDapOnly({ session: { death: { dapOnly: 'true' } } }));
+    });
+
+    it('should return false when dap only is in session but is false', () => {
+      assert.isFalse(helper.isDapOnly({ session: { death: { dapOnly: false } } }));
+    });
+
+    it('should return true when dap only is in session and is true', () => {
+      assert.isTrue(helper.isDapOnly({ session: { death: { dapOnly: true } } }));
+    });
+  });
+
+  describe('isDeathVerified', () => {
+    it('should return false when no request passed', () => {
+      assert.isFalse(helper.isDeathVerified());
+    });
+
+    it('should return false when null request passed', () => {
+      assert.isFalse(helper.isDeathVerified(null));
+    });
+
+    it('should return false when blank object passed', () => {
+      assert.isFalse(helper.isDeathVerified({ }));
+    });
+
+    it('should return false when deathDetail not in object passed', () => {
+      assert.isFalse(helper.isDeathVerified({ foo: 'bar' }));
+    });
+
+    it('should return false when deathDetail in object but does not include dateOfDeathVerification', () => {
+      assert.isFalse(helper.isDeathVerified({ deathDetail: { } }));
+    });
+
+    it('should return false when dateOfDeathVerification is not NV', () => {
+      assert.isFalse(helper.isDeathVerified({ deathDetail: { dateOfDeathVerification: 'NV' } }));
+    });
+
+    it('should return true when dateOfDeathVerification is V', () => {
+      assert.isTrue(helper.isDeathVerified({ deathDetail: { dateOfDeathVerification: 'V' } }));
+    });
+  });
+
+  describe('isDeathNotVerified', () => {
+    it('should return false when no request passed', () => {
+      assert.isFalse(helper.isDeathNotVerified());
+    });
+
+    it('should return false when null request passed', () => {
+      assert.isFalse(helper.isDeathNotVerified(null));
+    });
+
+    it('should return false when blank object passed', () => {
+      assert.isFalse(helper.isDeathNotVerified({ }));
+    });
+
+    it('should return false when deathDetail not in object passed', () => {
+      assert.isFalse(helper.isDeathNotVerified({ foo: 'bar' }));
+    });
+
+    it('should return false when deathDetail in object but does not include dateOfDeathVerification', () => {
+      assert.isFalse(helper.isDeathNotVerified({ deathDetail: { } }));
+    });
+
+    it('should return false when dateOfDeathVerification is not V', () => {
+      assert.isFalse(helper.isDeathNotVerified({ deathDetail: { dateOfDeathVerification: 'V' } }));
+    });
+
+    it('should return true when dateOfDeathVerification is NV', () => {
+      assert.isTrue(helper.isDeathNotVerified({ deathDetail: { dateOfDeathVerification: 'NV' } }));
+    });
+  });
 });

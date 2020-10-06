@@ -6,21 +6,44 @@ const object = require('../../../lib/objects/deathObject');
 
 const detailsUprn = { address: '10091853817' };
 
+const dapDetails = {
+  'dap-name': { name: 'Margaret Meldrew' },
+  'dap-phone-number': { phoneNumber: '0000 000 000' },
+  'dap-address': detailsUprn,
+  'address-lookup': addressData.multipleAddressesNoneEmpty(),
+};
+
 const verifiedDetails = {
+  ...dapDetails,
   'date-of-death': {
-    dateYear: '2000',
+    dateYear: '2019',
     dateMonth: '01',
     dateDay: '01',
     verification: 'V',
   },
-  'dap-name': {
-    name: 'Margaret Meldrew',
+};
+
+const notVerifiedDetails = {
+  ...dapDetails,
+  'date-of-death': {
+    dateYear: '2019',
+    dateMonth: '01',
+    dateDay: '01',
+    verification: 'NV',
   },
-  'dap-phone-number': {
-    phoneNumber: '0000 000 000',
+};
+
+const noDapdetails = {
+  'date-of-death': {
+    dateYear: '2019',
+    dateMonth: '01',
+    dateDay: '01',
+    verification: 'V',
   },
-  'dap-address': detailsUprn,
-  'address-lookup': addressData.multipleAddressesNoneEmpty(),
+};
+
+const verifiedDetailsWithoutDateOfDeath = {
+  ...dapDetails,
 };
 
 const deathPayment = {
@@ -30,7 +53,7 @@ const deathPayment = {
 };
 
 const verifiedResponse = {
-  dateOfDeath: '2000-01-01T00:00:00.000Z',
+  dateOfDeath: '2019-01-01T00:00:00.000Z',
   dateOfDeathVerification: 'V',
   nino: 'AA370773A',
   amountDetails: deathPayment,
@@ -52,24 +75,8 @@ const verifiedResponse = {
   },
 };
 
-const notVerifiedDetails = {
-  'date-of-death': {
-    dateYear: '2000',
-    dateMonth: '01',
-    dateDay: '01',
-    verification: 'NV',
-  },
-  'dap-name': {
-    name: 'Margaret Meldrew',
-  },
-  'dap-phone-number': {
-    phoneNumber: '0000 000 000',
-  },
-  'dap-address': detailsUprn,
-  'address-lookup': addressData.multipleAddressesNoneEmpty(),
-};
 const notVerifiedResponse = {
-  dateOfDeath: '2000-01-01T00:00:00.000Z',
+  dateOfDeath: '2019-01-01T00:00:00.000Z',
   dateOfDeathVerification: 'NV',
   nino: 'AA370773A',
   deathPayeeDetails: {
@@ -90,6 +97,13 @@ const notVerifiedResponse = {
   },
 };
 
+const noDapDetailsResponse = {
+  dateOfDeath: '2019-01-01T00:00:00.000Z',
+  dateOfDeathVerification: 'V',
+  nino: 'AA370773A',
+  amountDetails: deathPayment,
+};
+
 describe('deathObject object', () => {
   describe('formatter', () => {
     it('should return valid json object when with verified data when verification is set to V', (done) => {
@@ -98,9 +112,21 @@ describe('deathObject object', () => {
       done();
     });
 
+    it('should return valid json object when with verified data when there is no verification in details', (done) => {
+      const json = object.formatter(verifiedDetailsWithoutDateOfDeath, deathPayment, claimData.validClaimWithDeathVerified());
+      assert.deepEqual(json, verifiedResponse);
+      done();
+    });
+
     it('should return valid json object when with verified data when verification is set to NV', (done) => {
       const json = object.formatter(notVerifiedDetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, notVerifiedResponse);
+      done();
+    });
+
+    it('should return valid json object with no deathPayeeDetails when dap not in details object', (done) => {
+      const json = object.formatter(noDapdetails, deathPayment, claimData.validClaim());
+      assert.deepEqual(json, noDapDetailsResponse);
       done();
     });
   });

@@ -43,9 +43,11 @@ const enterDateOfDeathResponse = {
 
 const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { } } };
 const dapGetNamePopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
+const dapGetDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { dapOnly: true } } };
 
 const dapPostNameInvalidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: '' } };
 const dapPostNameInvalidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: '' } };
+const dapPostNameInvalidDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { dapOnly: true } }, body: { name: '' } };
 const dapPostNameValidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: 'Margret Meldrew' } };
 const dapPostNameValidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: 'Margret Meldrew' } };
 
@@ -147,6 +149,21 @@ const paymentRequest = {
       'death-payment': {
         amount: null,
       },
+      'dap-address': { address: '10091853817' },
+      'address-lookup': addressData.multipleAddressesNoneEmpty(),
+    },
+  },
+  flash: flashMock,
+};
+
+const paymentRequestWithOutDateOfDeath = {
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  session: {
+    awardDetails: claimData.validClaimWithDeathVerified(),
+    death: {
+      'dap-name': { name: 'Margaret Meldrew' },
+      'dap-phone-number': { phoneNumber: '0000 000 000' },
+      'death-payment': { amount: null },
       'dap-address': { address: '10091853817' },
       'address-lookup': addressData.multipleAddressesNoneEmpty(),
     },
@@ -622,13 +639,20 @@ describe('Change circumstances date of death controller ', () => {
     });
   });
 
+  describe('getRedirectToDapDetails function (GET /changes-and-enquiries/personal/death/enter-person-dealing-with-the-estate-details)', () => {
+    it('should display form when page when requested', () => {
+      controller.getRedirectToDapDetails(emptyPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/name');
+    });
+  });
+
   describe('getDapName function (GET /changes-and-enquiries/personal/death/name)', () => {
     it('should display blank form when requested', (done) => {
       controller.getDapName(dapGetNameRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.isUndefined(genericResponse.data.details);
-      assert.isFalse(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -636,9 +660,9 @@ describe('Change circumstances date of death controller ', () => {
     it('should display populated form when requested', (done) => {
       controller.getDapName(dapGetNamePopulatedRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { name: 'Margret Meldrew' });
-      assert.isFalse(genericResponse.data.editMode);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -646,9 +670,19 @@ describe('Change circumstances date of death controller ', () => {
     it('should display populated form when requested in edit mode', (done) => {
       controller.getDapName({ ...dapGetNamePopulatedRequest, ...editQueryString }, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/check-details');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.details, { name: 'Margret Meldrew' });
-      assert.isTrue(genericResponse.data.editMode);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should form when requested in dap only', (done) => {
+      controller.getDapName(dapGetDapOnlyRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal');
+      assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+      assert.isUndefined(genericResponse.data.details);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -660,7 +694,7 @@ describe('Change circumstances date of death controller ', () => {
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.deepEqual(genericResponse.data.errors.name.text, 'Enter the full name of the person dealing with the estate');
-      assert.isFalse(genericResponse.data.editMode);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -668,7 +702,15 @@ describe('Change circumstances date of death controller ', () => {
     it('should return form again with error when invalid data supplied in edit mode', (done) => {
       controller.postDapName(dapPostNameInvalidEditRequest, genericResponse);
       assert.deepEqual(genericResponse.data.errors.name.text, 'Enter the full name of the person dealing with the estate');
-      assert.isTrue(genericResponse.data.editMode);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/check-details');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should return form again with error when invalid data supplied when dap only', (done) => {
+      controller.postDapName(dapPostNameInvalidDapOnlyRequest, genericResponse);
+      assert.deepEqual(genericResponse.data.errors.name.text, 'Enter the full name of the person dealing with the estate');
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -937,87 +979,175 @@ describe('Change circumstances date of death controller ', () => {
   });
 
   describe('getDeathPayment function (GET /changes-and-enquiries/personal/death/payment)', () => {
-    it('should return view with error when API returns 400 state', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.BAD_REQUEST, {});
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/payment/death-arrears');
-        assert.equal(genericResponse.data.globalError, errorMessages[400]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+    describe('verification of date of death when date of death form inputs are present', () => {
+      it('should return view with error when API returns 400 state', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.BAD_REQUEST, {});
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/payment/death-arrears');
+          assert.equal(genericResponse.data.globalError, errorMessages[400]);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+        });
+      });
+
+      it('should return view with error when API returns 500 state', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/payment/death-arrears');
+          assert.equal(genericResponse.data.globalError, errorMessages[500]);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+        });
+      });
+
+      it('should display overpayment result when requested and API returns 200 with negative values', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.overpayment);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.isDefined(genericResponse.data.details);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/overpayment');
+        });
+      });
+
+      it('should display arrears result when requested and API returns 200 with positive values', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.arrears);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
+        });
+      });
+
+      it('should display nothing owed result when requested and API returns 200 with zero value', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
+        });
+      });
+
+      it('should display cannot calculate result when requested and API returns 200 with null values', () => {
+        const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
+        const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
+        });
       });
     });
 
-    it('should return view with error when API returns 500 state', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/payment/death-arrears');
-        assert.equal(genericResponse.data.globalError, errorMessages[500]);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+    describe('verified date of death when date of death form inputs are not present award death details are used', () => {
+      it('should return view with error when API returns 400 state', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.BAD_REQUEST, {});
+        controller.getDeathPayment(paymentRequestWithOutDateOfDeath, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/payment/death-arrears');
+          assert.equal(genericResponse.data.globalError, errorMessages[400]);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+        });
       });
-    });
 
-    it('should display overpayment result when requested and API returns 200 with negative values', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.OK, deathArrearsResponses.overpayment);
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.isDefined(genericResponse.data.details);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/overpayment');
+      it('should return view with error when API returns 500 state', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/payment/death-arrears');
+          assert.equal(genericResponse.data.globalError, errorMessages[500]);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/index');
+        });
       });
-    });
 
-    it('should display arrears result when requested and API returns 200 with positive values', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.OK, deathArrearsResponses.arrears);
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
-        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
+      it('should display overpayment result when requested and API returns 200 with negative values', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.overpayment);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.isDefined(genericResponse.data.details);
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/overpayment');
+        });
       });
-    });
 
-    it('should display nothing owed result when requested and API returns 200 with zero value', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
-        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
-        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
+      it('should display arrears result when requested and API returns 200 with positive values', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.arrears);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/arrears');
+        });
       });
-    });
 
-    it('should display cannot calculate result when requested and API returns 200 with null values', () => {
-      const { dateYear, dateMonth, dateDay } = paymentRequest.session.death['date-of-death'];
-      const dateOfDeath = `${dateYear}-${dateMonth}-${dateDay}`;
-      nock('http://test-url/').get(deathArrearsApiUri)
-        .query({ nino: paymentRequest.session.awardDetails.nino, dateOfDeath })
-        .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
-      controller.getDeathPayment(paymentRequest, genericResponse);
-      return testPromise.then(() => {
-        assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
-        assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
+      it('should display nothing owed result when requested and API returns 200 with zero value', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.nothingOwed);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/nothing-owed');
+        });
+      });
+
+      it('should display cannot calculate result when requested and API returns 200 with null values', () => {
+        const dateOfDeath = '2019-01-01';
+        const { nino } = paymentRequestWithOutDateOfDeath.session.awardDetails;
+        nock('http://test-url/').get(deathArrearsApiUri)
+          .query({ nino, dateOfDeath })
+          .reply(httpStatus.OK, deathArrearsResponses.cannotCalculate);
+        controller.getDeathPayment(paymentRequest, genericResponse);
+        return testPromise.then(() => {
+          assert.equal(genericResponse.data.pageData.back, '/changes-and-enquiries/personal/death/address-select');
+          assert.equal(genericResponse.data.pageData.button, '/changes-and-enquiries/personal/death/check-details');
+          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/payment/cannot-calculate');
+        });
       });
     });
 

@@ -7,6 +7,9 @@ router.route('/personal/death')
   .get(functions.getAddDateDeath)
   .post(functions.postAddDateDeath);
 
+router.route('/personal/death/enter-person-dealing-with-the-estate-details')
+  .get(functions.getRedirectToDapDetails);
+
 router.route('/personal/death/name')
   .get(functions.getDapName)
   .post(functions.postDapName);
