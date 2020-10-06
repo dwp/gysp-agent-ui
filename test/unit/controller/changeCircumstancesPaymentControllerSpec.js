@@ -21,22 +21,22 @@ const paymentViewDataWithReference = {
 
 const paymentSummaryViewDataFirstPaymentPaid = {
   paymentOne: {
-    creditDate: '11 April 2019',
+    creditDate: 'Thursday 11 April 2019',
     amount: '£203.57',
   },
   paymentTwo: {
-    creditDate: '19 April 2019',
+    creditDate: 'Friday 19 April 2019',
     amount: '£101.83',
   },
 };
 
 const paymentSummaryViewDataFirstPaymentNotPaid = {
   paymentOne: {
-    creditDate: '11 April 2019',
+    creditDate: 'Thursday 11 April 2019',
     amount: '£203.57',
   },
   paymentTwo: {
-    creditDate: '19 April 2019',
+    creditDate: 'Friday 19 April 2019',
     amount: '£101.83',
   },
 };

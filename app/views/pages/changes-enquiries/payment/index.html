@@ -53,8 +53,8 @@
                 {% if paymentSummary.paymentTwo %}
                   <tr class="govuk-table__row">
                     <td class="govuk-table__cell gysp-payment-tab-table">{{ t('payment:payment_table.next_payment') }}</td>
-                    <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentOne.amount }}</td>
+                    <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentTwo.amount }}</td>
                   </tr>
                 {% endif %}
               </tbody>
@@ -72,7 +72,7 @@
                   {% endif %}
                   </td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+                    <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
                   </td>
           {% elif paymentSummary.paymentTwo %}
                   <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
@@ -84,7 +84,7 @@
                     {% endif %}
                   </td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+                    <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
                   </td>
                 </tr>
                 <tr class="govuk-table__row">
