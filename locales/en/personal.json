@@ -4,7 +4,8 @@
       "final-payment-not-calculated": "Final payment has not been calculated<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Calculate final payment</a>",
       "arrears-payment-due": "{{AMOUNT}} arrears payment due<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Enter payee details</a>",
       "awaiting-verification": "Date of death awaiting verification<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Verify date of death</a>",
-      "awaiting-dap-details": "Awaiting details of the person dealing with the estate<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Enter details</a>"
+      "awaiting-dap-details": "Awaiting details of the person dealing with the estate<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Enter details</a>",
+      "awaiting-verification-and-dap-details": "Awaiting verification of death and details of the person dealing with the estate<br /><a href=\"{{URL}}\" class=\"govuk-link govuk-link--no-visited-state\">Update details</a>"
     }
   },
   "timeline": {

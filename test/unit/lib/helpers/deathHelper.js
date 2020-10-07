@@ -167,6 +167,24 @@ describe('death helper', () => {
     });
   });
 
+  describe('isCalDeathNotVerified', () => {
+    it('should return false when status is null', () => {
+      assert.isFalse(helper.isCalDeathNotVerified(null));
+    });
+
+    it('should return false when status is undefined', () => {
+      assert.isFalse(helper.isCalDeathNotVerified(undefined));
+    });
+
+    it('should return false when status is string', () => {
+      assert.isFalse(helper.isCalDeathNotVerified('string'));
+    });
+
+    it('should return true when status is DEATH_NOT_VERIFIED', () => {
+      assert.isTrue(helper.isCalDeathNotVerified('DEATH_NOT_VERIFIED'));
+    });
+  });
+
   describe('isNullOrCannotCalculate', () => {
     it('should return false when status is null', () => {
       assert.isTrue(helper.isNullOrCannotCalculate(null));
@@ -192,6 +210,24 @@ describe('death helper', () => {
 
     it('should return true as section is does match when retryCalc is supplied', () => {
       assert.isTrue(helper.isRetryCalc('retryCalc'));
+    });
+  });
+
+  describe('isOriginCanVerifyDateOfDeath', () => {
+    it('should return false when status is null', () => {
+      assert.isFalse(helper.isOriginCanVerifyDateOfDeath(null));
+    });
+
+    it('should return false when status is undefined', () => {
+      assert.isFalse(helper.isOriginCanVerifyDateOfDeath(undefined));
+    });
+
+    it('should return false when status is string', () => {
+      assert.isFalse(helper.isOriginCanVerifyDateOfDeath('string'));
+    });
+
+    it('should return true when status is canVerifyDateOfDeath', () => {
+      assert.isTrue(helper.isOriginCanVerifyDateOfDeath('canVerifyDateOfDeath'));
     });
   });
 
@@ -292,6 +328,10 @@ describe('death helper', () => {
 
     it('should return arrears when verification is V, status NOTHING_OWED and section retryCalc', () => {
       assert.equal(helper.successMessage('V', 'NOTHING_OWED', 'retryCalc'), 'Final payment calculated - account closed');
+    });
+
+    it('should return arrears when verification is NV, status DEATH_NOT_VERIFIED and section canVerifyDateOfDeath', () => {
+      assert.equal(helper.successMessage('NV', 'DEATH_NOT_VERIFIED', 'canVerifyDateOfDeath'), 'Recorded details of person dealing with the estate');
     });
 
     it('should return verified when verification is V and status is undefined', () => {

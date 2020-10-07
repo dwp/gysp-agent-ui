@@ -4,7 +4,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}{{ t("verify-date-of-death:header", {'DATE': dateOfDeath}) }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t("death-can-verify-date:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -15,34 +15,34 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="/changes-and-enquiries/personal/death/verify" autocomplete="off">
+  <form method="post" action="{{ formAction }}" autocomplete="off">
 
     {{ govukRadios({
       classes: "govuk-radios--inline",
-      name: "verify",
+      name: "canVerify",
       fieldset: {
         legend: {
-          text: t("verify-date-of-death:fields.verify.legend", {'DATE': dateOfDeath}),
+          text: t("death-can-verify-date:header"),
           isPageHeading: true,
           classes: "govuk-fieldset__legend--l"
         }
       },
       items: [{
-        id: "verify-yes",
+        id: "can-verify-yes",
         value: "yes",
-        text: t("verify-date-of-death:fields.verify.options.yes"),
-        checked: true if details.verify == 'yes' else false
+        text: t("app:options.yes"),
+        checked: true if details.canVerify == 'yes' else false
       }, {
-        id: "verify-no",
+        id: "can-verify-no",
         value: "no",
-        text: t("verify-date-of-death:fields.verify.options.no"),
-        checked: true if details.verify == 'no' else false
+        text: t("app:options.no"),
+        checked: true if details.canVerify == 'no' else false
       }],
-      errorMessage: errors.verify
+      errorMessage: errors.canVerify
     }) }}
 
     {{ govukButton({
-      text: t("verify-date-of-death:button")
+      text: t("app:button.continue")
     }) }}
   </form>
 {% endblock %}

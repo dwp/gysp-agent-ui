@@ -10,7 +10,8 @@
     "retryCalc": {
       "success": {
         "overpayment": "Final payment calculated - account closed",
-        "nothing-owed": "Final payment calculated - account closed"
+        "nothing-owed": "Final payment calculated - account closed",
+        "not-verified": "Recorded details of person dealing with the estate"
       }
     }
   }

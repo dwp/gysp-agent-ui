@@ -130,8 +130,14 @@ module.exports = {
   validDeathNotVerified() {
     return {
       deathDetail: {
-        dateOfDeath: '2019-01-01T00:00:00.000Z',
+        dateOfDeath: 1546300800000,
         dateOfDeathVerification: 'NV',
+        payeeDetails: {
+          fullName: 'Brenda',
+          phoneNumber: '23213131',
+          payeeAddress: { },
+          accountDetail: null,
+        },
       },
     };
   },

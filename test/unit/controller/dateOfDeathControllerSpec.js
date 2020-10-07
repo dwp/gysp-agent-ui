@@ -31,6 +31,10 @@ const errorMessage = {
 
 const editQueryString = { query: { edit: 'true' } };
 
+const canVerifyDateOfDeathOrigin = { origin: 'canVerifyDateOfDeath' };
+const verifiedDateOfDeathYesStage = { 'death-stage': 'verifiedDateOfDeathYes' };
+const reVerifiedDateOfDeathStage = { 'death-stage': 'reVerifiedDateOfDeath' };
+
 const keyDetails = {
   fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
 };
@@ -44,6 +48,9 @@ const enterDateOfDeathResponse = {
 const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { } } };
 const dapGetNamePopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
 const dapGetDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { dapOnly: true } } };
+const dapGetOriginRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin } } };
+const dapGetOriginWithVerifiedDateOfDeathYesRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin, ...verifiedDateOfDeathYesStage } } };
+const dapGetOriginWithReVerifiedDateOfDeathRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin, ...reVerifiedDateOfDeathStage } } };
 
 const dapPostNameInvalidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: '' } };
 const dapPostNameInvalidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: '' } };
@@ -88,6 +95,7 @@ const verifyDeathResponse = {
   },
   awardDetails: claimData.validClaimWithDeathNotVerified(),
   dateOfDeath: '1 January 2019',
+  backLink: '/changes-and-enquiries/personal',
 };
 
 const verifiedResponse = {
@@ -677,12 +685,33 @@ describe('Change circumstances date of death controller ', () => {
       done();
     });
 
-    it('should form when requested in dap only', (done) => {
+    it('should display blank form when requested in dap only', (done) => {
       controller.getDapName(dapGetDapOnlyRequest, genericResponse);
       assert.deepEqual(genericResponse.data.awardDetails, claimData.validClaim());
       assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal');
       assert.deepEqual(genericResponse.data.keyDetails, keyDetails);
       assert.isUndefined(genericResponse.data.details);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should display form with back link as can verify when requested with origin is canVerifyDateOfDeath and no death stage ', (done) => {
+      controller.getDapName(dapGetOriginRequest, genericResponse);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/are-you-able-to-verify-the-date-of-death');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should display form with back link as verify when requested with origin is canVerifyDateOfDeath and death stage is verifiedDateOfDeathYes', (done) => {
+      controller.getDapName(dapGetOriginWithVerifiedDateOfDeathYesRequest, genericResponse);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/verify');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
+      done();
+    });
+
+    it('should display form with back link as verified-date when requested with origin is canVerifyDateOfDeath and death stage is reVerifiedDateOfDeath', (done) => {
+      controller.getDapName(dapGetOriginWithReVerifiedDateOfDeathRequest, genericResponse);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/verified-date');
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/name');
       done();
     });
@@ -1228,6 +1257,15 @@ describe('Change circumstances date of death controller ', () => {
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
       done();
     });
+
+    it('should display form when requested with can verify death back url when origin is set as canVerifyDateOfDeath', (done) => {
+      const request = JSON.parse(JSON.stringify(verifyDeathRequest));
+      request.session.death = { ...canVerifyDateOfDeathOrigin };
+      controller.getVerifyDeath(request, genericResponse);
+      assert.equal(genericResponse.data.backLink, '/changes-and-enquiries/personal/death/are-you-able-to-verify-the-date-of-death');
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/verify-date');
+      done();
+    });
   });
 
   describe('postVerifyDeath function (POST /changes-and-enquiries/personal/death)', () => {
@@ -1239,10 +1277,19 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should return a redirect to personal when API returns 200 state with valid yes post', () => {
+    it('should return a redirect to payment when API returns 200 state with valid yes post', () => {
       controller.postVerifyDeath(validYesPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should return a redirect to dap name when API returns 200 state with valid yes post and origin is set as canVerifyDateOfDeath', () => {
+      const request = JSON.parse(JSON.stringify(validYesPostRequest));
+      request.session.death = { ...canVerifyDateOfDeathOrigin };
+      controller.postVerifyDeath(request, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/name');
       });
     });
 
@@ -1272,10 +1319,19 @@ describe('Change circumstances date of death controller ', () => {
       });
     });
 
-    it('should return a redirect when API returns 200 state with valid post', () => {
+    it('should return a redirect to payment when API returns 200 state with valid post', () => {
       controller.postAddVerifiedDeath(validAddVerifiedDeathPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/payment');
+      });
+    });
+
+    it('should return a redirect to dap name when API returns 200 state with valid post and origin is set as canVerifyDateOfDeath', () => {
+      const request = JSON.parse(JSON.stringify(validAddVerifiedDeathPostRequest));
+      request.session.death = { ...canVerifyDateOfDeathOrigin };
+      controller.postAddVerifiedDeath(request, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/death/name');
       });
     });
   });

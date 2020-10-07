@@ -3,6 +3,8 @@ const express = require('express');
 const router = new express.Router();
 const functions = require('./functions');
 
+router.use('/personal/death', require('./can-verify-date/routes'));
+
 router.route('/personal/death')
   .get(functions.getAddDateDeath)
   .post(functions.postAddDateDeath);

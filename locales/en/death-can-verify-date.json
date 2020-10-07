@@ -1,0 +1,10 @@
+{
+  "header": "Are you able to verify the date of death?",
+  "fields": {
+    "can-verify": {
+      "errors": {
+        "required": "Select 'yes' if are you able to verify the date of death"
+      }
+    }
+  }
+}

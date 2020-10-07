@@ -75,6 +75,9 @@ const verifiedResponse = {
   },
 };
 
+const verifiedResponseWithEvent = JSON.parse(JSON.stringify(verifiedResponse));
+
+
 const notVerifiedResponse = {
   dateOfDeath: '2019-01-01T00:00:00.000Z',
   dateOfDeathVerification: 'NV',
@@ -127,6 +130,36 @@ describe('deathObject object', () => {
     it('should return valid json object with no deathPayeeDetails when dap not in details object', (done) => {
       const json = object.formatter(noDapdetails, deathPayment, claimData.validClaim());
       assert.deepEqual(json, noDapDetailsResponse);
+      done();
+    });
+
+    it('should return valid json object with eventName when origin is set as canVerifyDateOfDeath and status is ARREARS', (done) => {
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaimWithDeathNotVerified(), 'ARREARS', 'canVerifyDateOfDeath');
+      assert.deepEqual(json, { ...verifiedResponseWithEvent, eventName: 'death-record:messages.success.arrears' });
+      done();
+    });
+
+    it('should return valid json object with eventName when origin is set as canVerifyDateOfDeath and status is OVERPAYMENT', (done) => {
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaimWithDeathNotVerified(), 'OVERPAYMENT', 'canVerifyDateOfDeath');
+      assert.deepEqual(json, { ...verifiedResponseWithEvent, eventName: 'death-record:messages.retryCalc.success.overpayment' });
+      done();
+    });
+
+    it('should return valid json object with eventName when origin is set as canVerifyDateOfDeath and status is NOTHING_OWED', (done) => {
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaimWithDeathNotVerified(), 'NOTHING_OWED', 'canVerifyDateOfDeath');
+      assert.deepEqual(json, { ...verifiedResponseWithEvent, eventName: 'death-record:messages.retryCalc.success.nothing-owed' });
+      done();
+    });
+
+    it('should return valid json object with eventName when origin is set as canVerifyDateOfDeath and status is DEATH_NOT_VERIFIED', (done) => {
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaimWithDeathNotVerified(), 'DEATH_NOT_VERIFIED', 'canVerifyDateOfDeath');
+      assert.deepEqual(json, { ...verifiedResponseWithEvent, eventName: 'death-record:messages.retryCalc.success.not-verified' });
+      done();
+    });
+
+    it('should return valid json object without eventName when origin is set as canVerifyDateOfDeath and status is undefined', (done) => {
+      const json = object.formatter(verifiedDetails, deathPayment, claimData.validClaimWithDeathNotVerified(), undefined, 'canVerifyDateOfDeath');
+      assert.deepEqual(json, verifiedResponseWithEvent);
       done();
     });
   });

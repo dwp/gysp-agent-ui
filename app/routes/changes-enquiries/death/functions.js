@@ -32,8 +32,12 @@ const [CANNOT_CALCULATE, OVERPAYMENT, ARREARS, NOTHING_OWED, DEATH_NOT_VERIFIED]
 
 const baseUrl = '/changes-and-enquiries/personal';
 const deathDateUrl = `${baseUrl}/death`;
+const canVerifyDateUrl = `${deathDateUrl}/are-you-able-to-verify-the-date-of-death`;
+const verifyDateUrl = `${deathDateUrl}/verify`;
+const verifiedDateUrl = `${deathDateUrl}/verified-date`;
 const dapNameUrl = `${deathDateUrl}/name`;
 const checkDetailsUrl = `${deathDateUrl}/check-details`;
+const paymentUrl = `${deathDateUrl}/payment`;
 
 function getAddDateDeath(req, res) {
   const { awardDetails } = req.session;
@@ -68,11 +72,22 @@ function getRedirectToDapDetails(req, res) {
 }
 
 function dapNameBackLink(req) {
+  const deathOrigin = dataStore.get(req, 'origin', 'death');
+  const deathStage = dataStore.get(req, 'death-stage', 'death');
   if (checkChangeHelper.isEditMode(req, 'dap-name')) {
     return checkDetailsUrl;
   }
   if (deathHelper.isDapOnly(req)) {
     return baseUrl;
+  }
+  if (deathOrigin === 'canVerifyDateOfDeath') {
+    if (deathStage === 'verifiedDateOfDeathYes') {
+      return verifyDateUrl;
+    }
+    if (deathStage === 'reVerifiedDateOfDeath') {
+      return verifiedDateUrl;
+    }
+    return canVerifyDateUrl;
   }
   return deathDateUrl;
 }
@@ -332,6 +347,7 @@ function buildGetDeathArrearsUrl(req, res) {
 function getDeathPayment(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const deathStage = dataStore.get(req, 'death-stage', 'death');
+  const deathOrigin = dataStore.get(req, 'origin', 'death');
   const { verification } = dataStore.get(req, 'date-of-death', 'death') || Object.create(null);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (verification === 'V' || deathHelper.isDeathVerified(awardDetails)) {
@@ -340,7 +356,7 @@ function getDeathPayment(req, res) {
       dataStore.save(req, 'death-payment-details', details);
       const formattedDetails = deathPaymentObject.formatter(details);
       const status = deathHelper.deathPaymentStatus(details.amount);
-      const pageData = deathPaymentObject.pageData(deathStage, status);
+      const pageData = deathPaymentObject.pageData(deathStage, status, deathOrigin);
       res.render(deathHelper.deathPaymentView(status), {
         keyDetails,
         details: formattedDetails,
@@ -415,16 +431,13 @@ function getRecordDeathErrorHandler(error, req, res) {
 function getRecordDeath(req, res) {
   const awardDetails = dataStore.get(req, 'awardDetails');
   const death = dataStore.get(req, 'death');
+  const origin = death && death.origin;
   const deathPayment = dataStore.get(req, 'death-payment-details');
-  const deathDetails = deathObject.formatter(death, deathPayment, awardDetails);
+  const status = (deathPayment && deathPaymentStatus(deathPayment.amount)) || DEATH_NOT_VERIFIED;
+  const deathDetails = deathObject.formatter(death, deathPayment, awardDetails, status, origin);
   const putDeathDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + deathDetailsUpdateApiUri, deathDetails, 'award', req.user);
   request(putDeathDetailsCall).then(() => {
-    if (generalHelper.isNotUndefinedEmptyOrNull(deathPayment)) {
-      const status = deathPaymentStatus(deathPayment.amount);
-      req.flash('success', deathHelper.successMessage(deathDetails.dateOfDeathVerification, status));
-    } else {
-      req.flash('success', deathHelper.successMessage(deathDetails.dateOfDeathVerification, DEATH_NOT_VERIFIED));
-    }
+    req.flash('success', deathHelper.successMessage(deathDetails.dateOfDeathVerification, status, origin));
     deleteSession.deleteAllDeathSession(req);
     deleteSession.deleteChangesEnquiries(req);
     res.redirect('/changes-and-enquiries/personal');
@@ -467,11 +480,13 @@ function getVerifyDeath(req, res) {
   const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
   const { awardDetails } = req.session;
   const details = dataStore.get(req, 'death');
+  const backLink = details && details.origin === 'canVerifyDateOfDeath' ? canVerifyDateUrl : baseUrl;
   res.render('pages/changes-enquiries/death/verify-date', {
     keyDetails,
     awardDetails,
     details,
     dateOfDeath: dateHelper.longDate(awardDetails.deathDetail.dateOfDeath),
+    backLink,
   });
 }
 
@@ -483,11 +498,14 @@ function postVerifyDeath(req, res) {
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'verify', details.verify, 'death');
     if (details.verify === 'yes') {
-      const verifiedDetails = dateHelper.dateComponents(dateHelper.timestampToDateDash(awardDetails.dateOfDeath));
-      verifiedDetails.verification = 'V';
+      const deathOrigin = dataStore.get(req, 'origin', 'death');
       dataStore.save(req, 'death-stage', 'verifiedDateOfDeathYes', 'death');
-      dataStore.save(req, 'date-of-death', verifiedDetails, 'death');
-      res.redirect('/changes-and-enquiries/personal/death/payment');
+      dataStore.save(req, 'date-of-death', {
+        ...dateHelper.dateComponents(awardDetails.deathDetail.dateOfDeath, 'x'),
+        verification: 'V',
+      }, 'death');
+      const redirectUrl = deathOrigin === 'canVerifyDateOfDeath' ? dapNameUrl : paymentUrl;
+      res.redirect(redirectUrl);
     } else {
       dataStore.save(req, 'date-of-death', null, 'death');
       res.redirect('/changes-and-enquiries/personal/death/verified-date');
@@ -521,10 +539,12 @@ function postAddVerifiedDeath(req, res) {
   const errors = formValidator.dateOfDeathVerifiedValidation(details);
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
   if (Object.keys(errors).length === 0) {
+    const deathOrigin = dataStore.get(req, 'origin', 'death');
     details.verification = 'V';
     dataStore.save(req, 'death-stage', 'reVerifiedDateOfDeath', 'death');
     dataStore.save(req, 'date-of-death', details, 'death');
-    res.redirect('/changes-and-enquiries/personal/death/payment');
+    const redirectUrl = deathOrigin === 'canVerifyDateOfDeath' ? dapNameUrl : paymentUrl;
+    res.redirect(redirectUrl);
   } else {
     res.render('pages/changes-enquiries/death/enter-date-verified', {
       keyDetails,

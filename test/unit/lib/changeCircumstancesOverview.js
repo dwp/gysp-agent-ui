@@ -82,7 +82,7 @@ describe('change of circumstances overview ', () => {
       it('should return date of death not verified warning', () => {
         const details = {
           ...claimData.validClaim(),
-          deathDetail: { dateOfDeathVerification: 'NV' },
+          deathDetail: { dateOfDeathVerification: 'NV', payeeDetails: { } },
         };
         const formatter = changeCircumstancesOverview.formatter(details);
         assert.equal(formatter.warning.html, 'Date of death awaiting verification<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;verify" class="govuk-link govuk-link--no-visited-state">Verify date of death</a>');
@@ -97,6 +97,17 @@ describe('change of circumstances overview ', () => {
         };
         const formatter = changeCircumstancesOverview.formatter(details);
         assert.equal(formatter.warning.html, 'Awaiting details of the person dealing with the estate<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;enter-person-dealing-with-the-estate-details" class="govuk-link govuk-link--no-visited-state">Enter details</a>');
+      });
+
+      it('should return awaiting verification and dap details warning', () => {
+        const details = {
+          ...claimData.validClaim(),
+          awardStatus: 'DEADNOTVERIFIED',
+          deathAllActionsPerformed: false,
+          deathDetail: { dateOfDeathVerification: 'NV' },
+        };
+        const formatter = changeCircumstancesOverview.formatter(details);
+        assert.equal(formatter.warning.html, 'Awaiting verification of death and details of the person dealing with the estate<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;are-you-able-to-verify-the-date-of-death" class="govuk-link govuk-link--no-visited-state">Update details</a>');
       });
     });
   });
