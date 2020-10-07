@@ -55,7 +55,7 @@
     "itemid": "1.1.0",
     "js-yaml": "3.14.0",
     "mockdate": "3.0.2",
-    "moment": "2.29.0",
+    "moment": "2.29.1",
     "nunjucks": "3.2.2",
     "redis": "3.0.2",
     "request-promise": "4.2.6",
