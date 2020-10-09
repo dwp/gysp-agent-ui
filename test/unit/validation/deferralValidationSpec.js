@@ -1,7 +1,18 @@
 const assert = require('assert');
+
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+const i18nextConfig = require('../../../config/i18next');
+
 const validator = require('../../../lib/validation/deferralValidation');
 
 describe('Deferral Validation', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   describe('dateRequestReceived validator', () => {
     it('should return error when "form" is undefined', () => {
       const errors = validator.dateRequestReceived();

@@ -20,11 +20,18 @@
     "last_payment": "Last payment",
     "next_payment": "Next payment"
   },
+  "payment_history": {
+    "caption": "Payment history",
+    "record_manual_payment": "Record a manual payment"
+  },
   "timeline": {
     "header": "Payment changes",
     "empty": "No changes made",
     "banking_details": {
       "changed": "Banking details changed"
+    },
+    "manual_payment": {
+      "added": "Manual payment recorded"
     },
     "payment_frequency": {
       "changed": "Frequency changed"

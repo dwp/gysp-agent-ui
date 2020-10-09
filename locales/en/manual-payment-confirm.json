@@ -1,0 +1,10 @@
+{
+  "header": "Confirm manual payment",
+  "h2": "Payment amounts",
+  "p": "Based on the dates you entered, the total payment and breakdown is shown below.",
+  "payment_amounts_table": {
+    "total": "Total",
+    "new_state_pension": "New State Pension",
+    "protected_payment": "Protected payment"
+  } 
+}

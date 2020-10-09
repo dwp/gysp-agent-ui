@@ -27,7 +27,6 @@ const recentPaymentsResponseObject = {
     { text: 'Payment date' },
     { text: 'Amount' },
     { text: 'Status' },
-    { text: '' },
   ],
   rows: [
     [
@@ -36,7 +35,7 @@ const recentPaymentsResponseObject = {
       { text: '01/01/2019' },
       { text: '£200.20' },
       { text: sentStatus },
-      { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' },
+      { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>' },
     ],
     [
       { text: '01/01/2019' },
@@ -44,7 +43,7 @@ const recentPaymentsResponseObject = {
       { text: '01/02/2019' },
       { text: '£300.20' },
       { text: paidStatus },
-      { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' },
+      { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>' },
     ],
     [
       { text: '01/02/2019' },
@@ -52,7 +51,7 @@ const recentPaymentsResponseObject = {
       { text: '01/03/2019' },
       { text: '£400.20' },
       { text: paidStatus },
-      { html: '<a href="/changes-and-enquiries/payment-history/3" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' },
+      { html: '<a href="/changes-and-enquiries/payment-history/3" class="govuk-link">Details</a>' },
     ],
   ],
 };

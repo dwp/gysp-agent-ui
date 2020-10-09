@@ -49,11 +49,22 @@ const recentPaymentTableViewDataSentAndPaid = {
     { text: 'Payment date' },
     { text: 'Amount' },
     { text: 'Status' },
-    { text: '' },
   ],
   rows: [
-    [{ text: '11/03/2019' }, { text: '11/04/2019' }, { text: '11/04/2019' }, { text: '£203.57' }, { text: 'Sent' }, { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
-    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
+    [
+      { text: '11/03/2019' },
+      { text: '11/04/2019' },
+      { text: '11/04/2019' },
+      { text: '£203.57' },
+      { text: 'Sent' },
+      { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>' }],
+    [
+      { text: '11/02/2019' },
+      { text: '11/03/2019' },
+      { text: '11/03/2019' },
+      { text: '£203.57' },
+      { text: 'Paid' },
+      { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>' }],
   ],
 };
 
@@ -65,11 +76,24 @@ const recentPaymentTableViewDataAllPaid = {
     { text: 'Payment date' },
     { text: 'Amount' },
     { text: 'Status' },
-    { text: '' },
   ],
   rows: [
-    [{ text: '11/03/2019' }, { text: '11/04/2019' }, { text: '11/04/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
-    [{ text: '11/02/2019' }, { text: '11/03/2019' }, { text: '11/03/2019' }, { text: '£203.57' }, { text: 'Paid' }, { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>', classes: 'govuk-table__cell--numeric' }],
+    [
+      { text: '11/03/2019' },
+      { text: '11/04/2019' },
+      { text: '11/04/2019' },
+      { text: '£203.57' },
+      { text: 'Paid' },
+      { html: '<a href="/changes-and-enquiries/payment-history/1" class="govuk-link">Details</a>' },
+    ],
+    [
+      { text: '11/02/2019' },
+      { text: '11/03/2019' },
+      { text: '11/03/2019' },
+      { text: '£203.57' },
+      { text: 'Paid' },
+      { html: '<a href="/changes-and-enquiries/payment-history/2" class="govuk-link">Details</a>' },
+    ],
   ],
 };
 

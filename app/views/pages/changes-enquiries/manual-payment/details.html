@@ -1,0 +1,146 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("manual-payment-details:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block innerContent %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: backLink,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
+  }) }}
+
+  <form method="post" action={{ formAction }} autocomplete="off" novalidate>
+
+    {% call govukFieldset({
+      legend: {
+        text: t('manual-payment-details:header'),
+        classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-6"
+      }
+    }) %}
+
+      {% call govukFieldset({
+        legend: {
+          text: t('manual-payment-details:fields.payment_period.legend'),
+          classes: "govuk-fieldset__legend--m"
+        }
+      }) %}
+
+        {{ govukDateInput({
+          id: "fromDate",
+          fieldset: {
+            legend: {
+              text: t("app:date.from"),
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              label: t("app:date.day"),
+              name: "fromDay",
+              value: formData.fromDay,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.fromDay),
+              attributes: { maxlength: '2' }
+            },
+            {
+              label: t("app:date.month"),
+              name: "fromMonth",
+              value: formData.fromMonth,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.fromMonth),
+              attributes: { maxlength: '2' }
+            },
+            {
+              label: t("app:date.year"),
+              name: "fromYear",
+              value: formData.fromYear,
+              classes: "govuk-input--width-4" + (" govuk-input--error" if errors.fromYear),
+              attributes: { maxlength: '4' }
+            }
+          ],
+          errorMessage: errors.fromDate
+        }) }}
+
+        {{ govukDateInput({
+          id: "toDate",
+          fieldset: {
+            legend: {
+              text: t("app:date.to"),
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              label: t("app:date.day"),
+              name: "toDay",
+              value: formData.toDay,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.toDay),
+              attributes: { maxlength: '2' }
+            },
+            {
+              label: t("app:date.month"),
+              name: "toMonth",
+              value: formData.toMonth,
+              classes: "govuk-input--width-2" + (" govuk-input--error" if errors.toMonth),
+              attributes: { maxlength: '2' }
+            },
+            {
+              label: t("app:date.year"),
+              name: "toYear",
+              value: formData.toYear,
+              classes: "govuk-input--width-4" + (" govuk-input--error" if errors.toYear),
+              attributes: { maxlength: '4' }
+            }
+          ],
+          errorMessage: errors.toDate
+        }) }}
+
+      {% endcall %}
+
+      {{ govukDateInput({
+        id: "paymentDate",
+        fieldset: {
+          legend: {
+            text: t('manual-payment-details:fields.payment_date.legend'),
+            classes: "govuk-fieldset__legend--m govuk-!-margin-bottom-6"
+          }
+        },
+        hint: {
+          text: t('manual-payment-details:fields.payment_date.hint')
+        },
+        items: [
+          {
+            label: t("app:date.day"),
+            name: "paymentDay",
+            value: formData.paymentDay,
+            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.paymentDay),
+            attributes: { maxlength: '2' }
+          },
+          {
+            label: t("app:date.month"),
+            name: "paymentMonth",
+            value: formData.paymentMonth,
+            classes: "govuk-input--width-2" + (" govuk-input--error" if errors.paymentMonth),
+            attributes: { maxlength: '2' }
+          },
+          {
+            label: t("app:date.year"),
+            name: "paymentYear",
+            value: formData.paymentYear,
+            classes: "govuk-input--width-4" + (" govuk-input--error" if errors.paymentYear),
+            attributes: { maxlength: '4' }
+          }
+        ],
+        errorMessage: errors.paymentDate
+      }) }}
+
+    {% endcall %}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

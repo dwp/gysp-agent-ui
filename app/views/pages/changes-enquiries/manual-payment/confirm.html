@@ -1,0 +1,42 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("manual-payment-confirm:header") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
+{% block innerContent %}
+  {{ govukBackLink({
+    text: t("app:link.back"),
+    href: backLink,
+    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-6"
+  }) }}
+
+  <h2 class="govuk-heading-l">{{ t('manual-payment-confirm:h2') }}</h2>
+  
+  <p class="govuk-body">{{ t('manual-payment-confirm:p') }}</p>
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header gysp-manual-payment-amounts">{{ t('manual-payment-confirm:payment_amounts_table.total') }}</th>
+        <th scope="col" class="govuk-table__header">{{ tableData.totalAmount }}</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">{{ t('manual-payment-confirm:payment_amounts_table.new_state_pension') }}</td>
+        <td class="govuk-table__cell">{{ tableData.statePensionAmount }}</td>
+      </tr>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">{{ t('manual-payment-confirm:payment_amounts_table.protected_payment') }}</td>
+        <td class="govuk-table__cell">{{ tableData.protectedPaymentAmount }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  {{ govukButton({
+    text: t("app:button.confirm"),
+    href: button
+  }) }}
+{% endblock %}

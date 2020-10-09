@@ -234,6 +234,18 @@
     }
 }
 
+.gysp-manual-payment-amounts {
+    @include govuk-media-query($from: tablet) {
+        width: 47%;
+    }
+}
+
+.gysp-record-manual-payment {
+    @include govuk-media-query($from: tablet) {
+        float: right;
+    }
+}
+
 .gysp-col-1 {
     @include govuk-media-query($from: tablet) {
         width: 200px;

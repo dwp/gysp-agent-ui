@@ -1,0 +1,25 @@
+{
+  "header": "Manual payment details",
+  "fields": {
+    "payment_period": {
+      "legend": "Payment period",
+      "errors": {
+        "fromRequired": "Enter a payment period 'from' date",
+        "toRequired": "Enter a payment period 'to' date",
+        "invalid": "Enter a real date, like 12 8 2020",
+        "sequence": "The 'to' date cannot be before the 'from' date"
+      }
+    },
+    "payment_date": {
+      "legend": "Payment date",
+      "hint": "This is the date the payment went into, or will go into the claimant's account.",
+      "errors": {
+        "required": "Enter a payment date",
+        "invalid": "Enter a real date, like 12 8 2020"
+      }
+    }
+  },
+  "errors": {
+    "invalid": "Enter a valid payment period."
+  }
+}
