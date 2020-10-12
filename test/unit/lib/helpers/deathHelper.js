@@ -314,11 +314,15 @@ describe('death helper', () => {
       assert.equal(helper.successMessage('NV', 'OVERPAYMENT'), 'Verified date of death - account closed');
     });
 
-    it('should return arrears when verification is V, status OVERPAYMENT and section retryCalc', () => {
+    it('should return account closed when verification is V, status OVERPAYMENT and section retryCalc', () => {
       assert.equal(helper.successMessage('V', 'OVERPAYMENT', 'retryCalc'), 'Final payment calculated - account closed');
     });
 
-    it('should return overpayment when verification is V and status NOTHING_OWED', () => {
+    it('should return account closed when verification is V, status OVERPAYMENT and section dapOnly', () => {
+      assert.equal(helper.successMessage('V', 'OVERPAYMENT', 'dapOnly'), 'Final payment calculated - account closed');
+    });
+
+    it('should return account closed when verification is V and status NOTHING_OWED', () => {
       assert.equal(helper.successMessage('V', 'NOTHING_OWED'), 'Verified date of death - account closed');
     });
 
@@ -326,8 +330,12 @@ describe('death helper', () => {
       assert.equal(helper.successMessage('NV', 'NOTHING_OWED'), 'Verified date of death - account closed');
     });
 
-    it('should return arrears when verification is V, status NOTHING_OWED and section retryCalc', () => {
+    it('should return account closed when verification is V, status NOTHING_OWED and section retryCalc', () => {
       assert.equal(helper.successMessage('V', 'NOTHING_OWED', 'retryCalc'), 'Final payment calculated - account closed');
+    });
+
+    it('should return account closed when verification is V, status NOTHING_OWED and section dapOnly', () => {
+      assert.equal(helper.successMessage('V', 'NOTHING_OWED', 'dapOnly'), 'Final payment calculated - account closed');
     });
 
     it('should return arrears when verification is NV, status DEATH_NOT_VERIFIED and section canVerifyDateOfDeath', () => {
@@ -369,41 +377,25 @@ describe('death helper', () => {
     });
   });
 
-  describe('isDapOnly', () => {
-    it('should return false when no request passed', () => {
-      assert.isFalse(helper.isDapOnly());
+  describe('isOriginDapOnly', () => {
+    it('should return false when no origin passed', () => {
+      assert.isFalse(helper.isOriginDapOnly());
     });
 
-    it('should return false when null request passed', () => {
-      assert.isFalse(helper.isDapOnly(null));
+    it('should return false when null is passed', () => {
+      assert.isFalse(helper.isOriginDapOnly(null));
     });
 
-    it('should return false when blank object passed', () => {
-      assert.isFalse(helper.isDapOnly({ }));
+    it('should return false when undefined is passed', () => {
+      assert.isFalse(helper.isOriginDapOnly(undefined));
     });
 
-    it('should return false when blank session passed', () => {
-      assert.isFalse(helper.isDapOnly({ session: { } }));
+    it('should return false when no matching string is passed', () => {
+      assert.isFalse(helper.isOriginDapOnly('string'));
     });
 
-    it('should return false when death not in session', () => {
-      assert.isFalse(helper.isDapOnly({ session: { foo: 'bar' } }));
-    });
-
-    it('should return false when dap only not in session', () => {
-      assert.isFalse(helper.isDapOnly({ session: { death: { foo: 'bar' } } }));
-    });
-
-    it('should return false when dap only is in session but is string', () => {
-      assert.isFalse(helper.isDapOnly({ session: { death: { dapOnly: 'true' } } }));
-    });
-
-    it('should return false when dap only is in session but is false', () => {
-      assert.isFalse(helper.isDapOnly({ session: { death: { dapOnly: false } } }));
-    });
-
-    it('should return true when dap only is in session and is true', () => {
-      assert.isTrue(helper.isDapOnly({ session: { death: { dapOnly: true } } }));
+    it('should return true when dapOnly string is passed', () => {
+      assert.isTrue(helper.isOriginDapOnly('dapOnly'));
     });
   });
 

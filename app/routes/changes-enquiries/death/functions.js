@@ -67,7 +67,7 @@ function postAddDateDeath(req, res) {
 }
 
 function getRedirectToDapDetails(req, res) {
-  dataStore.save(req, 'dapOnly', true, 'death');
+  dataStore.save(req, 'origin', 'dapOnly', 'death');
   res.redirect(dapNameUrl);
 }
 
@@ -77,7 +77,7 @@ function dapNameBackLink(req) {
   if (checkChangeHelper.isEditMode(req, 'dap-name')) {
     return checkDetailsUrl;
   }
-  if (deathHelper.isDapOnly(req)) {
+  if (deathHelper.isOriginDapOnly(deathOrigin)) {
     return baseUrl;
   }
   if (deathOrigin === 'canVerifyDateOfDeath') {

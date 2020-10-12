@@ -47,14 +47,14 @@ const enterDateOfDeathResponse = {
 
 const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { } } };
 const dapGetNamePopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
-const dapGetDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { dapOnly: true } } };
+const dapGetDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { origin: 'dapOnly' } } };
 const dapGetOriginRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin } } };
 const dapGetOriginWithVerifiedDateOfDeathYesRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin, ...verifiedDateOfDeathYesStage } } };
 const dapGetOriginWithReVerifiedDateOfDeathRequest = { session: { awardDetails: claimData.validClaim(), death: { ...canVerifyDateOfDeathOrigin, ...reVerifiedDateOfDeathStage } } };
 
 const dapPostNameInvalidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: '' } };
 const dapPostNameInvalidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: '' } };
-const dapPostNameInvalidDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { dapOnly: true } }, body: { name: '' } };
+const dapPostNameInvalidDapOnlyRequest = { session: { awardDetails: claimData.validClaim(), death: { origin: 'dapOnly' } }, body: { name: '' } };
 const dapPostNameValidRequest = { session: { awardDetails: claimData.validClaim() }, body: { name: 'Margret Meldrew' } };
 const dapPostNameValidEditRequest = { session: { awardDetails: claimData.validClaim(), editSection: 'dap-name' }, body: { name: 'Margret Meldrew' } };
 
