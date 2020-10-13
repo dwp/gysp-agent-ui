@@ -1,3 +1,14 @@
+# [6.8.0](https://github.com/dwp/gysp-agent-ui/compare/6.7.0...6.8.0) (2020-10-13)
+
+
+### Features
+
+* **death:** add warning for none verified death without dap details ([b417ec0](https://github.com/dwp/gysp-agent-ui/commit/b417ec05866a26a50f93b43dd3dca224e743bdcb))
+* **death:** add warning for verified death without dap details ([b08247e](https://github.com/dwp/gysp-agent-ui/commit/b08247e027bcec50cee7bb44b08fc5944fdf9c1c))
+* **manual-payment:** add journey to record manual payment ([eccf049](https://github.com/dwp/gysp-agent-ui/commit/eccf0499eccb56e7188097a81efeb44d62bd992d))
+
+
+
 # [6.7.0](https://github.com/dwp/gysp-agent-ui/compare/6.6.0...6.7.0) (2020-09-30)
 
 
