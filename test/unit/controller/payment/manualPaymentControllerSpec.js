@@ -18,7 +18,7 @@ const session = () => ({
     'manual-payment': {
       apiResponse: {
         protectedPaymentAmount: 10,
-        statePensionAmount: 20,
+        cpsStatePensionAmount: 20,
         totalAmount: 30,
       },
       formData: {},
@@ -50,7 +50,7 @@ const reqHeaders = {
 
 const tableData = {
   protectedPaymentAmount: '£10.00',
-  statePensionAmount: '£20.00',
+  cpsStatePensionAmount: '£20.00',
   totalAmount: '£30.00',
 };
 
