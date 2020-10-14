@@ -14,6 +14,7 @@ const controller = require('../../../app/routes/changes-enquiries/payment-freque
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse = {};
@@ -84,11 +85,7 @@ describe('Change payment frequency controller ', () => {
 
     flash = { type: '', message: '' };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 30);
-    });
+    testPromise = promiseWait();
   });
 
   describe(' getChangePaymentFrequency function (GET /changes-and-enquiries/payment/frequency)', () => {

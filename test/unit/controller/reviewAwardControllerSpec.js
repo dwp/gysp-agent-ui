@@ -9,6 +9,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/review-award/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -48,11 +49,7 @@ describe('Review award controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with total number of awards to review', () => {

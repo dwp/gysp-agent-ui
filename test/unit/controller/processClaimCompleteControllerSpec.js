@@ -8,6 +8,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-complete/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -33,11 +34,7 @@ describe('Process claim controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view when user has completed', () => {

@@ -9,6 +9,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-payment/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -29,11 +30,7 @@ const errorMessage = {
 
 describe('Process claim payment controller', () => {
   beforeEach(() => {
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 50);
-    });
+    testPromise = promiseWait();
   });
 
   describe('getProcessClaimPayment function (GET /process-claim/payment)', () => {

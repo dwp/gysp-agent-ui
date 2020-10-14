@@ -12,6 +12,7 @@ const controller = require('../../../app/routes/changes-enquiries/award/function
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 const keyDetails = {
   fullName: 'Joe Bloggs',
@@ -51,11 +52,7 @@ describe('Change circumstances award controller', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 100);
-    });
+    testPromise = promiseWait();
   });
 
   describe('getAwardList function (GET /changes-enquiries/award)', () => {

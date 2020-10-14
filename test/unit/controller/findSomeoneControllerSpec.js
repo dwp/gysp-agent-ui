@@ -10,6 +10,7 @@ nock.disableNetConnect();
 
 const findSomeoneController = require('../../../app/routes/find-someone/functions');
 const claimData = require('../../lib/claimData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -60,11 +61,7 @@ describe('Find someone controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with error when API returns 500 state', () => {

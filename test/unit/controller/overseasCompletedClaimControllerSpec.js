@@ -8,6 +8,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const overseasCompletedClaimController = require('../../../app/routes/overseas-completed-claim/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -63,11 +64,7 @@ describe('Overseas completed claim controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with total number of overseas completed claims from API', () => {
@@ -105,11 +102,7 @@ describe('Overseas completed claim controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with overseas completed claim details from API', () => {
@@ -148,11 +141,7 @@ describe('Overseas completed claim controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return a PDF for drop out details from API', () => {
@@ -177,11 +166,7 @@ describe('Overseas completed claim controller ', () => {
 
   describe(' postOverseasCompletedClaimUpdateStatus function (POST /overseas/completed-claim/details/update-status)', () => {
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
     afterEach(() => {
       nock.cleanAll();

@@ -14,6 +14,7 @@ const addressController = require('../../../app/routes/changes-enquiries/address
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 const addressData = require('../../lib/addressData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse = {};
@@ -82,11 +83,7 @@ describe('Change address controller ', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 100);
-    });
+    testPromise = promiseWait();
   });
 
   afterEach(() => {

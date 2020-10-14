@@ -9,6 +9,7 @@ const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 const paymentSummaryData = require('../../lib/paymentSummaryData');
 const recentPaymentData = require('../../lib/recentPaymentData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 const paymentViewDataWithReference = {
   accountHolder: 'Joe Bloggs',
@@ -121,11 +122,7 @@ describe('Change circumstances payment controller ', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 100);
-    });
+    testPromise = promiseWait();
   });
 
   describe(' getPaymentOverview function (GET /changes-enquiries/payment)', () => {

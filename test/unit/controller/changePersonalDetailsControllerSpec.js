@@ -12,6 +12,7 @@ const controller = require('../../../app/routes/changes-enquiries/personal/funct
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 const keyDetails = {
   fullName: 'Joe Bloggs',
@@ -62,11 +63,7 @@ describe('Change circumstances personal controller', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 100);
-    });
+    testPromise = promiseWait();
   });
 
   afterEach(() => {

@@ -4,6 +4,7 @@ const controller = require('../../../../app/routes/changes-enquiries/stop-state-
 
 const claimData = require('../../../lib/claimData');
 const responseHelper = require('../../../lib/responseHelper');
+const { promiseWait } = require('../../../lib/unitHelper');
 
 const awardDetails = { session: { awardDetails: claimData.validClaim() } };
 
@@ -27,11 +28,7 @@ describe('Stop State Pension controller', () => {
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 30);
-    });
+    testPromise = promiseWait();
   });
 
   describe('getStopStatePension function (GET /changes-and-enquiries/personal/stop-state-pension)', () => {

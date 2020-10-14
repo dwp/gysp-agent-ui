@@ -9,6 +9,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const findClaimController = require('../../../app/routes/find-claim/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -52,11 +53,7 @@ describe('Find Claim controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with error when API returns 500 state', () => {

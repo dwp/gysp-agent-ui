@@ -7,6 +7,7 @@ const controller = require('../../../../app/routes/changes-enquiries/deferral/fu
 
 const claimData = require('../../../lib/claimData');
 const responseHelper = require('../../../lib/responseHelper');
+const { promiseWait } = require('../../../lib/unitHelper');
 
 const awardDetails = { session: { awardDetails: claimData.validClaim() } };
 
@@ -81,11 +82,7 @@ describe('Deferral controller', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 30);
-    });
+    testPromise = promiseWait();
 
     flash = { type: '', message: '' };
   });

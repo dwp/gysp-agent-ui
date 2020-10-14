@@ -14,6 +14,7 @@ const controller = require('../../../app/routes/changes-enquiries/death-payee/fu
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 const addressData = require('../../lib/addressData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let genericResponse = {};
 
@@ -235,11 +236,7 @@ describe('Change circumstances date of death controller ', () => {
 
     checkPayeeDetailsRequest = { session: { awardDetails: claimData.validClaim() } };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 30);
-    });
+    testPromise = promiseWait();
   });
 
   afterEach(() => {

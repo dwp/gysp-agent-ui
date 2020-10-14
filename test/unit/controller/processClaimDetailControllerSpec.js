@@ -8,6 +8,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-detail/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -37,11 +38,7 @@ describe('Process claim detail controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view when API returns none 404 state', () => {

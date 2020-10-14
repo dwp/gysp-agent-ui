@@ -8,6 +8,7 @@ const changeAccountDetailsController = require('../../../app/routes/changes-enqu
 
 const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse = {};
@@ -48,12 +49,7 @@ describe('Change circumstances contact controller ', () => {
         },
       },
     };
-
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 30);
-    });
+    testPromise = promiseWait();
   });
   afterEach(() => {
     nock.cleanAll();

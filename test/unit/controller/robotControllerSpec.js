@@ -9,6 +9,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const claimController = require('../../../app/routes/robot/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -60,11 +61,7 @@ describe('Robot controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 100);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with error when API returns 500 state', () => {
@@ -149,11 +146,7 @@ describe('Robot controller ', () => {
       },
     };
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return view with error when API returns 404 state', () => {

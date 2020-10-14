@@ -8,6 +8,7 @@ const i18next = require('i18next');
 const i18nextFsBackend = require('i18next-fs-backend');
 
 const i18nextConfig = require('../../../config/i18next');
+const { promiseWait } = require('../../lib/unitHelper');
 
 chai.use(chaiAsPromised);
 
@@ -150,11 +151,7 @@ describe('Claim information controller ', () => {
       },
     };
 
-    testPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 20);
-    });
+    testPromise = promiseWait();
   });
 
   describe(' getClaimInformation function ', () => {

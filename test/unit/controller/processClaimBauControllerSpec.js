@@ -8,6 +8,7 @@ const nock = require('nock');
 nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-to-bau/functions');
+const { promiseWait } = require('../../lib/unitHelper');
 
 let testPromise;
 let genericResponse;
@@ -68,11 +69,7 @@ describe('Process claim send to BAU controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return and redirect back when API returns a 200 response', () => {
@@ -108,11 +105,7 @@ describe('Process claim send to BAU controller', () => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
     beforeEach(() => {
-      testPromise = new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 20);
-      });
+      testPromise = promiseWait();
     });
 
     it('should return and redirect back when API returns a 200 response', () => {
