@@ -28,8 +28,10 @@ const statePensionUpdateTypes = ['new-state-pension', 'protected-payment', 'inhe
 
 const ninoRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
 const marriedRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried() } };
+const noSpouseDobRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.noSpouseDob() } };
 const singleToMarriedRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimSingle(), marital: { maritalStatus: 'married' } } };
 const singleToCivilRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimSingle(), marital: { maritalStatus: 'civil' } } };
+const spouseDobVerifiedRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.spouseDobVerified() } };
 
 const maritalDivorcedStatusRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { maritalStatus: 'divorced' } } };
 
@@ -78,7 +80,9 @@ const validNinoPostRequest = {
 const emptyDobPostRequest = { session: { awardDetails: claimData.validClaimMarried() }, body: {} };
 const validDobPostRequest = {
   session: { awardDetails: claimData.validClaimMarried() },
-  body: { dobDay: '01', dobMonth: '01', dobYear: '1980' },
+  body: {
+    dobDay: '01', dobMonth: '01', dobYear: '1980', dobVerified: 'V',
+  },
   flash: flashMock,
 };
 
@@ -448,11 +452,22 @@ describe('Change circumstances - marital controller', () => {
   });
 
   describe('getPartnerDateOfBirth function (GET /changes-enquiries/marital-details/date-of-birth)', () => {
-    it('should return dob view with empty date of birht when requested', () => {
-      controller.getPartnerDateOfBirth(marriedRequest, genericResponse);
+    it('should return dob view with empty date of birth when requested', () => {
+      controller.getPartnerDateOfBirth(noSpouseDobRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/dob');
       assert.equal(genericResponse.data.maritalStatus, 'married');
-      assert.isUndefined(genericResponse.data.details);
+      assert.deepEqual(genericResponse.data.details, {
+        dobDay: '', dobMonth: '', dobYear: '',
+      });
+    });
+
+    it('should return dob view with populated date of birth when requested', () => {
+      controller.getPartnerDateOfBirth(spouseDobVerifiedRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/dob');
+      assert.equal(genericResponse.data.maritalStatus, 'married');
+      assert.deepEqual(genericResponse.data.details, {
+        dobDay: '19', dobMonth: '3', dobYear: '1952',
+      });
     });
   });
 
@@ -460,7 +475,7 @@ describe('Change circumstances - marital controller', () => {
     it('should return view name with errors when called with empty post', () => {
       controller.postPartnerDateOfBirth(emptyDobPostRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/dob');
-      assert.lengthOf(Object.keys(genericResponse.data.errors), 4);
+      assert.lengthOf(Object.keys(genericResponse.data.errors), 5);
       assert.equal(genericResponse.data.maritalStatus, 'married');
       assert.deepEqual(genericResponse.data.details, {});
     });

@@ -22,6 +22,11 @@
           "future": "Spouse's date of birth must be in the past"
         },
         "success-message": "Spouse details updated"
+      },
+      "dobVerified": {
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
       }
     }
   },
@@ -48,6 +53,11 @@
           "future": "Partner's date of birth must be in the past"
         },
         "success-message": "Partner details updated"
+      },
+      "dobVerified": {
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
       }
     }
   },
@@ -74,6 +84,11 @@
           "future": "Ex-spouse's date of birth must be in the past"
         },
         "success-message": "Ex-spouse details updated"
+      },
+      "dobVerified": {
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
       }
     }
   },
@@ -100,6 +115,11 @@
           "future": "Ex-partner's date of birth must be in the past"
         },
         "success-message": "Ex-partner details updated"
+      },
+      "dobVerified": {
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
       }
     }
   },
@@ -126,6 +146,11 @@
           "future": "Late spouse or partner's date of birth must be in the past"
         },
         "success-message": "Late spouse or partner details updated"
+      },
+      "dobVerified": {
+        "errors": {
+          "required": "Select whether the date of birth is verified or not verified"
+        }
       }
     }
   }

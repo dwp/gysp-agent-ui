@@ -37,6 +37,16 @@ module.exports = {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalSingle(),
     };
   },
+  validClaimNoSpouseDob() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.noSpouseDob(),
+    };
+  },
+  validClaimSpouseDobVerified() {
+    return {
+      ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.spouseDobVerified(),
+    };
+  },
   validClaimMarried() {
     return {
       ...this.validBase(), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validMaritalMarried(),
@@ -166,6 +176,34 @@ module.exports = {
     return {
       maritalStatus: 'Single',
       partnerDetail: null,
+    };
+  },
+  noSpouseDob() {
+    return {
+      maritalStatus: 'Married',
+      maritalStatusVerified: false,
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloggs',
+        allOtherNames: 'Middle',
+        marriageDate: '2000-03-19T00:00:00.000Z',
+        partnerNino: 'AA123456C',
+      },
+    };
+  },
+  spouseDobVerified() {
+    return {
+      maritalStatus: 'Married',
+      maritalStatusVerified: false,
+      partnerDetail: {
+        firstName: 'Jane',
+        surname: 'Bloggs',
+        allOtherNames: 'Middle',
+        dob: '1952-03-19T00:00:00.000Z',
+        dobVerified: true,
+        marriageDate: '2000-03-19T00:00:00.000Z',
+        partnerNino: 'AA123456C',
+      },
     };
   },
   validMaritalMarried() {

@@ -114,7 +114,7 @@ const dobAddFormatted = {
     surname: 'Bloggs',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
-    dobVerified: false,
+    dobVerified: true,
     marriageDate: '2000-03-19T00:00:00.000Z',
   },
 };
@@ -238,7 +238,9 @@ const dateDetailsNotVerified = {
 
 const partnerNinoDetails = { partnerNino: 'AA123456A' };
 
-const partnerDobDetails = { dobYear: '1952', dobMonth: '03', dobDay: '19' };
+const partnerDobDetails = {
+  dobYear: '1952', dobMonth: '03', dobDay: '19', dobVerified: 'V',
+};
 
 const partnerAllDetails = {
   firstName: 'Jane',
@@ -247,6 +249,7 @@ const partnerAllDetails = {
   dobYear: '1952',
   dobMonth: '03',
   dobDay: '19',
+  dobVerified: 'V',
   partnerNino: 'AA123456A',
 };
 
@@ -257,6 +260,7 @@ const partnerOptionalNotCompleteDetails = {
   dobYear: '',
   dobMonth: '',
   dobDay: '',
+  dobVerified: 'NV',
   partnerNino: '',
 };
 

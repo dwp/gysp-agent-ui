@@ -205,8 +205,14 @@ async function postChangePartnerNino(req, res) {
 
 function getPartnerDateOfBirth(req, res) {
   const award = dataStore.get(req, 'awardDetails');
+  const dob = award.partnerDetail.dob ? dateHelper.epochDateToComponents(award.partnerDetail.dob) : { day: '', month: '', year: '' };
   const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
   res.render('pages/changes-enquiries/marital/dob', {
+    details: {
+      dobDay: dob.day,
+      dobMonth: dob.month,
+      dobYear: dob.year,
+    },
     maritalStatus,
   });
 }

@@ -275,26 +275,26 @@ describe('marital validator', () => {
     maritalStatus.forEach((status) => {
       it(`should return no error when valid data is supplied - ${status} status`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '2019', dobMonth: '01', dobDay: '01',
+          dobYear: '2019', dobMonth: '01', dobDay: '01', dobVerified: 'V',
         });
         assert.equal(Object.keys(errors).length, 0);
       });
 
       it(`should return all errors when empty - ${status} status`, () => {
         const errors = validator.partnerDobValidator({ }, status);
-        assert.equal(Object.keys(errors).length, 4);
+        assert.equal(Object.keys(errors).length, 5);
       });
 
       it(`should return all errors when blank - ${status}`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '', dobMonth: '', dobDay: '',
+          dobYear: '', dobMonth: '', dobDay: '', dobVerified: '',
         }, status);
-        assert.equal(Object.keys(errors).length, 4);
+        assert.equal(Object.keys(errors).length, 5);
       });
 
       it(`should return error when date in the future - ${status}`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '2099', dobMonth: '01', dobDay: '01',
+          dobYear: '2099', dobMonth: '01', dobDay: '01', dobVerified: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 1);
         assert.equal(errors.dob.text, i18next.t(`marital-detail:${status}.fields.dob.errors.future`));
@@ -302,7 +302,7 @@ describe('marital validator', () => {
 
       it(`should return error when year is invalid - ${status}`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '20', dobMonth: '01', dobDay: '01',
+          dobYear: '20', dobMonth: '01', dobDay: '01', dobVerified: 'NV',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
         assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
@@ -310,7 +310,7 @@ describe('marital validator', () => {
 
       it(`should return error when month is invalid - ${status}`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '2018', dobMonth: '20', dobDay: '01',
+          dobYear: '2018', dobMonth: '20', dobDay: '01', dobVerified: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
         assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
@@ -318,10 +318,18 @@ describe('marital validator', () => {
 
       it(`should return error when day is invalid - ${status}`, () => {
         const errors = validator.partnerDobValidator({
-          dobYear: '2018', dobMonth: '01', dobDay: '40',
+          dobYear: '2018', dobMonth: '01', dobDay: '40', dobVerified: 'NV',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
         assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
+      });
+
+      it('should return error when dobVerified is not specified', () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2018', dobMonth: '01', dobDay: '01', dobVerified: 'X',
+        }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.dobVerified.text, 'Select whether the date of birth is verified or not verified');
       });
     });
   });

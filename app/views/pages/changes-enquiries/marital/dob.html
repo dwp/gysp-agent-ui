@@ -2,6 +2,7 @@
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block pageTitle %}{{ t("marital-detail:" + maritalStatus + ".fields.dob.legend") }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
 
@@ -47,6 +48,22 @@
         attributes: { maxlength: '4' }
       }],
       errorMessage: errors.dob
+    }) }}
+
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "dobVerified",
+      items: [
+        {
+          value: 'V',
+          text: t("app:verification-status.verified"),
+        },
+        {
+          value: 'NV',
+          text: t("app:verification-status.not-verified"),
+        }
+      ],
+      errorMessage: errors.dobVerified
     }) }}
 
     {{ govukButton({

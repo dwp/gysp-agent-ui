@@ -20,83 +20,14 @@ const basePartnerObject = {
   partnerNino: 'AA123456A',
 };
 
-const nullPartnerDetails = {
-  maritalStatus: 'Married',
-  partnerDetail: {
-    firstName: null,
-    surname: null,
-    allOtherNames: null,
-    dob: null,
-    partnerNino: null,
-    marriageDate: '2000-04-19T17:26:35.089Z',
-  },
+const basePartnerDetail = {
+  firstName: 'Joe',
+  surname: 'Bloggs',
+  allOtherNames: 'Middle',
+  dob: '19 March 1953',
+  dobVerified: false,
+  partnerNino: 'AA 12 34 56 A',
 };
-
-const basePartnerDetailRows = [{
-  key: { text: 'First name', classes: 'gysp-col-1' },
-  value: { text: 'Joe' },
-}, {
-  key: { text: 'Last name', classes: 'gysp-col-1' },
-  value: { text: 'Bloggs' },
-}, {
-  key: { text: 'Other names', classes: 'gysp-col-1' },
-  value: { text: 'Middle' },
-}, {
-  key: { text: 'Date of birth', classes: 'gysp-col-1' },
-  value: { text: '19 March 1953' },
-  actions: {
-    items: [{
-      href: '/changes-and-enquiries/marital-details/date-of-birth',
-      text: 'Change',
-      visuallyHiddenText: 'date of birth',
-      classes: 'govuk-link--no-visited-state',
-    }],
-  },
-}, {
-  key: { text: 'National Insurance number', classes: 'gysp-col-1' },
-  value: { text: 'AA 12 34 56 A' },
-  actions: {
-    items: [{
-      href: '/changes-and-enquiries/marital-details/nino',
-      text: 'Change',
-      visuallyHiddenText: 'national insurance number',
-      classes: 'govuk-link--no-visited-state',
-    }],
-  },
-}];
-
-const blankPartnerDetailRows = [{
-  key: { text: 'First name', classes: 'gysp-col-1' },
-  value: { text: '' },
-}, {
-  key: { text: 'Last name', classes: 'gysp-col-1' },
-  value: { text: '' },
-}, {
-  key: { text: 'Other names', classes: 'gysp-col-1' },
-  value: { text: '' },
-}, {
-  key: { text: 'Date of birth', classes: 'gysp-col-1' },
-  value: { text: '' },
-  actions: {
-    items: [{
-      href: '/changes-and-enquiries/marital-details/date-of-birth',
-      text: 'Add',
-      visuallyHiddenText: 'date of birth',
-      classes: 'govuk-link--no-visited-state',
-    }],
-  },
-}, {
-  key: { text: 'National Insurance number', classes: 'gysp-col-1' },
-  value: { text: '' },
-  actions: {
-    items: [{
-      href: '/changes-and-enquiries/marital-details/nino',
-      text: 'Add',
-      visuallyHiddenText: 'national insurance number',
-      classes: 'govuk-link--no-visited-state',
-    }],
-  },
-}];
 
 const validObjects = {
   married: {
@@ -130,10 +61,6 @@ describe('maritalDetailsObject ', () => {
       assert.isNull(formatted);
     });
 
-    it('should return blank partner details when values are null', () => {
-      const formatted = maritalDetailsObject.formatter(nullPartnerDetails);
-      assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows);
-    });
     validObjectsArray.forEach((item) => {
       it(`should return object when partner details are present with a status of ${item.object.maritalStatus}`, () => {
         const formatted = maritalDetailsObject.formatter(item.object);
@@ -141,8 +68,8 @@ describe('maritalDetailsObject ', () => {
         assert.equal(formatted.details.status, i18next.t(`marital-details:details.summary.values.status.${item.key}`));
         assert.equal(formatted.details.dateLabel, i18next.t(`marital-details:details.summary.keys.date.${item.key}`));
         assert.equal(formatted.details.date, '19 April 2000');
-        assert.equal(formatted.partnerSummary.header, i18next.t(`marital-details:partner-details.header.${item.key}`));
-        assert.deepEqual(formatted.partnerSummary.rows, basePartnerDetailRows);
+        assert.equal(formatted.status, item.key);
+        assert.deepEqual(formatted.partnerDetail, basePartnerDetail);
       });
     });
   });

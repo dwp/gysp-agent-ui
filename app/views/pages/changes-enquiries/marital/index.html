@@ -1,7 +1,6 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 {% block pageTitle %}{{ t('marital-details:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
 
@@ -16,35 +15,87 @@
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ t('marital-details:header') }}</h1>
   <table id="marital-details" class="govuk-table">
-      <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell gysp-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
-          <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        <th class="govuk-table__cell gysp-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
+        <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
+        <td class="govuk-table__cell govuk-table__header--numeric">
+          <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
+        </td>
+      </tr>
+      <tr class="govuk-table__row">
+        <th class="govuk-table__cell gysp-col-1" scope="row">{{ maritalDetails.details.dateLabel }}</th>
+        <td class="govuk-table__cell" {% if maritalDetails.details.maritalStatusVerified %}colspan="2"{% endif %}>
+          {{ maritalDetails.details.date }}
+          <span class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-padding-left-6 gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if maritalDetails.details.maritalStatusVerified else 'inactive' }}">
+            {{ t('app:verification-status.verified') if maritalDetails.details.maritalStatusVerified else t('app:verification-status.not-verified') }}
+          </span>
+        </td>
+        {% if not maritalDetails.details.maritalStatusVerified %}
           <td class="govuk-table__cell govuk-table__header--numeric">
-            <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
+            <a href="/changes-and-enquiries/marital-details/date" class="govuk-link govuk-link--no-visited-state">
+              {{ t('app:link.change') }}
+              <span class="govuk-visually-hidden"> {{ maritalDetails.details.dateLabel | lower }}</span>
+            </a>
           </td>
-        </tr>
-        <tr class="govuk-table__row">
-          <th class="govuk-table__cell gysp-col-1" scope="row">{{ maritalDetails.details.dateLabel }}</th>
-          <td class="govuk-table__cell">
-            {{ maritalDetails.details.date }}
-            <span class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-padding-left-6 gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if maritalDetails.details.maritalStatusVerified else 'inactive' }}">
-              {{ t('app:verification-status.verified') if maritalDetails.details.maritalStatusVerified else t('app:verification-status.not-verified') }}
-            </span>
-          </td>
-          <td class="govuk-table__cell govuk-table__header--numeric">
-            <a href="/changes-and-enquiries/marital-details/date" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ maritalDetails.details.dateLabel | lower }}</span></a>
-          </td>
-        </tr>
-      </tbody>
+        {% endif %}
+      </tr>
+    </tbody>
   </table>
-  {{ govukSummaryList({
-    rows: maritalDetails.detailsSummaryRows
-  }) }}
 
-  <h2 class="govuk-heading-m">{{ maritalDetails.partnerSummary.header }}</h2>
-  {{ govukSummaryList({
-    rows: maritalDetails.partnerSummary.rows
-  }) }}
+  <h2 class="govuk-heading-m">{{ t('marital-details:partner-details.header.' + maritalDetails.status) }}</h2>
+  <dl class="govuk-summary-list">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.first-name') }}</dt>
+      <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.firstName }}</dd>
+      <span class="govuk-summary-list__actions gysp-summary-list__actions"></span>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.surname') }}</dt>
+      <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.surname }}</dd>
+      <span class="govuk-summary-list__actions gysp-summary-list__actions"></span>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.other-names') }}</dt>
+      <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.allOtherNames }}</dd>
+      <span class="govuk-summary-list__actions gysp-summary-list__actions"></span>
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.dob') }}</dt>
+      {% if maritalDetails.partnerDetail.dobVerified %}
+        <dd class="govuk-summary-list__value">
+          {{ maritalDetails.partnerDetail.dob }}
+        </dd>
+        <dd class="govuk-summary-list__actions gysp-summary-list__actions">
+          <span class="govuk-!-font-size-16 govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--active gysp-summary-list__status gysp-summary-list__status__active">
+            {{ t('app:verification-status.verified') }}
+          </span>
+        </dd>
+      {% else %}
+        <dd class="govuk-summary-list__value">
+          {{ maritalDetails.partnerDetail.dob }}
+          <span class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-padding-left-6 gysp-secondary-text-colour gysp-status gysp-status--inactive gysp-summary-list__status gysp-summary-list__status__inactive">
+            {{ t('app:verification-status.not-verified') }}
+          </span>
+        </dd>
+        <dd class="govuk-summary-list__actions gysp-summary-list__actions">
+          <a class="govuk-link govuk-link--no-visited-state" href="/changes-and-enquiries/marital-details/date-of-birth">
+            {% if maritalDetails.partnerDetail.dob %}{{ t('app:link.change') }}{% else %}{{ t('app:link.add') }}{% endif %}
+            <span class="govuk-visually-hidden"> {{ t('marital-details:partner-details.summary-keys.dob') | lower }}</span>
+          </a>
+        </dd>
+      {% endif %}
+    </div>
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.nino') }}</dt>
+      <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.partnerNino }}</dd>
+      <dd class="govuk-summary-list__actions gysp-summary-list__actions">
+        <a class="govuk-link govuk-link--no-visited-state" href="/changes-and-enquiries/marital-details/nino">
+          {% if maritalDetails.partnerDetail.partnerNino %}{{ t('app:link.change') }}{% else %}{{ t('app:link.add') }}{% endif %}
+          <span class="govuk-visually-hidden"> {{ t('marital-details:partner-details.summary-keys.nino') | lower }}</span>
+        </a>
+      </dd>
+    </div>
+  </dl>
 
 {% endblock %}

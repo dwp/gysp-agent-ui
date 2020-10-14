@@ -267,3 +267,27 @@
         text-decoration: none;
     }
 }
+
+.gysp-summary-list {
+    &__actions {
+        width: 80px;
+
+        &__status {
+            vertical-align: middle;
+        }
+    }
+
+    &__status {      
+        @include govuk-media-query($until: tablet) {
+            float: none;
+        }
+
+        &__active {
+            margin-top: 0;
+        }
+
+        &__inactive {
+            margin-top: 3px;
+        }
+    }
+}
