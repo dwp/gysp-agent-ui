@@ -48,6 +48,10 @@
         "verified": "Date spouse or partner died verified",
         "not-verified": "Date spouse or partner died not verified"
       },
+      "civil": {
+        "verified": "Date of civil partnership verified",
+        "not-verified": "Date of civil partnership not verified"
+      },
       "dissolved": {
         "verified": "Date civil partnership was dissolved verified",
         "not-verified": "Date civil partnership was dissolved not verified"
