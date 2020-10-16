@@ -26,13 +26,13 @@ describe('manualPaymentTableObject', () => {
       assert.isFalse(manualPaymentTableObject.formatter({ protectedPaymentAmount: 10, cpsStatePensionAmount: 20 }));
     });
 
-    it('should return formatted manualPaymentTableObject when passed valid data (int)', () => {
-      const result = manualPaymentTableObject.formatter({ protectedPaymentAmount: 10, cpsStatePensionAmount: 20, totalAmount: 30 });
-      assert.deepEqual(result, formatted);
+    it('should return false when passed string values', () => {
+      const result = manualPaymentTableObject.formatter({ protectedPaymentAmount: '10', cpsStatePensionAmount: '20', totalAmount: '30' });
+      assert.isFalse(result);
     });
 
-    it('should return formatted manualPaymentTableObject when passed valid data (string)', () => {
-      const result = manualPaymentTableObject.formatter({ protectedPaymentAmount: '10', cpsStatePensionAmount: '20', totalAmount: '30' });
+    it('should return formatted manualPaymentTableObject when passed valid data (int)', () => {
+      const result = manualPaymentTableObject.formatter({ protectedPaymentAmount: 10, cpsStatePensionAmount: 20, totalAmount: 30 });
       assert.deepEqual(result, formatted);
     });
   });
