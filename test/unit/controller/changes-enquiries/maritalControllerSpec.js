@@ -223,6 +223,7 @@ const emptyUpdateStatePensionAwardAmountPostRequest = (type) => ({
       date: {
         dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
       },
+      '2020-01-01:2018-11-09:73': { entitlementDate: 1546300800000 },
     },
   },
   fullUrl: '/test-url',
@@ -850,7 +851,7 @@ describe('Change circumstances - marital controller', () => {
 
       it('should return a redirect with INTERNAL_SERVER_ERROR flash message message', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('new-state-pension');
-        const endpoint = getValidateNspApiUri('2020-01-01', '100.44');
+        const endpoint = getValidateNspApiUri('2019-01-01', '100.44');
         nock('http://test-url/').get(endpoint).reply(httpStatus.INTERNAL_SERVER_ERROR, { });
         await controller.postUpdateStatePensionAwardAmount({ ...request, body: { amount: '100.44' } }, genericResponse);
         assert.equal(genericResponse.address, '/test-url');
@@ -862,7 +863,7 @@ describe('Change circumstances - marital controller', () => {
 
       it('should return a redirect with BAD_REQUEST flash message message', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('new-state-pension');
-        const endpoint = getValidateNspApiUri('2020-01-01', '100.44');
+        const endpoint = getValidateNspApiUri('2019-01-01', '100.44');
         nock('http://test-url/').get(endpoint).reply(httpStatus.BAD_REQUEST, { });
         await controller.postUpdateStatePensionAwardAmount({ ...request, body: { amount: '100.44' } }, genericResponse);
         assert.equal(genericResponse.address, '/test-url');
@@ -874,7 +875,7 @@ describe('Change circumstances - marital controller', () => {
 
       it('should return a redirect to update state pension award when validation is passed', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('new-state-pension');
-        nock('http://test-url/').get(getValidateNspApiUri('2020-01-01', '100.44')).reply(httpStatus.OK, { valid: true, validation: { max: 0 } });
+        nock('http://test-url/').get(getValidateNspApiUri('2019-01-01', '100.44')).reply(httpStatus.OK, { valid: true, validation: { max: 0 } });
         await controller.postUpdateStatePensionAwardAmount({ ...request, body: { amount: '100.44' } }, genericResponse);
         assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/update-state-pension-award');
         assert.equal(request.session.marital['update-state-pension-award-new-state-pension'].amount, '100.44');

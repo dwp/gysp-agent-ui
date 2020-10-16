@@ -460,8 +460,9 @@ async function postUpdateStatePensionAwardAmount(req, res) {
     const { type } = req.params;
     const details = req.body;
     const errors = await maritalValidation.updateStatePensionAwardAmountValidator(details, type, (amount) => {
-      const { dateYear, dateMonth, dateDay } = dataStore.get(req, 'date', 'marital') || Object.create(null);
-      const entitlementDate = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
+      const { cacheKey } = buildEntitlementDateApiUri(req);
+      const { entitlementDate: epoch } = dataStore.get(req, cacheKey, 'marital');
+      const entitlementDate = dateHelper.timestampToDateDash(epoch);
       const getValidate = requestHelper.generateGetCall(res.locals.agentGateway + getValidateNspApiUri(entitlementDate, amount), {}, 'payment');
       return request(getValidate);
     });
