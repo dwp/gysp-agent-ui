@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const helmet = require('helmet');
+const noCache = require('nocache');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const session = require('express-session');
@@ -53,20 +54,20 @@ app.use(favicon('./node_modules/govuk-frontend/govuk/assets/images/favicon.ico')
 app.disable('etag');
 
 // Use helmet to set XSS security headers, Content-Security-Policy, etc.
-app.use(helmet());
-app.use(helmet.frameguard({ action: 'deny' }));
-app.use(helmet.noCache());
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    defaultSrc: ['\'self\''],
-    scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'www.google-analytics.com'],
-    imgSrc: ['\'self\'', 'www.google-analytics.com'],
-    fontSrc: ['\'self\'', 'data: blob:'],
+app.use(helmet({
+  referrerPolicy: false,
+  frameguard: { action: 'deny' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ['\'self\''],
+      scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'www.google-analytics.com'],
+      imgSrc: ['\'self\'', 'www.google-analytics.com'],
+      fontSrc: ['\'self\'', 'data: blob:'],
+    },
+    reportOnly: false,
   },
-  reportOnly: false,
-  setAllHeaders: true,
-  disableAndroid: false,
 }));
+app.use(noCache());
 
 app.set('trust proxy', 1);
 
