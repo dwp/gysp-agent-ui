@@ -15,7 +15,7 @@
 
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ pageData.header }}</h1>
-  <form method="post" action="{{ pageData.formAction }}" autocomplete="off">
+  <form method="post" action="{{ pageData.formAction }}" autocomplete="off" novalidate>
     {{ govukInput({
       id: "accountName",
       name: "accountName",

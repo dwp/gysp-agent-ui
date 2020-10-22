@@ -24,7 +24,7 @@
           {{ error(messages.error) }}
         {% endif %}
 
-        <form method="post" action="/tasks/task/consider-entitlement/partner-nino" autocomplete="off">
+        <form method="post" action="/tasks/task/consider-entitlement/partner-nino" autocomplete="off" novalidate>
           {{ govukInput({
             label: {
               text: t("entitlement-partner-nino:fields." + maritalStatus + ".partnerNino.label"),

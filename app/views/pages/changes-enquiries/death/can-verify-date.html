@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="{{ formAction }}" autocomplete="off">
+  <form method="post" action="{{ formAction }}" autocomplete="off" novalidate>
 
     {{ govukRadios({
       classes: "govuk-radios--inline",

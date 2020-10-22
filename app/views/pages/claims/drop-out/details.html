@@ -42,7 +42,7 @@
 
                 <div class="gysp-claims-drop-outs__buttons-container">
                     <div class="gysp-claims-drop-outs__button-form">
-                      <form method="post" action="/claims/drop-out/details" id="form-details-{{ details.invitationCode }}" autocomplete="off">
+                      <form method="post" action="/claims/drop-out/details" id="form-details-{{ details.invitationCode }}" autocomplete="off" novalidate>
                         <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
                         {{ govukButton({
                           text: "Get claim form",
@@ -54,7 +54,7 @@
                       </form>
                     </div>
                     <div class="gysp-claims-drop-outs__button-form">
-                      <form method="post" action="/claims/drop-out/details/update-status" id="form-details-{{ details.invitationCode }}" autocomplete="off">
+                      <form method="post" action="/claims/drop-out/details/update-status" id="form-details-{{ details.invitationCode }}" autocomplete="off" novalidate>
                         <input type="hidden" name="status" value="queue" />
                         <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
                         {{ govukButton({
@@ -79,7 +79,7 @@
 
                       {% set fixedDropOutHtml %}
                         <p class="govuk-body">Have you fixed this drop out?</p>
-                        <form method="post" action="/claims/drop-out/details/update-status" id="form-fix-drop-out" autocomplete="off">
+                        <form method="post" action="/claims/drop-out/details/update-status" id="form-fix-drop-out" autocomplete="off" novalidate>
                           <input type="hidden" name="status" value="fixed" />
                           <input type="hidden" name="inviteKey" value="{{ details.invitationCode }}" />
                           {{ govukButton({

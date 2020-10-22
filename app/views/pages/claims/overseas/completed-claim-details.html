@@ -35,7 +35,7 @@
         }) }}
 
         <div class="claims-drop-outs__buttons-container">
-          <form method="post" action="/claims/overseas/completed-claim/details" id="form-details" autocomplete="off">
+          <form method="post" action="/claims/overseas/completed-claim/details" id="form-details" autocomplete="off" novalidate>
             <input type="hidden" name="inviteKey" value="{{ details.inviteKey }}" />
             {{ govukButton({
                 text: 'Get claim form',
@@ -45,7 +45,7 @@
                 }
             }) }}
           </form>
-          <form method="post" action="/claims/overseas/completed-claim/details/update-status" id="form-claim-not-uploaded" autocomplete="off">
+          <form method="post" action="/claims/overseas/completed-claim/details/update-status" id="form-claim-not-uploaded" autocomplete="off" novalidate>
             <input type="hidden" name="status" value="CREATED" />
             <input type="hidden" name="inviteKey" value="{{ details.inviteKey }}" />
             {{ govukButton({
@@ -68,7 +68,7 @@
             }) }}
             <div id="fix-completed-claim-form" class="panel panel--border js-hidden">
               <p class="govuk-body">Have you uploaded this claim?</p>
-              <form method="post" action="/claims/overseas/completed-claim/details/update-status" id="form-claim-uploaded" autocomplete="off">
+              <form method="post" action="/claims/overseas/completed-claim/details/update-status" id="form-claim-uploaded" autocomplete="off" novalidate>
                 <input type="hidden" name="status" value="COMPLETE" />
                 <input type="hidden" name="inviteKey" value="{{ details.inviteKey }}" />
                 {{ govukButton({

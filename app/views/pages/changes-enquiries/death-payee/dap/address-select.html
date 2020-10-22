@@ -18,7 +18,7 @@
   <h2 class="govuk-heading-s">Postcode <br>
   {{ postCodeDetails.postcode }} <a href="address" class="govuk-link govuk-link--no-visited-state">Change</a></h2>
 
-  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/address-select" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/address-select" autocomplete="off" novalidate>
     {{ govukSelect({
       label: {
         text: t("death-check-payee-dap:fields.address.label")

@@ -33,7 +33,7 @@
 {% if details %}
     <div class="govuk-grid-row no-js">
         <div class="govuk-grid-column-full">
-            <form method="post" action="/claims/next-claim/download" id="form-details-status-{{ details.inviteKey }}" autocomplete="off">
+            <form method="post" action="/claims/next-claim/download" id="form-details-status-{{ details.inviteKey }}" autocomplete="off" novalidate>
                 <input type="hidden" name="encodedPdf" value="{{ encodedPdf }}" />
                 <input type="hidden" name="filename" value="{{ details.pdfFilename }}" />
                 {{ govukButton({
@@ -105,7 +105,7 @@
         </div>
     </div>
 {% endif %}
-<form method="post" action="/claims/next-claim" id="form__next-claim" autocomplete="off">
+<form method="post" action="/claims/next-claim" id="form__next-claim" autocomplete="off" novalidate>
     <div class="govuk-grid-row no-js">
         <div class="govuk-grid-column-full">
             {{ govukButton({

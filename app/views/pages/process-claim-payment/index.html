@@ -62,7 +62,7 @@
           },
           rows: details.regularPayment.rows
         }) }}
-      <form method="post" action="/process-claim/payment" id="form__create-letter" autocomplete="off">
+      <form method="post" action="/process-claim/payment" id="form__create-letter" autocomplete="off" novalidate>
         {{ govukButton({
           text: 'Create letter',
           attributes: {

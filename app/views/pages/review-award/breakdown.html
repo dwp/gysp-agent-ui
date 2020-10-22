@@ -54,7 +54,7 @@
         rows: details.regularPayment.rows
       }) }}
 
-      <form method="post" action="/review-award/schedule" id="form__create-letter" autocomplete="off">
+      <form method="post" action="/review-award/schedule" id="form__create-letter" autocomplete="off" novalidate>
         {{ govukButton({
           text: details.button,
           attributes: {

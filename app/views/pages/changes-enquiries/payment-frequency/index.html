@@ -16,7 +16,7 @@
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ t("payment-frequency:header") }}</h1>
 
-  <form method="post" action="/changes-and-enquiries/payment/frequency" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/payment/frequency" autocomplete="off" novalidate>
     {{ govukRadios({
       classes: "govuk-radios",
       name: "frequency",

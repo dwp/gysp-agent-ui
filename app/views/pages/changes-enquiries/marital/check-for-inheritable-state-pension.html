@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="{{ formUrl }}" autocomplete="off">
+  <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
     {{ govukRadios({
       classes: "govuk-radios--inline",
       name: "checkInheritableStatePension",

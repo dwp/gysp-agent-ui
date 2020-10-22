@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="/changes-and-enquiries/payment-history/{{ statusDetail.id }}/status-update" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/payment-history/{{ statusDetail.id }}/status-update" autocomplete="off" novalidate>
     {{ govukRadios({
       classes: "govuk-radios--inline",
       name: "statusUpdate",

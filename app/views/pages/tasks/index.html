@@ -15,7 +15,7 @@
 
         {% if tasks %}
             <p class="govuk-body govuk-!-margin-bottom-7">{{ t('tasks:p') }}</p>
-            <form method="post" action="/tasks" id="form-view-tasks" autocomplete="off">
+            <form method="post" action="/tasks" id="form-view-tasks" autocomplete="off" novalidate>
                 {{ govukButton({
                     text: t('tasks:button'),
                     attributes: {

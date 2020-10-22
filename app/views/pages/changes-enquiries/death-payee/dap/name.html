@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block innerContent %}
-  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/name" autocomplete="off">
+  <form method="post" action="/changes-and-enquiries/personal/death/payee-details/name" autocomplete="off" novalidate>
     <h1 class="govuk-heading-l">{{ t("death-check-payee-dap:header.name") }}</h1>
     {{ govukInput({
       label: {
