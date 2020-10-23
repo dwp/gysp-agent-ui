@@ -166,6 +166,18 @@ describe('Form validation', () => {
       assert.equal(errors.dobYear, true);
     });
 
+    it('Should return error when date has non-numeric characters', () => {
+      fullCustomerData.dobDay = 'DD';
+      fullCustomerData.dobMonth = 'MM';
+      fullCustomerData.dobYear = 'YYYY';
+      const errors = validator.customerDetails(fullCustomerData, titles);
+      assert.equal(Object.keys(errors).length, 4);
+      assert.equal(errors.dob.text, 'Date of birth must be a valid date');
+      assert.equal(errors.dobDay, true);
+      assert.equal(errors.dobMonth, true);
+      assert.equal(errors.dobYear, true);
+    });
+
     it('Should return State Pension Date error when invalid date supplied', () => {
       fullCustomerData.dobDay = 12;
       fullCustomerData.dobMonth = 12;
@@ -646,6 +658,14 @@ describe('Form validation', () => {
       assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
 
+    it('should return error when date has non-numeric characters', () => {
+      const errors = validator.dateOfDeathValidation({
+        dateYear: 'YYYY', dateMonth: 'MM', dateDay: 'DD', verification: 'V',
+      });
+      assert.equal(Object.keys(errors).length, 4);
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
+    });
+
     it('should return error when verification is invalid', () => {
       const errors = validator.dateOfDeathValidation({
         dateYear: '2018', dateMonth: '01', dateDay: '01', verification: 'bob',
@@ -736,6 +756,14 @@ describe('Form validation', () => {
       assert.equal(Object.keys(errors).length, 2);
       assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
     });
+
+    it('should return error when date has non-numeric characters', () => {
+      const errors = validator.dateOfDeathVerifiedValidation({
+        dateYear: 'YYYY', dateMonth: 'MM', dateDay: 'DD',
+      });
+      assert.equal(Object.keys(errors).length, 4);
+      assert.equal(errors.date.text, 'Enter a real date of death, like 12 2 2019');
+    });
   });
 
   describe('reviewAwardEntitlementDateValidation validator', () => {
@@ -786,6 +814,14 @@ describe('Form validation', () => {
         dateYear: '2018', dateMonth: '01', dateDay: '40',
       });
       assert.equal(Object.keys(errors).length, 2);
+      assert.equal(errors.date.text, 'Enter a real date');
+    });
+
+    it('should return error when date has non-numeric characters', () => {
+      const errors = validator.reviewAwardEntitlementDateValidation(1541030400000, {
+        dateYear: 'YYYY', dateMonth: 'MM', dateDay: 'DD',
+      });
+      assert.equal(Object.keys(errors).length, 4);
       assert.equal(errors.date.text, 'Enter a real date');
     });
 
@@ -1017,6 +1053,14 @@ describe('Form validation', () => {
           dateYear: '2018', dateMonth: '01', dateDay: '40', verification: 'V',
         }, status);
         assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.format`));
+      });
+
+      it(`should return error when date has non-numeric characters - ${status}`, () => {
+        const errors = validator.maritalDate({
+          dateYear: 'YYYY', dateMonth: 'MM', dateDay: 'DD', verification: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 4);
         assert.equal(errors.date.text, i18next.t(`marital-date:fields.date.errors.${status}.format`));
       });
 
