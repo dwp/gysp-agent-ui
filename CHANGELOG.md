@@ -1,3 +1,19 @@
+## [6.8.1](https://github.com/dwp/gysp-agent-ui/compare/6.8.0...6.8.1) (2020-10-27)
+
+
+### Bug Fixes
+
+* **invalid-character-check:** add validation ([1233444](https://github.com/dwp/gysp-agent-ui/commit/1233444794cd0e5d4460a1ba47c8826e5cc7f09b))
+* **manual-payment:** still show values if £0.00 ([a723e08](https://github.com/dwp/gysp-agent-ui/commit/a723e084eb0aaba81dfc33256cb3140784cb5fea))
+* **widow-date:** update date used ([3a3db4b](https://github.com/dwp/gysp-agent-ui/commit/3a3db4b06e293786c6ed7efe462aaa23a04e6e74))
+
+
+### Features
+
+* **verify-spouse-dob:** add feature to verify spouse dob ([1e3130c](https://github.com/dwp/gysp-agent-ui/commit/1e3130ce63a2ecb674fcef6b4d93db9bb1238321))
+
+
+
 # [6.8.0](https://github.com/dwp/gysp-agent-ui/compare/6.7.0...6.8.0) (2020-10-13)
 
 
