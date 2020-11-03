@@ -5,27 +5,27 @@ const requestHelper = require('../../../lib/requestHelper');
 const errorHelper = require('../../../lib/helpers/errorHelper');
 const redirectHelper = require('../../../lib/helpers/redirectHelper');
 const requestFilterHelper = require('../../../lib/helpers/requestFilterHelper');
+const taskHelper = require('../../../lib/helpers/taskHelper');
 
 const dataStore = require('../../../lib/dataStore');
 const deleteSession = require('../../../lib/deleteSession');
 
 const taskObject = require('../../../lib/objects/view/taskObject');
-const taskDetailObject = require('../../../lib/objects/view/taskDetailObject');
-const maritalDetailsEntitlementApiObject = require('../../../lib/objects/api/maritalDetailsEntitlementObject');
 
 const getWorkItemEndPoint = 'api/workitem/next-workitem';
 const putWorkItemUpdateStatusReturnedEndPoint = 'api/workitem/update-status-returned';
 const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
-const putWorkItemUpdateStatusCompleteEndPoint = 'api/workitem/update-status-complete';
-const putMaritalDetailsEndPoint = 'api/award/update-marital-details';
 
-async function awardDetails(req, res) {
-  const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
-  const detail = await dataStore.cacheRetrieveAndStore(req, 'tasks', 'awardDetails', () => {
+async function awardAndReasonDetails(req, res) {
+  const { inviteKey, workItemReason } = dataStore.get(req, 'work-item', 'tasks');
+  const award = await dataStore.cacheRetrieveAndStore(req, 'tasks', 'awardDetails', () => {
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
     return request(awardCall);
   });
-  return detail;
+  return {
+    award,
+    workItemReason,
+  };
 }
 
 function getTasks(req, res) {
@@ -74,14 +74,9 @@ async function getReturnTaskToQueue(req, res) {
 
 async function getTaskDetail(req, res) {
   try {
-    const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
-    const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
-    const award = await request(awardCall);
-    const updatedEntitlementDetails = dataStore.get(req, 'updated-entitlement-details');
-    const details = taskDetailObject.formatter(award, updatedEntitlementDetails);
-    res.render('pages/tasks/detail', {
-      details,
-    });
+    const { workItemReason, award } = await awardAndReasonDetails(req, res);
+    const { view, data } = taskHelper.taskDetail(req, workItemReason, award);
+    res.render(`pages/tasks/${view}`, data);
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/tasks/task');
   }
@@ -95,24 +90,11 @@ function getTaskComplete(req, res) {
   });
 }
 
-async function updateAwardMaritalDetails(req, res, updatedEntitlementDetails) {
-  const award = await awardDetails(req, res);
-  const maritalDetails = maritalDetailsEntitlementApiObject.formatter(updatedEntitlementDetails, award);
-  const updateMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsEndPoint, maritalDetails, 'award', req.user);
-  return request(updateMaritalDetailsCall);
-}
-
 async function getEndTask(req, res) {
   try {
-    const updatedEntitlementDetails = dataStore.get(req, 'updated-entitlement-details');
-    if (updatedEntitlementDetails) {
-      await updateAwardMaritalDetails(req, res, updatedEntitlementDetails);
-    }
-    const workItem = dataStore.get(req, 'work-item', 'tasks');
-    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.workItem(), workItem);
-    const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusCompleteEndPoint, filteredRequest, 'work-items', req.user);
-    await request(returnCall);
-    redirectHelper.redirectAndClearSessionKey(req, res, ['tasks', 'updated-entitlement-details'], '/tasks');
+    const { workItemReason } = dataStore.get(req, 'work-item', 'tasks');
+    const sessionKeys = await taskHelper.taskEnd(req, res, workItemReason);
+    redirectHelper.redirectAndClearSessionKey(req, res, sessionKeys, '/tasks');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task/complete');
   }

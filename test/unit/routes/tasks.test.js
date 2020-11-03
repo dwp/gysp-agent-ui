@@ -195,7 +195,7 @@ describe('tasks controller ', () => {
     it('should return task view when requested with API response OK - Married', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
       await controller.getTaskDetail(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
       assert.isObject(genericResponse.data.details);
       assert.equal(genericResponse.data.details.partnerSummary.header, "Spouse's details");
       assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
@@ -204,7 +204,7 @@ describe('tasks controller ', () => {
     it('should return task view when requested with API response OK - Civil Partnership', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimCivilPartner());
       await controller.getTaskDetail(civilTaskRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
       assert.isObject(genericResponse.data.details);
       assert.equal(genericResponse.data.details.partnerSummary.header, "Civil partner's details");
       assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');

@@ -1,8 +1,8 @@
 {
   "header": "Complete task",
-  "p": {
-    "married": "If you have checked the spouse's record and completed any necessary actions, you can end this task.",
-    "civilpartnership": "If you have checked the civil partner's record and completed any necessary actions, you can end this task."
+  "content": {
+    "married": "<p class=\"govuk-body\">If you have checked the spouse's record and completed any necessary actions, you can end this task.</p>",
+    "civilpartnership": "<p class=\"govuk-body\">If you have checked the civil partner's record and completed any necessary actions, you can end this task.</p>"
   },
   "button": "End task"
 }

@@ -5,7 +5,7 @@ const i18nextFsBackend = require('i18next-fs-backend');
 
 const i18nextConfig = require('../../../../../config/i18next');
 
-const taskDetailObject = require('../../../../../lib/objects/view/taskDetailObject');
+const taskMaritalDetailObject = require('../../../../../lib/objects/view/taskMaritalDetailObject');
 
 const claimData = require('../../../../lib/claimData');
 
@@ -236,33 +236,33 @@ describe('taskDetailsObject', () => {
 
   describe('formatter', () => {
     it('should return blank optional rows when values are null - married', () => {
-      const formatted = taskDetailObject.formatter(optionalNullPartnerDetails);
+      const formatted = taskMaritalDetailObject.formatter(optionalNullPartnerDetails, 'MARRIED');
       assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('married'));
     });
 
     it('should return blank optional rows when values are not present - married', () => {
-      const formatted = taskDetailObject.formatter(optionalMissingPartnerDetails);
+      const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetails, 'MARRIED');
       assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('married'));
     });
 
     it('should return blank optional rows when values are null - civil', () => {
-      const formatted = taskDetailObject.formatter(optionalNullPartnerDetailsCivil);
+      const formatted = taskMaritalDetailObject.formatter(optionalNullPartnerDetailsCivil, 'CIVILPARTNERSHIP');
       assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('civil'));
     });
 
     it('should return blank optional rows when values are not present - civil', () => {
-      const formatted = taskDetailObject.formatter(optionalMissingPartnerDetailsCivil);
+      const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsCivil, 'CIVILPARTNERSHIP');
       assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('civil'));
     });
 
     it('should return all rows verified when verified fields are true', () => {
-      const formatted = taskDetailObject.formatter(partnerAllElementsVerified);
+      const formatted = taskMaritalDetailObject.formatter(partnerAllElementsVerified, 'MARRIED');
       assert.deepEqual(formatted.partnerSummary.rows, verifiedPartnerDetailRows('married'));
     });
 
     validObjectsArray.forEach((item) => {
       it(`should return object when partner details are present with a status of ${item.object.maritalStatus}`, () => {
-        const formatted = taskDetailObject.formatter(item.object);
+        const formatted = taskMaritalDetailObject.formatter(item.object, item.key);
         assert.isObject(formatted);
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
         assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
@@ -272,7 +272,7 @@ describe('taskDetailsObject', () => {
       });
 
       it(`should return object with updated partner details are present with a status of ${item.object.maritalStatus}`, () => {
-        const formatted = taskDetailObject.formatter(item.object, allItemsUpdated);
+        const formatted = taskMaritalDetailObject.formatter(item.object, item.key, allItemsUpdated);
         assert.isObject(formatted);
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
         assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));

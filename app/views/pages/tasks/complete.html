@@ -25,10 +25,11 @@
         {% endif %}
 
         <h1 class="govuk-heading-xl">{{ t('task-complete:header') }}</h1>
-        <p class="govuk-body govuk-!-margin-bottom-7">{{ t('task-complete:p.' + details.reason) }}</p>
+        {{ t('task-complete:content.' + details.reason) | safe }}
         {{ govukButton({
           text: t('task-complete:button'),
           href: '/tasks/task/end',
+          classes: 'govuk-!-margin-top-6',
           attributes: {
             id: 'task-end'
           }
