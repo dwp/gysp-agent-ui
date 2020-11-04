@@ -1,17 +1,11 @@
-{% extends 'pages/changes-enquiries/layout.html' %}
+{% extends template %}
 {% from "moj/components/currency-input/macro.njk" import mojCurrencyInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% block pageTitle %}{{ t('marital-update-award-amount:fields.amount.' + type + '.label') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+{% block pageTitle %}{{ t('marital-update-award-amount:fields.amount.' + type + '.label') }}{{ super() }}{% endblock %}
 
-{% block sectionBackLink %}
-  {{ govukBackLink({
-    text: t("app:link.back"),
-    href: '/changes-and-enquiries' + backHref,
-    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
-  }) }}
-{% endblock %}
+{% set headerSuffixClass = 'l' if keyDetails else 'xl' %}
 
 {% block innerContent %}
   <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
@@ -24,7 +18,7 @@
       },
       label: {
         text: t('marital-update-award-amount:fields.amount.' + type + '.label'),
-        classes: "govuk-label--l",
+        classes: "govuk-label--" + headerSuffixClass,
         isPageHeading: true
       },
       value: details.amount,

@@ -1,18 +1,12 @@
-{% extends 'pages/changes-enquiries/layout.html' %}
+{% extends template %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "components/input-group/macro.njk" import gyspInputGroup %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
-{% block pageTitle %}{{ t('marital-update-state-pension-award:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+{% block pageTitle %}{{ t('marital-update-state-pension-award:header') }}{{ super() }}{% endblock %}
 
-{% block sectionBackLink %}
-  {{ govukBackLink({
-    text: t("app:link.back"),
-    href: '/changes-and-enquiries' + backHref,
-    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
-  }) }}
-{% endblock %}
+{% set headerSuffixClass = 'l' if keyDetails else 'xl' %}
 
 {% block innerContent %}
   <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
@@ -28,7 +22,7 @@
       fieldset: {
         legend: {
           text: t('marital-update-state-pension-award:header'),
-          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-6",
+          classes: "govuk-fieldset__legend--" + headerSuffixClass + " govuk-!-margin-bottom-6",
           isPageHeading: true
         }
       },

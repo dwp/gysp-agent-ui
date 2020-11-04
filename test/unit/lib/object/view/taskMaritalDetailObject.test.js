@@ -58,6 +58,30 @@ const optionalMissingPartnerDetailsCivil = {
   },
 };
 
+const optionalMissingPartnerDetailsWidowedMarried = {
+  ...claimData.validClaimWidowed(),
+  maritalStatus: 'Widowed',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Joe',
+    surname: 'Bloggs',
+    widowedDate: 1604918918000,
+    marriageDate: 946684800000,
+  },
+};
+
+const optionalMissingPartnerDetailsWidowedCivil = {
+  ...claimData.validClaimWidowed(),
+  maritalStatus: 'Widowed',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Joe',
+    surname: 'Bloggs',
+    widowedDate: 1604918918000,
+    civilPartnershipDate: 946684800000,
+  },
+};
+
 const partnerAllElementsVerified = {
   ...claimData.validClaim(),
   maritalStatus: 'Married',
@@ -65,8 +89,25 @@ const partnerAllElementsVerified = {
   partnerDetail: {
     firstName: 'Joe',
     surname: 'Bloggs',
+    allOtherNames: 'Bob',
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: true,
+    marriageDate: 946684800000,
+    partnerNino: 'AA123456C',
+  },
+};
+
+const partnerAllElementsVerifiedWidowed = {
+  ...claimData.validClaimWidowed(),
+  maritalStatus: 'WIDOWED',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Joe',
+    surname: 'Bloggs',
+    allOtherNames: 'Bob',
+    dob: '1952-03-19T00:00:00.000Z',
+    dobVerified: true,
+    widowedDate: 1604918918000,
     marriageDate: 946684800000,
     partnerNino: 'AA123456C',
   },
@@ -163,13 +204,33 @@ const verifiedPartnerDetailRows = (status) => [{
   value: { text: 'Bloggs' },
 }, {
   key: { text: 'Other names' },
-  value: { text: '' },
+  value: { text: 'Bob' },
 }, {
   key: { text: 'Date of birth' },
   value: { html: '19 March 1952 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    Verified\n  </span>' },
 }, {
   key: { text: i18next.t(`task-detail:partner-details.summary-keys.marital-date.${status}`) },
   value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    Verified\n  </span>' },
+}];
+
+const verifiedPartnerDetailWidowRows = (status) => [{
+  key: { text: 'National Insurance number' },
+  value: { text: 'AA123456C' },
+}, {
+  key: { text: 'First name' },
+  value: { text: 'Joe' },
+}, {
+  key: { text: 'Last name' },
+  value: { text: 'Bloggs' },
+}, {
+  key: { text: 'Other names' },
+  value: { text: 'Bob' },
+}, {
+  key: { text: 'Date of birth' },
+  value: { text: '19 March 1952' },
+}, {
+  key: { text: i18next.t(`task-detail:partner-details.summary-keys.marital-date.${status}`) },
+  value: { text: '1 January 2000' },
 }];
 
 const baseClaimantDetailRows = [{
@@ -209,6 +270,17 @@ const blankPartnerDetailRows = (status) => [{
 }, {
   key: { text: i18next.t(`task-detail:partner-details.summary-keys.marital-date.${status}`) },
   value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n    Verified\n  </span>' },
+}];
+
+const widowedPartnerDetailNoOptionalsRows = (status) => [{
+  key: { text: 'First name' },
+  value: { text: 'Joe' },
+}, {
+  key: { text: 'Last name' },
+  value: { text: 'Bloggs' },
+}, {
+  key: { text: i18next.t(`task-detail:partner-details.summary-keys.marital-date.${status}`) },
+  value: { text: '1 January 2000' },
 }];
 
 const validObjects = {
@@ -255,9 +327,25 @@ describe('taskDetailsObject', () => {
       assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('civil'));
     });
 
+    it('should return miss optional rows when values are not present - widowed (pre married)', () => {
+      const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsWidowedMarried, 'WIDOWED');
+      assert.deepEqual(formatted.partnerSummary.rows, widowedPartnerDetailNoOptionalsRows('married'));
+      assert.equal(formatted.partnerSummary.classes, 'gysp-widow-partner-details-summary');
+    });
+
+    it('should return miss optional rows when values are not present - widowed (pre civil partnership)', () => {
+      const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsWidowedCivil, 'WIDOWED');
+      assert.deepEqual(formatted.partnerSummary.rows, widowedPartnerDetailNoOptionalsRows('civil'));
+    });
+
     it('should return all rows verified when verified fields are true', () => {
       const formatted = taskMaritalDetailObject.formatter(partnerAllElementsVerified, 'MARRIED');
       assert.deepEqual(formatted.partnerSummary.rows, verifiedPartnerDetailRows('married'));
+    });
+
+    it('should return all rows verified when verified fields are true - widowed', () => {
+      const formatted = taskMaritalDetailObject.formatter(partnerAllElementsVerifiedWidowed, 'WIDOWED');
+      assert.deepEqual(formatted.partnerSummary.rows, verifiedPartnerDetailWidowRows('married'));
     });
 
     validObjectsArray.forEach((item) => {
@@ -265,21 +353,58 @@ describe('taskDetailsObject', () => {
         const formatted = taskMaritalDetailObject.formatter(item.object, item.key);
         assert.isObject(formatted);
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
+        assert.isFalse(formatted.hint);
         assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
         assert.deepEqual(formatted.partnerSummary.rows, basePartnerDetailRows(item.key));
+        assert.isUndefined(formatted.partnerSummary.classes);
         assert.equal(formatted.claimantSummary.header, "Claimant's details");
         assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.equal(formatted.buttonHref, '/tasks/task/complete');
       });
 
       it(`should return object with updated partner details are present with a status of ${item.object.maritalStatus}`, () => {
         const formatted = taskMaritalDetailObject.formatter(item.object, item.key, allItemsUpdated);
         assert.isObject(formatted);
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
+        assert.isFalse(formatted.hint);
         assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
         assert.deepEqual(formatted.partnerSummary.rows, updatedPartnerDetailRows(item.key));
+        assert.isUndefined(formatted.partnerSummary.classes);
         assert.equal(formatted.claimantSummary.header, "Claimant's details");
         assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.equal(formatted.buttonHref, '/tasks/task/complete');
       });
+
+      it(`should return object with updated partner details are present with a status of ${item.object.maritalStatus}`, () => {
+        const formatted = taskMaritalDetailObject.formatter(item.object, item.key, allItemsUpdated);
+        assert.isObject(formatted);
+        assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
+        assert.isFalse(formatted.hint);
+        assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
+        assert.deepEqual(formatted.partnerSummary.rows, updatedPartnerDetailRows(item.key));
+        assert.isUndefined(formatted.partnerSummary.classes);
+        assert.equal(formatted.claimantSummary.header, "Claimant's details");
+        assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.equal(formatted.buttonHref, '/tasks/task/complete');
+      });
+    });
+
+
+    it('should return object when partner details are present with a status of widowed', () => {
+      const formatted = taskMaritalDetailObject.formatter(claimData.validClaimWidowed(), 'WIDOWED');
+      assert.isObject(formatted);
+      assert.equal(formatted.header, i18next.t('task-detail:header.widowed'));
+      assert.equal(formatted.hint, i18next.t('task-detail:hint.widowed'));
+      assert.equal(formatted.partnerSummary.header, i18next.t('task-detail:partner-details.header.widowed'));
+      assert.isArray(formatted.partnerSummary.rows);
+      assert.equal(formatted.partnerSummary.classes, 'gysp-widow-partner-details-summary');
+      assert.equal(formatted.claimantSummary.header, "Claimant's details");
+      assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
+      assert.equal(formatted.claimantSummary.classes, 'gysp-widow-partner-details-summary');
+      assert.equal(formatted.buttonHref, '/tasks/task/consider-entitlement/entitled-to-any-inherited-state-pension');
     });
   });
 });

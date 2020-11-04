@@ -7,6 +7,10 @@
     "header": "Consider the State Pension entitlement of a civil partner",
     "p": "Check the record of the claimant's civil partner to see if there is any change to their State Pension entitlement."
   },
+  "widowed": {
+    "header": "Consider State Pension entitlement of a widowed claimant",
+    "p": "Check the record of the late spouse or partner's to see if there is any change to the claimant’s State Pension entitlement."
+  },
   "primary-button": "Start this task",
   "secondary-button": "Return task to queue"
 }

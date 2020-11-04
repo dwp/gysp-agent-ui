@@ -9,7 +9,7 @@
 {% block backLink %}
   <div class="govuk-width-container">
     {{ govukBackLink({
-      text: 'Back',
+      text: t('app:link.back'),
       href: '/tasks/task',
       classes: 'govuk-!-margin-top-8 govuk-!-margin-bottom-0'
     }) }}
@@ -17,6 +17,8 @@
 {% endblock %}
 
 {% block content %}
+
+
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -26,21 +28,25 @@
 
         <h1 class="govuk-heading-xl">{{ details.header }}</h1>
 
+        {% if details.hint %}
+          <p class="govuk-hint govuk-!-margin-bottom-7">{{ details.hint }}</p>
+        {% endif %}
+
         <h2 class="govuk-heading-m">{{ details.partnerSummary.header }}</h2>
         {{ govukSummaryList({
             rows: details.partnerSummary.rows,
-            classes: 'gysp-partner-details-summary'
+            classes: details.partnerSummary.classes or 'gysp-partner-details-summary'
         }) }}
 
         <h2 class="govuk-heading-m">{{ details.claimantSummary.header }}</h2>
         {{ govukSummaryList({
             rows: details.claimantSummary.rows,
-            classes: 'gysp-partner-details-summary'
+            classes: details.claimantSummary.classes or 'gysp-partner-details-summary'
         }) }}
 
         {{ govukButton({
             text: t('app:button.continue'),
-            href: '/tasks/task/complete',
+            href: details.buttonHref,
             attributes: {
                 id: 'task-continue'
             }

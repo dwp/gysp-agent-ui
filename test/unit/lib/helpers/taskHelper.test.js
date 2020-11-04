@@ -23,6 +23,7 @@ const taskWorkReasons = ['MARRIED', 'CIVILPARTNERSHIP'];
 const getAwardByInviteKeyUri = '/api/award/award-by-invite-key';
 const putWorkItemUpdateStatusCompleteUri = '/api/workitem/update-status-complete';
 const putMaritalDetailsUri = '/api/award/update-marital-details';
+const putWidowDetailsUri = '/api/award/update-widow-details';
 
 // Requests
 const session = (object) => ({ session: object });
@@ -38,6 +39,14 @@ const updatedMaritalDetails = {
     dateYear: '2000', dateMonth: '5', dateDay: '19', verification: 'V',
   },
 };
+
+const widowUpdateDetails = {
+  marital: {
+    date: { dateYear: '2000', dateMonth: '5', dateDay: '19' },
+    'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' },
+  },
+};
+
 
 describe('task helper', () => {
   before(async () => {
@@ -65,8 +74,42 @@ describe('task helper', () => {
         assert.isObject(task.data);
       });
     });
+
+    it('should return a WIDOWED entitlement detail page', () => {
+      const task = helper.taskDetail(blankSession, 'WIDOWED', claimData.validClaimWidowed());
+      assert.equal(task.view, 'entitlement/detail');
+      assert.isObject(blankSession.session.marital.date);
+      assert.isObject(task.data);
+    });
   });
 
+  describe('taskComplete', () => {
+    it('should return a MARRIED entitlement complete page', () => {
+      const task = helper.taskComplete({ ...taskRequest('MARRIED') });
+      assert.equal(task.backHref, '/task/detail');
+      assert.isObject(task.details);
+    });
+
+    it('should return a CIVILPARTNERSHIP entitlement complete page', () => {
+      const task = helper.taskComplete({ ...taskRequest('CIVILPARTNERSHIP') });
+      assert.equal(task.backHref, '/task/detail');
+      assert.isObject(task.details);
+    });
+
+    it('should return a WIDOWED entitlement complete page - entitled yes', () => {
+      const yes = { marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' } } };
+      const task = helper.taskComplete({ ...taskRequest('WIDOWED', yes) });
+      assert.equal(task.backHref, '/task/consider-entitlement/update-state-pension-award');
+      assert.isObject(task.details);
+    });
+
+    it('should return a WIDOWED entitlement complete page - entitled no', () => {
+      const no = { marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'no' } } };
+      const task = helper.taskComplete({ ...taskRequest('WIDOWED', no) });
+      assert.equal(task.backHref, '/task/consider-entitlement/entitled-to-any-inherited-state-pension');
+      assert.isObject(task.details);
+    });
+  });
   describe('taskEnd', () => {
     it('should throw error when work reason is not valid', async () => {
       await assert.isRejected(helper.taskEnd(blankSession, genericResponse, 'INVALID'), Error, 'Invalid workItemReason, got INVALID');
@@ -76,13 +119,13 @@ describe('task helper', () => {
       it('should be return a array when successfully call API without updated entitlement details - MARRIED', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(taskRequest('MARRIED'), genericResponse, 'MARRIED');
-        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details']);
+        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'awardDetails']);
       });
 
       it('should be return a array when successfully call API without updated entitlement details - CIVILPARTNERSHIP', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(taskRequest('CIVILPARTNERSHIP'), genericResponse, 'CIVILPARTNERSHIP');
-        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details']);
+        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'awardDetails']);
       });
 
       it('should be return a array when successfully call API with updated entitlement details - MARRIED', async () => {
@@ -91,7 +134,7 @@ describe('task helper', () => {
         nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.OK, {});
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(request, genericResponse, 'MARRIED');
-        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details']);
+        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'awardDetails']);
       });
 
       it('should be return array when successfully call API with updated entitlement details - CIVILPARTNERSHIP', async () => {
@@ -100,7 +143,19 @@ describe('task helper', () => {
         nock('http://test-url/').put(putMaritalDetailsUri).reply(httpStatus.OK, {});
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(request, genericResponse, 'CIVILPARTNERSHIP');
-        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details']);
+        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'awardDetails']);
+      });
+    });
+
+    describe('WIDOWED', () => {
+      it('should be return array when successfully call API with updated entitlement details - WIDOWED', async () => {
+        const extra = { ...widowUpdateDetails, awardDetails: claimData.validClaimWidowed() };
+        const request = taskRequest('WIDOWED', extra);
+        nock('http://test-url/').get(`${getAwardByInviteKeyUri}/${request.session.tasks['work-item'].inviteKey}`).reply(httpStatus.OK, claimData.validClaimWidowed());
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        nock('http://test-url/').put(putWidowDetailsUri).reply(httpStatus.OK, {});
+        const taskEnd = await helper.taskEnd(request, genericResponse, 'WIDOWED');
+        assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'marital', 'awardDetails']);
       });
     });
   });

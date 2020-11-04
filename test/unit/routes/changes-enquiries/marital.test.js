@@ -702,7 +702,7 @@ describe('Change circumstances - marital controller', () => {
   describe('getEntitledToInheritedStatePension function (GET /changes-enquiries/marital-details/entitled-to-any-inherited-state-pension)', () => {
     it('should return view when requested', () => {
       controller.getEntitledToInheritedStatePension(entitledToInheritedStatePensionRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/entitled-to-inherited-state-pension');
+      assert.equal(genericResponse.viewName, 'common/marital/entitled-to-inherited-state-pension');
       assert.equal(genericResponse.data.backHref, '/marital-details/consider-state-pension-entitlement');
       assert.equal(genericResponse.data.formUrl, '/test-url');
       assert.deepEqual(genericResponse.data.details, entitledToInheritedStatePensionRequest.session.marital['entitled-to-inherited-state-pension']);
@@ -712,7 +712,7 @@ describe('Change circumstances - marital controller', () => {
   describe('postEntitledToInheritedStatePension function (POST /changes-enquiries/marital-details/entitled-to-any-inherited-state-pension)', () => {
     it('should return view name with errors when called with empty post', () => {
       controller.postEntitledToInheritedStatePension(emptyEntitledToInheritedStatePensionPostRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/entitled-to-inherited-state-pension');
+      assert.equal(genericResponse.viewName, 'common/marital/entitled-to-inherited-state-pension');
       assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
       assert.equal(genericResponse.data.backHref, '/marital-details/consider-state-pension-entitlement');
       assert.equal(genericResponse.data.formUrl, '/test-url');
@@ -735,7 +735,7 @@ describe('Change circumstances - marital controller', () => {
   describe('getRelevantInheritedAmounts function (GET /changes-enquiries/marital-details/relevant-inherited-amounts)', () => {
     it('should return view when requested', () => {
       controller.getRelevantInheritedAmounts(relevantInheritedAmountsRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/relevant-inherited-amounts');
+      assert.equal(genericResponse.viewName, 'common/marital/relevant-inherited-amounts');
       assert.equal(genericResponse.data.backHref, '/marital-details/entitled-to-any-inherited-state-pension');
       assert.equal(genericResponse.data.formUrl, '/test-url');
       assert.deepEqual(genericResponse.data.details, relevantInheritedAmountsRequest.session.marital['relevant-inherited-amounts']);
@@ -745,7 +745,7 @@ describe('Change circumstances - marital controller', () => {
   describe('postRelevantInheritedAmounts function (POST /changes-enquiries/marital-details/relevant-inherited-amounts)', () => {
     it('should return view name with errors when called with empty post', () => {
       controller.postRelevantInheritedAmounts(emptyRelevantInheritedAmountsPostRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/relevant-inherited-amounts');
+      assert.equal(genericResponse.viewName, 'common/marital/relevant-inherited-amounts');
       assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
       assert.equal(genericResponse.data.backHref, '/marital-details/entitled-to-any-inherited-state-pension');
       assert.equal(genericResponse.data.formUrl, '/test-url');
@@ -782,7 +782,7 @@ describe('Change circumstances - marital controller', () => {
     it('should be return a view with api date when OK message from API', async () => {
       nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, { entitlementDate: 1580968800000 });
       await controller.getUpdateStatePensionAward(updateStatePensionAwardRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
+      assert.equal(genericResponse.viewName, 'common/marital/update-state-pension-award');
       assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
       assert.equal(genericResponse.data.formUrl, '/test-url');
       assert.isObject(genericResponse.data.details);
@@ -790,7 +790,7 @@ describe('Change circumstances - marital controller', () => {
 
     it('should be return a view cached api date', async () => {
       await controller.getUpdateStatePensionAward(updateStatePensionAwardRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
+      assert.equal(genericResponse.viewName, 'common/marital/update-state-pension-award');
       assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
       assert.equal(genericResponse.data.formUrl, '/test-url');
       assert.isObject(genericResponse.data.details);
@@ -820,7 +820,7 @@ describe('Change circumstances - marital controller', () => {
     it('should return view when requested with errors with empty post and call API', async () => {
       nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, { entitlementDate: 1580968800000 });
       await controller.postUpdateStatePensionAward(emptyUpdateStatePensionAwardPostRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-state-pension-award');
+      assert.equal(genericResponse.viewName, 'common/marital/update-state-pension-award');
       assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
       assert.equal(genericResponse.data.backHref, '/marital-details/relevant-inherited-amounts');
       assert.equal(genericResponse.data.formUrl, '/test-url');
@@ -839,7 +839,7 @@ describe('Change circumstances - marital controller', () => {
         it('should return view when requested with details', () => {
           const request = updateStatePensionAwardAmountWithDetailsRequest(type);
           controller.getUpdateStatePensionAwardAmount(request, genericResponse);
-          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-award-amount');
+          assert.equal(genericResponse.viewName, 'common/marital/update-award-amount');
           assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
           assert.equal(genericResponse.data.formUrl, '/test-url');
           assert.deepEqual(genericResponse.data.details, request.session.marital[`update-state-pension-award-${type}`]);
@@ -848,7 +848,7 @@ describe('Change circumstances - marital controller', () => {
         it('should return view when requested without details', () => {
           const request = updateStatePensionAwardAmountWithoutDetailsRequest(type);
           controller.getUpdateStatePensionAwardAmount(request, genericResponse);
-          assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-award-amount');
+          assert.equal(genericResponse.viewName, 'common/marital/update-award-amount');
           assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
           assert.equal(genericResponse.data.formUrl, '/test-url');
           assert.isUndefined(genericResponse.data.details);
@@ -862,7 +862,7 @@ describe('Change circumstances - marital controller', () => {
       it('should return view when requested with errors with empty post', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('new-state-pension');
         await controller.postUpdateStatePensionAwardAmount(request, genericResponse);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-award-amount');
+        assert.equal(genericResponse.viewName, 'common/marital/update-award-amount');
         assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
         assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
         assert.equal(genericResponse.data.formUrl, '/test-url');
@@ -906,7 +906,7 @@ describe('Change circumstances - marital controller', () => {
       it('should return view when requested with errors with empty post', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('protected-payment');
         await controller.postUpdateStatePensionAwardAmount(request, genericResponse);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-award-amount');
+        assert.equal(genericResponse.viewName, 'common/marital/update-award-amount');
         assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
         assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
         assert.equal(genericResponse.data.formUrl, '/test-url');
@@ -925,7 +925,7 @@ describe('Change circumstances - marital controller', () => {
       it('should return view when requested with errors with empty post', async () => {
         const request = emptyUpdateStatePensionAwardAmountPostRequest('inherited-extra-state-pension');
         await controller.postUpdateStatePensionAwardAmount(request, genericResponse);
-        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-award-amount');
+        assert.equal(genericResponse.viewName, 'common/marital/update-award-amount');
         assert.lengthOf(Object.keys(genericResponse.data.errors), 1);
         assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
         assert.equal(genericResponse.data.formUrl, '/test-url');

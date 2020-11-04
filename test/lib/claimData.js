@@ -277,6 +277,7 @@ module.exports = {
   validMaritalWidowed() {
     return {
       maritalStatus: 'Widowed',
+      maritalStatusVerified: true,
       partnerDetail: {
         firstName: 'Jane',
         surname: 'Bloggs',

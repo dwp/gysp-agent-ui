@@ -77,6 +77,32 @@ const detailsVerifiedNoWeeklyUpdated = {
   },
 };
 
+const widowUpdatedEntitledNoEntitlement = {
+  date: {
+    dateYear: '2020', dateMonth: '3', dateDay: '1', verification: 'V',
+  },
+  'entitled-to-inherited-state-pension': {
+    entitledInheritableStatePension: 'no',
+  },
+};
+
+const widowUpdatedEntitledYesEntitlement = {
+  date: {
+    dateYear: '2020', dateMonth: '3', dateDay: '1', verification: 'V',
+  },
+  'entitled-to-inherited-state-pension': {
+    entitledInheritableStatePension: 'yes',
+  },
+  'relevant-inherited-amounts': {
+    additionalPension: '100.14',
+    graduatedBenefit: '',
+    basicExtraStatePension: '',
+    additionalExtraStatePension: '',
+    graduatedBenefitExtraStatePension: '',
+    protectedPayment: '',
+  },
+};
+
 const detailsVerifiedAllUpdated = {
   date: {
     dateYear: '2020', dateMonth: '3', dateDay: '1', verification: 'V',
@@ -145,6 +171,36 @@ const detailsVerifiedAllUpdatedFormatted = {
   },
 };
 
+const detailsTaskEntitledAsFalseFormatted = {
+  nino: 'AA370773A',
+  widowedDate: '2020-03-01T00:00:00.000Z',
+  widowedDateVerified: true,
+  checkInheritableStatePension: true,
+  entitledInheritableStatePension: false,
+  widowedAmounts: null,
+};
+
+const detailsTaskEntitledAsTrueFormatted = {
+  nino: 'AA370773A',
+  widowedDate: '2020-03-01T00:00:00.000Z',
+  widowedDateVerified: true,
+  checkInheritableStatePension: true,
+  entitledInheritableStatePension: true,
+  widowedAmounts: {
+    additionalEspAmount: null,
+    additionalPensionAmount: 100.14,
+    basicPensionEspAmount: null,
+    graduatedBenefitAmount: null,
+    graduatedBenefitEspAmount: null,
+    protectedPaymentInheritableAmount: null,
+    weeklyInheritedExtraStatePensionAmount: 0,
+    weeklyProtectedPaymentAmount: 10,
+    weeklyStatePensionAmount: 100,
+  },
+};
+
+const isTask = true;
+
 describe('maritalWidowDetailsObject', () => {
   describe('formatter', () => {
     it('should return formatted verified widow object with check inheritable state pension as yes', () => {
@@ -154,11 +210,21 @@ describe('maritalWidowDetailsObject', () => {
     it('should return formatted not verified widow object with check inheritable state pension as no', () => {
       assert.deepEqual(maritalDetailsObject.formatter(detailsNegative, claimData.validClaimMarried()), detailsNegativeFormatted);
     });
+
     it('should return formatted verified widow object with updated widowedAmounts', () => {
       assert.deepEqual(maritalDetailsObject.formatter(detailsVerifiedAllUpdated, claimData.validClaimMarried()), detailsVerifiedAllUpdatedFormatted);
     });
+
     it('should return formatted verified widow object with no in payment award', () => {
       assert.deepEqual(maritalDetailsObject.formatter(detailsVerifiedNoWeeklyUpdated, awardNoInPayment), detailsWithEntitledAsTrueFormatted);
+    });
+
+    it('should return formatted verified widow object with widowed amounts as null when is a task and entitledInheritableStatePension is no', () => {
+      assert.deepEqual(maritalDetailsObject.formatter(widowUpdatedEntitledNoEntitlement, claimData.validClaimWidowed(), isTask), detailsTaskEntitledAsFalseFormatted);
+    });
+
+    it('should return formatted verified widow object with widowed amounts as null when is a task and entitledInheritableStatePension is yes', () => {
+      assert.deepEqual(maritalDetailsObject.formatter(widowUpdatedEntitledYesEntitlement, claimData.validClaimWidowed(), isTask), detailsTaskEntitledAsTrueFormatted);
     });
   });
 });

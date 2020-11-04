@@ -15,4 +15,20 @@ router.route('/marital-date')
   .get(functions.getMaritalDate)
   .post(functions.postMaritalDate);
 
+router.route('/entitled-to-any-inherited-state-pension')
+  .get(functions.getEntitledToInheritedStatePension)
+  .post(functions.postEntitledToInheritedStatePension);
+
+router.route('/relevant-inherited-amounts')
+  .get(functions.getRelevantInheritedAmounts)
+  .post(functions.postRelevantInheritedAmounts);
+
+router.route('/update-state-pension-award')
+  .get(functions.getUpdateStatePensionAward)
+  .post(functions.postUpdateStatePensionAward);
+
+router.route('/update-state-pension-award/:type(new-state-pension|protected-payment|inherited-extra-state-pension)')
+  .get(functions.getUpdateStatePensionAwardAmount)
+  .post(functions.postUpdateStatePensionAwardAmount);
+
 module.exports = router;

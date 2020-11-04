@@ -27,6 +27,7 @@ const awardByInviteKeyUri = '/api/award/award-by-invite-key';
 // API Responses
 const marriedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'MARRIED' };
 const civilWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'CIVILPARTNERSHIP' };
+const widowWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'WIDOWED' };
 
 // Mocks
 const flash = { type: '', message: '' };
@@ -61,6 +62,8 @@ const updatedMaritalDetails = {
 
 let marriedTaskRequest;
 let civilTaskRequest;
+let widowNoTaskRequest;
+let widowYesTaskRequest;
 let marriedTaskWithUpdatesRequest;
 
 describe('tasks controller ', () => {
@@ -76,6 +79,8 @@ describe('tasks controller ', () => {
 
     marriedTaskRequest = { session: { tasks: { 'work-item': marriedWorkItem } }, flash: flashMock };
     civilTaskRequest = { session: { tasks: { 'work-item': civilWorkItem } }, flash: flashMock };
+    widowNoTaskRequest = { session: { tasks: { 'work-item': widowWorkItem }, marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'no' } } }, flash: flashMock };
+    widowYesTaskRequest = { session: { tasks: { 'work-item': widowWorkItem }, marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' } } }, flash: flashMock };
     marriedTaskWithUpdatesRequest = { session: { tasks: { 'work-item': marriedWorkItem }, 'updated-entitlement-details': updatedMaritalDetails }, flash: flashMock };
   });
 
@@ -124,6 +129,12 @@ describe('tasks controller ', () => {
       controller.getTask(civilTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/task');
       assert.equal(genericResponse.data.details.reason, 'civilpartnership');
+    });
+
+    it('should return widowed task view when requested', () => {
+      controller.getTask(widowNoTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/task');
+      assert.equal(genericResponse.data.details.reason, 'widowed');
     });
   });
 
@@ -209,19 +220,40 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.data.details.partnerSummary.header, "Civil partner's details");
       assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
     });
+
+    it('should return task view when requested with API response OK - Widowed', async () => {
+      nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimWidowed());
+      await controller.getTaskDetail(widowNoTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
+      assert.isObject(genericResponse.data.details);
+      assert.equal(genericResponse.data.details.partnerSummary.header, "Late spouse or partner's details");
+      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '4');
+    });
   });
 
   describe('getTaskComplete function', () => {
-    it('should return spouse task view when requested', () => {
+    it('should return spouse task view when requested', async () => {
       controller.getTaskComplete(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/complete');
       assert.equal(genericResponse.data.details.reason, 'married');
     });
 
-    it('should return civil partner task view when requested', () => {
+    it('should return civil partner task view when requested', async () => {
       controller.getTaskComplete(civilTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/complete');
       assert.equal(genericResponse.data.details.reason, 'civilpartnership');
+    });
+
+    it('should return widow task view when requested with entitlement no', async () => {
+      controller.getTaskComplete(widowNoTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/complete');
+      assert.equal(genericResponse.data.details.reason, 'widowed-no');
+    });
+
+    it('should return widow task view when requested with entitlement yes', async () => {
+      controller.getTaskComplete(widowYesTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/complete');
+      assert.equal(genericResponse.data.details.reason, 'widowed-yes');
     });
   });
 

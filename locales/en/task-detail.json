@@ -1,12 +1,17 @@
 {
   "header": {
     "married": "Consider spouse entitlement",
-    "civilpartnership": "Consider civil partner entitlement"
+    "civilpartnership": "Consider civil partner entitlement",
+    "widowed": "Consider State Pension entitlement"
+  },
+  "hint": {
+    "widowed": "Check the record of the late spouse or partner to see if any State Pension can be inherited."
   },
   "partner-details": {
     "header": {
       "married": "Spouse's details",
-      "civil": "Civil partner's details"
+      "civil": "Civil partner's details",
+      "widowed": "Late spouse or partner's details"
     },
     "summary-keys": {
       "nino": "National Insurance number",
@@ -16,7 +21,8 @@
       "dob": "Date of birth",
       "marital-date": {
         "married": "Date of marriage",
-        "civil": "Date of civil partnership"
+        "civil": "Date of civil partnership",
+        "widowed": "Date of widowhood"
       }
     }
   },

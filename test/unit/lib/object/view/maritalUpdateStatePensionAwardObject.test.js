@@ -55,7 +55,7 @@ const formattedResponse = {
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
-        href: '/changes-and-enquiries/marital-details/update-state-pension-award/new-state-pension',
+        href: 'update-state-pension-award/new-state-pension',
         text: 'Change',
         visuallyHiddenText: 'new state pension',
       }],
@@ -66,7 +66,7 @@ const formattedResponse = {
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
-        href: '/changes-and-enquiries/marital-details/update-state-pension-award/protected-payment',
+        href: 'update-state-pension-award/protected-payment',
         text: 'Change',
         visuallyHiddenText: 'protected payment',
       }],
@@ -80,7 +80,7 @@ const formattedResponse = {
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
-        href: '/changes-and-enquiries/marital-details/update-state-pension-award/inherited-extra-state-pension',
+        href: 'update-state-pension-award/inherited-extra-state-pension',
         text: 'Change',
         visuallyHiddenText: 'inherited extra state pension',
       }],

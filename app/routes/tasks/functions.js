@@ -18,7 +18,7 @@ const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
 
 async function awardAndReasonDetails(req, res) {
   const { inviteKey, workItemReason } = dataStore.get(req, 'work-item', 'tasks');
-  const award = await dataStore.cacheRetrieveAndStore(req, 'tasks', 'awardDetails', () => {
+  const award = await dataStore.cacheRetrieveAndStore(req, null, 'awardDetails', () => {
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
     return request(awardCall);
   });
@@ -52,7 +52,7 @@ async function postTasks(req, res) {
   }
 }
 
-function getTask(req, res) {
+async function getTask(req, res) {
   const task = dataStore.get(req, 'work-item', 'tasks');
   const details = taskObject.formatter(task);
   res.render('pages/tasks/task', {
@@ -83,10 +83,9 @@ async function getTaskDetail(req, res) {
 }
 
 function getTaskComplete(req, res) {
-  const task = dataStore.get(req, 'work-item', 'tasks');
-  const details = taskObject.complete(task);
+  const details = taskHelper.taskComplete(req, res);
   res.render('pages/tasks/complete', {
-    details,
+    ...details,
   });
 }
 

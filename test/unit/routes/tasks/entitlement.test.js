@@ -23,6 +23,7 @@ const awardByInviteKeyUri = '/api/award/award-by-invite-key';
 // API Responses
 const marriedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'MARRIED' };
 const civilWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'CIVILPARTNERSHIP' };
+const widowedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'WIDOWED' };
 
 // Mocks
 const flash = { type: '', message: '' };
@@ -31,7 +32,7 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
-const taskSession = { tasks: { awardDetails: claimData.validClaimMarried() } };
+const taskSession = { awardDetails: claimData.validClaimMarried() };
 const ninoFormPost = { partnerNino: 'AA112233A' };
 const dateVerificationFormPost = {
   dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
@@ -50,10 +51,20 @@ const updatedEntitlementDetails = {
   },
 };
 
+// File paths
+const tasksLayout = 'pages/tasks/layout.html';
+
 let marriedTaskRequest;
 let marriedTaskUpdatedRequest;
 let civilTaskRequest;
 let civilTaskUpdatedRequest;
+let widowedTaskRequest;
+
+const awardErrorsAssert = (statusCode, inviteKey) => {
+  assert.equal(flash.type, 'error');
+  assert.equal(flash.message, i18next.t(errorHelper.errorMessage(statusCode), { SERVICE: 'award' }));
+  assert.equal(genericResponse.locals.logMessage, `${statusCode} - ${statusCode} - {} - Requested on /api/award/award-by-invite-key/${inviteKey}`);
+};
 
 describe('task entitlement controller ', () => {
   before(async () => {
@@ -70,6 +81,7 @@ describe('task entitlement controller ', () => {
     marriedTaskUpdatedRequest = { session: { tasks: { 'work-item': marriedWorkItem }, 'updated-entitlement-details': updatedEntitlementDetails, flash: flashMock } };
     civilTaskRequest = { session: { tasks: { 'work-item': civilWorkItem } }, flash: flashMock };
     civilTaskUpdatedRequest = { session: { tasks: { 'work-item': civilWorkItem }, 'updated-entitlement-details': updatedEntitlementDetails, flash: flashMock } };
+    widowedTaskRequest = { session: { tasks: { 'work-item': widowedWorkItem }, flash: flashMock } };
   });
 
   describe('getPartnerNino function', () => {
@@ -82,18 +94,14 @@ describe('task entitlement controller ', () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.NOT_FOUND, {});
       await controller.getPartnerNino(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
-      assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.NOT_FOUND, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response INTERNAL_SERVER_ERROR', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.getPartnerNino(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
-      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.INTERNAL_SERVER_ERROR, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response OK - Married', async () => {
@@ -140,18 +148,14 @@ describe('task entitlement controller ', () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.NOT_FOUND, {});
       await controller.getDateOfBirth(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
-      assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.NOT_FOUND, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response INTERNAL_SERVER_ERROR', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.getDateOfBirth(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
-      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.INTERNAL_SERVER_ERROR, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response OK - Married', async () => {
@@ -213,18 +217,14 @@ describe('task entitlement controller ', () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.NOT_FOUND, {});
       await controller.getMaritalDate(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, i18next.t(errorHelper.errorMessage(httpStatus.NOT_FOUND), { SERVICE: 'award' }));
-      assert.equal(genericResponse.locals.logMessage, `404 - 404 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.NOT_FOUND, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response INTERNAL_SERVER_ERROR', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.getMaritalDate(marriedTaskRequest, genericResponse);
       assert.equal(genericResponse.address, '/tasks/task');
-      assert.equal(flash.type, 'error');
-      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
-      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on /api/award/award-by-invite-key/${marriedWorkItem.inviteKey}`);
+      awardErrorsAssert(httpStatus.INTERNAL_SERVER_ERROR, marriedWorkItem.inviteKey);
     });
 
     it('should return task view when requested with API response OK - Married', async () => {
@@ -286,6 +286,19 @@ describe('task entitlement controller ', () => {
       controller.postMaritalDate(validDateOfBirthPostRequest, genericResponse);
       assert.deepEqual(validDateOfBirthPostRequest.session['updated-entitlement-details']['marital-date'], dateVerificationFormPost);
       assert.equal(genericResponse.address, '/tasks/task/detail');
+    });
+  });
+
+  describe('getEntitledToInheritedStatePension function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.getEntitledToInheritedStatePension);
+      assert.isFunction(controller.getEntitledToInheritedStatePension);
+    });
+
+    it('should setup common component', () => {
+      controller.getEntitledToInheritedStatePension(widowedTaskRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/detail');
     });
   });
 });

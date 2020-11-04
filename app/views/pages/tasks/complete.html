@@ -1,20 +1,10 @@
-{% extends 'helpers/layout.html' %}
+{% extends './layout.html' %}
 {% from 'helpers/form.html' import globalError as error %}
 {% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ t('task-complete:header') }}{% endblock %}
-
-{% block backLink %}
-  <div class="govuk-width-container">
-    {{ govukBackLink({
-      text: 'Back',
-      href: '/tasks/task/detail',
-      classes: 'govuk-!-margin-top-8 govuk-!-margin-bottom-0'
-    }) }}
-  </div>
-{% endblock %}
 
 {% block content %}
 

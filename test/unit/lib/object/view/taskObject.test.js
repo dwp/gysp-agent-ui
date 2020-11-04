@@ -19,12 +19,12 @@ describe('taskObject ', () => {
 
   describe('complete', () => {
     it('should return formatted married object when MARRIED data supplied', () => {
-      const formatted = taskObject.complete(marriedWorkItem);
+      const formatted = taskObject.complete(marriedWorkItem.workItemReason);
       assert.equal(formatted.reason, 'married');
     });
 
     it('should return formatted civil partnership object when CIVILPARTNERSHIP supplied', () => {
-      const formatted = taskObject.complete(civilWorkItem);
+      const formatted = taskObject.complete(civilWorkItem.workItemReason);
       assert.equal(formatted.reason, 'civilpartnership');
     });
   });

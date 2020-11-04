@@ -1,0 +1,38 @@
+{% extends template %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t('marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.legend') }}{{ super() }}{% endblock %}
+
+{% set headerSuffixClass = 'l' if keyDetails else 'xl' %}
+
+{% block innerContent %}
+  <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
+    {{ govukRadios({
+      classes: "govuk-radios--inline",
+      name: "entitledInheritableStatePension",
+      fieldset: {
+        legend: {
+          text: t('marital-entitled-to-inherited-state-pension:fields.entitledInheritableStatePension.legend'),
+          isPageHeading: true,
+          classes: "govuk-fieldset__legend--" + headerSuffixClass + " govuk-!-margin-bottom-5"
+        }
+      },
+      items: [{
+        value: "yes",
+        text: t("app:options.yes"),
+        checked: true if details.entitledInheritableStatePension == 'yes' else false
+      }, {
+        value: "no",
+        text: t("app:options.no"),
+        checked: true if details.entitledInheritableStatePension == 'no' else false
+      }],
+      errorMessage: errors.entitledInheritableStatePension
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.continue")
+    }) }}
+  </form>
+{% endblock %}

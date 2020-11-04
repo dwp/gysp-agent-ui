@@ -1,0 +1,35 @@
+{% extends 'helpers/layout.html' %}
+{% from 'helpers/form.html' import globalError as error %}
+{% from 'helpers/global-navigation.html' import globalNavigation %}
+{% from 'helpers/key-details.html' import keyDetailsSection %}
+{% from 'helpers/secondary-navigation.html' import secondaryNavigation %}
+{% from 'helpers/timeline.html' import timeline %}
+{% from 'moj/components/banner/macro.njk' import mojBanner %}
+
+{% block pageTitle %}{% endblock %}
+
+{% if backHref %}
+    {% block backLink %}
+        <div class="govuk-width-container">
+            {{ govukBackLink({
+                text: t("app:link.back"),
+                href: '/tasks' + backHref,
+                classes: "govuk-!-margin-top-8 govuk-!-margin-bottom-0"
+            }) }}
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block content %}
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            {% if globalError %}
+                {{ error(globalError) }}
+            {% endif %}
+            {% if messages.error %}
+                {{ error(messages.error) }}
+            {% endif %}
+            {% block innerContent %} {% endblock %}
+        </div>
+    </div>
+{% endblock %}

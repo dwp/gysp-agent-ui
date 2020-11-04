@@ -147,6 +147,22 @@
     }
 }
 
+.gysp-widow-partner-details-summary {
+    .govuk-summary-list {
+        &__key {
+            @include govuk-media-query($from: tablet) {
+                width: 50%;
+            }
+        }
+
+        &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 50%;
+            }
+        }
+    }
+}
+
 .gysp-payment-details-summary {
     .govuk-summary-list__row {
         &:not(:first-child) {
@@ -277,7 +293,7 @@
         }
     }
 
-    &__status {      
+    &__status {
         @include govuk-media-query($until: tablet) {
             float: none;
         }

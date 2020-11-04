@@ -14,9 +14,15 @@ const dataStore = require('../../../../lib/dataStore');
 
 const getAwardByInviteKeyEndPoint = 'api/award/award-by-invite-key';
 
+const entitledToInheritedStatePension = require('../../../common/marital/entitledToInheritedStatePension');
+const relevantInheritedAmounts = require('../../../common/marital/relevantInheritedAmounts');
+const updateStatePensionAward = require('../../../common/marital/updateStatePensionAward');
+
+const template = 'pages/tasks/layout.html';
+
 async function awardDetails(req, res) {
   const { inviteKey } = dataStore.get(req, 'work-item', 'tasks');
-  const detail = await dataStore.cacheRetrieveAndStore(req, 'tasks', 'awardDetails', () => {
+  const detail = await dataStore.cacheRetrieveAndStore(req, null, 'awardDetails', () => {
     const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}${getAwardByInviteKeyEndPoint}/${inviteKey}`, {}, 'award');
     return request(awardCall);
   });
@@ -34,9 +40,9 @@ async function getPartnerNino(req, res) {
   }
 }
 
-async function postPartnerNino(req, res) {
+function postPartnerNino(req, res) {
   const details = req.body;
-  const { maritalStatus: status } = dataStore.get(req, 'awardDetails', 'tasks');
+  const { maritalStatus: status } = dataStore.get(req, 'awardDetails');
   const maritalStatus = transformToShortStatus(status);
   const errors = maritalNinoValidation(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
@@ -66,9 +72,9 @@ async function getDateOfBirth(req, res) {
   }
 }
 
-async function postDateOfBirth(req, res) {
+function postDateOfBirth(req, res) {
   const details = req.body;
-  const { maritalStatus: status } = dataStore.get(req, 'awardDetails', 'tasks');
+  const { maritalStatus: status } = dataStore.get(req, 'awardDetails');
   const maritalStatus = transformToShortStatus(status);
   const errors = dateOfBirthValidation(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
@@ -97,9 +103,9 @@ async function getMaritalDate(req, res) {
   }
 }
 
-async function postMaritalDate(req, res) {
+function postMaritalDate(req, res) {
   const details = req.body;
-  const { maritalStatus: status } = dataStore.get(req, 'awardDetails', 'tasks');
+  const { maritalStatus: status } = dataStore.get(req, 'awardDetails');
   const maritalStatus = transformToShortStatus(status);
   const errors = maritalDateValidation(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
@@ -115,6 +121,69 @@ async function postMaritalDate(req, res) {
   }
 }
 
+function getEntitledToInheritedStatePension(req, res) {
+  entitledToInheritedStatePension.getEntitledToInheritedStatePension(req, res, {
+    template,
+    backHref: '/task/detail',
+  });
+}
+
+function postEntitledToInheritedStatePension(req, res) {
+  entitledToInheritedStatePension.postEntitledToInheritedStatePension(req, res, {
+    template,
+    backHref: '/task/detail',
+    nextRouteYes: '/tasks/task/consider-entitlement/relevant-inherited-amounts',
+    nextRouteNo: '/tasks/task/complete',
+  });
+}
+
+function getRelevantInheritedAmounts(req, res) {
+  relevantInheritedAmounts.getRelevantInheritedAmounts(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/entitled-to-any-inherited-state-pension',
+  });
+}
+
+function postRelevantInheritedAmounts(req, res) {
+  relevantInheritedAmounts.postRelevantInheritedAmounts(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/entitled-to-any-inherited-state-pension',
+    nextRoute: '/tasks/task/consider-entitlement/update-state-pension-award',
+  });
+}
+
+async function getUpdateStatePensionAward(req, res) {
+  await updateStatePensionAward.getUpdateStatePensionAward(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/relevant-inherited-amounts',
+    errorRedirect: '/tasks/task/consider-entitlement/relevant-inherited-amounts',
+  });
+}
+
+async function postUpdateStatePensionAward(req, res) {
+  await updateStatePensionAward.postUpdateStatePensionAward(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/relevant-inherited-amounts',
+    nextRoute: '/tasks/task/complete',
+    errorRedirect: '/changes-and-enquiries/marital-details/relevant-inherited-amounts',
+  });
+}
+
+function getUpdateStatePensionAwardAmount(req, res) {
+  updateStatePensionAward.getUpdateStatePensionAwardAmount(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/update-state-pension-award',
+  });
+}
+
+async function postUpdateStatePensionAwardAmount(req, res) {
+  await updateStatePensionAward.postUpdateStatePensionAwardAmount(req, res, {
+    template,
+    backHref: '/task/consider-entitlement/update-state-pension-award',
+    nextRoute: '/tasks/task/consider-entitlement/update-state-pension-award',
+  });
+}
+
 module.exports = {
   getPartnerNino,
   postPartnerNino,
@@ -122,4 +191,12 @@ module.exports = {
   postDateOfBirth,
   getMaritalDate,
   postMaritalDate,
+  getEntitledToInheritedStatePension,
+  postEntitledToInheritedStatePension,
+  getRelevantInheritedAmounts,
+  postRelevantInheritedAmounts,
+  getUpdateStatePensionAward,
+  postUpdateStatePensionAward,
+  getUpdateStatePensionAwardAmount,
+  postUpdateStatePensionAwardAmount,
 };

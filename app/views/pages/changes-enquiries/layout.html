@@ -6,6 +6,8 @@
 {% from 'helpers/timeline.html' import timeline %}
 {% from 'moj/components/banner/macro.njk' import mojBanner %}
 
+{% block pageTitle %} - {{ t('app:title.changes-enquiries') }}{% endblock %}
+
 {% block globalNavigation %}
     {{ globalNavigation(activeGlobalNavigationSection) }}
 {% endblock %}
@@ -38,7 +40,15 @@
             {% if secondaryNavigationList %}
                 {{ secondaryNavigation(secondaryNavigationList) }}
             {% endif %}
-            {% block sectionBackLink %}{% endblock %}
+            {% block sectionBackLink %}
+                {% if backHref %}
+                    {{ govukBackLink({
+                        text: t("app:link.back"),
+                        href: '/changes-and-enquiries' + backHref,
+                        classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+                    }) }}
+                {% endif %}
+            {% endblock %}
             {% block innerContent %} {% endblock %}
         </div>
         {% if timelineDetails %}

@@ -346,4 +346,73 @@ describe('marital status helper', () => {
       assert.isFalse(helper.maritalDate({ }, null));
     });
   });
+
+  describe('previousMaritalDate', () => {
+    it('should return false when partnerDetail is undefined', () => {
+      assert.isFalse(helper.previousMaritalDate());
+    });
+
+    it('should return false when partnerDetail is null', () => {
+      assert.isFalse(helper.previousMaritalDate(null));
+    });
+
+    it('should return false when partnerDetail is empty object', () => {
+      assert.isFalse(helper.previousMaritalDate({ }));
+    });
+
+    it('should return false when partnerDetail only has 1 status', () => {
+      assert.isFalse(helper.previousMaritalDate({ marriageDate: 1573296518000 }));
+    });
+
+    it('should return married date when date is second latest date', () => {
+      const result = helper.previousMaritalDate({
+        widowedDate: 1604918918000,
+        marriageDate: 1573296518000,
+        civilPartnershipDate: 1541760518000,
+      });
+      assert.deepEqual(result, { status: 'married', date: 1573296518000 });
+    });
+
+    it('should return civil date when date is second latest date', () => {
+      const result = helper.previousMaritalDate({
+        widowedDate: 1604918918000,
+        marriageDate: 1541760518000,
+        civilPartnershipDate: 1573296518000,
+        divorcedDate: 1510224518000,
+      });
+      assert.deepEqual(result, { status: 'civil', date: 1573296518000 });
+    });
+
+    it('should return divorced date when date is second latest date', () => {
+      const result = helper.previousMaritalDate({
+        widowedDate: 1604918918000,
+        marriageDate: 1541760518000,
+        civilPartnershipDate: 1510224518000,
+        divorcedDate: 1573296518000,
+      });
+      assert.deepEqual(result, { status: 'divorced', date: 1573296518000 });
+    });
+
+    it('should return dissolved date when date is second latest date', () => {
+      const result = helper.previousMaritalDate({
+        widowedDate: 1604918918000,
+        marriageDate: 1541760518000,
+        civilPartnershipDate: 1510224518000,
+        divorcedDate: 1478688518000,
+        dissolvedDate: 1573296518000,
+      });
+      assert.deepEqual(result, { status: 'dissolved', date: 1573296518000 });
+    });
+
+    it('should return widowed date when date is second latest date', () => {
+      const result = helper.previousMaritalDate({
+        widowedDate: 1573296518000,
+        marriageDate: 1604918918000,
+        civilPartnershipDate: 1510224518000,
+        divorcedDate: 1478688518000,
+        dissolvedDate: 1573296518000,
+      });
+      assert.deepEqual(result, { status: 'widowed', date: 1573296518000 });
+    });
+  });
 });
