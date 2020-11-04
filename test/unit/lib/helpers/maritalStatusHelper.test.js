@@ -175,7 +175,11 @@ describe('marital status helper', () => {
     });
 
     it('should return success alert key for marital status changed and award updated', () => {
-      assert.equal(helper.maritalDateSuccessAlert('married', 'widowed', 'V', true), 'Marital status changed - award updated');
+      assert.equal(helper.maritalDateSuccessAlert('married', 'widowed', 'V', '-award-updated'), 'Marital status changed - award updated');
+    });
+
+    it('should return success alert key for marital status changed and no change to award', () => {
+      assert.equal(helper.maritalDateSuccessAlert('married', 'widowed', 'V', '-no-change-to-award'), 'Marital status changed - no change to award');
     });
 
     it('should return success alert key for verified marital date changed when current and new status are the same', () => {

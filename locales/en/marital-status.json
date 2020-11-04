@@ -15,5 +15,6 @@
     }
   },
   "success-message": "Marital status changed",
-  "success-message-award": "Marital status changed - award updated"
+  "success-message-award-updated": "Marital status changed - award updated",
+  "success-message-no-change-to-award": "Marital status changed - no change to award"
 }

@@ -249,6 +249,26 @@ const updateAndSendLetterPostRequest = {
   fullUrl: '/changes-and-enquiries/marital-details/update-and-send-letter',
   flash: flashMock,
 };
+
+// SendLetter requests
+const sendLetterRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { } }, fullUrl: '/test-url' };
+const sendLetterPostRequest = {
+  session: {
+    searchedNino: 'AA370773A',
+    awardDetails: claimData.validClaimMarried(),
+    marital: {
+      maritalStatus: 'widowed',
+      date: {
+        dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
+      },
+      'check-for-inheritable-state-pension': { checkInheritableStatePension: 'yes' },
+      'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'no' },
+    },
+  },
+  fullUrl: '/changes-and-enquiries/marital-details/send-letter',
+  flash: flashMock,
+};
+
 // API Endpoints
 const changeCircumstancesDetailsUri = '/api/award';
 const putMaritalDetailsApiUri = '/api/award/update-marital-details';
@@ -930,7 +950,7 @@ describe('Change circumstances - marital controller', () => {
     });
   });
 
-  describe('postUpdateAndSendLetter function (GET /changes-and-enquiries/marital-details/update-and-send-letter)', () => {
+  describe('postUpdateAndSendLetter function (POST /changes-and-enquiries/marital-details/update-and-send-letter)', () => {
     it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
       nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       await controller.postUpdateAndSendLetter(updateAndSendLetterPostRequest, genericResponse);
@@ -955,7 +975,45 @@ describe('Change circumstances - marital controller', () => {
       assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
       assert.equal(flash.type, 'success');
       assert.equal(flash.message, 'Marital status changed - award updated');
-      assert.isUndefined(saveMaritalDetailsPostRequest.session.marital);
+      assert.isUndefined(updateAndSendLetterPostRequest.session.marital);
+    });
+  });
+
+  describe('getSendLetter function (GET /changes-enquiries/marital-details/send-letter)', () => {
+    it('should return view when requested with details', () => {
+      controller.getSendLetter(sendLetterRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/send-letter');
+      assert.equal(genericResponse.data.backHref, '/marital-details/entitled-to-any-inherited-state-pension');
+      assert.equal(genericResponse.data.formUrl, '/test-url');
+    });
+  });
+
+  describe('postSendLetter function (POST /changes-and-enquiries/marital-details/send-letter)', () => {
+    it('should be return a redirect with INTERNAL_SERVER_ERROR message', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      await controller.postSendLetter(sendLetterPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/send-letter');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.INTERNAL_SERVER_ERROR));
+      assert.equal(genericResponse.locals.logMessage, `500 - 500 - {} - Requested on ${putUpdateWidowDetails}`);
+    });
+
+    it('should be return a redirect with BAD_REQUEST message', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.BAD_REQUEST, {});
+      await controller.postSendLetter(sendLetterPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/marital-details/send-letter');
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, errorHelper.errorMessage(httpStatus.BAD_REQUEST));
+      assert.equal(genericResponse.locals.logMessage, `400 - 400 - {} - Requested on ${putUpdateWidowDetails}`);
+    });
+
+    it('should be return a redirect with OK message and clear session', async () => {
+      nock('http://test-url/').put(putUpdateWidowDetails).reply(httpStatus.OK, {});
+      await controller.postSendLetter(sendLetterPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/changes-and-enquiries/personal');
+      assert.equal(flash.type, 'success');
+      assert.equal(flash.message, 'Marital status changed - no change to award');
+      assert.isUndefined(sendLetterPostRequest.session.marital);
     });
   });
 });

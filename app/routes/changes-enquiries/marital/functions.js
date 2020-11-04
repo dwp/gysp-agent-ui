@@ -491,20 +491,36 @@ function getUpdateAndSendLetter(req, res) {
   });
 }
 
-async function saveUpdateAwardAndRedirect(req, res, award) {
+async function saveUpdateAwardAndRedirect(req, res, award, suffix) {
   const maritalFormDetails = dataStore.get(req, 'marital');
   const { maritalStatus: currentMaritalStatus } = award;
   const { date: { verification }, maritalStatus: newMaritalStatus } = maritalFormDetails;
   await saveWidowDetails(req, res, award, maritalFormDetails);
   const maritalShortStatus = maritalStatusHelper.currentOrNewShortStatus(currentMaritalStatus, newMaritalStatus);
-  req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification, true));
+  req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification, suffix));
   redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
 }
 
 async function postUpdateAndSendLetter(req, res) {
   const award = dataStore.get(req, 'awardDetails');
   try {
-    await saveUpdateAwardAndRedirect(req, res, award);
+    await saveUpdateAwardAndRedirect(req, res, award, '-award-updated');
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.fullUrl);
+  }
+}
+
+function getSendLetter(req, res) {
+  res.render('pages/changes-enquiries/marital/send-letter', {
+    formUrl: req.fullUrl,
+    backHref: '/marital-details/entitled-to-any-inherited-state-pension',
+  });
+}
+
+async function postSendLetter(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  try {
+    await saveUpdateAwardAndRedirect(req, res, award, '-no-change-to-award');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.fullUrl);
   }
@@ -528,6 +544,8 @@ module.exports.postSaveMaritalDetails = postSaveMaritalDetails;
 module.exports.getConsiderStatePensionEntitlement = getConsiderStatePensionEntitlement;
 module.exports.getEntitledToInheritedStatePension = getEntitledToInheritedStatePension;
 module.exports.postEntitledToInheritedStatePension = postEntitledToInheritedStatePension;
+module.exports.getSendLetter = getSendLetter;
+module.exports.postSendLetter = postSendLetter;
 module.exports.getRelevantInheritedAmounts = getRelevantInheritedAmounts;
 module.exports.postRelevantInheritedAmounts = postRelevantInheritedAmounts;
 module.exports.getUpdateStatePensionAward = getUpdateStatePensionAward;

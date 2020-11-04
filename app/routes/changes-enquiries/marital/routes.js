@@ -52,6 +52,10 @@ router.route('/marital-details/update-and-send-letter')
   .get(functions.getUpdateAndSendLetter)
   .post(functions.postUpdateAndSendLetter);
 
+router.route('/marital-details/send-letter')
+  .get(functions.getSendLetter)
+  .post(functions.postSendLetter);
+
 router.route('/marital-details/save-and-create-task')
   .get(functions.getSaveMaritalDetails)
   .post(functions.postSaveMaritalDetails);
