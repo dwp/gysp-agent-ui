@@ -73,7 +73,7 @@
     "aws-sdk": "2.783.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
-    "conventional-changelog-cli": "2.1.0",
+    "conventional-changelog-cli": "2.1.1",
     "del": "6.0.0",
     "eslint": "7.12.1",
     "html5shiv": "3.7.3",
