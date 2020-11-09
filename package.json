@@ -70,7 +70,7 @@
     "@dwp/commitlint-config-base": "1.1.0",
     "@dwp/eslint-config-base": "4.1.0",
     "@dwp/eslint-config-mocha": "1.1.0",
-    "aws-sdk": "2.787.0",
+    "aws-sdk": "2.788.0",
     "chai": "4.2.0",
     "chai-as-promised": "7.1.1",
     "conventional-changelog-cli": "2.1.1",
