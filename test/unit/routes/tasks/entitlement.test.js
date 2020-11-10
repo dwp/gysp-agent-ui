@@ -15,10 +15,13 @@ const controller = require('../../../../app/routes/tasks/entitlement/functions')
 
 const responseHelper = require('../../../lib/responseHelper');
 const errorHelper = require('../../../lib/errorHelper');
+const { cloneObject } = require('../../../lib/unitHelper');
 
 let genericResponse;
 
+// API endpoints
 const awardByInviteKeyUri = '/api/award/award-by-invite-key';
+const getEntitlementDateApiUri = (entitlementDate, claimFromDate, ninoDigits) => `/api/award/entitlement-date?entitlementDate=${entitlementDate}&claimFromDate=${claimFromDate}&ninoDigits=${ninoDigits}`;
 
 // API Responses
 const marriedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'MARRIED' };
@@ -32,7 +35,14 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
+const maritalObject = {
+  marital: {
+    date: { dateDay: '1', dateMonth: '1', dateYear: '2020' },
+    'update-state-pension-award-new-state-pension': { amount: '123.12' },
+  },
+};
 const taskSession = { awardDetails: claimData.validClaimMarried() };
+const taskWidowedSession = { awardDetails: claimData.validClaimWidowed(), ...maritalObject };
 const ninoFormPost = { partnerNino: 'AA112233A' };
 const dateVerificationFormPost = {
   dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
@@ -50,6 +60,15 @@ const updatedEntitlementDetails = {
     dateDay: '1', dateMonth: '1', dateYear: '2020', verification: 'V',
   },
 };
+const validEntitledToInheritedStatePensionPostRequest = (answer) => ({ session: { ...taskWidowedSession }, body: { entitledInheritableStatePension: answer } });
+const validRelevantInheritedAmountsPostRequest = { session: { ...taskWidowedSession }, body: { additionalPension: '100.10' } };
+const validUpdateStatePensionAwardGetRequest = { session: { ...taskWidowedSession }, flash: () => {} };
+const validUpdateStatePensionAwardPostRequest = { session: { ...cloneObject(taskWidowedSession) }, flash: () => {} };
+const invalidUpdateStatePensionAwardPostRequest = { session: { awardDetails: claimData.validClaimWidowed(), marital: { date: { dateDay: '1', dateMonth: '1', dateYear: '2020' } } }, flash: () => {} };
+const validUpdateStatePensionAwardAmountGetRequest = { params: { type: 'protected-payment' }, session: { ...cloneObject(taskWidowedSession) }, flash: () => {} };
+const updateStatePensionAwardAmountPostBase = { params: { type: 'protected-payment' }, session: { awardDetails: claimData.validClaimWidowed(), marital: { date: { dateDay: '1', dateMonth: '1', dateYear: '2020' }, '2020-01-01:2018-11-09:73': { entitlementDate: 1546300800000 } } } };
+const emptyUpdateStatePensionAwardAmountPostRequest = { ...cloneObject(updateStatePensionAwardAmountPostBase), body: { }, flash: () => {} };
+const validUpdateStatePensionAwardAmountPostRequest = { ...cloneObject(updateStatePensionAwardAmountPostBase), body: { amount: '1.01' }, flash: () => {} };
 
 // File paths
 const tasksLayout = 'pages/tasks/layout.html';
@@ -299,6 +318,142 @@ describe('task entitlement controller ', () => {
       controller.getEntitledToInheritedStatePension(widowedTaskRequest, genericResponse);
       assert.equal(genericResponse.data.template, tasksLayout);
       assert.equal(genericResponse.data.backHref, '/task/detail');
+    });
+  });
+
+  describe('postEntitledToInheritedStatePension function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.postEntitledToInheritedStatePension);
+      assert.isFunction(controller.postEntitledToInheritedStatePension);
+    });
+
+    it('should setup common component and trigger validation', () => {
+      const task = validEntitledToInheritedStatePensionPostRequest('');
+      controller.postEntitledToInheritedStatePension(task, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/detail');
+    });
+
+    it('should setup common component and redirect - yes', () => {
+      const task = validEntitledToInheritedStatePensionPostRequest('yes');
+      controller.postEntitledToInheritedStatePension(task, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/consider-entitlement/relevant-inherited-amounts');
+    });
+
+    it('should setup common component and redirect - no', () => {
+      const task = validEntitledToInheritedStatePensionPostRequest('no');
+      controller.postEntitledToInheritedStatePension(task, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/complete');
+    });
+  });
+
+  describe('getRelevantInheritedAmounts function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.getRelevantInheritedAmounts);
+      assert.isFunction(controller.getRelevantInheritedAmounts);
+    });
+
+    it('should setup common component', () => {
+      controller.getRelevantInheritedAmounts(widowedTaskRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/entitled-to-any-inherited-state-pension');
+    });
+  });
+
+  describe('postRelevantInheritedAmounts function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.postRelevantInheritedAmounts);
+      assert.isFunction(controller.postRelevantInheritedAmounts);
+    });
+
+    it('should setup common component and trigger validation', () => {
+      controller.postRelevantInheritedAmounts(emptyPostRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/entitled-to-any-inherited-state-pension');
+    });
+
+    it('should setup common component and redirect', () => {
+      controller.postRelevantInheritedAmounts(validRelevantInheritedAmountsPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/consider-entitlement/update-state-pension-award');
+    });
+  });
+
+  describe('getUpdateStatePensionAward function', () => {
+    const getEntitlementDateUri = getEntitlementDateApiUri('2020-01-01', '2018-11-09', '73');
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.getUpdateStatePensionAward);
+      assert.isFunction(controller.getUpdateStatePensionAward);
+    });
+
+    it('should setup common component and trigger error redirect', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.NOT_FOUND, {});
+      await controller.getUpdateStatePensionAward(validUpdateStatePensionAwardGetRequest, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/consider-entitlement/relevant-inherited-amounts');
+    });
+
+    it('should setup common component', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, {});
+      await controller.getUpdateStatePensionAward(validUpdateStatePensionAwardGetRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/relevant-inherited-amounts');
+    });
+  });
+
+  describe('postUpdateStatePensionAward function', () => {
+    const getEntitlementDateUri = getEntitlementDateApiUri('2020-01-01', '2018-11-09', '73');
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.postUpdateStatePensionAward);
+      assert.isFunction(controller.postUpdateStatePensionAward);
+    });
+
+    it('should setup common component and trigger error redirect', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.NOT_FOUND, {});
+      await controller.postUpdateStatePensionAward(invalidUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/consider-entitlement/relevant-inherited-amounts');
+    });
+
+    it('should setup common component and trigger validation', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, {});
+      await controller.postUpdateStatePensionAward(invalidUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/relevant-inherited-amounts');
+    });
+
+    it('should setup common component redirect', async () => {
+      nock('http://test-url/').get(getEntitlementDateUri).reply(httpStatus.OK, {});
+      await controller.postUpdateStatePensionAward(validUpdateStatePensionAwardPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/complete');
+    });
+  });
+
+  describe('getUpdateStatePensionAwardAmount function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.getUpdateStatePensionAwardAmount);
+      assert.isFunction(controller.getUpdateStatePensionAwardAmount);
+    });
+
+    it('should setup common component', () => {
+      controller.getUpdateStatePensionAwardAmount(validUpdateStatePensionAwardAmountGetRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/update-state-pension-award');
+    });
+  });
+
+  describe('postUpdateStatePensionAwardAmount function', () => {
+    it('should be defined when calling function', () => {
+      assert.isDefined(controller.postUpdateStatePensionAwardAmount);
+      assert.isFunction(controller.postUpdateStatePensionAwardAmount);
+    });
+
+    it('should setup common component and trigger validation', async () => {
+      await controller.postUpdateStatePensionAwardAmount(emptyUpdateStatePensionAwardAmountPostRequest, genericResponse);
+      assert.equal(genericResponse.data.template, tasksLayout);
+      assert.equal(genericResponse.data.backHref, '/task/consider-entitlement/update-state-pension-award');
+    });
+
+    it('should setup common component and redirect', async () => {
+      await controller.postUpdateStatePensionAwardAmount(validUpdateStatePensionAwardAmountPostRequest, genericResponse);
+      assert.equal(genericResponse.address, '/tasks/task/consider-entitlement/update-state-pension-award');
     });
   });
 });

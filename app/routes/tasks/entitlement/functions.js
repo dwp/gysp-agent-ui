@@ -165,7 +165,7 @@ async function postUpdateStatePensionAward(req, res) {
     template,
     backHref: '/task/consider-entitlement/relevant-inherited-amounts',
     nextRoute: '/tasks/task/complete',
-    errorRedirect: '/changes-and-enquiries/marital-details/relevant-inherited-amounts',
+    errorRedirect: '/tasks/task/consider-entitlement/relevant-inherited-amounts',
   });
 }
 

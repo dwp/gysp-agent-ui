@@ -6,4 +6,7 @@ module.exports = {
       }, milliseconds);
     });
   },
+  cloneObject(object) {
+    return JSON.parse(JSON.stringify(object));
+  },
 };
