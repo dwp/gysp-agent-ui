@@ -1,3 +1,13 @@
+# [6.9.0](https://github.com/dwp/gysp-agent-ui/compare/6.8.1...6.9.0) (2020-11-10)
+
+
+### Features
+
+* **no-inheritable-entitlement:** add 'no' route to widowhood journey ([3abc149](https://github.com/dwp/gysp-agent-ui/commit/3abc149c1fd57a7d2c2cbb432a34b8687dc2681e))
+* **widow-task:** ability to process a widow task ([32dcf53](https://github.com/dwp/gysp-agent-ui/commit/32dcf5347561f42e6b080f5a7d90e6a360e13968))
+
+
+
 ## [6.8.1](https://github.com/dwp/gysp-agent-ui/compare/6.8.0...6.8.1) (2020-10-27)
 
 
