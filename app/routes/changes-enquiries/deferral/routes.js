@@ -11,6 +11,10 @@ router.route('/deferral/deferral-date')
   .get(functions.getDefaultDate)
   .post(functions.postDefaultDate);
 
+router.route('/deferral/from-date')
+  .get(functions.getFromDate)
+  .post(functions.postFromDate);
+
 router.route('/deferral/confirm')
   .get(functions.getConfirm);
 

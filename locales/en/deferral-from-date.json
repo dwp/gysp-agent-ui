@@ -1,0 +1,11 @@
+{
+  "header": "Date the claimant is deferring from",
+  "fields": {
+    "date": {
+      "errors": {
+        "required": "Enter the date the claimant is deferring from",
+        "invalid": "Enter a real date, like 12 3 2020"
+      }
+    }
+  }
+}

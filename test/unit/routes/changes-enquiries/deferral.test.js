@@ -3,6 +3,10 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+const i18nextConfig = require('../../../../config/i18next');
+
 const controller = require('../../../../app/routes/changes-enquiries/deferral/functions');
 
 const claimData = require('../../../lib/claimData');
@@ -31,13 +35,21 @@ const getDefaultDateResponse = {
   statePensionDate: '9 November 2018',
 };
 
-const postDefaultDateRequestYes = { ...awardDetails, body: { 'default-date': 'yes' } };
+const postDefaultDateRequestYes = { ...awardDetails, body: { 'default-date': 'yes', 'from-date': 'foo' } };
 
 const postDefaultDateRequestNo = { ...awardDetails, body: { 'default-date': 'no' } };
 
+const getFromDateResponse = {
+  backHref: '/personal/deferral/deferral-date',
+  formAction: '/changes-and-enquiries/personal/deferral/from-date',
+};
+
+const postFromDateResponse = { ...awardDetails, body: { day: '1', month: '1', year: '2000' } };
+
 const getConfirmResponse = {
-  backLink: '/changes-and-enquiries/personal/deferral/deferral-date',
+  backHref: '/personal/deferral/from-date',
   button: '/changes-and-enquiries/personal/deferral/update',
+  fromDate: '1 January 2000',
 };
 
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
@@ -50,7 +62,6 @@ const getUpdateRequest = {
   session: {
     awardDetails: claimData.validClaim(),
     deferral: {
-      'from-date': Date.now(),
       'date-request-received': { year: '2020', month: '1', day: '1' },
     },
   },
@@ -68,6 +79,12 @@ const errorMessages = {
 };
 
 describe('Deferral controller', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -137,11 +154,13 @@ describe('Deferral controller', () => {
       });
     });
 
-    it('should save to session and redirect to the /confirm page if using the default date (State Pension date)', () => {
+    it('should update session and redirect to the /confirm page if using the default date (State Pension date)', () => {
       controller.postDefaultDate(postDefaultDateRequestYes, genericResponse);
       return testPromise.then(() => {
-        const defaultDate = postDefaultDateRequestYes.session.deferral['default-date'];
-        assert.equal(defaultDate, postDefaultDateRequestYes.body['default-date']);
+        const { deferral } = postDefaultDateRequestYes.session;
+        assert.equal(deferral['default-date'], 'yes');
+        assert.equal(deferral['back-href'], '/personal/deferral/deferral-date');
+        assert.equal(deferral['from-date'], undefined);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/confirm');
       });
     });
@@ -152,6 +171,35 @@ describe('Deferral controller', () => {
         const defaultDate = postDefaultDateRequestYes.session.deferral['default-date'];
         assert.equal(defaultDate, postDefaultDateRequestNo.body['default-date']);
         assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/from-date');
+      });
+    });
+  });
+
+  describe('getFromDate function (GET /changes-and-enquiries/personal/deferral/from-date)', () => {
+    it('should return correct data and page when requested', () => {
+      controller.getFromDate(getRequest, genericResponse);
+      assert.equal(JSON.stringify(genericResponse.data), JSON.stringify(getFromDateResponse));
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/deferral/from-date');
+    });
+  });
+
+  describe('postFromDate function (POST /changes-and-enquiries/personal/deferral/from-date)', () => {
+    it('should return the same data and page, with errors, when requested with an empty form', () => {
+      controller.postFromDate(postRequestEmpty, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(Object.keys(genericResponse.data.errors).length, 4);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/deferral/from-date');
+      });
+    });
+
+    it('should save to session and redirect to the /confirm', () => {
+      controller.postFromDate(postFromDateResponse, genericResponse);
+      return testPromise.then(() => {
+        const { day, month, year } = postFromDateResponse.session.deferral['from-date'];
+        assert.equal(day, postFromDateResponse.body.day);
+        assert.equal(month, postFromDateResponse.body.month);
+        assert.equal(year, postFromDateResponse.body.year);
+        assert.equal(genericResponse.address, '/changes-and-enquiries/personal/deferral/confirm');
       });
     });
   });

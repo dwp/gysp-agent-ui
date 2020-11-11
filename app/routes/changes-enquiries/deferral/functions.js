@@ -4,6 +4,7 @@ const request = require('request-promise');
 const dataStore = require('../../../../lib/dataStore');
 const dateHelper = require('../../../../lib/dateHelper');
 const deferralObject = require('../../../../lib/objects/api/deferralObject');
+const deleteSession = require('../../../../lib/deleteSession');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const requestHelper = require('../../../../lib/requestHelper');
@@ -11,9 +12,12 @@ const validator = require('../../../../lib/validation/deferralValidation');
 
 const root = '/changes-and-enquiries/personal';
 
+const confirmUrl = `${root}/deferral/confirm`;
 const dateRequestReceivedUrl = `${root}/deferral/date-request-received`;
 const defaultDateUrl = `${root}/deferral/deferral-date`;
+const fromDateUrl = `${root}/deferral/from-date`;
 const stopStatePensionUrl = `${root}/stop-state-pension`;
+const updateUrl = `${root}/deferral/update`;
 
 function getDateRequestReceived(req, res) {
   const details = dataStore.get(req, 'date-request-received', 'deferral');
@@ -29,7 +33,7 @@ function postDateRequestReceived(req, res) {
   const errors = validator.dateRequestReceived(details);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'date-request-received', details, 'deferral');
-    res.redirect(`${root}/deferral/deferral-date`);
+    res.redirect(defaultDateUrl);
   } else {
     res.render('pages/changes-enquiries/deferral/date-request-received', {
       backLink: stopStatePensionUrl,
@@ -58,10 +62,11 @@ function postDefaultDate(req, res) {
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'default-date', details['default-date'], 'deferral');
     if (details['default-date'] === 'yes') {
-      dataStore.save(req, 'from-date', statePensionDate, 'deferral');
-      res.redirect(`${root}/deferral/confirm`);
+      dataStore.save(req, 'back-href', '/personal/deferral/deferral-date', 'deferral');
+      deleteSession.deleteSessionBySectionKey(req, 'deferral', 'from-date');
+      res.redirect(confirmUrl);
     } else {
-      res.redirect(`${root}/deferral/from-date`);
+      res.redirect(fromDateUrl);
     }
   } else {
     res.render('pages/changes-enquiries/deferral/default-date', {
@@ -73,20 +78,51 @@ function postDefaultDate(req, res) {
   }
 }
 
+function getFromDate(req, res) {
+  const details = dataStore.get(req, 'from-date', 'deferral');
+  res.render('pages/changes-enquiries/deferral/from-date', {
+    backHref: '/personal/deferral/deferral-date',
+    details,
+    formAction: fromDateUrl,
+  });
+}
+
+function postFromDate(req, res) {
+  const details = req.body;
+  const errors = validator.fromDate(details);
+  if (Object.keys(errors).length === 0) {
+    dataStore.save(req, 'back-href', '/personal/deferral/from-date', 'deferral');
+    dataStore.save(req, 'from-date', details, 'deferral');
+    res.redirect(confirmUrl);
+  } else {
+    res.render('pages/changes-enquiries/deferral/from-date', {
+      backHref: '/deferral/deferral-date',
+      details,
+      errors,
+      formAction: fromDateUrl,
+    });
+  }
+}
+
 function getConfirm(req, res) {
+  const backHref = dataStore.get(req, 'back-href', 'deferral');
+  const date = dataStore.get(req, 'from-date', 'deferral');
+  const formatted = date && dateHelper.longDate({ year: date.year, month: date.month - 1, day: date.day });
   res.render('pages/changes-enquiries/deferral/confirm', {
-    backLink: defaultDateUrl,
-    button: `${root}/deferral/update`,
+    backHref,
+    button: updateUrl,
+    fromDate: formatted,
   });
 }
 
 async function getUpdate(req, res) {
-  const { nino } = dataStore.get(req, 'awardDetails');
+  const { nino, statePensionDate } = dataStore.get(req, 'awardDetails');
   const {
-    'from-date': fromDate,
+    'from-date': date,
     'date-request-received': dateRequestReceived,
   } = dataStore.get(req, 'deferral');
-  const deferralDetails = deferralObject.formatter(nino, fromDate, dateRequestReceived);
+  const formatted = date && { year: date.year, month: date.month - 1, day: date.day };
+  const deferralDetails = deferralObject.formatter(nino, formatted || statePensionDate, dateRequestReceived);
   const recordDeferralApiUri = 'api/award/record-deferral';
   const putCall = requestHelper.generatePutCall(res.locals.agentGateway + recordDeferralApiUri, deferralDetails, 'award', req.user);
   try {
@@ -95,7 +131,7 @@ async function getUpdate(req, res) {
     const sessionKeys = ['stop-state-pension', 'deferral'];
     redirectHelper.redirectAndClearSessionKey(req, res, sessionKeys, root);
   } catch (err) {
-    errorHelper.flashErrorAndRedirect(req, res, err, 'award', `${root}/deferral/confirm`);
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', confirmUrl);
   }
 }
 
@@ -103,5 +139,7 @@ module.exports.getDateRequestReceived = getDateRequestReceived;
 module.exports.postDateRequestReceived = postDateRequestReceived;
 module.exports.getDefaultDate = getDefaultDate;
 module.exports.postDefaultDate = postDefaultDate;
+module.exports.getFromDate = getFromDate;
+module.exports.postFromDate = postFromDate;
 module.exports.getConfirm = getConfirm;
 module.exports.getUpdate = getUpdate;
