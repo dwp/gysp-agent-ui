@@ -307,3 +307,12 @@
         }
     }
 }
+
+.gysp-recent-payments-table {
+    &__first {
+        width: 40%;
+        @include govuk-media-query($until: tablet) {
+            width: auto
+        }
+    }
+}

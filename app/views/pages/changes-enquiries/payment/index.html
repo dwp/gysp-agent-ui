@@ -108,7 +108,7 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
       {% if recentPaymentsTable %}
-        <table class="govuk-table gysp-recent-payments-table" id="recent-payments">
+        <table class="govuk-table" id="recent-payments">
           <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">
             {{ t('payment:payment_history.caption') }}
             <a href="/changes-and-enquiries/payment/manual-payment/details" class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19 govuk-!-font-weight-regular gysp-record-manual-payment">
@@ -118,7 +118,7 @@
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
               {% for head in recentPaymentsTable.head %}
-                <th scope="col" class="govuk-table__header" {% if loop.last %} colspan="2"{% endif %}>{{ head.text }}</th>
+                <th scope="col" class="govuk-table__header {%- if loop.first %} gysp-recent-payments-table__first {%- endif %}" {% if loop.last %} colspan="2"{% endif %}>{{ head.text }}</th>
               {% endfor %}
             </tr>
           </thead>
