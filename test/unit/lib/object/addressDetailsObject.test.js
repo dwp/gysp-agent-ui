@@ -19,5 +19,11 @@ describe('addressDetails object', () => {
       assert.equal(JSON.stringify(json), JSON.stringify(claimData.validClaimAllAddressNull()));
       done();
     });
+
+    it('should return valid json object with thorughfare from street array and postTown from townName', (done) => {
+      const json = addressDetailsObject.formatter(detailsUprn, claimData.validClaim().nino, addressData.singleAddressWithStreetArrayAndTownName());
+      assert.equal(JSON.stringify(json), JSON.stringify(claimData.validClaimAllAddressWithLocalAuthorityData()));
+      done();
+    });
   });
 });

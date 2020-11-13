@@ -2,6 +2,9 @@ const { assert } = require('chai');
 
 const helper = require('../../../../lib/helpers/addressHelper');
 const claimData = require('../../../lib/claimData');
+const addressData = require('../../../lib/addressData');
+
+const detailsUprn = { address: '10091853817' };
 
 describe('address helper', () => {
   describe('address', () => {
@@ -104,6 +107,13 @@ describe('address helper', () => {
     it('should return formatted address array the when dependentThoroughfareName is null and buildingNumber and thoroughfareName present ', () => {
       const addressArray = helper.address(claimData.validDependentThoroughfareNullAndBuildingNumber());
       assert.equal(JSON.stringify(addressArray), JSON.stringify(claimData.validDependentThoroughfareNullAndBuildingNumberResult()));
+    });
+  });
+  describe('AddressLookupApiFormatter ', () => {
+    it('should return valid json object with thorughfare from street array and postTown from townName', (done) => {
+      const json = helper.addressLookupApiFormatter(detailsUprn, addressData.singleAddressWithStreetArrayAndTownName());
+      assert.equal(JSON.stringify(json), JSON.stringify(claimData.validUkAddressLocalAuthorityData()));
+      done();
     });
   });
 });

@@ -114,6 +114,10 @@ module.exports = {
     const { nino } = this.validBase();
     return { ...this.validUkAddressNull(), nino, ...this.validAddressEventChangeTimeline() };
   },
+  validClaimAllAddressWithLocalAuthorityData() {
+    const { nino } = this.validBase();
+    return { ...this.validUkAddressLocalAuthorityData(), nino, ...this.validAddressEventChangeTimeline() };
+  },
   validBase() {
     return {
       claimCreatedDate: '2018-11-09T12:27:48.795Z',
@@ -385,6 +389,20 @@ module.exports = {
       postTown: 'LONDON',
       postCode: 'W1J 7NT',
       singleLine: '148 PICCADILLY, LONDON, W1J 7NT',
+      uprn: '10091853817',
+    };
+  },
+  validUkAddressLocalAuthorityData() {
+    return {
+      buildingName: 'Name',
+      subBuildingName: '1/L',
+      buildingNumber: 1,
+      dependentLocality: 'dependentLocality',
+      thoroughfareName: 'MAIN STREET',
+      dependentThoroughfareName: 'WINDSOR PLACE',
+      postTown: 'BRIDGE OF WEIR',
+      postCode: 'PA11 3AF',
+      singleLine: '1/L 1 WINDSOR PLACE, MAIN STREET, BRIDGE OF WEIR, PA11 3AF',
       uprn: '10091853817',
     };
   },

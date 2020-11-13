@@ -12,6 +12,10 @@ module.exports = {
     const address = { ...this.addressBase().data[0] };
     return { data: [address] };
   },
+  singleAddressWithStreetArrayAndTownName() {
+    const address = { ...this.addressBase().data[1] };
+    return { data: [address] };
+  },
   multipleAddressesList() {
     return [{
       text: '2 addresses found',
@@ -41,7 +45,7 @@ module.exports = {
         poBoxNumber: null,
         buildingName: 'Name',
         buildingNumber: '1',
-        street: ['WINDSOR PLACE', 'MAIN STREET'],
+        street: [],
         locality: ['dependentLocality'],
         postTown: 'BRIDGE OF WEIR',
         postcode: 'PA11 3AF',
@@ -112,7 +116,6 @@ module.exports = {
         buildingNumber: '1',
         street: ['WINDSOR PLACE', 'MAIN STREET'],
         locality: ['dependentLocality'],
-        postTown: 'BRIDGE OF WEIR',
         postcode: 'PA11 3AF',
         countryCode: 'GBR',
         singleLine: '1/L 1 WINDSOR PLACE, MAIN STREET, BRIDGE OF WEIR, PA11 3AF',
@@ -147,7 +150,7 @@ module.exports = {
           departmentName: null,
           dependentLocality: 'dependentLocality',
           locality: null,
-          postTown: 'BRIDGE OF WEIR',
+          postTown: null,
           townName: 'BRIDGE OF WEIR',
           postcodeLocator: 'PA11 3AF',
           paoText: null,
@@ -168,8 +171,8 @@ module.exports = {
           state: '2',
           administrativeArea: null,
           class: 'CR08',
-          dependentThoroughfare: 'WINDSOR PLACE',
-          thoroughfare: 'MAIN STREET',
+          dependentThoroughfare: null,
+          thoroughfare: null,
         },
       }],
     };
