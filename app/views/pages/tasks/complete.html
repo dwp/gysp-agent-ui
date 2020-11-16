@@ -1,30 +1,18 @@
 {% extends './layout.html' %}
 {% from 'helpers/form.html' import globalError as error %}
-{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ t('task-complete:header') }}{% endblock %}
 
-{% block content %}
-
-<div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-        {% if messages.error %}
-          {{ error(messages.error) }}
-        {% endif %}
-
-        <h1 class="govuk-heading-xl">{{ t('task-complete:header') }}</h1>
-        {{ t('task-complete:content.' + details.reason) | safe }}
-        {{ govukButton({
-          text: t('task-complete:button'),
-          href: '/tasks/task/end',
-          classes: 'govuk-!-margin-top-6',
-          attributes: {
-            id: 'task-end'
-          }
-        }) }}
-    </div>
-</div>
-
+{% block innerContent %}
+  <h1 class="govuk-heading-xl">{{ t('task-complete:header') }}</h1>
+  {{ t('task-complete:content.' + details.reason) | safe }}
+  {{ govukButton({
+    text: t('task-complete:button'),
+    href: '/tasks/task/end',
+    classes: 'govuk-!-margin-top-6',
+    attributes: {
+      id: 'task-end'
+    }
+  }) }}
 {% endblock %}

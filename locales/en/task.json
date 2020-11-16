@@ -11,6 +11,10 @@
     "header": "Consider State Pension entitlement of a widowed claimant",
     "p": "Check the record of the late spouse or partner's to see if there is any change to the claimant’s State Pension entitlement."
   },
+  "deatharrears": {
+    "header": "Send BR330 form",
+    "p": "Send a form to request death arrears payee details."
+  },
   "primary-button": "Start this task",
   "secondary-button": "Return task to queue"
 }

@@ -29,7 +29,7 @@ async function awardAndReasonDetails(req, res) {
 }
 
 function getTasks(req, res) {
-  deleteSession.deleteSessionBySection(req, 'tasks');
+  deleteSession.deleteTasksSession(req);
   res.render('pages/tasks/index', { tasks: true });
 }
 

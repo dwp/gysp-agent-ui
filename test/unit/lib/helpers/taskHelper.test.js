@@ -47,7 +47,6 @@ const widowUpdateDetails = {
   },
 };
 
-
 describe('task helper', () => {
   before(async () => {
     await i18next
@@ -70,15 +69,21 @@ describe('task helper', () => {
     taskWorkReasons.forEach((reason) => {
       it(`should return a ${reason} entitlement detail page`, () => {
         const task = helper.taskDetail(blankSession, reason, claimData.validClaimMarried());
-        assert.equal(task.view, 'entitlement/detail');
+        assert.equal(task.view, 'detail');
         assert.isObject(task.data);
       });
     });
 
     it('should return a WIDOWED entitlement detail page', () => {
       const task = helper.taskDetail(blankSession, 'WIDOWED', claimData.validClaimWidowed());
-      assert.equal(task.view, 'entitlement/detail');
+      assert.equal(task.view, 'detail');
       assert.isObject(blankSession.session.marital.date);
+      assert.isObject(task.data);
+    });
+
+    it('should return a DEATHARREARS entitlement detail page', () => {
+      const task = helper.taskDetail(blankSession, 'DEATHARREARS', claimData.validClaimWithDeathArrearsDue());
+      assert.equal(task.view, 'detail');
       assert.isObject(task.data);
     });
   });
@@ -107,6 +112,12 @@ describe('task helper', () => {
       const no = { marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'no' } } };
       const task = helper.taskComplete({ ...taskRequest('WIDOWED', no) });
       assert.equal(task.backHref, '/task/consider-entitlement/entitled-to-any-inherited-state-pension');
+      assert.isObject(task.details);
+    });
+
+    it('should return a DEATHARREARS entitlement complete page - entitled no', () => {
+      const task = helper.taskComplete({ ...taskRequest('DEATHARREARS') });
+      assert.equal(task.backHref, '/task/detail');
       assert.isObject(task.details);
     });
   });
@@ -156,6 +167,14 @@ describe('task helper', () => {
         nock('http://test-url/').put(putWidowDetailsUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(request, genericResponse, 'WIDOWED');
         assert.deepEqual(taskEnd, ['tasks', 'updated-entitlement-details', 'marital', 'awardDetails']);
+      });
+    });
+
+    describe('DEATHARREARS', () => {
+      it('should be return a array when successfully call API - DEATHARREARS', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        const taskEnd = await helper.taskEnd(taskRequest('DEATHARREARS'), genericResponse, 'DEATHARREARS');
+        assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
       });
     });
   });

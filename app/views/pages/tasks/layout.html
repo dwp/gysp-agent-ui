@@ -5,11 +5,12 @@
 {% from 'helpers/secondary-navigation.html' import secondaryNavigation %}
 {% from 'helpers/timeline.html' import timeline %}
 {% from 'moj/components/banner/macro.njk' import mojBanner %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 
 {% block pageTitle %}{% endblock %}
 
-{% if backHref %}
-    {% block backLink %}
+{% block backLink %}
+    {% if backHref %}
         <div class="govuk-width-container">
             {{ govukBackLink({
                 text: t("app:link.back"),
@@ -17,8 +18,8 @@
                 classes: "govuk-!-margin-top-8 govuk-!-margin-bottom-0"
             }) }}
         </div>
-    {% endblock %}
-{% endif %}
+    {% endif %}
+{% endblock %}
 
 {% block content %}
     <div class="govuk-grid-row">

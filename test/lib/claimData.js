@@ -163,6 +163,22 @@ module.exports = {
         amountDetails: {
           amount: 100.0,
         },
+        payeeDetails: {
+          fullName: 'Adam Dennis',
+          phoneNumber: '0234 1234567',
+          payeeAddress: {
+            buildingName: null,
+            buildingNumber: '2',
+            dependentLocality: null,
+            dependentThoroughfareName: null,
+            postCode: 'LO1 1TY',
+            postTown: 'LONDON',
+            subBuildingName: null,
+            thoroughfareName: 'TEST WAY',
+            uprn: '1230004234234',
+          },
+          accountDetail: null,
+        },
       },
     };
   },

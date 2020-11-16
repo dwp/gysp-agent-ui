@@ -115,7 +115,7 @@ const partnerAllElementsVerifiedWidowed = {
 
 const basePartnerDetailRows = (status) => [{
   key: { text: 'National Insurance number' },
-  value: { text: 'AA123456C' },
+  value: { text: 'AA 12 34 56 C' },
   actions: {
     items: [{
       classes: 'govuk-link--no-visited-state',
@@ -159,7 +159,7 @@ const basePartnerDetailRows = (status) => [{
 
 const updatedPartnerDetailRows = (status) => [{
   key: { text: 'National Insurance number' },
-  value: { text: 'AA654321C' },
+  value: { text: 'AA 65 43 21 C' },
   actions: {
     items: [{
       classes: 'govuk-link--no-visited-state',
@@ -187,7 +187,7 @@ const updatedPartnerDetailRows = (status) => [{
 
 const verifiedPartnerDetailRows = (status) => [{
   key: { text: 'National Insurance number' },
-  value: { text: 'AA123456C' },
+  value: { text: 'AA 12 34 56 C' },
   actions: {
     items: [{
       classes: 'govuk-link--no-visited-state',
@@ -215,7 +215,7 @@ const verifiedPartnerDetailRows = (status) => [{
 
 const verifiedPartnerDetailWidowRows = (status) => [{
   key: { text: 'National Insurance number' },
-  value: { text: 'AA123456C' },
+  value: { text: 'AA 12 34 56 C' },
 }, {
   key: { text: 'First name' },
   value: { text: 'Joe' },
@@ -235,7 +235,7 @@ const verifiedPartnerDetailWidowRows = (status) => [{
 
 const baseClaimantDetailRows = [{
   key: { text: 'National Insurance Number' },
-  value: { text: 'AA370773A' },
+  value: { text: 'AA 37 07 73 A' },
 }, {
   key: { text: 'Full name' },
   value: { text: 'Joe Bloggs' },
@@ -309,85 +309,94 @@ describe('taskDetailsObject', () => {
   describe('formatter', () => {
     it('should return blank optional rows when values are null - married', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalNullPartnerDetails, 'MARRIED');
-      assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('married'));
+      assert.deepEqual(formatted.summaryList[0].rows, blankPartnerDetailRows('married'));
     });
 
     it('should return blank optional rows when values are not present - married', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetails, 'MARRIED');
-      assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('married'));
+      assert.deepEqual(formatted.summaryList[0].rows, blankPartnerDetailRows('married'));
     });
 
     it('should return blank optional rows when values are null - civil', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalNullPartnerDetailsCivil, 'CIVILPARTNERSHIP');
-      assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('civil'));
+      assert.deepEqual(formatted.summaryList[0].rows, blankPartnerDetailRows('civil'));
     });
 
     it('should return blank optional rows when values are not present - civil', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsCivil, 'CIVILPARTNERSHIP');
-      assert.deepEqual(formatted.partnerSummary.rows, blankPartnerDetailRows('civil'));
+      assert.deepEqual(formatted.summaryList[0].rows, blankPartnerDetailRows('civil'));
     });
 
     it('should return miss optional rows when values are not present - widowed (pre married)', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsWidowedMarried, 'WIDOWED');
-      assert.deepEqual(formatted.partnerSummary.rows, widowedPartnerDetailNoOptionalsRows('married'));
-      assert.equal(formatted.partnerSummary.classes, 'gysp-widow-partner-details-summary');
+      assert.deepEqual(formatted.summaryList[0].rows, widowedPartnerDetailNoOptionalsRows('married'));
+      assert.equal(formatted.summaryList[0].classes, 'gysp-widow-partner-details-summary');
     });
 
     it('should return miss optional rows when values are not present - widowed (pre civil partnership)', () => {
       const formatted = taskMaritalDetailObject.formatter(optionalMissingPartnerDetailsWidowedCivil, 'WIDOWED');
-      assert.deepEqual(formatted.partnerSummary.rows, widowedPartnerDetailNoOptionalsRows('civil'));
+      assert.deepEqual(formatted.summaryList[0].rows, widowedPartnerDetailNoOptionalsRows('civil'));
     });
 
     it('should return all rows verified when verified fields are true', () => {
       const formatted = taskMaritalDetailObject.formatter(partnerAllElementsVerified, 'MARRIED');
-      assert.deepEqual(formatted.partnerSummary.rows, verifiedPartnerDetailRows('married'));
+      assert.deepEqual(formatted.summaryList[0].rows, verifiedPartnerDetailRows('married'));
     });
 
     it('should return all rows verified when verified fields are true - widowed', () => {
       const formatted = taskMaritalDetailObject.formatter(partnerAllElementsVerifiedWidowed, 'WIDOWED');
-      assert.deepEqual(formatted.partnerSummary.rows, verifiedPartnerDetailWidowRows('married'));
+      assert.deepEqual(formatted.summaryList[0].rows, verifiedPartnerDetailWidowRows('married'));
     });
 
     validObjectsArray.forEach((item) => {
       it(`should return object when partner details are present with a status of ${item.object.maritalStatus}`, () => {
         const formatted = taskMaritalDetailObject.formatter(item.object, item.key);
         assert.isObject(formatted);
+        assert.equal(formatted.backHref, '/task');
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
         assert.isFalse(formatted.hint);
-        assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
-        assert.deepEqual(formatted.partnerSummary.rows, basePartnerDetailRows(item.key));
-        assert.isUndefined(formatted.partnerSummary.classes);
-        assert.equal(formatted.claimantSummary.header, "Claimant's details");
-        assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
-        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.lengthOf(formatted.summaryList, 2);
+        assert.equal(formatted.summaryList[0].header, i18next.t(`task-detail:partner-details.header.${item.key}`));
+        assert.isArray(formatted.summaryList[0].rows);
+        assert.deepEqual(formatted.summaryList[0].rows, basePartnerDetailRows(item.key));
+        assert.isUndefined(formatted.summaryList[0].classes);
+        assert.equal(formatted.summaryList[1].header, "Claimant's details");
+        assert.deepEqual(formatted.summaryList[1].rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.summaryList[1].classes);
         assert.equal(formatted.buttonHref, '/tasks/task/complete');
       });
 
       it(`should return object with updated partner details are present with a status of ${item.object.maritalStatus}`, () => {
         const formatted = taskMaritalDetailObject.formatter(item.object, item.key, allItemsUpdated);
         assert.isObject(formatted);
+        assert.equal(formatted.backHref, '/task');
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
         assert.isFalse(formatted.hint);
-        assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
-        assert.deepEqual(formatted.partnerSummary.rows, updatedPartnerDetailRows(item.key));
-        assert.isUndefined(formatted.partnerSummary.classes);
-        assert.equal(formatted.claimantSummary.header, "Claimant's details");
-        assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
-        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.lengthOf(formatted.summaryList, 2);
+        assert.equal(formatted.summaryList[0].header, i18next.t(`task-detail:partner-details.header.${item.key}`));
+        assert.isArray(formatted.summaryList[0].rows);
+        assert.deepEqual(formatted.summaryList[0].rows, updatedPartnerDetailRows(item.key));
+        assert.isUndefined(formatted.summaryList[0].classes);
+        assert.equal(formatted.summaryList[1].header, "Claimant's details");
+        assert.deepEqual(formatted.summaryList[1].rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.summaryList[1].classes);
         assert.equal(formatted.buttonHref, '/tasks/task/complete');
       });
 
       it(`should return object with updated partner details are present with a status of ${item.object.maritalStatus}`, () => {
         const formatted = taskMaritalDetailObject.formatter(item.object, item.key, allItemsUpdated);
         assert.isObject(formatted);
+        assert.equal(formatted.backHref, '/task');
         assert.equal(formatted.header, i18next.t(`task-detail:header.${item.key}`));
         assert.isFalse(formatted.hint);
-        assert.equal(formatted.partnerSummary.header, i18next.t(`task-detail:partner-details.header.${item.key}`));
-        assert.deepEqual(formatted.partnerSummary.rows, updatedPartnerDetailRows(item.key));
-        assert.isUndefined(formatted.partnerSummary.classes);
-        assert.equal(formatted.claimantSummary.header, "Claimant's details");
-        assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
-        assert.isUndefined(formatted.claimantSummary.classes);
+        assert.lengthOf(formatted.summaryList, 2);
+        assert.equal(formatted.summaryList[0].header, i18next.t(`task-detail:partner-details.header.${item.key}`));
+        assert.isArray(formatted.summaryList[0].rows);
+        assert.deepEqual(formatted.summaryList[0].rows, updatedPartnerDetailRows(item.key));
+        assert.isUndefined(formatted.summaryList[0].classes);
+        assert.equal(formatted.summaryList[1].header, "Claimant's details");
+        assert.deepEqual(formatted.summaryList[1].rows, baseClaimantDetailRows);
+        assert.isUndefined(formatted.summaryList[1].classes);
         assert.equal(formatted.buttonHref, '/tasks/task/complete');
       });
     });
@@ -396,14 +405,16 @@ describe('taskDetailsObject', () => {
     it('should return object when partner details are present with a status of widowed', () => {
       const formatted = taskMaritalDetailObject.formatter(claimData.validClaimWidowed(), 'WIDOWED');
       assert.isObject(formatted);
+      assert.equal(formatted.backHref, '/task');
       assert.equal(formatted.header, i18next.t('task-detail:header.widowed'));
       assert.equal(formatted.hint, i18next.t('task-detail:hint.widowed'));
-      assert.equal(formatted.partnerSummary.header, i18next.t('task-detail:partner-details.header.widowed'));
-      assert.isArray(formatted.partnerSummary.rows);
-      assert.equal(formatted.partnerSummary.classes, 'gysp-widow-partner-details-summary');
-      assert.equal(formatted.claimantSummary.header, "Claimant's details");
-      assert.deepEqual(formatted.claimantSummary.rows, baseClaimantDetailRows);
-      assert.equal(formatted.claimantSummary.classes, 'gysp-widow-partner-details-summary');
+      assert.lengthOf(formatted.summaryList, 2);
+      assert.equal(formatted.summaryList[0].header, i18next.t('task-detail:partner-details.header.widowed'));
+      assert.isArray(formatted.summaryList[0].rows);
+      assert.equal(formatted.summaryList[0].classes, 'gysp-widow-partner-details-summary');
+      assert.equal(formatted.summaryList[1].header, "Claimant's details");
+      assert.deepEqual(formatted.summaryList[1].rows, baseClaimantDetailRows);
+      assert.equal(formatted.summaryList[1].classes, 'gysp-widow-partner-details-summary');
       assert.equal(formatted.buttonHref, '/tasks/task/consider-entitlement/entitled-to-any-inherited-state-pension');
     });
   });

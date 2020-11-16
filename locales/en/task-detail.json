@@ -2,7 +2,8 @@
   "header": {
     "married": "Consider spouse entitlement",
     "civilpartnership": "Consider civil partner entitlement",
-    "widowed": "Consider State Pension entitlement"
+    "widowed": "Consider State Pension entitlement",
+    "deatharrears": "Send BR330 form to the person dealing with the estate"
   },
   "hint": {
     "widowed": "Check the record of the late spouse or partner to see if any State Pension can be inherited."
@@ -32,6 +33,14 @@
       "nino": "National Insurance Number",
       "full-name": "Full name",
       "address": "Address"
+    }
+  },
+  "death": {
+    "dap": {
+      "summary-keys": {
+        "full-name": "Full name",
+        "address": "Address"
+      }
     }
   }
 }

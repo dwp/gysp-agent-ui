@@ -28,6 +28,7 @@ const awardByInviteKeyUri = '/api/award/award-by-invite-key';
 const marriedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'MARRIED' };
 const civilWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'CIVILPARTNERSHIP' };
 const widowWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'WIDOWED' };
+const deathArrearsWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'DEATHARREARS' };
 
 // Mocks
 const flash = { type: '', message: '' };
@@ -45,6 +46,13 @@ const user = {
 
 // Requests
 const emptyRequest = { session: {}, user: { ...user }, flash: flashMock };
+const dirtyTasksRequest = {
+  session: {
+    tasks: { foo: 'bar' }, 'updated-entitlement-details': { foo: 'bar' }, marital: { foo: 'bar' }, awardDetails: { foo: 'bar' },
+  },
+  flash: flashMock,
+  user: { ...user },
+};
 const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock, user: { ...user } };
 
 // Headers
@@ -65,6 +73,7 @@ let civilTaskRequest;
 let widowNoTaskRequest;
 let widowYesTaskRequest;
 let marriedTaskWithUpdatesRequest;
+let deathArrearsTaskRequest;
 
 describe('tasks controller ', () => {
   before(async () => {
@@ -82,12 +91,19 @@ describe('tasks controller ', () => {
     widowNoTaskRequest = { session: { tasks: { 'work-item': widowWorkItem }, marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'no' } } }, flash: flashMock };
     widowYesTaskRequest = { session: { tasks: { 'work-item': widowWorkItem }, marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' } } }, flash: flashMock };
     marriedTaskWithUpdatesRequest = { session: { tasks: { 'work-item': marriedWorkItem }, 'updated-entitlement-details': updatedMaritalDetails }, flash: flashMock };
+    deathArrearsTaskRequest = { session: { tasks: { 'work-item': deathArrearsWorkItem } }, flash: flashMock };
   });
 
   describe('getTasks function', () => {
     it('should return tasks view when requested', async () => {
       controller.getTasks(emptyRequest, genericResponse);
       assert.isUndefined(emptyRequest.session.tasks);
+      assert.equal(genericResponse.viewName, 'pages/tasks/index');
+    });
+
+    it('should return tasks view with clean tasks session when requested', async () => {
+      controller.getTasks(dirtyTasksRequest, genericResponse);
+      assert.doesNotHaveAllKeys(dirtyTasksRequest.session, ['tasks', 'updated-entitlement-details', 'marital', 'awardDetails']);
       assert.equal(genericResponse.viewName, 'pages/tasks/index');
     });
   });
@@ -206,28 +222,41 @@ describe('tasks controller ', () => {
     it('should return task view when requested with API response OK - Married', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${marriedWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimMarried());
       await controller.getTaskDetail(marriedTaskRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
-      assert.isObject(genericResponse.data.details);
-      assert.equal(genericResponse.data.details.partnerSummary.header, "Spouse's details");
-      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.lengthOf(genericResponse.data.summaryList, 2);
+      assert.equal(genericResponse.data.summaryList[0].header, "Spouse's details");
+      assert.lengthOf(genericResponse.data.summaryList[0].rows, 6);
     });
 
     it('should return task view when requested with API response OK - Civil Partnership', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimCivilPartner());
       await controller.getTaskDetail(civilTaskRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
-      assert.isObject(genericResponse.data.details);
-      assert.equal(genericResponse.data.details.partnerSummary.header, "Civil partner's details");
-      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '6');
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.lengthOf(genericResponse.data.summaryList, 2);
+      assert.equal(genericResponse.data.summaryList[0].header, "Civil partner's details");
+      assert.lengthOf(genericResponse.data.summaryList[0].rows, 6);
     });
 
     it('should return task view when requested with API response OK - Widowed', async () => {
       nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimWidowed());
       await controller.getTaskDetail(widowNoTaskRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/tasks/entitlement/detail');
-      assert.isObject(genericResponse.data.details);
-      assert.equal(genericResponse.data.details.partnerSummary.header, "Late spouse or partner's details");
-      assert.lengthOf(genericResponse.data.details.partnerSummary.rows, '4');
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.lengthOf(genericResponse.data.summaryList, 2);
+      assert.equal(genericResponse.data.summaryList[0].header, "Late spouse or partner's details");
+      assert.lengthOf(genericResponse.data.summaryList[0].rows, 4);
+    });
+
+    it('should return task view when requested with API response OK - Death arrears', async () => {
+      nock('http://test-url/').get(`${awardByInviteKeyUri}/${civilWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimWithDeathArrearsDue());
+      await controller.getTaskDetail(deathArrearsTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.equal(genericResponse.data.header, 'Send BR330 form to the person dealing with the estate');
+      assert.lengthOf(genericResponse.data.summaryList, 2);
+      assert.lengthOf(genericResponse.data.summaryList[0].rows, 2);
     });
   });
 
@@ -254,6 +283,12 @@ describe('tasks controller ', () => {
       controller.getTaskComplete(widowYesTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/complete');
       assert.equal(genericResponse.data.details.reason, 'widowed-yes');
+    });
+
+    it('should return death arrears task view when requested', async () => {
+      controller.getTaskComplete(deathArrearsTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/complete');
+      assert.equal(genericResponse.data.details.reason, 'deatharrears');
     });
   });
 
