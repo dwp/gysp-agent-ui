@@ -86,6 +86,20 @@ describe('task helper', () => {
       assert.equal(task.view, 'detail');
       assert.isObject(task.data);
     });
+
+    it('should return a DEATHOVERPAYMENT entitlement detail under no reclaim amount - 25.00', () => {
+      const task = helper.taskDetail(blankSession, 'DEATHOVERPAYMENT', claimData.validClaimWithDeathOverPaymentDue(25));
+      assert.equal(task.view, 'detail');
+      assert.isObject(task.data);
+      assert.lengthOf(task.data.summaryList, 2);
+    });
+
+    it('should return a DEATHOVERPAYMENT entitlement detail page over no reclaim amount - 25.01', () => {
+      const task = helper.taskDetail(blankSession, 'DEATHOVERPAYMENT', claimData.validClaimWithDeathOverPaymentDue(25.01));
+      assert.equal(task.view, 'detail');
+      assert.isObject(task.data);
+      assert.lengthOf(task.data.summaryList, 5);
+    });
   });
 
   describe('taskComplete', () => {
@@ -171,6 +185,14 @@ describe('task helper', () => {
     });
 
     describe('DEATHARREARS', () => {
+      it('should be return a array when successfully call API - DEATHARREARS', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        const taskEnd = await helper.taskEnd(taskRequest('DEATHARREARS'), genericResponse, 'DEATHARREARS');
+        assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
+      });
+    });
+
+    describe('DEATHOVERPAYEMENT', () => {
       it('should be return a array when successfully call API - DEATHARREARS', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(taskRequest('DEATHARREARS'), genericResponse, 'DEATHARREARS');

@@ -21,7 +21,7 @@ const dapSummaryRows = [{
 }];
 
 const claimantSummaryRows = [{
-  key: { text: 'National Insurance Number', ...summaryWidthClass },
+  key: { text: 'National Insurance number', ...summaryWidthClass },
   value: { text: 'AA 37 07 73 A', ...summaryWidthClass },
 }, {
   key: { text: 'Full name', ...summaryWidthClass },

@@ -458,4 +458,44 @@ describe('death helper', () => {
       assert.isTrue(helper.isDeathNotVerified({ deathDetail: { dateOfDeathVerification: 'NV' } }));
     });
   });
+
+  describe('isDeathOverpaymentRepayable', () => {
+    it('should be defined', () => {
+      assert.isDefined(helper.isDeathOverpaymentRepayable);
+    });
+
+    it('should be a function', () => {
+      assert.isFunction(helper.isDeathOverpaymentRepayable);
+    });
+
+    it('should throw an error when amount is undefined', () => {
+      assert.throw(() => {
+        helper.isDeathOverpaymentRepayable(undefined);
+      }, TypeError, 'Expected number got undefined: undefined');
+    });
+
+    it('should throw an error when amount is null', () => {
+      assert.throw(() => {
+        helper.isDeathOverpaymentRepayable(null);
+      }, TypeError, 'Expected number got object: null');
+    });
+
+    it('should throw an error when amount is a string number', () => {
+      assert.throw(() => {
+        helper.isDeathOverpaymentRepayable('1');
+      }, TypeError, 'Expected number got string: 1');
+    });
+
+    [0, 24.99, 25, -24.99, -25].forEach((number) => {
+      it(`should return false when amount is ${number}`, () => {
+        assert.isFalse(helper.isDeathOverpaymentRepayable(number));
+      });
+    });
+
+    [25.01, -25.01].forEach((number) => {
+      it(`should return true when amount is ${number}`, () => {
+        assert.isTrue(helper.isDeathOverpaymentRepayable(number));
+      });
+    });
+  });
 });

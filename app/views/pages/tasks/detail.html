@@ -17,7 +17,11 @@
     {% if summary.header %}
       <h2 class="govuk-heading-m">{{ summary.header }}</h2>
     {% endif %}
-    {{ govukSummaryList(summary) }}
+    {% if summary.rows %}
+      {{ govukSummaryList(summary) }}
+    {% elif summary.empty %}
+      <p class="govuk-!-margin-bottom-7">{{ summary.empty }}</p>
+    {% endif %}
   {% endfor %}
 
   {{ govukButton({

@@ -160,6 +160,7 @@ describe('General Helper ', () => {
       assert.isTrue(helper.checkNameCharacters('Joe Test-tester The First.'));
     });
   });
+
   describe('isValidCurrency', () => {
     const invalid = ['1.1', '1.111', '.0', '1', '-1.00', '+1.00', 'aaa', '1,000.00'];
     invalid.forEach((value) => {
@@ -174,6 +175,7 @@ describe('General Helper ', () => {
       });
     });
   });
+
   describe('isGreaterThenFiveCharacterExcludingPoint', () => {
     it('should return true when value is greater then 5 without point', () => {
       assert.isTrue(helper.isGreaterThenFiveCharacterExcludingPoint('123456'));
@@ -192,6 +194,25 @@ describe('General Helper ', () => {
     });
     it('should return false when value is less than 5 without point', () => {
       assert.isFalse(helper.isGreaterThenFiveCharacterExcludingPoint('1234'));
+    });
+  });
+
+  describe('formatPaymentFrequency', () => {
+    const weeklyString = 'weekly';
+    it('should formatted frequency string for 1 week', () => {
+      assert.equal(helper.formatPaymentFrequency('1W'), `1 ${weeklyString}`);
+    });
+
+    it('should formatted frequency string for 2 weeks', () => {
+      assert.equal(helper.formatPaymentFrequency('2W'), `2 ${weeklyString}`);
+    });
+
+    it('should formatted frequency string for 4 weeks', () => {
+      assert.equal(helper.formatPaymentFrequency('4W'), `4 ${weeklyString}`);
+    });
+
+    it('should formatted frequency string for 13 weeks', () => {
+      assert.equal(helper.formatPaymentFrequency('13W'), `13 ${weeklyString}`);
     });
   });
 });

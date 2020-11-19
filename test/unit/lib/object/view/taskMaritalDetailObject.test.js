@@ -234,7 +234,7 @@ const verifiedPartnerDetailWidowRows = (status) => [{
 }];
 
 const baseClaimantDetailRows = [{
-  key: { text: 'National Insurance Number' },
+  key: { text: 'National Insurance number' },
   value: { text: 'AA 37 07 73 A' },
 }, {
   key: { text: 'Full name' },

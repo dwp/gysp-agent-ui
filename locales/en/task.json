@@ -15,6 +15,10 @@
     "header": "Send BR330 form",
     "p": "Send a form to request death arrears payee details."
   },
+  "deathoverpayment": {
+    "header": "Refer a death overpayment to the debt management service",
+    "p": "Send an overpayment referral following the death of a claimant"
+  },
   "primary-button": "Start this task",
   "secondary-button": "Return task to queue"
 }

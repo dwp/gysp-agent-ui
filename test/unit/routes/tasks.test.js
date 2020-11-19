@@ -29,6 +29,7 @@ const marriedWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'MARRIED' };
 const civilWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'CIVILPARTNERSHIP' };
 const widowWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'WIDOWED' };
 const deathArrearsWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'DEATHARREARS' };
+const deathOverPaymentWorkItem = { inviteKey: 'BLOG123456', workItemReason: 'DEATHOVERPAYMENT' };
 
 // Mocks
 const flash = { type: '', message: '' };
@@ -74,6 +75,7 @@ let widowNoTaskRequest;
 let widowYesTaskRequest;
 let marriedTaskWithUpdatesRequest;
 let deathArrearsTaskRequest;
+let deathOverPaymentTaskRequest;
 
 describe('tasks controller ', () => {
   before(async () => {
@@ -92,6 +94,7 @@ describe('tasks controller ', () => {
     widowYesTaskRequest = { session: { tasks: { 'work-item': widowWorkItem }, marital: { 'entitled-to-inherited-state-pension': { entitledInheritableStatePension: 'yes' } } }, flash: flashMock };
     marriedTaskWithUpdatesRequest = { session: { tasks: { 'work-item': marriedWorkItem }, 'updated-entitlement-details': updatedMaritalDetails }, flash: flashMock };
     deathArrearsTaskRequest = { session: { tasks: { 'work-item': deathArrearsWorkItem } }, flash: flashMock };
+    deathOverPaymentTaskRequest = { session: { tasks: { 'work-item': deathOverPaymentWorkItem } }, flash: flashMock };
   });
 
   describe('getTasks function', () => {
@@ -151,6 +154,18 @@ describe('tasks controller ', () => {
       controller.getTask(widowNoTaskRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/tasks/task');
       assert.equal(genericResponse.data.details.reason, 'widowed');
+    });
+
+    it('should return death arrears task view when requested', () => {
+      controller.getTask(deathArrearsTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/task');
+      assert.equal(genericResponse.data.details.reason, 'deatharrears');
+    });
+
+    it('should return death overpayment under task view when requested', () => {
+      controller.getTask(deathOverPaymentTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/task');
+      assert.equal(genericResponse.data.details.reason, 'deathoverpayment');
     });
   });
 
@@ -257,6 +272,24 @@ describe('tasks controller ', () => {
       assert.equal(genericResponse.data.header, 'Send BR330 form to the person dealing with the estate');
       assert.lengthOf(genericResponse.data.summaryList, 2);
       assert.lengthOf(genericResponse.data.summaryList[0].rows, 2);
+    });
+
+    it('should return task view when requested with API response OK - Death overpayment - Over £25', async () => {
+      nock('http://test-url/').get(`${awardByInviteKeyUri}/${deathOverPaymentWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimWithDeathOverPaymentDue(25.01));
+      await controller.getTaskDetail(deathOverPaymentTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.equal(genericResponse.data.header, 'Overpayment referral details');
+      assert.lengthOf(genericResponse.data.summaryList, 5);
+    });
+
+    it('should return task view when requested with API response OK - Death overpayment - Under or equal to £25', async () => {
+      nock('http://test-url/').get(`${awardByInviteKeyUri}/${deathOverPaymentWorkItem.inviteKey}`).reply(httpStatus.OK, claimData.validClaimWithDeathOverPaymentDue(25));
+      await controller.getTaskDetail(deathOverPaymentTaskRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/detail');
+      assert.isObject(genericResponse.data);
+      assert.equal(genericResponse.data.header, 'Overpayment referral details');
+      assert.lengthOf(genericResponse.data.summaryList, 2);
     });
   });
 

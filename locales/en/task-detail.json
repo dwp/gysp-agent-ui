@@ -3,10 +3,12 @@
     "married": "Consider spouse entitlement",
     "civilpartnership": "Consider civil partner entitlement",
     "widowed": "Consider State Pension entitlement",
-    "deatharrears": "Send BR330 form to the person dealing with the estate"
+    "deatharrears": "Send BR330 form to the person dealing with the estate",
+    "deathoverpayment": "Overpayment referral details"
   },
   "hint": {
-    "widowed": "Check the record of the late spouse or partner to see if any State Pension can be inherited."
+    "widowed": "Check the record of the late spouse or partner to see if any State Pension can be inherited.",
+    "deathoverpayment": "Use these details to refer the overpayment to the debt management service through the e-referral tool."
   },
   "partner-details": {
     "header": {
@@ -30,16 +32,47 @@
   "claimant-details": {
     "header": "Claimant's details",
     "summary-keys": {
-      "nino": "National Insurance Number",
+      "nino": "National Insurance number",
       "full-name": "Full name",
       "address": "Address"
     }
   },
   "death": {
+    "overpayment-details": {
+      "header": "Overpayment details",
+      "summary-keys": {
+        "period": "Period",
+        "amount": "Weekly amount",
+        "total": "Total overpayment"
+      },
+      "summary-values": {
+        "period": "{{startDate}} to {{endDate}}"
+      }
+    },
     "dap": {
+      "header": "Details of the person dealing with the estate",
+      "empty": "No details held.",
       "summary-keys": {
         "full-name": "Full name",
+        "phone": "Phone number",
         "address": "Address"
+      }
+    },
+    "other-debt-referral-details": {
+      "header": "Other debt referral details",
+      "summary-keys": {
+        "payment-day": "Payment day",
+        "payment-frequency": "Payment frequency",
+        "date-death-recorded": "Date the death was recorded"
+      }
+    },
+    "bank-building-details": {
+      "header": "Bank or building society account details",
+      "summary-keys": {
+        "account-holder": "Account holder name",
+        "account-number": "Account number",
+        "sort-code": "Sort code",
+        "reference-number": "Roll or reference number"
       }
     }
   }
