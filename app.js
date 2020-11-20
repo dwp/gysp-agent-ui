@@ -155,8 +155,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Heath end point before middleware to bypass kong auth
-app.use(config.mountUrl, require('./app/routes/health/routes.js'));
+// Actuator end points before middleware to bypass kong auth
+app.use(`${config.mountUrl}actuator`, require('./app/routes/actuator/routes'));
 
 // Middelware
 app.use(require('./lib/middleware/landing')());

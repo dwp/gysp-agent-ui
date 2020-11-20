@@ -23,7 +23,7 @@ WORKDIR ${STUNNEL_FOLDER}
 COPY --chown=node:node docker/stunnel.conf ${STUNNEL_FOLDER}stunnel.conf
 
 HEALTHCHECK --interval=30s --timeout=2s --start-period=30s  \
-  CMD curl -fk $(if [ "$USE_TLS" = "true" ]; then echo "https"; else echo "http"; fi)://localhost:${PORT}${CONTEXT_PATH}health || exit 1
+  CMD curl -fk $(if [ "$USE_TLS" = "true" ]; then echo "https"; else echo "http"; fi)://localhost:${PORT}${CONTEXT_PATH}actuator/health || exit 1
 
 RUN mkdir -p ${APP_FOLDER}
 
