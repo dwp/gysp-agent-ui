@@ -326,7 +326,7 @@
 
 .gysp-recent-payments-table {
     &__first {
-        width: 40%;
+        width: 38%;
         @include govuk-media-query($until: tablet) {
             width: auto
         }
