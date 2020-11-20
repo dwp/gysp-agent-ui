@@ -20,7 +20,7 @@
     {% if summary.rows %}
       {{ govukSummaryList(summary) }}
     {% elif summary.empty %}
-      <p class="govuk-!-margin-bottom-7">{{ summary.empty }}</p>
+      <p class="govuk-body govuk-!-margin-bottom-7">{{ summary.empty }}</p>
     {% endif %}
   {% endfor %}
 
