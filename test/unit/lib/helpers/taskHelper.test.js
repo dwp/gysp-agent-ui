@@ -192,10 +192,10 @@ describe('task helper', () => {
       });
     });
 
-    describe('DEATHOVERPAYEMENT', () => {
+    describe('DEATHOVERPAYMENT', () => {
       it('should be return a array when successfully call API - DEATHARREARS', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
-        const taskEnd = await helper.taskEnd(taskRequest('DEATHARREARS'), genericResponse, 'DEATHARREARS');
+        const taskEnd = await helper.taskEnd(taskRequest('DEATHOVERPAYMENT'), genericResponse, 'DEATHOVERPAYMENT');
         assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
       });
     });
