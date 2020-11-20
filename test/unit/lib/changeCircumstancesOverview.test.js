@@ -57,17 +57,6 @@ describe('change of circumstances overview ', () => {
     });
 
     context('warnings', () => {
-      it('should return final payment is not calculated warning', () => {
-        const details = {
-          ...claimData.validClaim(),
-          deathAllActionsPerformed: false,
-          deathCalculationPerformed: false,
-          deathDetail: { dateOfDeathVerification: 'V', payeeDetails: { foo: 'bar' } },
-        };
-        const formatter = changeCircumstancesOverview.formatter(details);
-        assert.equal(formatter.warning.html, 'Final payment has not been calculated<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;retry-calculation" class="govuk-link govuk-link--no-visited-state">Calculate final payment</a>');
-      });
-
       it('should return arrears payment due warning', () => {
         const details = {
           ...claimData.validClaim(),
