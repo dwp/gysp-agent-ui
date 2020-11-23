@@ -62,7 +62,7 @@ describe('change of circumstances overview ', () => {
           ...claimData.validClaim(),
           deathAllActionsPerformed: false,
           deathCalculationPerformed: true,
-          deathDetail: { amountDetails: { amount: 100.0 } },
+          deathDetail: { amountDetails: { amount: 100.0 }, payeeDetails: { } },
         };
         const formatter = changeCircumstancesOverview.formatter(details);
         assert.equal(formatter.warning.html, '£100.00 arrears payment due<br /><a href="&#x2F;changes-and-enquiries&#x2F;personal&#x2F;death&#x2F;payee-details" class="govuk-link govuk-link--no-visited-state">Enter payee details</a>');
