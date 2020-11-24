@@ -1,4 +1,9 @@
 {
+  "timezone": "Europe/London",
+  "schedule": [
+    "after 7am every weekday",
+    "before 6pm every weekday"
+  ],
   "gitLabAutomerge": true,
   "automerge": true,
   "major": {
