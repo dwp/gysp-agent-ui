@@ -158,7 +158,7 @@ app.use((req, res, next) => {
 // Actuator end points before middleware to bypass kong auth
 app.use(`${config.mountUrl}actuator`, require('./app/routes/actuator/routes'));
 
-// Middelware
+// Middleware
 app.use(require('./lib/middleware/landing')());
 app.use(require('./lib/middleware/processClaim')(log));
 app.use(require('./lib/middleware/reviewAward')(log));
