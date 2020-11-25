@@ -1,3 +1,19 @@
+# [7.0.0](https://github.com/dwp/gysp-agent-ui/compare/6.9.0...7.0.0) (2020-11-25)
+
+
+### Bug Fixes
+
+* corrected address lookup when assigning ([44e742d](https://github.com/dwp/gysp-agent-ui/commit/44e742d208b5ed644eb00565b43ce0b4cd6bc097))
+
+
+### Features
+
+* **deferral-date:** add deferral from date other than state pension date ([d0ab431](https://github.com/dwp/gysp-agent-ui/commit/d0ab431490649b712163047b1a788467aa206648))
+* **task:** death arrears task ([0fb0d15](https://github.com/dwp/gysp-agent-ui/commit/0fb0d151dbda3c763fc57014f601ca0852982796))
+* **tasks:** death overpayment task ([136df59](https://github.com/dwp/gysp-agent-ui/commit/136df59475461cece58ea6d5f318c675f4677b1d))
+
+
+
 # [6.9.0](https://github.com/dwp/gysp-agent-ui/compare/6.8.1...6.9.0) (2020-11-10)
 
 
