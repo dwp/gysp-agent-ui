@@ -1,8 +1,99 @@
 const { assert } = require('chai');
+const moment = require('moment');
 
 const helper = require('../../../../lib/helpers/general');
 
+const monthsWith30Days = ['04', '06', '09', '11'];
+const monthsWith31Days = ['01', '03', '05', '07', '08', '10', '12'];
+
+const leapYear1972 = 1972;
+const leapYear2200 = 2200;
+const leapYear2100 = 2100;
+
 describe('General Helper ', () => {
+  describe('isDateDayValid', () => {
+    it('should return false when no params are passed', () => {
+      assert.isFalse(helper.isDateDayValid());
+    });
+
+    it('should return true when day is undefined', () => {
+      assert.isTrue(helper.isDateDayValid(undefined, '1', '2020'));
+    });
+
+    it('should return false when month is undefined', () => {
+      assert.isFalse(helper.isDateDayValid('1', undefined, '2020'));
+    });
+
+    it('should return false when year is undefined', () => {
+      assert.isFalse(helper.isDateDayValid('1', '1', undefined));
+    });
+
+    monthsWith30Days.forEach((month) => {
+      it(`should return false when day is an invalid day of month - 2020-${month}-31`, () => {
+        assert.isFalse(helper.isDateDayValid('31', month, '2020'));
+      });
+
+      it(`should return true when day is an valid day of month - 2020-${month}-30`, () => {
+        assert.isTrue(helper.isDateDayValid('30', month, '2020'));
+      });
+    });
+
+    monthsWith31Days.forEach((month) => {
+      it(`should return true when day is an valid day of month - 2020-${month}-31`, () => {
+        assert.isTrue(helper.isDateDayValid('31', month, '2020'));
+      });
+    });
+
+    it('should return false when day is an invalid day (31) of February - 2020-02-31', () => {
+      assert.isFalse(helper.isDateDayValid('31', '02', '2020'));
+    });
+
+    it('should return false when day is an invalid day of February - 2020-02-29', () => {
+      assert.isTrue(helper.isDateDayValid('29', '02', '2020'));
+    });
+
+    it('should return false when day is an invalid day of February - 2021-02-29', () => {
+      assert.isFalse(helper.isDateDayValid('29', '02', '2021'));
+    });
+
+    it('should return true when day is valid - single digit', () => {
+      assert.isTrue(helper.isDateDayValid('1', '1', '2020'));
+    });
+
+    it('should return true when day is valid - double digit', () => {
+      assert.isTrue(helper.isDateDayValid('01', '01', '2020'));
+    });
+  });
+
+  describe('daysInMonth', () => {
+    monthsWith30Days.forEach((month) => {
+      it(`should return 30 when month is ${moment(`2020-${month}`).format('MMMM')}`, () => {
+        assert.equal(helper.daysInMonth(month, '2020'), 30);
+      });
+    });
+
+    monthsWith31Days.forEach((month) => {
+      it(`should return 31 when month is ${moment(`2020-${month}`).format('MMMM')}`, () => {
+        assert.equal(helper.daysInMonth(month, '2020'), 31);
+      });
+    });
+
+    for (let year = leapYear1972; year <= leapYear2200; year++) {
+      if ((year === leapYear2100 || year === leapYear2200) || year % 4 !== 0) {
+        it(`should return 28 when month is February and year is ${year} which is not a leap year`, () => {
+          assert.equal(helper.daysInMonth('02', year), 28);
+        });
+      }
+    }
+
+    for (let year = leapYear1972; year <= leapYear2200; year += 4) {
+      if (year !== leapYear2100 && year !== leapYear2200) { // only years that not a leap year
+        it(`should return 29 when month is February and year is ${year} which is a leap year`, () => {
+          assert.equal(helper.daysInMonth('02', year), 29);
+        });
+      }
+    }
+  });
   describe('removeNullFromArray', () => {
     it('should return array with nulls removed then nulls are present', () => {
       assert.deepEqual(helper.removeNullFromArray(['test', 'test', null, 'test', null]), ['test', 'test', 'test']);

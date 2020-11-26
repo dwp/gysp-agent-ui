@@ -130,6 +130,42 @@ describe('Form validation', () => {
       assert.equal(errors.dobMonth, true);
     });
 
+    it('Should return error when date of birth day is empty', () => {
+      fullCustomerData.dobDay = '';
+      fullCustomerData.dobMonth = 12;
+      fullCustomerData.dobYear = 1953;
+      const errors = validator.customerDetails(fullCustomerData, titles);
+      assert.strictEqual(Object.keys(errors).length, 2);
+      assert.strictEqual(errors.dob.text, 'Date of birth is required');
+      assert.strictEqual(errors.dobDay, true);
+      assert.strictEqual(errors.dobMonth, undefined);
+      assert.strictEqual(errors.dobYear, undefined);
+    });
+
+    it('Should return error when date of birth month is empty', () => {
+      fullCustomerData.dobDay = 10;
+      fullCustomerData.dobMonth = '';
+      fullCustomerData.dobYear = 1953;
+      const errors = validator.customerDetails(fullCustomerData, titles);
+      assert.strictEqual(Object.keys(errors).length, 2);
+      assert.strictEqual(errors.dob.text, 'Date of birth is required');
+      assert.strictEqual(errors.dobDay, undefined);
+      assert.strictEqual(errors.dobMonth, true);
+      assert.strictEqual(errors.dobYear, undefined);
+    });
+
+    it('Should return error when date of birth year is empty', () => {
+      fullCustomerData.dobDay = 10;
+      fullCustomerData.dobMonth = 12;
+      fullCustomerData.dobYear = '';
+      const errors = validator.customerDetails(fullCustomerData, titles);
+      assert.strictEqual(Object.keys(errors).length, 2);
+      assert.strictEqual(errors.dob.text, 'Date of birth is required');
+      assert.strictEqual(errors.dobDay, undefined);
+      assert.strictEqual(errors.dobMonth, undefined);
+      assert.strictEqual(errors.dobYear, true);
+    });
+
     it('Should return date error when invalid year date supplied (1 digit)', () => {
       fullCustomerData.dobDay = 10;
       fullCustomerData.dobMonth = 10;
