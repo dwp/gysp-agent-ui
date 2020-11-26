@@ -24,7 +24,7 @@ const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAw
 
 function getReviewAward(req, res) {
   deleteSession.deleteReviewAward(req, 'all');
-  const reviewAwards = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/count/srb-review`, {}, 'hmrc-calculation');
+  const reviewAwards = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/count/srb-review`, {}, 'hmrc-calculation', req.user);
   request(reviewAwards)
     .then((body) => {
       const total = body;
@@ -39,7 +39,7 @@ function getReviewAward(req, res) {
 async function getReviewReason(req, res) {
   try {
     const reviewAward = await cacheRetrieveAndStore(req, 'review-award', () => {
-      const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation');
+      const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation', req.user);
       return request(reviewAwardCall);
     });
 

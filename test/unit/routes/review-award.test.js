@@ -37,9 +37,19 @@ const validNextSrb = {
   totalAmount: 300.0,
 };
 
-let validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
+// Headers
+const reqHeaders = { reqheaders: { agentRef: 'Test User', location: '123456', staffId: '12345678' } };
 
-const invalidRequest = { session: { }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+// Request Headers
+const user = {
+  cis: {
+    givenname: 'Test', surname: 'User', SLOC: '123456', dwp_staffid: '12345678',
+  },
+};
+
+// Requests
+let validRequest = { session: {}, user: { ...user } };
+const invalidRequest = { session: { }, user: { ...user } };
 
 const emptyPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: {} };
 const validPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: { dateYear: '2020', dateMonth: '01', dateDay: '01' } };
@@ -53,7 +63,7 @@ describe('Review award controller', () => {
     });
 
     it('should return view with total number of awards to review', () => {
-      nock('http://test-url/').get(awardReviewTotalUri).reply(200, awardReviewTotalResponse);
+      nock('http://test-url/', reqHeaders).get(awardReviewTotalUri).reply(200, awardReviewTotalResponse);
       controller.getReviewAward(validRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/review-award/index');
@@ -62,7 +72,7 @@ describe('Review award controller', () => {
     });
 
     it('should return error view when API returns none 200 state', () => {
-      nock('http://test-url/').get(awardReviewTotalUri).reply(500, {});
+      nock('http://test-url/', reqHeaders).get(awardReviewTotalUri).reply(500, {});
       controller.getReviewAward(validRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/error');
@@ -77,11 +87,11 @@ describe('Review award controller', () => {
     genericResponse.locals = responseHelper.localResponse(genericResponse);
 
     beforeEach(() => {
-      validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: {}, user: { ...user } };
     });
 
     it('should return view with reason when receive 500 response from award api and 500 from award review', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(500, {});
+      nock('http://test-url/', reqHeaders).get(awardReviewUri).reply(500, {});
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(500, {});
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
@@ -90,7 +100,7 @@ describe('Review award controller', () => {
     });
 
     it('should return view with reason when receive 200 response from award api but 500 from award review', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(500, {});
+      nock('http://test-url/', reqHeaders).get(awardReviewUri).reply(500, {});
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(200, claimData.validClaim());
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
@@ -99,7 +109,7 @@ describe('Review award controller', () => {
     });
 
     it('should return view with reason when receive 500 response from award api but 200 from award review', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
+      nock('http://test-url/', reqHeaders).get(awardReviewUri).reply(200, validNextSrb);
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(500, {});
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/error');
@@ -108,7 +118,7 @@ describe('Review award controller', () => {
     });
 
     it('should return view with reason when receive 200 response from both api\'s', async () => {
-      nock('http://test-url/').get(awardReviewUri).reply(200, validNextSrb);
+      nock('http://test-url/', reqHeaders).get(awardReviewUri).reply(200, validNextSrb);
       nock('http://test-url/').get(`${awardUri}/${claimData.validClaim().nino}`).reply(200, claimData.validClaim());
       await controller.getReviewReason(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/reason');
