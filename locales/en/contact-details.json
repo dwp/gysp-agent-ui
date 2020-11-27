@@ -1,12 +1,8 @@
 {
-  "header": {
-    "add": "Add {{TYPE}} phone number",
-    "change": "Change {{TYPE}} phone number"
-  },
   "fields": {
     "home_phone_number": {
+      "header": "Home phone number",
       "add": {
-        "label": "Enter home phone number",
         "errors": {
           "required": "Enter a home phone number",
           "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
@@ -14,7 +10,6 @@
         }
       },
       "change": {
-        "label": "Enter new home phone number",
         "errors": {
           "required": "Enter a new home phone number",
           "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
@@ -23,8 +18,8 @@
       }
     },
     "work_phone_number": {
+      "header": "Work phone number",
       "add": {
-        "label": "Enter work phone number",
         "errors": {
           "required": "Enter a work phone number",
           "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
@@ -32,7 +27,6 @@
         }
       },
       "change": {
-        "label": "Enter new work phone number",
         "errors": {
           "required": "Enter a new work phone number",
           "format": "Enter a telephone number in the correct format, like 01632 960 001 or 4408081570192",
@@ -41,8 +35,8 @@
       }
     },
     "mobile_phone_number": {
+      "header": "Mobile phone number",
       "add": {
-        "label": "Enter mobile phone number",
         "errors": {
           "required": "Enter a mobile phone number",
           "format": "Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982",
@@ -50,7 +44,6 @@
         }
       },
       "change": {
-        "label": "Enter new mobile phone number",
         "errors": {
           "required": "Enter a new mobile phone number",
           "format": "Enter a mobile phone number in the correct format, like 07700 900 982 or 4407700900982",
@@ -59,9 +52,8 @@
       }
     },
     "email": {
+      "header": "Email address",
       "add": {
-        "header": "Add email address",
-        "label": "Enter email address",
         "errors": {
           "required": "Enter an email address",
           "format": "Enter an email address in the correct format, like name@example.com",
@@ -69,8 +61,6 @@
         }
       },
       "change": {
-        "header": "Change email address",
-        "label": "Enter new email address",
         "errors": {
           "required": "Enter a new email address",
           "format": "Enter an email address in the correct format, like name@example.com",

@@ -4,7 +4,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
-{% block pageTitle %}{{ t("contact-details:header." + addOrChange, {TYPE: type}) }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t("contact-details:fields." + type + "_phone_number.header") }} - Changes and enquiries{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -15,33 +15,26 @@
 {% endblock %}
 
 {% block innerContent %}
-    <form method="post" action="/changes-and-enquiries/contact/{{ type }}" autocomplete="off" novalidate>
-      {% call govukFieldset({
-        legend: {
-          text: t("contact-details:header." + addOrChange, {TYPE: type}),
-          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-7",
-          isPageHeading: true
-        }
-      }) %}
+  <form method="post" action="/changes-and-enquiries/contact/{{ type }}" autocomplete="off" novalidate>
+    {{ govukInput({
+      label: {
+        text: t("contact-details:fields." + type + "_phone_number.header"),
+        classes: "govuk-label--l",
+        isPageHeading: true
+      },
+      id: type + "PhoneNumber",
+      name: type + "PhoneNumber",
+      value: details[type + 'PhoneNumber'],
+      classes: "govuk-input--width-20",
+      errorMessage: errors[type + 'PhoneNumber']
+    }) }}
 
-        {{ govukInput({
-          label: {
-            text: t("contact-details:fields." + type + "_phone_number." + addOrChange + ".label")
-          },
-          id: type + "PhoneNumber",
-          name: type + "PhoneNumber",
-          value: details[type + 'PhoneNumber'],
-          classes: "govuk-input--width-20",
-          errorMessage: errors[type + 'PhoneNumber']
-        }) }}
+    {% if addOrChange == 'change' %}
+      <p class="govuk-body"><a href="/changes-and-enquiries/contact/remove/{{ type }}" id="typePhoneNumberRemove" class="govuk-link govuk-link--no-visited-state">Remove {{ type }} phone number</a></p>
+    {% endif %}
 
-      {% endcall %}
-
-      {% if addOrChange == 'change' %}
-        <p class="govuk-body"><a href="/changes-and-enquiries/contact/remove/{{ type }}" id="typePhoneNumberRemove" class="govuk-link govuk-link--no-visited-state">Remove {{ type }} phone number</a></p>
-      {% endif %}
-      {{ govukButton({
-        text: t("app:button.save")
-      }) }}
-    </form>
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
 {% endblock %}

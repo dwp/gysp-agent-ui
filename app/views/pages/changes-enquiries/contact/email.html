@@ -4,7 +4,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
-{% block pageTitle %}{{ t("contact-details:fields." + type + "." + addOrChange + ".header") }} - Changes and enquiries{% endblock %}
+{% block pageTitle %}{{ t("contact-details:fields." + type + ".header") }} - Changes and enquiries{% endblock %}
 
 {% block sectionBackLink %}
   {{ govukBackLink({
@@ -16,30 +16,23 @@
 
 {% block innerContent %}
   <form method="post" action="/changes-and-enquiries/contact/{{ type }}" autocomplete="off" novalidate>
-    {% call govukFieldset({
-      legend: {
-        text: t("contact-details:fields." + type + "." + addOrChange + ".header"),
-        classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-7",
+    {{ govukInput({
+      label: {
+        text: t("contact-details:fields." + type + ".header"),
+        classes: "govuk-label--l",
         isPageHeading: true
-      }
-    }) %}
-
-      {{ govukInput({
-        label: {
-          text: t("contact-details:fields." + type + "." + addOrChange + ".label")
-        },
-        id: type,
-        name: type,
-        value: details[type],
-        classes: "govuk-input--width-20",
-        errorMessage: errors[type]
-      }) }}
-
-    {% endcall %}
+      },
+      id: type,
+      name: type,
+      value: details[type],
+      classes: "govuk-input--width-20",
+      errorMessage: errors[type]
+    }) }}
 
     {% if addOrChange == 'change' %}
       <p class="govuk-body"><a href="/changes-and-enquiries/contact/remove/{{ type }}" id="typeEmailRemove" class="govuk-link govuk-link--no-visited-state">Remove {{ type }} address</a></p>
     {% endif %}
+    
     {{ govukButton({
       text: t("app:button.save")
     }) }}
