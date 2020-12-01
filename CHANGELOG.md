@@ -1,3 +1,17 @@
+# [7.1.0](https://github.com/dwp/gysp-agent-ui/compare/7.0.0...7.1.0) (2020-12-01)
+
+
+### Bug Fixes
+
+* **util:** handle leap year and invalid 31st dates ([515c725](https://github.com/dwp/gysp-agent-ui/commit/515c7253042b670cdcc1aab719c8d1a37c3a43fc))
+
+
+### Features
+
+* **review:** add user request to SRB GET headers ([43a0812](https://github.com/dwp/gysp-agent-ui/commit/43a0812f06552351829bbbb65adc2848ce7c5c2d))
+
+
+
 # [7.0.0](https://github.com/dwp/gysp-agent-ui/compare/6.9.0...7.0.0) (2020-11-25)
 
 
