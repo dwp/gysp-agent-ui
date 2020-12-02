@@ -48,7 +48,7 @@ app.set('view engine', 'html');
 app.use(`${config.mountUrl}assets`, express.static('./public', { maxage: cacheLength }));
 app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
 app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: cacheLength }));
-app.use(favicon('./node_modules/govuk-frontend/govuk/assets/images/favicon.ico'));
+app.use(config.mountUrl, favicon('./public/images/favicon.ico'));
 
 // Disable Etag for pages
 app.disable('etag');
