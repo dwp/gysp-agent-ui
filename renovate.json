@@ -11,7 +11,7 @@
   },
   "packageRules": [
     {
-      "packageNames": ["aws-sdk", "snyk"],
+      "packageNames": ["snyk"],
       "schedule": ["after 6am on monday"]
     }
   ]
