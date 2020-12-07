@@ -587,6 +587,10 @@ describe('Change circumstances date of death controller ', () => {
       logMessage: '',
       agentGateway: 'http://test-url/',
       logger: {
+        info(traceID, infoTxt) {
+          genericResponse.locals.traceID = traceID;
+          genericResponse.locals.logMessage = infoTxt;
+        },
         error(traceID, errorTxt) {
           genericResponse.locals.traceID = traceID;
           genericResponse.locals.logMessage = errorTxt;

@@ -37,7 +37,8 @@ function postPostcodeLookupErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   const input = postcodeLookupObject.formatter(req.body);
   const lookupUri = postcodeLookupApiUri + input.postcode;
-  requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger);
+  const type = error.statusCode === 404 ? 'info' : 'error';
+  requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger, type);
   res.render('pages/changes-enquiries/address/index', {
     details: req.body,
     globalError: postcodeLookupGlobalErrorMessage(error),
