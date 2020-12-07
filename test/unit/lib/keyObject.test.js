@@ -10,12 +10,13 @@ const agentRefObject = {
   cis: {
     surname: 'User',
     givenname: 'Test',
+    dwp_staffid: '12345678',
   },
 };
 
 const validJson = {
   surname: 'Bloggs',
-  agentRef: 'Test User',
+  agentRef: '12345678',
 };
 
 describe('Key object formatter', () => {

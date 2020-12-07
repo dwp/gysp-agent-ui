@@ -46,6 +46,7 @@ const agentRefObject = {
   cis: {
     surname: 'User',
     givenname: 'Test',
+    dwp_staffid: '12345678',
   },
 };
 
@@ -58,7 +59,7 @@ const validJson = {
   gender: 'Male',
   nino: 'AA370773A',
   inviteKey: 'BLOG1234',
-  agentRef: 'Test User',
+  agentRef: '12345678',
   residentialAddress: {
     thoroughfareName: 'Thoroughfare Name',
     postCode: 'Post Code',

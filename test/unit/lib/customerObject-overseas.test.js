@@ -42,6 +42,7 @@ const agentRefObject = {
   cis: {
     surname: 'User',
     givenname: 'Test',
+    dwp_staffid: '12345678',
   },
 };
 
@@ -53,7 +54,7 @@ const validJson = {
   dobVerification: 'V',
   gender: 'Male',
   nino: 'AA370773A',
-  agentRef: 'Test User',
+  agentRef: '12345678',
   overseasAddress: {
     line1: 'Address Line 1',
     country: 'Country 1',
@@ -74,7 +75,7 @@ const validJsonNoAddressLine2to7 = {
   dobVerification: 'V',
   gender: 'Male',
   nino: 'AA370773A',
-  agentRef: 'Test User',
+  agentRef: '12345678',
   overseasAddress: {
     line1: 'Address Line 1',
     country: 'Country 1',
