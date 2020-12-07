@@ -100,6 +100,12 @@ describe('task helper', () => {
       assert.isObject(task.data);
       assert.lengthOf(task.data.summaryList, 5);
     });
+
+    it('should return a DEATHOVERPAYMENTEMAIL detail page', () => {
+      const task = helper.taskDetail(blankSession, 'DEATHOVERPAYMENTEMAIL', claimData.validClaimWithDeathOverPaymentDue());
+      assert.equal(task.view, 'detail');
+      assert.isObject(task.data);
+    });
   });
 
   describe('taskComplete', () => {
@@ -131,6 +137,18 @@ describe('task helper', () => {
 
     it('should return a DEATHARREARS entitlement complete page - entitled no', () => {
       const task = helper.taskComplete({ ...taskRequest('DEATHARREARS') });
+      assert.equal(task.backHref, '/task/detail');
+      assert.isObject(task.details);
+    });
+
+    it('should return a DEATHOVERPAYMENT entitlement complete page - entitled no', () => {
+      const task = helper.taskComplete({ ...taskRequest('DEATHOVERPAYMENT') });
+      assert.equal(task.backHref, '/task/detail');
+      assert.isObject(task.details);
+    });
+
+    it('should return a DEATHOVERPAYMENTEMAIL entitlement complete page - entitled no', () => {
+      const task = helper.taskComplete({ ...taskRequest('DEATHOVERPAYMENTEMAIL') });
       assert.equal(task.backHref, '/task/detail');
       assert.isObject(task.details);
     });
@@ -196,6 +214,14 @@ describe('task helper', () => {
       it('should be return a array when successfully call API - DEATHARREARS', async () => {
         nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
         const taskEnd = await helper.taskEnd(taskRequest('DEATHOVERPAYMENT'), genericResponse, 'DEATHOVERPAYMENT');
+        assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
+      });
+    });
+
+    describe('DEATHOVERPAYMENTEMAIL', () => {
+      it('should be return a array when successfully call API - DEATHOVERPAYMENTEMAIL', async () => {
+        nock('http://test-url/').put(putWorkItemUpdateStatusCompleteUri).reply(httpStatus.OK, {});
+        const taskEnd = await helper.taskEnd(taskRequest('DEATHOVERPAYMENTEMAIL'), genericResponse, 'DEATHOVERPAYMENTEMAIL');
         assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
       });
     });

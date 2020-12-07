@@ -19,6 +19,10 @@
     "header": "Refer a death overpayment to the debt management service",
     "p": "Send an overpayment referral following the death of a claimant."
   },
+  "deathoverpaymentemail": {
+    "header": "Email the debt management service with additional referral details",
+    "p": "Send details of the person dealing with the estate of a claimant who has died to the debt management service."
+  },
   "primary-button": "Start this task",
   "secondary-button": "Return task to queue"
 }
