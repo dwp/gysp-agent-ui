@@ -168,6 +168,13 @@ app.use(require('./lib/middleware/tasks')(log));
 app.use(require('./lib/kongAuth'));
 
 // Route information
+if (config.env === 'local' || config.env === 'development' || config.env === 'test') {
+  app.use((req, res, next) => {
+    res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
+    next();
+  });
+  app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
+}
 app.use(config.mountUrl, require('./app/routes/general/routes.js'));
 
 app.use((req, res, next) => {
@@ -179,14 +186,6 @@ app.use((req, res, next) => {
   }
   return next();
 });
-
-if (config.env === 'local' || config.env === 'development' || config.env === 'test') {
-  app.use((req, res, next) => {
-    res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
-    next();
-  });
-  app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
-}
 
 app.use(`${config.mountUrl}customer`, roles.permit('GYSP-TEST-SUPPORT-TEAM'), require('./app/routes/customer/routes.js'));
 app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/next-claim/routes.js'));
