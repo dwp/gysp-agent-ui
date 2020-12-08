@@ -11,6 +11,7 @@ const i18nextHttpMiddleware = require('i18next-http-middleware');
 const i18nextFsBackend = require('i18next-fs-backend');
 const compression = require('compression');
 const flash = require('express-flash');
+const moment = require('moment');
 const roles = require('./lib/middleware/roleAuth.js');
 const mockDateRoutes = require('./app/routes/mock-date/routes.js');
 const packageJson = require('./package.json');
@@ -117,6 +118,7 @@ app.use((req, res, next) => {
   res.locals.homepageUrl = '/';
   res.locals.skipLinkMessage = 'Skip to main content';
   res.locals.serviceName = i18next.t('app:service_name');
+  res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
   res.locals.logger = log;
   /* Urls */
   res.locals.agentGateway = config.application.urls.agentGateway;
@@ -179,7 +181,11 @@ app.use((req, res, next) => {
   return next();
 });
 
-if (config.env !== 'production') {
+if (config.env === 'development' || config.env === 'test') {
+  app.use((req, res, next) => {
+    res.locals.currentDateTime = new Date().toString();
+    next();
+  });
   app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
 }
 

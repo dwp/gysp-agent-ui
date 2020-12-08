@@ -94,6 +94,9 @@
         </span>
       </div>
     </div>
+    {% if currentDateTime %}
+      <p id="current-datetime" class="govuk-body govuk-!-font-size-14">Current datetime: {{ currentDateTime }}</p>
+    {% endif %}
   </div>
 </footer>
 {% endblock %}
