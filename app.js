@@ -159,24 +159,6 @@ app.use((req, res, next) => {
 // Actuator end points before middleware to bypass kong auth
 app.use(`${config.mountUrl}actuator`, require('./app/routes/actuator/routes'));
 
-// Middleware
-app.use(require('./lib/middleware/landing')());
-app.use(require('./lib/middleware/processClaim')(log));
-app.use(require('./lib/middleware/reviewAward')(log));
-app.use(require('./lib/middleware/changesEnquiries')(log));
-app.use(require('./lib/middleware/tasks')(log));
-app.use(require('./lib/kongAuth'));
-
-// Route information
-if (config.env === 'local' || config.env === 'development' || config.env === 'test') {
-  app.use((req, res, next) => {
-    res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
-    next();
-  });
-  app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
-}
-app.use(config.mountUrl, require('./app/routes/general/routes.js'));
-
 app.use((req, res, next) => {
   if (config.application.urls.agentGateway === '' || config.application.urls.agentGateway === undefined) {
     return next(new Error('No backend URL supplied'));
@@ -187,6 +169,27 @@ app.use((req, res, next) => {
   return next();
 });
 
+// Mock date
+if (config.env !== 'production' && config.env !== 'staging') {
+  app.use((req, res, next) => {
+    if (req.session.mockDateEnabled) {
+      res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
+    }
+    next();
+  });
+  app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
+}
+
+// Middleware
+app.use(require('./lib/middleware/landing')());
+app.use(require('./lib/middleware/processClaim')(log));
+app.use(require('./lib/middleware/reviewAward')(log));
+app.use(require('./lib/middleware/changesEnquiries')(log));
+app.use(require('./lib/middleware/tasks')(log));
+app.use(require('./lib/kongAuth'));
+
+// Route information
+app.use(config.mountUrl, require('./app/routes/general/routes.js'));
 app.use(`${config.mountUrl}customer`, roles.permit('GYSP-TEST-SUPPORT-TEAM'), require('./app/routes/customer/routes.js'));
 app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/next-claim/routes.js'));
 app.use(`${config.mountUrl}claims`, roles.permit('GYSP-TEST-OPS-PROCESSOR'), require('./app/routes/drop-out-claim/routes.js'));

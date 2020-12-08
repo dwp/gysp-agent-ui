@@ -14,9 +14,9 @@ const responseHelper = require('../../lib/responseHelper');
 
 const emptyDateTime = { params: { datetime: '' } };
 const invalidDateTime = { params: { datetime: 'invalid' } };
-const validDateTime = { params: { datetime: '2020-10-01T10:00:00' } };
+const validDateTime = { session: {}, params: { datetime: '2020-10-01T10:00:00' } };
 
-const validRequest = {};
+const validRequest = { session: {} };
 const currentDateTime = moment();
 
 describe('mock date controller ', () => {
@@ -53,6 +53,7 @@ describe('mock date controller ', () => {
     it('should return redirect and set the date when valid datetime is supplied', () => {
       controller.getMockSetDate(validDateTime, genericResponse);
       assert.include(new Date().toString(), 'Thu Oct 01 2020 10:00:00');
+      assert.isTrue(validDateTime.session.mockDateEnabled);
       assert.equal(genericResponse.address, '/');
     });
   });
@@ -61,6 +62,7 @@ describe('mock date controller ', () => {
     it('should return redirect and set the date when valid datetime is supplied', () => {
       controller.getMockResetDate(validRequest, genericResponse);
       assert.equal(moment().format('YYYY-MM-DD'), currentDateTime.format('YYYY-MM-DD'));
+      assert.isUndefined(validRequest.session.mockDateEnabled);
       assert.equal(genericResponse.address, '/');
     });
   });
