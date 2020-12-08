@@ -118,7 +118,6 @@ app.use((req, res, next) => {
   res.locals.homepageUrl = '/';
   res.locals.skipLinkMessage = 'Skip to main content';
   res.locals.serviceName = i18next.t('app:service_name');
-  res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
   res.locals.logger = log;
   /* Urls */
   res.locals.agentGateway = config.application.urls.agentGateway;
@@ -181,9 +180,9 @@ app.use((req, res, next) => {
   return next();
 });
 
-if (config.env === 'development' || config.env === 'test') {
+if (config.env === 'local' || config.env === 'development' || config.env === 'test') {
   app.use((req, res, next) => {
-    res.locals.currentDateTime = new Date().toString();
+    res.locals.currentDateTime = moment().format('DD/MM/YYYY HH:mm:ss');
     next();
   });
   app.use(`${config.mountUrl}mock-date`, mockDateRoutes);
