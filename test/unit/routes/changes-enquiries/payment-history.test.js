@@ -178,15 +178,15 @@ const reissuePaymentDetailsFormatted = {
     }, {
       key: {
         classes: 'govuk-!-width-one-third',
-        text: 'Account number',
-      },
-      value: { text: '12345678' },
-    }, {
-      key: {
-        classes: 'govuk-!-width-one-third',
         text: 'Sort code',
       },
       value: { text: '11 22 33' },
+    }, {
+      key: {
+        classes: 'govuk-!-width-one-third',
+        text: 'Account number',
+      },
+      value: { text: '12345678' },
     }, {
       key: {
         classes: 'govuk-!-width-one-third',
