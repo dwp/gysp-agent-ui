@@ -15,10 +15,11 @@
 
 {% block innerContent %}
   <form method="post" action="/changes-and-enquiries/personal/death/phone-number" autocomplete="off" novalidate>
-    <h1 class="govuk-heading-l">{{ t("death-dap:header.phone-number", { NAME: awardDetails.firstName }) }}</h1>
     {{ govukInput({
       label: {
-        text: t("death-dap:fields.phone-number.label")
+        text: t("death-dap:header.phone-number", { NAME: awardDetails.firstName }),
+        classes: "govuk-label--l govuk-!-margin-bottom-5",
+        isPageHeading: true
       },
       id: "phone-number",
       name: "phoneNumber",

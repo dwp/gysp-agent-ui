@@ -8,7 +8,7 @@
   },
   "summary": {
     "name": {
-      "key": "Name",
+      "key": "Full name",
       "action": "Change"
     },
     "phone": {

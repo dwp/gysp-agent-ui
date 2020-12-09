@@ -1,13 +1,11 @@
 {
-
   "header": {
-    "name": "Name of the person dealing with {{NAME}}'s estate",
+    "name": "Full name of the person dealing with {{NAME}}'s estate",
     "phone-number": "Phone number of the person dealing with {{NAME}}'s estate",
     "address": "Address of the person dealing with {{NAME}}'s estate"
   },
   "fields": {
     "name": {
-      "label": "Full name",
       "errors": {
         "required": "Enter the full name of the person dealing with the estate",
         "invalid": "Full name must start with a letter and not contain numbers",
@@ -15,7 +13,6 @@
       }
     },
     "phone-number": {
-      "label": "Phone number",
       "errors": {
         "required": "Enter a phone number",
         "invalid": "Enter a phone number in the correct format, like 01632 960 001 or 4408081570192",
