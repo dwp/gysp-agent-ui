@@ -12,18 +12,18 @@ const i18nextFsBackend = require('i18next-fs-backend');
 const compression = require('compression');
 const flash = require('express-flash');
 const moment = require('moment');
-const roles = require('./lib/middleware/roleAuth.js');
+
 const mockDateRoutes = require('./app/routes/mock-date/routes.js');
 const packageJson = require('./package.json');
-
 const redisClient = require('./bootstrap/redisClient');
-
-const app = express();
+const roles = require('./lib/middleware/roleAuth.js');
 
 // Config variables
 const config = require('./config/application');
 const i18nextConfig = require('./config/i18next');
 const log = require('./config/logging')('agent-ui', config.application.logs);
+
+const app = express();
 
 const { cacheLength } = config.application.assets;
 
@@ -102,7 +102,7 @@ i18next
   .use(i18nextFsBackend)
   .init(i18nextConfig);
 
-app.use(i18nextHttpMiddleware.handle(i18next, { ignoreRoutes: ['/public'] }));
+app.use(i18nextHttpMiddleware.handle(i18next, { ignoreRoutes: ['/assets'] }));
 
 // Add post middleware
 app.use(bodyParser.json());
