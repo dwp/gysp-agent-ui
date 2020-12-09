@@ -15,30 +15,22 @@
 {% endblock %}
 
 {% block innerContent %}
-    <form method="post" action="/changes-and-enquiries/address" autocomplete="off" novalidate>
-      {% call govukFieldset({
-        legend: {
-          text: t("address:header"),
-          classes: "govuk-fieldset__legend--l govuk-!-margin-bottom-7",
-          isPageHeading: true
-        }
-      }) %}
+  <h1 class="govuk-heading-l">{{ t("address:header") }}</h1>
 
-        {{ govukInput({
-          label: {
-            text: t("address:fields.postcode.label")
-          },
-          id: "postcode",
-          name: "postcode",
-          value: details.postcode,
-          classes: "govuk-input--width-10",
-          errorMessage: errors.postcode
-        }) }}
+  <form method="post" action="/changes-and-enquiries/address" autocomplete="off" novalidate>
+    {{ govukInput({
+      label: {
+        text: t("address:fields.postcode.label")
+      },
+      id: "postcode",
+      name: "postcode",
+      value: details.postcode,
+      classes: "govuk-input--width-10",
+      errorMessage: errors.postcode
+    }) }}
 
-      {% endcall %}
-
-      {{ govukButton({
-        text: t("address:button.find")
-      }) }}
-    </form>
+    {{ govukButton({
+      text: t("address:button.find")
+    }) }}
+  </form>
 {% endblock %}

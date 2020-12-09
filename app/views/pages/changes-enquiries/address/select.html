@@ -8,7 +8,7 @@
 
 {% block sectionBackLink %}
   {{ govukBackLink({
-    text: 'Back',
+    text: t("app:link.back"),
     href: '/changes-and-enquiries/address',
     classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
   }) }}
@@ -16,8 +16,11 @@
 
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ t("address:header") }}</h1>
-  <h2 class="govuk-heading-s">Postcode <br>
-  {{ postCodeDetails.postcode }} <a href="/changes-and-enquiries/address" class="govuk-link">Change</a></h2>
+
+  <h2 class="govuk-heading-s">
+    {{ t("address:fields.postcode.label") }}<br>
+    {{ postCodeDetails.postcode }} <a href="/changes-and-enquiries/address" class="govuk-link">Change</a>
+  </h2>
 
   <form method="post" action="/changes-and-enquiries/address/select" autocomplete="off" novalidate>
     {{ govukSelect({

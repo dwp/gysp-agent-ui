@@ -1,8 +1,8 @@
 {
-  "header": "Change address",
+  "header": "Address",
   "fields": {
     "postcode": {
-      "label": "Enter new postcode",
+      "label": "UK postcode",
       "errors": {
         "required": "You must enter a postcode",
         "format": "Enter a postcode in the correct format, like AA1 1AA"
