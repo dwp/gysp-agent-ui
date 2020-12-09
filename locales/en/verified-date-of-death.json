@@ -1,8 +1,8 @@
 {
-  "header": "Enter date of death",
+  "header": "Date of death",
   "fields": {
     "date": {
-      "legend": "Enter date of death",
+      "legend": "Date of death",
       "items": {
         "day": {
           "label": "Day"
