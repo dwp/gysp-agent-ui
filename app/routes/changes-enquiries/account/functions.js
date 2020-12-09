@@ -4,7 +4,7 @@ const httpStatus = require('http-status-codes');
 const formValidator = require('../../../../lib/formValidator');
 const requestHelper = require('../../../../lib/requestHelper');
 const accountDetailsObject = require('../../../../lib/objects/accountDetailsObject');
-
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 
 const paymentDetailsUpdateApiUri = 'api/award/payee';
 
@@ -42,7 +42,7 @@ function postChangeBankBuildingAccountDetails(req, res) {
       req.user,
     );
     request(putaccountDetailCall).then(() => {
-      res.redirect('/changes-and-enquiries/payment');
+      redirectHelper.successAlertAndRedirect(req, res, 'payment:success-message.bank_details_changed', '/changes-and-enquiries/payment');
     }).catch((err) => {
       postChangeBankBuildingAccountDetailsErrorHandler(err, req, res);
     });

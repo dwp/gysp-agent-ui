@@ -36,5 +36,8 @@
     "payment_frequency": {
       "changed": "Frequency changed"
     }
+  },
+  "success-message": {
+    "bank_details_changed": "Bank or building society account details changed"
   }
 }

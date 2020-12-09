@@ -2,6 +2,11 @@ const { assert } = require('chai');
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+
+const i18nextConfig = require('../../../../config/i18next');
+
 nock.disableNetConnect();
 
 const changeAccountDetailsController = require('../../../../app/routes/changes-enquiries/account/functions');
@@ -13,16 +18,52 @@ const { promiseWait } = require('../../../lib/unitHelper');
 let testPromise;
 let genericResponse = {};
 
+// Mocks
+let flash = { type: '', message: '' };
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
+
 const accountChangeRequest = { session: { awardDetails: claimData.validClaim() } };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
-const validBankPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim() }, body: { accountName: 'Derek Trotter', accountNumber: '12345678', sortCode: '112233' } };
-const validBuildingSocietyPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
-  session: { awardDetails: claimData.validClaim() },
-  body: {
-    accountName: 'Derek Trotter', accountNumber: '87654321', sortCode: '445566', referenceNumber: '2863547',
+
+const validBankPostRequest = {
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
   },
+  session: {
+    awardDetails: claimData.validClaim(),
+  },
+  body: {
+    accountName: 'Derek Trotter',
+    accountNumber: '12345678',
+    sortCode: '112233',
+  },
+  flash: flashMock,
+};
+
+const validBuildingSocietyPostRequest = {
+  user: {
+    cis: {
+      surname: 'User',
+      givenname: 'Test',
+    },
+  },
+  session: {
+    awardDetails: claimData.validClaim(),
+  },
+  body: {
+    accountName: 'Derek Trotter',
+    accountNumber: '87654321',
+    sortCode: '445566',
+    referenceNumber: '2863547',
+  },
+  flash: flashMock,
 };
 
 const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
@@ -36,6 +77,12 @@ const errorMessages = {
 };
 
 describe('Change circumstances contact controller ', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = {
@@ -49,8 +96,12 @@ describe('Change circumstances contact controller ', () => {
         },
       },
     };
+
+    flash = { type: '', message: '' };
+
     testPromise = promiseWait();
   });
+
   afterEach(() => {
     nock.cleanAll();
   });
