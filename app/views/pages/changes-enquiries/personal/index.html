@@ -7,7 +7,8 @@
     {% if details.warning %}
       {{ govukWarningText({
         html: details.warning.html,
-        iconFallbackText: t('app:warning-text.icon-fallback-text')
+        iconFallbackText: t('app:warning-text.icon-fallback-text'),
+        classes: "gysp-warning-text"
       }) }}
     {% endif %}
 {% endblock %}
