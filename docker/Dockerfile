@@ -9,7 +9,7 @@ ARG APP_FOLDER=/home/node/agent-ui/
 ARG STUNNEL_FOLDER=/opt/stunnel/
 ARG HARDEN_FOLDER=/opt/harden/
 
-RUN apk add --no-cache tzdata=2020c-r1 curl=7.67.0-r2
+RUN apk add --no-cache tzdata>2020c-r1 curl>7.67.0-r2
 
 # Default ENV
 ENV TZ=Europe/London
@@ -17,7 +17,7 @@ ENV PORT=3002
 ENV CONTEXT_PATH=/
 
 # Set up stunnel for use with Redis
-RUN apk add --update --no-cache stunnel=5.56-r1 && mv "$(command -v stunnel)" /usr/local/bin/
+RUN apk add --update --no-cache stunnel>5.56-r1 && mv "$(command -v stunnel)" /usr/local/bin/
 
 WORKDIR ${STUNNEL_FOLDER}
 COPY --chown=node:node docker/stunnel.conf ${STUNNEL_FOLDER}stunnel.conf
