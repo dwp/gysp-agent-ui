@@ -63,8 +63,8 @@
 .gysp-status,
 .gysp-payment {
     float: right;
-    margin-top: 5px;
-    font-size: 15px;
+    margin: 5px 12px 0 0;
+    font-size: 15.3px;
 
     &::before {
         display: inline-block;
@@ -76,11 +76,11 @@
         background-size: 15px 15px;
         content: '';
         @include govuk-media-query($from: tablet) {
-            width: 16px;
-            height: 16px;
+            width: 15.3px;
+            height: 15.3px;
             padding: 0;
-            background-size: 16px 16px;
-            margin-bottom: -2px;
+            background-size: 15.3px 15.3px;
+            margin-bottom: 0;
         }
     }
 
@@ -353,4 +353,18 @@
     .govuk-warning-text__icon {
         margin-top: 8px;
     }
+}
+
+.gysp-extra-padding-right {
+    padding-right: 35px;
+}
+
+.gysp-marital-details-col-1 {
+    @include govuk-media-query($from: tablet) {
+        width: 205px;
+    }
+}
+
+.gysp-marital-details-col-3 {
+    width: 1%;
 }

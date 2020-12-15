@@ -16,22 +16,22 @@
   <table id="marital-details" class="govuk-table">
     <tbody class="govuk-table__body">
       <tr class="govuk-table__row">
-        <th class="govuk-table__cell gysp-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
+        <th class="govuk-table__cell gysp-marital-details-col-1" scope="row">{{ t('marital-details:details.summary.keys.status') }}</th>
         <td class="govuk-table__cell">{{ maritalDetails.details.status }}</td>
-        <td class="govuk-table__cell govuk-table__header--numeric">
+        <td class="govuk-table__cell gysp-marital-details-col-3">
           <a href="/changes-and-enquiries/marital-details/status" class="govuk-link govuk-link--no-visited-state">{{ t('app:link.change') }}<span class="govuk-visually-hidden"> {{ t('marital-details:details.summary.keys.status') | lower }}</span></a>
         </td>
       </tr>
       <tr class="govuk-table__row">
-        <th class="govuk-table__cell gysp-col-1" scope="row">{{ maritalDetails.details.dateLabel }}</th>
+        <th class="govuk-table__cell" scope="row">{{ maritalDetails.details.dateLabel }}</th>
         <td class="govuk-table__cell" {% if maritalDetails.details.maritalStatusVerified %}colspan="2"{% endif %}>
           {{ maritalDetails.details.date }}
-          <span class="govuk-!-font-size-16 govuk-!-font-weight-bold govuk-!-padding-left-6 gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if maritalDetails.details.maritalStatusVerified else 'inactive' }}">
+          <span class="govuk-!-font-weight-bold gysp-secondary-text-colour gysp-status gysp-status--{{ 'active' if maritalDetails.details.maritalStatusVerified else 'inactive' }}">
             {{ t('app:verification-status.verified') if maritalDetails.details.maritalStatusVerified else t('app:verification-status.not-verified') }}
           </span>
         </td>
         {% if not maritalDetails.details.maritalStatusVerified %}
-          <td class="govuk-table__cell govuk-table__header--numeric">
+          <td class="govuk-table__cell">
             <a href="/changes-and-enquiries/marital-details/date" class="govuk-link govuk-link--no-visited-state">
               {{ t('app:link.change') }}
               <span class="govuk-visually-hidden"> {{ maritalDetails.details.dateLabel | lower }}</span>
