@@ -1,7 +1,7 @@
 {
   "header": {
-    "married": "Spouse details",
-    "civil": "Partner details"
+    "married": "Spouse's details",
+    "civil": "Partner's details"
   },
   "fields": {
     "nino": {
