@@ -14,7 +14,8 @@ const awardDataInpayment = [{
   weeklyProtectedPaymentAmount: 200.0,
   weeklyExtraStatePensionAmount: 300.0,
   weeklyInheritedExtraStatePensionAmount: 400.0,
-  entitlementDate: '2018-11-09T12:27:48.795Z',
+  fromDate: 1559023200000, // 28/05/2019
+  toDate: 1590559200000, // 27/05/2020
 }, {
   inPayment: true,
   totalAmount: 1000.0,
@@ -22,7 +23,8 @@ const awardDataInpayment = [{
   weeklyProtectedPaymentAmount: 200.0,
   weeklyExtraStatePensionAmount: 300.0,
   weeklyInheritedExtraStatePensionAmount: 400.0,
-  entitlementDate: '2018-11-09T12:27:48.795Z',
+  fromDate: 1527487200000, // 28/05/2018
+  toDate: 1558936800000, // 27/05/2019
 }];
 
 const awardDataNoInpayment = [{
@@ -32,26 +34,28 @@ const awardDataNoInpayment = [{
   weeklyProtectedPaymentAmount: 200.0,
   weeklyExtraStatePensionAmount: 300.0,
   weeklyInheritedExtraStatePensionAmount: 400.0,
-  entitlementDate: '2018-11-09T12:27:48.795Z',
+  fromDate: 1559023200000, // 28/05/2019
+  toDate: 1590559200000, // 27/05/2020
 }, {
   inPayment: false,
-  totalAmount: 1000.0,
-  weeklyStatePensionAmount: 100.0,
-  weeklyProtectedPaymentAmount: 200.0,
-  weeklyExtraStatePensionAmount: 300.0,
-  weeklyInheritedExtraStatePensionAmount: 400.0,
-  entitlementDate: '2018-11-09T12:27:48.795Z',
+  totalAmount: 290.0,
+  weeklyStatePensionAmount: 200.0,
+  weeklyProtectedPaymentAmount: 40.0,
+  weeklyExtraStatePensionAmount: 30.0,
+  weeklyInheritedExtraStatePensionAmount: 20.0,
+  fromDate: 1527487200000, // 28/05/2018
+  toDate: 1558936800000, // 27/05/2019
 }];
 
 const entitlementDate = 1580968800000;
 
-const formattedResponse = {
+const formattedResponse = (total, nsp, pp, esp, iesp) => ({
   summaryOne: [{
     key: { text: 'Total', classes: 'govuk-!-font-weight-bold govuk-!-width-two-thirds' },
-    value: { text: '£1,000.00 per week', classes: 'govuk-!-font-weight-bold' },
+    value: { text: `£${total} per week`, classes: 'govuk-!-font-weight-bold' },
   }, {
     key: { text: 'New State Pension', classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds' },
-    value: { text: '£100.00' },
+    value: { text: `£${nsp}` },
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
@@ -62,7 +66,7 @@ const formattedResponse = {
     },
   }, {
     key: { text: 'Protected payment', classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds' },
-    value: { text: '£200.00' },
+    value: { text: `£${pp}` },
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
@@ -73,10 +77,10 @@ const formattedResponse = {
     },
   }, {
     key: { text: 'Extra State Pension', classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds' },
-    value: { text: '£300.00' },
+    value: { text: `£${esp}` },
   }, {
     key: { text: 'Inherited extra State Pension', classes: 'govuk-!-font-weight-regular govuk-!-width-two-thirds' },
-    value: { text: '£400.00' },
+    value: { text: `£${iesp}` },
     actions: {
       items: [{
         classes: 'govuk-link--no-visited-state',
@@ -90,7 +94,7 @@ const formattedResponse = {
     key: { text: 'Entitlement date', classes: 'govuk-!-width-two-thirds' },
     value: { text: '6 February 2020' },
   }],
-};
+});
 
 const emptySession = {};
 
@@ -114,12 +118,12 @@ describe('Object: maritalUpdateStatePensionAwardObject', () => {
 
     it('should return valid summary list object with inPayment amounts', () => {
       const response = maritalUpdateStatePensionAwardObject.formatter(awardDataInpayment, entitlementDate, emptySession);
-      assert.deepEqual(response, formattedResponse);
+      assert.deepEqual(response, formattedResponse('1,000.00', '100.00', '200.00', '300.00', '400.00'));
     });
 
-    it('should return valid summary list object with first amounts as no in payment present', () => {
+    it('should return valid summary list object with earliest from date as no in payment present', () => {
       const response = maritalUpdateStatePensionAwardObject.formatter(awardDataNoInpayment, entitlementDate, emptySession);
-      assert.deepEqual(response, formattedResponse);
+      assert.deepEqual(response, formattedResponse('290.00', '200.00', '40.00', '30.00', '20.00'));
     });
   });
 });
