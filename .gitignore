@@ -1,8 +1,9 @@
-.coverage/*
+.coverage/
 .nyc_output/
-.vscode/*
-node_modules/*
-public/*
+.sonarlint/
+.vscode/
+node_modules/
+public/
 .DS_Store
 .env
 .idea

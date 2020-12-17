@@ -58,15 +58,15 @@ npm run test
 
 Code coverage using [nyc](https://github.com/istanbuljs/nyc):
 ```
-npm run test-coverage
+npm run quality
 ```
 
 Code linting using [ESLint](https://github.com/eslint/eslint):
 ```
-npm run lint
+npm run compliance:lint
 ```
 
 Dependancy checks using [npm-audit](https://docs.npmjs.com/cli/audit) & [npm-outdated](https://docs.npmjs.com/cli/outdated):
 ```
-npm run security-tests
+npm run security
 ```

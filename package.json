@@ -2,7 +2,7 @@
   "name": "agent-ui",
   "version": "7.1.0",
   "description": "Agent frontend for Get your State Pension",
-  "snapshot": "9.9.9-SNAPSHOT",
+  "licence": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:dwp/gysp-agent-ui.git"
@@ -15,14 +15,17 @@
     "build": "gulp generateAssets",
     "prestart": "npm ci",
     "start": "gulp | bunyan",
-    "lint": "eslint .",
-    "test": "CONFIG_LOCATION='./test/resource/' mocha test/unit --recursive",
-    "test-coverage": "CONFIG_LOCATION='./test/resource/' BANK_FEATURE=false nyc mocha --reporter=mocha test/unit --recursive ",
-    "security-tests": "npm run security:outdated && npm run security:audit",
+    "compliance": "npm run compliance:lint && npm run compliance:lint-docker",
+    "compliance:lint": "eslint .",
+    "compliance:lint-docker": "docker run --rm -i hadolint/hadolint < docker/Dockerfile",
+    "test": "npm run test:unit",
+    "test:unit": "mocha test/unit --recursive",
+    "quality": "npm run quality:coverage",
+    "quality:coverage": "nyc mocha --reporter=mocha test/unit --recursive",
+    "security": "npm run security:audit && npm run security:outdated",
     "security:audit": "npm audit || true",
-    "security:snyk": "snyk test || true",
     "security:outdated": "npm outdated || true",
-    "compliance-tests": "npm run lint"
+    "security:snyk": "snyk test || true"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "0.0.23",

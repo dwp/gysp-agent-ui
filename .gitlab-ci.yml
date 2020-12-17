@@ -1,0 +1,207 @@
+# Import the standard library of templates
+include:
+  - project: rbac-shared/gitlab-ci-toolbox
+    ref: master
+    file: stdlib.yml
+
+stages:
+  - prepare
+  - build
+  - test
+  - compliance
+  - security
+  - package
+  - analysis
+  - publish
+  - deploy
+  - post deploy
+
+default:
+  image: node:12.20.0-alpine3.11@sha256:a9ee412baa5c130dea5f8483e95890f8d7e499dda196973f4397189b0bb98244
+
+# ---------------------------------------------------------------------- prepare
+
+meta:
+  stage: prepare
+  extends: .rbac-ci-vars
+
+# ------------------------------------------------------------------------ build
+
+node-modules:
+  stage: build
+  script:
+    - npm ci --no-optional
+  artifacts:
+    expire_in: 15 mins
+    paths:
+      - node_modules/
+      - package-lock.json
+
+# ------------------------------------------------------------------------- test
+
+unit-tests:
+  stage: test
+  variables:
+    NO_PROXY: test-url
+  needs:
+    - node-modules
+  script:
+    - npm run test:unit
+
+coverage:
+  stage: test
+  variables:
+    NO_PROXY: test-url
+  needs:
+    - node-modules
+  script:
+    - npm run quality:coverage
+    - ./node_modules/.bin/nyc report --reporter=text-summary
+  coverage: '/Statements +: +(\d+.?\d*)%/'
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - .coverage/
+
+# ------------------------------------------------------------------- compliance
+
+code-lint:
+  stage: compliance
+  script: npm run compliance:lint
+  needs:
+    - node-modules
+
+docker-lint:
+  stage: compliance
+  extends: .rbac-docker-lint
+  variables:
+    DOCKERFILE: docker/Dockerfile
+  needs:
+    - meta
+
+licenses:
+  stage: compliance
+  allow_failure: true
+  needs:
+    - meta
+  script: npx license-checker --onlyAllow 'MIT;ISC;Apache;WTFPL;BSD;LGPL;CC-BY-3.0;CC0-1.0;Unlicense' --excludePackages 'buffers@0.1.1;audit-resolve-core@1.1.7' && touch .ci-licenses
+  artifacts:
+    expire_in: 15 mins
+    when: always
+    paths:
+      - .ci-licenses
+
+# --------------------------------------------------------------------- security
+
+dependency-audit:
+  stage: security
+  allow_failure: true
+  needs:
+    - node-modules
+  script:
+    - npm audit --registry 'https://registry.npmjs.org/' --json | tee .audit.json || true
+    - npm run security:audit && touch .ci-dependencyaudit
+  artifacts:
+    expire_in: 1 week
+    when: always
+    paths:
+      - .audit.*
+      - .ci-dependencyaudit
+
+outdated:
+  stage: security
+  allow_failure: true
+  needs:
+    - node-modules
+  script: npm outdated --registry=https://registry.npmjs.org && touch .ci-outdated
+  artifacts:
+    expire_in: 15 mins
+    when: always
+    paths:
+      - .ci-outdated
+
+sensitive-data:
+  stage: security
+  extends: .rbac-secrets-scan
+  variables:
+    SCAN_OPENSOURCE: "false"
+  needs:
+    - meta
+
+# ---------------------------------------------------------------------- package
+
+image-package:
+  stage: package
+  extends: .rbac-base-image
+  variables:
+    DOCKERFILE: docker/Dockerfile
+    SAVE_IN_REGISTRY: "true"
+    IMAGE_NAME_TAG: ${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG}:${CI_COMMIT_SHORT_SHA}
+  dependencies:
+    - meta
+  before_script:
+    - STABLE=$([ -f .ci-licenses ] && [ -f .ci-dependencyaudit ] && [ -f .ci-outdated ] && echo "1" || echo "0")
+    - |
+      cat <<EOF > .imagelabels
+      ci_build_stable=${STABLE}
+      EOF
+
+# --------------------------------------------------------------------- analysis
+
+sonarqube:
+  stage: analysis
+  image: "$CI_REGISTRY/engineering-practice/sonar-scanner:3.1.0"
+  tags:
+    - transparent
+  needs:
+    - node-modules
+    - coverage
+  script: sonar-scanner -Dsonar.projectBaseDir=$CI_PROJECT_DIR --check-quality-threshold
+
+# ---------------------------------------------------------------------- publish
+
+image-push:
+  stage: publish
+  extends: .rbac-ecr-mirror-image
+  variables:
+    REMOTE_IMAGE_NAME: "${AWS_ACCOUNT_ID}.dkr.ecr.eu-west-2.amazonaws.com/gysp/dev/gysp-agentfrontend"
+    REMOTE_IMAGE_TAGS: "${CI_COMMIT_SHORT_SHA}"
+    SOURCE_IMAGE_NAME_TAG: "${CI_REGISTRY_IMAGE}/${CI_COMMIT_REF_SLUG}:${CI_COMMIT_SHORT_SHA}"
+  before_script:
+    - branchName="${CI_COMMIT_REF_SLUG:-master}"
+    - if [ "$branchName" == "master" ]; then REMOTE_IMAGE_TAGS="$CI_COMMIT_SHORT_SHA deploy"; fi
+    - echo "Using tags \"${REMOTE_IMAGE_TAGS}\""
+  dependencies:
+    - meta
+    - image-package
+  only:
+    - master
+
+container-deploy:
+  stage: deploy
+  extends: .rbac-aws-codedeploy
+  variables:
+    APPLICATION_NAME: gysp-agentfrontend-dev
+    GROUP_NAME: dev-gysp-gysp-agentfrontend-group
+    REVISION: "revisionType=S3,s3Location={bucket=dev-ecs-cluster-codedeploy-releases,bundleType=JSON,key=gysp/dev/gysp-agentfrontend/appspec.json}"
+  dependencies:
+    - meta
+    - image-push
+  only:
+    - master
+
+# ---------------------------------------------------------------------- post deploy
+
+integration-tests:
+  stage: post deploy
+  extends: .rbac-pipeline-trigger
+  variables:
+    PROJECT_PATH: "rbac-gysp/agent-ui-tests"
+    PAT: ${GITLAB_ACCESS_TOKEN}
+    WAIT_TTL: 420
+  needs:
+    - meta
+    - container-deploy
+  only:
+    - master
+
