@@ -18,7 +18,7 @@
           "married": "Enter the spouse's first name",
           "civil": "Enter the partner's first name"
         },
-        "invalid": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "invalid": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
         "length": "First name must have 35 characters or less"
       }
     },
@@ -29,7 +29,7 @@
           "married": "Enter the spouse's last name",
           "civil": "Enter the partner's last name"
         },
-        "invalid": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "invalid": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
         "length": "Last name must have 35 characters or less"
       }
     },
@@ -37,7 +37,7 @@
       "label": "Any other names",
       "hint": "Include middle names, maiden name, former married names changes of family name.",
       "errors": {
-        "invalid": "Other names must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "invalid": "Other names must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
         "length": "Other names must have 35 characters or less"
       }
     },

@@ -100,7 +100,7 @@ describe('marital validator', () => {
       it('should return error when firstName is invalid', () => {
         const errors = validator.partnerValidator({ ...validPostRequest, firstName: '123' });
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.firstName.text, 'First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands');
+        assert.equal(errors.firstName.text, 'First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces');
       });
 
       it('should return error when firstName greater than 35', () => {
@@ -143,7 +143,7 @@ describe('marital validator', () => {
       it('should return error when lastName is invalid', () => {
         const errors = validator.partnerValidator({ ...validPostRequest, lastName: '123' });
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.lastName.text, 'Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands');
+        assert.equal(errors.lastName.text, 'Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces');
       });
 
       it('should return error when lastName greater than 35', () => {
@@ -172,7 +172,7 @@ describe('marital validator', () => {
       it('should return error when otherName is invalid', () => {
         const errors = validator.partnerValidator({ ...validPostRequest, otherName: '123' });
         assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.otherName.text, 'Other names must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands');
+        assert.equal(errors.otherName.text, 'Other names must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces');
       });
 
       it('should return error when otherName greater than 35', () => {
