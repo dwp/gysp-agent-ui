@@ -1,72 +1,72 @@
 
 .navigation-secondary {
-  max-width: 960px;
-  margin: auto;
-  border-bottom: 1px solid govuk-colour('mid-grey');
-
-  ul {
-    // @extend %contain-floats;
     max-width: 960px;
-    margin: 0 auto;
-    padding-left: 0;
+    margin: auto;
+    border-bottom: 1px solid govuk-colour('mid-grey');
 
-    &::after {
+    ul {
+        // @extend %contain-floats;
+        max-width: 960px;
+        margin: 0 auto;
+        padding-left: 0;
+
+        &::after {
+                display: block;
+                clear: both;
+                content: '';
+        }
+    }
+
+    li {
+        float: left;
+        list-style-type: none;
+
+        @include govuk-media-query(mobile, mobile) {
+            width: 100%;
+        }
+    }
+
+    a {
+        @extend %govuk-body-m;
         display: block;
-        clear: both;
-        content: '';
-    }
-  }
+        margin: 0;
+        padding: 15px;
+        text-decoration: underline;
 
-  li {
-    float: left;
-    list-style-type: none;
+        &:link,
+        &:visited {
+            color: $govuk-link-colour;
+        }
 
-    @include govuk-media-query(mobile, mobile) {
-      width: 100%;
-    }
-  }
+        &:active,
+        &:focus {
+            background: $govuk-focus-colour;
+            color: $govuk-text-colour;
+        }
 
-  a {
-    @extend %govuk-body-m;
-    display: block;
-    margin: 0;
-    padding: 15px;
-    text-decoration: underline;
-
-    &:link,
-    &:visited {
-      color: $govuk-link-colour;
+        &:hover {
+            background: govuk-colour('light-grey');
+            text-decoration: underline;
+        }
     }
 
-    &:active,
-    &:focus {
-      background: $govuk-focus-colour;
-      color: $govuk-text-colour;
-    }
+    .active {
+        color: $govuk-text-colour;
+        text-decoration: none;
+        box-shadow: inset 0 -5px 0 0$govuk-brand-colour;
 
-    &:hover {
-      background: govuk-colour('light-grey');
-      text-decoration: underline;
-    }
-  }
+        &:link,
+        &:visited,
+        &:active {
+            color: $govuk-text-colour;
+        }
 
-  .active {
-    color: $govuk-text-colour;
-    text-decoration: none;
-    box-shadow: inset 0 -5px 0 0$govuk-brand-colour;
+        &:focus {
+            color: $govuk-text-colour;
+        }
 
-    &:link,
-    &:visited,
-    &:active {
-      color: $govuk-text-colour;
+        &:hover {
+            text-decoration: none;
+        }
     }
-
-    &:focus {
-      color: $govuk-text-colour;
-    }
-
-    &:hover {
-      text-decoration: none;
-    }
-  }
 }

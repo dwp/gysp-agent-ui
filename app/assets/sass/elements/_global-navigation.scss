@@ -1,82 +1,82 @@
 // sass-lint:disable no-ids
 #global-header-bar {
-  display: none;
+    display: none;
 }
 
 .navigation-global {
-  position: relative;
-  margin-top: -26px;
-  background: govuk-colour('light-grey');
-  @include govuk-media-query($from: tablet) {
-    margin-top: -10px;
-  }
-
-  ul {
-    @include govuk-clearfix;
-    max-width: 990px;
-    padding: 0;
+    position: relative;
+    margin-top: -26px;
+    background: govuk-colour('light-grey');
     @include govuk-media-query($from: tablet) {
-      margin: 0 15px;
-    }
-    @include govuk-media-query($and: '(min-width: #{($govuk-page-width + $govuk-gutter * 2)})') {
-      margin: 0 auto;
-    }
-  }
-
-  li {
-    width: 100%;
-    float: left;
-    list-style-type: none;
-
-    @include govuk-media-query($from: tablet) {
-      width: auto;
-    }
-  }
-
-  a {
-    display: block;
-    padding: 12px 15px;
-    text-decoration: none;
-    @include govuk-media-query($from: tablet) {
-      padding: 15px;
+        margin-top: -10px;
     }
 
-    &:link,
-    &:visited {
-      color: govuk-colour('black');
+    ul {
+        @include govuk-clearfix;
+        max-width: 990px;
+        padding: 0;
+        @include govuk-media-query($from: tablet) {
+            margin: 0 15px;
+        }
+        @include govuk-media-query($and: '(min-width: #{($govuk-page-width + $govuk-gutter * 2)})') {
+            margin: 0 auto;
+        }
     }
 
-    &:active,
-    &:focus {
-      background: govuk-colour('yellow');
-      color: govuk-colour('black');
+    li {
+        width: 100%;
+        float: left;
+        list-style-type: none;
+
+        @include govuk-media-query($from: tablet) {
+            width: auto;
+        }
     }
 
-    &:hover {
-      background: govuk-colour('light-grey');
-      text-decoration: underline;
-    }
-  }
+    a {
+        display: block;
+        padding: 12px 15px;
+        text-decoration: none;
+        @include govuk-media-query($from: tablet) {
+            padding: 15px;
+        }
 
-  .active {
-    border-bottom: 0;
-    background: $govuk-brand-colour;
-    font-weight: 700;
+        &:link,
+        &:visited {
+            color: govuk-colour('black');
+        }
 
-    &:link,
-    &:visited,
-    &:active {
-      color: govuk-colour('white');
+        &:active,
+        &:focus {
+            background: govuk-colour('yellow');
+            color: govuk-colour('black');
+        }
+
+        &:hover {
+            background: govuk-colour('light-grey');
+            text-decoration: underline;
+        }
     }
 
-    &:focus {
-      color: govuk-colour('black');
-    }
+    .active {
+        border-bottom: 0;
+        background: $govuk-brand-colour;
+        font-weight: 700;
 
-    &:hover {
-      background: $govuk-brand-colour;
-      color: govuk-colour('white');
-      text-decoration: underline;
+        &:link,
+        &:visited,
+        &:active {
+            color: govuk-colour('white');
+        }
+
+        &:focus {
+            color: govuk-colour('black');
+        }
+
+        &:hover {
+            background: $govuk-brand-colour;
+            color: govuk-colour('white');
+            text-decoration: underline;
+        }
     }
-  }
 }

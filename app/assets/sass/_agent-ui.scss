@@ -62,8 +62,8 @@
 
 .gysp-status,
 .gysp-payment {
-    float: right;
     margin: 5px 12px 0 0;
+    float: right;
     font-size: 15.3px;
 
     &::before {
@@ -78,9 +78,9 @@
         @include govuk-media-query($from: tablet) {
             width: 15.3px;
             height: 15.3px;
+            margin-bottom: 0;
             padding: 0;
             background-size: 15.3px 15.3px;
-            margin-bottom: 0;
         }
     }
 
@@ -344,7 +344,7 @@
     &__first {
         width: 38%;
         @include govuk-media-query($until: tablet) {
-            width: auto
+            width: auto;
         }
     }
 }

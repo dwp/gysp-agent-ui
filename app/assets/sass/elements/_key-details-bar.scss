@@ -1,144 +1,144 @@
 $white-transparent: rgba(255, 255, 255, .3);
 
 .key-details-bar {
-  margin-top: -10px;
-  background-color: $govuk-brand-colour;
+    margin-top: -10px;
+    background-color: $govuk-brand-colour;
 
-  &__key-details {
-    position: relative;
-    padding: 20px 0;
-    @media(max-width: 670px) {
-      padding: 20px 0;
+    &__key-details {
+        position: relative;
+        padding: 20px 0;
+        @media(max-width: 670px) {
+            padding: 20px 0;
+        }
+
+        * {
+            color: govuk-colour('white');
+        }
     }
 
-    * {
-      color: govuk-colour('white');
+    &__top-block {
+        margin: 0;
     }
-  }
 
-  &__top-block {
-    margin: 0;
-  }
-
-  &__top-block,
-  &__bottom-block {
-    &::after {
-      display: block;
-      clear: both;
-      content: ' ';
+    &__top-block,
+    &__bottom-block {
+        &::after {
+            display: block;
+            clear: both;
+            content: ' ';
+        }
     }
-  }
 
-  &__bottom-block {
-    margin-top: 6px;
-    padding-top: 10px;
-    border-top: 1px solid $white-transparent;
-    font-size: 19px;
-    text-align: right;
-    content: ' ';
-    @media(max-width: 670px) {
-      border: 0;
+    &__bottom-block {
+        margin-top: 6px;
+        padding-top: 10px;
+        border-top: 1px solid $white-transparent;
+        font-size: 19px;
+        text-align: right;
+        content: ' ';
+        @media(max-width: 670px) {
+            border: 0;
+        }
     }
-  }
 
-  &__name,
-  &__nino,
-  &__status {
-    margin-right: 20px;
-    margin-inline-start: 0;
-    float: left;
-    font-size: 19px;
-    @media(max-width: 670px) {
-      margin-bottom: 20px;
-      float: none;
-      font-size: 16px;
+    &__name,
+    &__nino,
+    &__status {
+        margin-right: 20px;
+        margin-inline-start: 0;
+        float: left;
+        font-size: 19px;
+        @media(max-width: 670px) {
+            margin-bottom: 20px;
+            float: none;
+            font-size: 16px;
 
-      &:last-of-type {
-        margin-bottom: 0;
-      }
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
     }
-  }
 
-  &__name {
-    margin-right: 10px;
-    font-size: 36px;
-    font-weight: 700;
-    line-height: 1.11111;
-    @media(max-width: 670px) {
-      margin: 0 5px 0 0;
-      float: left;
-      font-size: 24px;
-      line-height: 1.04167;
+    &__name {
+        margin-right: 10px;
+        font-size: 36px;
+        font-weight: 700;
+        line-height: 1.11111;
+        @media(max-width: 670px) {
+            margin: 0 5px 0 0;
+            float: left;
+            font-size: 24px;
+            line-height: 1.04167;
+        }
     }
-  }
 
-  &__nino {
-    margin-top: 12px;
-    margin-left: 40px;
-    font-size: 24px;
-    line-height: 1;
-    @media(max-width: 670px) {
-      margin: 5px 0 0;
-      float: left;
-      font-size: 18px;
+    &__nino {
+        margin-top: 12px;
+        margin-left: 40px;
+        font-size: 24px;
+        line-height: 1;
+        @media(max-width: 670px) {
+            margin: 5px 0 0;
+            float: left;
+            font-size: 18px;
+        }
     }
-  }
 
-  &__status {
-    margin: 5px 0 0;
-    padding: 5px 8px 0;
-    float: right;
-    background-color: govuk-colour('white');
-    color: $govuk-brand-colour;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    line-height: 1.25;
-    text-decoration: none;
-    text-transform: uppercase;
-    @media(max-width: 670px) {
-      margin-top: 5px;
-      float: left;
-      clear: both;
-      font-size: 14px;
+    &__status {
+        margin: 5px 0 0;
+        padding: 5px 8px 0;
+        float: right;
+        background-color: govuk-colour('white');
+        color: $govuk-brand-colour;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        line-height: 1.25;
+        text-decoration: none;
+        text-transform: uppercase;
+        @media(max-width: 670px) {
+            margin-top: 5px;
+            float: left;
+            clear: both;
+            font-size: 14px;
+        }
     }
-  }
 }
 
 .dwp-key-details-link {
-  color: govuk-colour('white');
-
-  &:visited,
-  &:link {
     color: govuk-colour('white');
-  }
+
+    &:visited,
+    &:link {
+        color: govuk-colour('white');
+    }
 }
 
 .key-details-slim-section {
-  margin-top: -10px;
-  @include govuk-responsive-margin(1, 'bottom');
-  border-bottom: 3px solid govuk-colour('light-grey');
-
-  &__name,
-  &__nino {
+    margin-top: -10px;
     @include govuk-responsive-margin(1, 'bottom');
-    display: inline-block;
-  }
+    border-bottom: 3px solid govuk-colour('light-grey');
 
-  &__name {
-    @include govuk-responsive-margin(3, 'right');
-    display: inline-block;
-  }
-
-  &__status {
-    @include govuk-media-query($from: tablet) {
-      float: right;
+    &__name,
+    &__nino {
+        @include govuk-responsive-margin(1, 'bottom');
+        display: inline-block;
     }
-  }
 
-  &__state-pension-date {
-    @include govuk-responsive-margin(1, 'top');
-    @include govuk-responsive-margin(3, 'bottom');
-    color: govuk-colour('dark-grey');
-  }
+    &__name {
+        @include govuk-responsive-margin(3, 'right');
+        display: inline-block;
+    }
+
+    &__status {
+        @include govuk-media-query($from: tablet) {
+            float: right;
+        }
+    }
+
+    &__state-pension-date {
+        @include govuk-responsive-margin(1, 'top');
+        @include govuk-responsive-margin(3, 'bottom');
+        color: govuk-colour('dark-grey');
+    }
 }

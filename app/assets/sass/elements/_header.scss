@@ -1,9 +1,9 @@
 .dwp-global-header {
     .header-proposition {
         .govuk-header__link--service-name {
-                font-size: 26px;
-                @include govuk-media-query($from: desktop) {
-                    font-size: 30px;
+            font-size: 26px;
+            @include govuk-media-query($from: desktop) {
+                font-size: 30px;
                 }
         }
     }
