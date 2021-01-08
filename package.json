@@ -28,7 +28,7 @@
     "security:snyk": "snyk test || true"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "0.0.23",
+    "@ministryofjustice/frontend": "0.1.0",
     "body-parser": "1.19.0",
     "bunyan": "1.8.14",
     "compression": "1.7.4",
