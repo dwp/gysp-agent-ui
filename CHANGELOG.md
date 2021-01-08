@@ -1,3 +1,19 @@
+# [8.0.0](https://github.com/dwp/gysp-agent-ui/compare/7.1.0...8.0.0) (2021-01-08)
+
+
+### Bug Fixes
+
+* add mount url and correct path for favicon ([4223572](https://github.com/dwp/gysp-agent-ui/commit/42235722b7221b1992779c25c8a465a096869ff3))
+* **award:** use earliest award if no in payment ([114a0bd](https://github.com/dwp/gysp-agent-ui/commit/114a0bd6ceb2ccfd6fdd6cfc933ba113c5780373))
+* **i18next-middleware:** ignore route /assets, not /public ([77d6b0c](https://github.com/dwp/gysp-agent-ui/commit/77d6b0c6bd516549a0241043c65983463e94d41a))
+
+
+### Features
+
+* **tasks:** overpayment email task ([0158f46](https://github.com/dwp/gysp-agent-ui/commit/0158f46defb1e67c963452abce4fd365f7a793c6))
+
+
+
 # [7.1.0](https://github.com/dwp/gysp-agent-ui/compare/7.0.0...7.1.0) (2020-12-01)
 
 
