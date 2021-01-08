@@ -82,7 +82,7 @@
     "del": "6.0.0",
     "eslint": "7.17.0",
     "html5shiv": "3.7.3",
-    "husky": "4.3.6",
+    "husky": "4.3.7",
     "jquery": "3.5.1",
     "jquery-autotab": "1.9.2",
     "mocha": "8.2.1",
