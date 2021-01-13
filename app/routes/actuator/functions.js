@@ -26,9 +26,9 @@ function getMetrics(req, res) {
 }
 
 function getPrometheus(metricsClient) {
-  return (req, res) => {
+  return async (req, res) => {
     res.set('Content-Type', metricsClient.register.contentType);
-    res.send(metricsClient.register.metrics());
+    res.send(await metricsClient.register.metrics());
   };
 }
 

@@ -59,13 +59,13 @@ describe('Actuator controller ', () => {
   });
 
   describe('getPrometheus function ', () => {
-    it('should set Content-Type header to metricsClient contentType', () => {
-      controller.getPrometheus(mockMetricsClient)({}, genericResponse);
+    it('should set Content-Type header to metricsClient contentType', async () => {
+      await controller.getPrometheus(mockMetricsClient)({}, genericResponse);
       assert.equal(genericResponse.headers['Content-Type'], 'test-header');
     });
 
-    it('should send metrics', () => {
-      controller.getPrometheus(mockMetricsClient)({}, genericResponse);
+    it('should send metrics', async () => {
+      await controller.getPrometheus(mockMetricsClient)({}, genericResponse);
       assert.equal(genericResponse.body, 'test-response');
     });
   });
