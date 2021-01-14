@@ -1,6 +1,6 @@
-const domain = require('../../lib/urlExtract');
-const dataStore = require('../dataStore');
-const deleteSession = require('../deleteSession');
+const domain = require('../lib/urlExtract');
+const dataStore = require('../lib/dataStore');
+const deleteSession = require('../lib/deleteSession');
 
 function destroySessionAndRedirect(req, res, redirectUrl) {
   req.session.destroy(() => {

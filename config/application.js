@@ -20,7 +20,9 @@ module.exports = {
       name: process.env.SESSION_NAME || 'name',
       secret: process.env.AGENT_FRONTEND_SESSION_SECRET || 'secret',
       timeout: process.env.SESSION_TIMEOUT ? parseInt(process.env.SESSION_TIMEOUT, 10) : 10,
-      securecookies: process.env.SESSION_SECURE_COOKIES === 'true',
+      cookies: {
+        secure: (process.env.SESSION_SECURE_COOKIES === 'true') || false,
+      },
     },
     urls: {
       apiHost: 'gysp-dev-agent-proxy',

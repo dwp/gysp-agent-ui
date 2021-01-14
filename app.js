@@ -1,22 +1,20 @@
 const path = require('path');
 const express = require('express');
-const helmet = require('helmet');
-const noCache = require('nocache');
-const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
-const session = require('express-session');
-const nunjucks = require('nunjucks');
-const i18next = require('i18next');
-const i18nextHttpMiddleware = require('i18next-http-middleware');
-const i18nextFsBackend = require('i18next-fs-backend');
-const compression = require('compression');
-const flash = require('express-flash');
 const moment = require('moment');
 
 const mockDateRoutes = require('./app/routes/mock-date/routes.js');
 const packageJson = require('./package.json');
-const redisClient = require('./bootstrap/redisClient');
-const roles = require('./lib/middleware/roleAuth.js');
+
+// Middleware
+const headersMiddleware = require('./middleware/headers');
+const staticMiddleware = require('./middleware/static');
+const nunjucksMiddleware = require('./middleware/nunjucks');
+const sessionMiddleware = require('./middleware/session');
+const i18nMiddleware = require('./middleware/i18n');
+const pageMiddleware = require('./middleware/page');
+
+const roles = require('./middleware/roleAuth');
 
 // Config variables
 const config = require('./config/application');
@@ -25,90 +23,30 @@ const log = require('./config/logging')('agent-ui', config.application.logs);
 
 const app = express();
 
-const { cacheLength } = config.application.assets;
+// Serve default, implicit favicon
+app.use(config.mountUrl, favicon('./public/images/favicon.ico'));
 
-// Template setup for nunjucks
-nunjucks.configure([
+// Mount all the required middleware
+staticMiddleware({
+  app,
+  npmGovukFrontend: path.join(__dirname, '/node_modules/govuk-frontend'),
+  maxAge: config.application.assets,
+  mountUrl: config.mountUrl,
+});
+
+headersMiddleware(app);
+
+nunjucksMiddleware(app, [
   'app/views',
   'node_modules/govuk-frontend/',
   'node_modules/@ministryofjustice/frontend/',
-], {
-  autoescape: true,
-  express: app,
-  noCache: config.application.noTemplateCache,
-});
+]);
 
-// Compression of assets
-app.use(compression());
+sessionMiddleware(app, log, config.application);
 
-// Disable x-powered-by header
-app.disable('x-powered-by');
+pageMiddleware(app);
 
-// Middleware to serve static assets
-app.set('view engine', 'html');
-app.use(`${config.mountUrl}assets`, express.static('./public', { maxage: cacheLength }));
-app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk')));
-app.use(`${config.mountUrl}assets`, express.static(path.join(__dirname, '/node_modules/govuk-frontend/govuk/assets'), { maxage: cacheLength }));
-app.use(config.mountUrl, favicon('./public/images/favicon.ico'));
-
-// Disable Etag for pages
-app.disable('etag');
-
-// Use helmet to set XSS security headers, Content-Security-Policy, etc.
-app.use(helmet({
-  referrerPolicy: false,
-  frameguard: { action: 'deny' },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ['\'self\''],
-      scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'www.google-analytics.com'],
-      imgSrc: ['\'self\'', 'www.google-analytics.com'],
-      fontSrc: ['\'self\'', 'data: blob:'],
-    },
-    reportOnly: false,
-  },
-}));
-app.use(noCache());
-
-app.set('trust proxy', 1);
-
-// Session settings
-const sessionConfig = {
-  secret: config.application.session.secret,
-  name: config.application.session.name,
-  cookie: {
-    maxAge: config.application.session.timeout,
-  },
-  resave: true,
-  rolling: true,
-  saveUninitialized: true,
-};
-if (config.application.session.securecookies === true) {
-  sessionConfig.cookie.secure = true;
-}
-if (config.application.session.store === 'redis') {
-  sessionConfig.store = redisClient(session);
-  sessionConfig.store.client.on('error', (err) => {
-    log.error(`Redis error: ${err}`);
-  });
-}
-app.use(session(sessionConfig));
-
-// Flash session middleware used for alerts
-app.use(flash());
-
-// Multilingual information
-i18next
-  .use(i18nextFsBackend)
-  .init(i18nextConfig);
-
-app.use(i18nextHttpMiddleware.handle(i18next, { ignoreRoutes: ['/assets'] }));
-
-// Add post middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-  extended: false,
-}));
+const i18next = i18nMiddleware(app, i18nextConfig);
 
 app.use((req, res, next) => {
   // Send assetPath to all views
@@ -181,12 +119,12 @@ if (config.env !== 'production' && config.env !== 'staging') {
 }
 
 // Middleware
-app.use(require('./lib/middleware/landing')());
-app.use(require('./lib/middleware/processClaim')(log));
-app.use(require('./lib/middleware/reviewAward')(log));
-app.use(require('./lib/middleware/changesEnquiries')(log));
-app.use(require('./lib/middleware/tasks')(log));
-app.use(require('./lib/kongAuth'));
+app.use(require('./middleware/landing')());
+app.use(require('./middleware/processClaim')(log));
+app.use(require('./middleware/reviewAward')(log));
+app.use(require('./middleware/changesEnquiries')(log));
+app.use(require('./middleware/tasks')(log));
+app.use(require('./middleware/kongAuth'));
 
 // Route information
 app.use(config.mountUrl, require('./app/routes/general/routes.js'));

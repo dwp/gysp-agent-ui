@@ -8,11 +8,5 @@
   "automerge": true,
   "major": {
     "automerge": false
-  },
-  "packageRules": [
-    {
-      "packageNames": ["snyk"],
-      "schedule": ["after 6am on monday"]
-    }
-  ]
+  }
 }

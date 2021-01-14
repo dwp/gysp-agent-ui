@@ -1,8 +1,8 @@
 const { assert } = require('chai');
-const responseHelper = require('../../../lib/responseHelper');
-const changesEnquiries = require('../../../../lib/middleware/changesEnquiries');
+const responseHelper = require('../../lib/responseHelper');
+const changesEnquiries = require('../../../middleware/changesEnquiries');
 
-const claimData = require('../../../lib/claimData');
+const claimData = require('../../lib/claimData');
 
 let genericResponse;
 let log;

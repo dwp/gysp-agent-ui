@@ -1,6 +1,6 @@
 const { assert } = require('chai');
-const responseHelper = require('../../../lib/responseHelper');
-const processClaim = require('../../../../lib/middleware/processClaim');
+const responseHelper = require('../../lib/responseHelper');
+const processClaim = require('../../../middleware/processClaim');
 
 let genericResponse;
 let log;

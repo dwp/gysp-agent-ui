@@ -1,5 +1,5 @@
 const config = require('../config/application');
-const dataStore = require('./dataStore');
+const dataStore = require('../lib/dataStore');
 
 const KONG_ENABLED = config.application.kong.enabled;
 

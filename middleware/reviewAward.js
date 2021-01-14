@@ -1,4 +1,4 @@
-const domain = require('../../lib/urlExtract');
+const domain = require('../lib/urlExtract');
 
 function destroySessionAndRedirect(req, res, redirectUrl) {
   req.session.destroy(() => {

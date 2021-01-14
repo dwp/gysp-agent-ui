@@ -1,7 +1,7 @@
-const domain = require('../urlExtract');
-const deleteSession = require('../deleteSession');
-const dataStore = require('../dataStore');
-const keyDetailsHelper = require('../keyDetailsHelper');
+const domain = require('../lib/urlExtract');
+const deleteSession = require('../lib/deleteSession');
+const dataStore = require('../lib/dataStore');
+const keyDetailsHelper = require('../lib/keyDetailsHelper');
 
 function checkAwardDetailsNotInSession(req) {
   return !req.session.searchedNino;
