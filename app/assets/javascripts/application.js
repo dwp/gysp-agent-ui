@@ -84,3 +84,11 @@ $(window).on('load', function (e) {
   $('#toDate-day').autotab({format: 'numeric', target: '#toDate-month'});
   $('#toDate-month').autotab({format: 'numeric', target: '#toDate-year'});
 });
+
+accessibleAutocomplete.enhanceSelectElement({
+  selectElement: document.querySelector('.gysp-autocomplete'),
+  autoselect: false,
+  defaultValue: '',
+  displayMenu: 'overlay',
+  minLength: 2
+});

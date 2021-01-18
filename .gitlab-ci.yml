@@ -125,6 +125,7 @@ sensitive-data:
   extends: .rbac-secrets-scan
   variables:
     SCAN_OPENSOURCE: "false"
+    EXCLUDE_FILES: "/resource/country-list.json"
   needs:
     - meta
 

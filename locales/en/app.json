@@ -28,6 +28,9 @@
     "verified": "Verified",
     "not-verified": "Not verified"
   },
+  "autocomplete": {
+    "default": "Select an option"
+  },
   "errors": {
     "api": {
       "not-found": "There has been a problem - {{SERVICE}} not found. This has been logged.",

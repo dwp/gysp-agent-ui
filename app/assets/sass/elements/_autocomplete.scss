@@ -1,0 +1,13 @@
+@import '../../../node_modules/accessible-autocomplete/src/autocomplete.css';
+
+.autocomplete__input {
+  width: 100%;
+}
+
+.gysp-autocomplete,
+.autocomplete__wrapper {
+  width: 100%;
+  @include govuk-media-query($from: tablet) {
+    width: 66.66%;
+  }
+}
