@@ -23,6 +23,15 @@ describe('redirect helper', () => {
       .init(i18nextConfig);
   });
 
+  beforeEach(() => {
+    response = {
+      address: '',
+      redirect(url) {
+        this.address = url;
+      },
+    };
+  });
+
   describe('redirectBasedOnPageAndEditMode', () => {
     it('should return dap-postcode next url when edit mode true', () => {
       assert.equal(helper.redirectBasedOnPageAndEditMode('dap-postcode', true), '/changes-and-enquiries/personal/death/address-select');
@@ -57,37 +66,30 @@ describe('redirect helper', () => {
     });
   });
 
-  describe('redirectAndClearSessionKey', () => {
-    beforeEach(() => {
-      response = {
-        address: '',
-        redirect(url) {
-          this.address = url;
-        },
-      };
-    });
-
+  describe('clearSessionKeyAndRedirect', () => {
     it('should return redirect with session key cleared when called', () => {
       const request = { session: { foo: 'bar' } };
-      helper.redirectAndClearSessionKey(request, response, 'foo', '/redirect');
+      helper.clearSessionKeyAndRedirect(request, response, 'foo', '/redirect');
       assert.isUndefined(request.session.foo);
       assert.equal(response.address, '/redirect');
     });
   });
 
   describe('successAlertAndRedirect', () => {
-    beforeEach(() => {
-      response = {
-        address: '',
-        redirect(url) {
-          this.address = url;
-        },
-      };
-    });
-
-    it('should return redirect with session key cleared when called', () => {
+    it('should return redirect with flash message when called', () => {
       const request = { flash: flashMock };
       helper.successAlertAndRedirect(request, response, 'app:service_name', '/redirect');
+      assert.equal(flash.type, 'success');
+      assert.equal(flash.message, 'DWP');
+      assert.equal(response.address, '/redirect');
+    });
+  });
+
+  describe('clearSessionKeySuccessAlertAndRedirect', () => {
+    it('should return redirect with session key cleared and flash message when called', () => {
+      const request = { session: { foo: 'bar' }, flash: flashMock };
+      helper.clearSessionKeySuccessAlertAndRedirect(request, response, 'foo', 'app:service_name', '/redirect');
+      assert.isUndefined(request.session.foo);
       assert.equal(flash.type, 'success');
       assert.equal(flash.message, 'DWP');
       assert.equal(response.address, '/redirect');

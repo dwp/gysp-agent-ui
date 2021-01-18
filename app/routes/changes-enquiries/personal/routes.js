@@ -7,5 +7,6 @@ router.get('/personal', functions.getPersonalDetails);
 
 router.use('/personal', require('../deferral/routes'));
 router.use('/personal', require('../stop-state-pension/routes'));
+router.use('/personal', require('../name-change/routes'));
 
 module.exports = router;

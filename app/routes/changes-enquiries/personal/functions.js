@@ -1,11 +1,11 @@
 const request = require('request-promise');
-const requestHelper = require('../../../../lib/requestHelper');
-const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
-const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
-const timelineHelper = require('../../../../lib/helpers/timelineHelper');
-const deleteSession = require('../../../../lib/deleteSession');
 
 const changeCircumstancesOverview = require('../../../../lib/changeCircumstancesOverview');
+const deleteSession = require('../../../../lib/deleteSession');
+const keyDetailsHelper = require('../../../../lib/keyDetailsHelper');
+const requestHelper = require('../../../../lib/requestHelper');
+const secondaryNavigationHelper = require('../../../../lib/helpers/secondaryNavigationHelper');
+const timelineHelper = require('../../../../lib/helpers/timelineHelper');
 
 const activeSecondaryNavigationSection = 'personal';
 
@@ -16,9 +16,9 @@ function getPersonalDetails(req, res) {
     .then(async (body) => {
       req.session.awardDetails = body;
       const details = changeCircumstancesOverview.formatter(body);
-      const keyDetails = keyDetailsHelper.formatter(req.session.awardDetails);
-      const timelineDetails = await timelineHelper.getTimeline(req, res, 'PERSONAL');
+      const keyDetails = keyDetailsHelper.formatter(body);
       const secondaryNavigationList = secondaryNavigationHelper.navigationItems(activeSecondaryNavigationSection);
+      const timelineDetails = await timelineHelper.getTimeline(req, res, 'PERSONAL');
       res.render('pages/changes-enquiries/personal/index', {
         details,
         keyDetails,

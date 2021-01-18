@@ -66,7 +66,7 @@ async function getReturnTaskToQueue(req, res) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.workItem(), workItem);
     const returnCall = requestHelper.generatePutCall(res.locals.agentGateway + putWorkItemUpdateStatusReturnedEndPoint, filteredRequest, 'work-items', req.user);
     await request(returnCall);
-    redirectHelper.redirectAndClearSessionKey(req, res, 'tasks', '/tasks');
+    redirectHelper.clearSessionKeyAndRedirect(req, res, 'tasks', '/tasks');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task');
   }
@@ -93,7 +93,7 @@ async function getEndTask(req, res) {
   try {
     const { workItemReason } = dataStore.get(req, 'work-item', 'tasks');
     const sessionKeys = await taskHelper.taskEnd(req, res, workItemReason);
-    redirectHelper.redirectAndClearSessionKey(req, res, sessionKeys, '/tasks');
+    redirectHelper.clearSessionKeyAndRedirect(req, res, sessionKeys, '/tasks');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'work items', '/tasks/task/complete');
   }

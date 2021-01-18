@@ -101,7 +101,7 @@ async function getUpdate(req, res) {
 
     req.flash('success', i18n.t('manual-payment-update:messages.success'));
 
-    redirectHelper.redirectAndClearSessionKey(req, res, ['manual-payment'], root);
+    redirectHelper.clearSessionKeyAndRedirect(req, res, ['manual-payment'], root);
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'payment', confirmUrl);
   }

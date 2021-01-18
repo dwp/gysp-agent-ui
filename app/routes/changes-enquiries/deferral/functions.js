@@ -129,7 +129,7 @@ async function getUpdate(req, res) {
     await request(putCall);
     req.flash('success', i18n.t('deferral-update:messages.success'));
     const sessionKeys = ['stop-state-pension', 'deferral'];
-    redirectHelper.redirectAndClearSessionKey(req, res, sessionKeys, root);
+    redirectHelper.clearSessionKeyAndRedirect(req, res, sessionKeys, root);
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', confirmUrl);
   }

@@ -14,34 +14,6 @@ const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const { promiseWait } = require('../../../lib/unitHelper');
 
-const keyDetails = {
-  fullName: 'Joe Bloggs',
-  nino: 'AA 37 07 73 A',
-  status: { text: 'RECEIVING STATE PENSION', class: 'active' },
-  dateOfBirth: null,
-};
-
-const keyDetailsDead = {
-  fullName: 'Joe Bloggs',
-  nino: 'AA 37 07 73 A',
-  status: { text: 'DEAD', class: 'dead' },
-  dateOfBirth: null,
-};
-
-const keyDetailsDeadNotVerified = {
-  fullName: 'Joe Bloggs',
-  nino: 'AA 37 07 73 A',
-  status: { text: 'DEAD - NOT VERIFIED', class: 'dead' },
-  dateOfBirth: null,
-};
-
-const keyDetailsDeferred = {
-  fullName: 'Joe Bloggs',
-  nino: 'AA 37 07 73 A',
-  status: { text: 'DEFERRED', class: 'deferred' },
-  dateOfBirth: null,
-};
-
 let testPromise;
 let genericResponse = {};
 const ninoRequest = { session: { searchedNino: 'AA370773A' }, body: {} };
@@ -83,7 +55,6 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(claimData.validPersonalDetailsViewData()));
-        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetails));
       });
     });
 
@@ -93,7 +64,6 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathVerifiedData());
-        assert.deepEqual(genericResponse.data.keyDetails, keyDetailsDead);
       });
     });
 
@@ -103,7 +73,6 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathNotVerifiedData());
-        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
       });
     });
 
@@ -113,7 +82,6 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.deepEqual(genericResponse.data.details, claimData.validClaimWithDeathNotVerifiedData());
-        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeadNotVerified));
       });
     });
 
@@ -123,7 +91,6 @@ describe('Change circumstances personal controller', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/index');
         assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify({ ...claimData.validPersonalDetailsViewData(), enableStopStatePension: false }));
-        assert.equal(JSON.stringify(genericResponse.data.keyDetails), JSON.stringify(keyDetailsDeferred));
       });
     });
 

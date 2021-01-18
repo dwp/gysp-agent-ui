@@ -124,7 +124,7 @@ async function saveDateAndRedirect(req, res, award, filteredRequest, maritalShor
   try {
     await request(putMaritalDetailsCall);
     req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification));
-    redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+    redirectHelper.clearSessionKeyAndRedirect(req, res, 'marital', '/changes-and-enquiries/personal');
   } catch (err) {
     errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date');
   }
@@ -142,7 +142,7 @@ async function saveDateWithInheritableCheckAndRedirect(req, res, award, maritalS
   const { date: { verification } } = maritalFormDetails;
   await saveWidowDetails(req, res, award, maritalFormDetails);
   req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification));
-  redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+  redirectHelper.clearSessionKeyAndRedirect(req, res, 'marital', '/changes-and-enquiries/personal');
 }
 
 async function postChangeMaritalDate(req, res) {
@@ -266,7 +266,7 @@ async function postPartnerDetails(req, res) {
     try {
       await request(putMaritalDetailsCall);
       req.flash('success', i18n.t('marital-status:success-message'));
-      redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+      redirectHelper.clearSessionKeyAndRedirect(req, res, 'marital', '/changes-and-enquiries/personal');
     } catch (err) {
       errorHelper.flashErrorAndRedirect(req, res, err, 'award', req.fullUrl);
     }
@@ -410,7 +410,7 @@ async function saveUpdateAwardAndRedirect(req, res, award, suffix) {
   await saveWidowDetails(req, res, award, maritalFormDetails);
   const maritalShortStatus = maritalStatusHelper.currentOrNewShortStatus(currentMaritalStatus, newMaritalStatus);
   req.flash('success', maritalStatusHelper.maritalDateSuccessAlert(currentMaritalStatus, maritalShortStatus, verification, suffix));
-  redirectHelper.redirectAndClearSessionKey(req, res, 'marital', '/changes-and-enquiries/personal');
+  redirectHelper.clearSessionKeyAndRedirect(req, res, 'marital', '/changes-and-enquiries/personal');
 }
 
 async function postUpdateAndSendLetter(req, res) {

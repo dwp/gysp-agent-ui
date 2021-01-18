@@ -1,0 +1,31 @@
+{
+  "header": "Name",
+  "fields": {
+    "firstName": {
+      "label": "First name",
+      "errors": {
+        "required": "Enter a first name",
+        "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "length": "First name must have 35 characters or less"
+      }
+    },
+    "lastName": {
+      "label": "Last name",
+      "errors": {
+        "required": "Enter a last name",
+        "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands",
+        "length": "Last name must have 35 characters or less"
+      }
+    }
+  },
+  "success-message": {
+    "name": {
+      "change": "Name changed"
+    }
+  },
+  "timeline": {
+    "name": {
+      "changed": "Name changed"
+    }
+  }
+}
