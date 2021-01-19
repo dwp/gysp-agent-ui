@@ -1,0 +1,8 @@
+{
+  "header": "New award",
+  "success-message": {
+    "entitlement-date": {
+      "changed": "Entitlement date changed"
+    }
+  }
+}

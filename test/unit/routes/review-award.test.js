@@ -1,30 +1,40 @@
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
-const httpStatus = require('http-status-codes');
+
+const { assert } = chai;
 
 chai.use(chaiAsPromised);
 
 const nock = require('nock');
+const httpStatus = require('http-status-codes');
 
 nock.disableNetConnect();
 
+const i18next = require('i18next');
+const i18nextFsBackend = require('i18next-fs-backend');
+const i18nextConfig = require('../../../config/i18next');
+
 const controller = require('../../../app/routes/review-award/functions');
-const { promiseWait } = require('../../lib/unitHelper');
 
-let testPromise;
 let genericResponse;
+let testPromise;
+let flash = { type: '', message: '' };
 
-const { assert } = chai;
+const flashMock = (type, message) => {
+  flash.type = type;
+  flash.message = message;
+};
 
-const responseHelper = require('../../lib/responseHelper');
 const claimData = require('../../lib/claimData');
 const dataObjects = require('../../lib/formDataObjects');
+const responseHelper = require('../../lib/responseHelper');
+const { promiseWait } = require('../../lib/unitHelper');
 
-const awardReviewTotalUri = '/api/hmrccalc/count/srb-review';
-const awardUri = '/api/award';
-const awardReviewUri = '/api/hmrccalc/next-srb';
-const awardReviewBreakdownUri = '/api/award/srbpaymentbreakdown';
 const awardAmountUpdateUri = '/api/award/srbamountsupdate';
+const awardReviewBreakdownUri = '/api/award/srbpaymentbreakdown';
+const awardReviewTotalUri = '/api/hmrccalc/count/srb-review';
+const awardReviewUri = '/api/hmrccalc/next-srb';
+const awardUri = '/api/award';
 
 const awardReviewTotalResponse = 50;
 
@@ -52,16 +62,29 @@ let validRequest = { session: {}, user: { ...user } };
 const invalidRequest = { session: { }, user: { ...user } };
 
 const emptyPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: {} };
-const validPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: { dateYear: '2020', dateMonth: '01', dateDay: '01' } };
+const validPostNewEntitlementDateRequest = {
+  session: { award: claimData.validClaim() },
+  body: { dateYear: '2020', dateMonth: '01', dateDay: '01' },
+  flash: flashMock,
+};
 
 describe('Review award controller', () => {
-  describe('getReviewAward function (GET /review-award)', () => {
+  before(async () => {
+    await i18next
+      .use(i18nextFsBackend)
+      .init(i18nextConfig);
+  });
+
+  beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
     genericResponse.locals = responseHelper.localResponse(genericResponse);
-    beforeEach(() => {
-      testPromise = promiseWait();
-    });
 
+    testPromise = promiseWait();
+
+    flash = { type: '', message: '' };
+  });
+
+  describe('getReviewAward function (GET /review-award)', () => {
     it('should return view with total number of awards to review', () => {
       nock('http://test-url/', reqHeaders).get(awardReviewTotalUri).reply(200, awardReviewTotalResponse);
       controller.getReviewAward(validRequest, genericResponse);
@@ -83,9 +106,6 @@ describe('Review award controller', () => {
   });
 
   describe('getReviewReason function (GET /review-award/reason)', () => {
-    genericResponse = responseHelper.genericResponse();
-    genericResponse.locals = responseHelper.localResponse(genericResponse);
-
     beforeEach(() => {
       validRequest = { session: {}, user: { ...user } };
     });
@@ -129,9 +149,6 @@ describe('Review award controller', () => {
   });
 
   describe('getNewAward function (GET /review-award/new-award)', () => {
-    genericResponse = responseHelper.genericResponse();
-    genericResponse.locals = responseHelper.localResponse(genericResponse);
-
     beforeEach(() => {
       validRequest = { session: { 'review-award': validNextSrb, award: claimData.validClaim() }, user: { cis: { surname: 'User', givenname: 'Test' } } };
     });
@@ -149,8 +166,6 @@ describe('Review award controller', () => {
   });
 
   describe('getPaymentSchedule function (GET /review-award/schedule)', () => {
-    genericResponse = responseHelper.genericResponse();
-    genericResponse.locals = responseHelper.localResponse(genericResponse);
     const validReviewAwardRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
     const validReviewAwardWithAssetedEntitlementDateRequest = dataObjects.validReviewAwardPaymentScheduleAssetedEntitlementDateRequest();
 
@@ -222,18 +237,7 @@ describe('Review award controller', () => {
   });
 
   describe('postPaymentSchedule function (POST /review-award/schedule)', () => {
-    genericResponse = responseHelper.genericResponse();
-    genericResponse.locals = responseHelper.localResponse(genericResponse);
     const validPostRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
-
-    const flash = {
-      type: '',
-      message: '',
-    };
-    const flashMock = (type, message) => {
-      flash.type = type;
-      flash.message = message;
-    };
     validPostRequest.flash = flashMock;
 
     it(`should return redirect with error when API returns ${httpStatus.BAD_REQUEST} state`, async () => {

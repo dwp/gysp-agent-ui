@@ -1,48 +1,59 @@
 {% extends 'helpers/layout.html' %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
-{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from 'helpers/key-details.html' import keyDetailsSlimSection %}
 
-{% block pageTitle %}New award{% endblock %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
+{% from 'helpers/key-details.html' import keyDetailsSlimSection %}
+{% from 'moj/components/banner/macro.njk' import mojBanner %}
+
+{% block pageTitle %}{{ t('new-award:header') }}{% endblock %}
 
 {% block content %}
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        {% if keyDetails %}
-            {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, spDate) }}
-        {% endif %}
+      {% if keyDetails %}
+        {{ keyDetailsSlimSection(keyDetails.fullName, keyDetails.nino, keyDetails.status, spDate) }}
+      {% endif %}
     </div>
-</div>
+  </div>
 
-{{ govukBackLink({
+  {% if messages.success %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds govuk-!-margin-top-7">
+          {{ mojBanner({
+            type: 'success',
+            text: messages.success,
+            iconFallbackText: 'Success'
+          }) }}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ govukBackLink({
     text: 'Back',
     href: '/review-award/reason',
     classes: 'govuk-!-margin-bottom-8'
-}) }}
+  }) }}
 
-<div class="govuk-grid-row">
+  <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl">New award</h1>
+      <h1 class="govuk-heading-xl">{{ t('new-award:header') }}</h1>
 
-        {{ govukSummaryList({
-            rows: details.summaryOne
-        }) }}
+      {{ govukSummaryList({
+        rows: details.summaryOne
+      }) }}
 
-        {{ govukSummaryList({
-            rows: details.summaryTwo
-        }) }}
+      {{ govukSummaryList({
+        rows: details.summaryTwo
+      }) }}
 
-        {{ govukButton({
-            text: 'Continue',
-            href: '/review-award/schedule',
-            attributes: {
-                id: 'award-review'
-            }
-        }) }}
-
+      {{ govukButton({
+        text: 'Continue',
+        href: '/review-award/schedule',
+        attributes: {
+          id: 'award-review'
+        }
+      }) }}
     </div>
-</div>
-
-
+  </div>
 {% endblock %}

@@ -11,53 +11,53 @@
 {% block pageTitle %} - {{ t('app:title.changes-enquiries') }}{% endblock %}
 
 {% block globalNavigation %}
-    {{ globalNavigation(activeGlobalNavigationSection) }}
+  {{ globalNavigation(activeGlobalNavigationSection) }}
 {% endblock %}
 
 {% block content %}
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            {% if messages.success %}
-                {{ mojBanner({
-                    type: 'success',
-                    text: messages.success,
-                    iconFallbackText: 'Success'
-                }) }}
-            {% endif %}
-        </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if messages.success %}
+        {{ mojBanner({
+          type: 'success',
+          text: messages.success,
+          iconFallbackText: 'Success'
+        }) }}
+      {% endif %}
     </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds gysp-extra-padding-right">
-            {% if globalError %}
-                {{ error(globalError) }}
-            {% endif %}
-            {% if messages.error %}
-                {{ error(messages.error) }}
-            {% endif %}
+  </div>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds gysp-extra-padding-right">
+      {% if globalError %}
+        {{ error(globalError) }}
+      {% endif %}
+      {% if messages.error %}
+        {{ error(messages.error) }}
+      {% endif %}
 
-            {% if keyDetails %}
-                {{ keyDetailsSection(t, keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
-            {% endif %}
-            {% block topContent %}{% endblock %}
-            {% if secondaryNavigationList %}
-                {{ secondaryNavigation(secondaryNavigationList) }}
-            {% endif %}
-            {% block sectionBackLink %}
-                {% if backHref %}
-                    {{ govukBackLink({
-                        text: t("app:link.back"),
-                        href: '/changes-and-enquiries' + backHref,
-                        classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
-                    }) }}
-                {% endif %}
-            {% endblock %}
-            {% block innerContent %} {% endblock %}
-        </div>
-        {% if timelineDetails %}
-            <div class="govuk-grid-column-one-third">
-                {{ timeline(t, timelineDetails) }}
-            </div>
+      {% if keyDetails %}
+        {{ keyDetailsSection(t, keyDetails.fullName, keyDetails.nino, keyDetails.status) }}
+      {% endif %}
+      {% block topContent %}{% endblock %}
+      {% if secondaryNavigationList %}
+        {{ secondaryNavigation(secondaryNavigationList) }}
+      {% endif %}
+      {% block sectionBackLink %}
+        {% if backHref %}
+          {{ govukBackLink({
+            text: t("app:link.back"),
+            href: '/changes-and-enquiries' + backHref,
+            classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
+          }) }}
         {% endif %}
+      {% endblock %}
+      {% block innerContent %} {% endblock %}
     </div>
-    {% block outerContent %} {% endblock %}
+    {% if timelineDetails %}
+      <div class="govuk-grid-column-one-third">
+        {{ timeline(t, timelineDetails) }}
+      </div>
+    {% endif %}
+  </div>
+  {% block outerContent %} {% endblock %}
 {% endblock %}

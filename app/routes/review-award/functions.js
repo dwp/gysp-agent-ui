@@ -1,15 +1,18 @@
-const request = require('request-promise');
 const httpStatus = require('http-status-codes');
 const querystring = require('querystring');
-const dateHelper = require('../../../lib/dateHelper');
-const requestHelper = require('../../../lib/requestHelper');
-const deleteSession = require('../../../lib/deleteSession');
-const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
+const request = require('request-promise');
+
 const dataStore = require('../../../lib/dataStore');
-const reviewAwardReasonObject = require('../../../lib/objects/reviewAwardReasonObject');
-const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
-const srbAmountUpdateObject = require('../../../lib/objects/srbAmountUpdateObject');
+const dateHelper = require('../../../lib/dateHelper');
+const deleteSession = require('../../../lib/deleteSession');
 const formValidator = require('../../../lib/formValidator');
+const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
+const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
+const redirectHelper = require('../../../lib/helpers/redirectHelper');
+const requestHelper = require('../../../lib/requestHelper');
+const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAwardObject');
+const reviewAwardReasonObject = require('../../../lib/objects/reviewAwardReasonObject');
+const srbAmountUpdateObject = require('../../../lib/objects/srbAmountUpdateObject');
 
 async function cacheRetrieveAndStore(req, key, apiCall) {
   if (dataStore.get(req, key)) {
@@ -19,8 +22,6 @@ async function cacheRetrieveAndStore(req, key, apiCall) {
   dataStore.save(req, key, data);
   return data;
 }
-
-const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAwardObject');
 
 function getReviewAward(req, res) {
   deleteSession.deleteReviewAward(req, 'all');
@@ -181,7 +182,7 @@ function postNewEntitlementDate(req, res) {
   const errors = formValidator.reviewAwardEntitlementDateValidation(award.statePensionDate, details);
   if (Object.keys(errors).length === 0) {
     dataStore.save(req, 'review-award-date', details);
-    res.redirect('/review-award/new-award');
+    redirectHelper.successAlertAndRedirect(req, res, 'new-award:success-message.entitlement-date.changed', '/review-award/new-award');
   } else {
     const keyDetails = keyDetailsHelper.formatter(award);
     const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
