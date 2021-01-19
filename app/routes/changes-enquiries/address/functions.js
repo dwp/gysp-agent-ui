@@ -6,15 +6,21 @@ const requestHelper = require('../../../../lib/requestHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const dataStore = require('../../../../lib/dataStore');
 const deleteSession = require('../../../../lib/deleteSession');
+const validator = require('../../../../lib/validation/internationalAddressValidation');
+const { getCountryList } = require('../../../../lib/helpers/countryHelper');
 
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
 const addressDetailsObject = require('../../../../lib/objects/addressDetailsObject');
+const internationalAddressObject = require('../../../../lib/objects/api/internationalAddressObject');
 
 const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
-const awardDetailsUpdateApiUri = 'api/award/updateaddressdetails';
+const updateAddressDetailsApiUri = 'api/award/updateaddressdetails';
+const updateOverseasAddressApiUri = 'api/award/update-overseas-address';
 
 function getPostcodeLookup(req, res) {
-  res.render('pages/changes-enquiries/address/index');
+  res.render('pages/changes-enquiries/address/index', {
+    backHref: '/contact',
+  });
 }
 
 function postcodeLookupGlobalErrorMessage(error) {
@@ -33,7 +39,7 @@ function postcodeLookupGlobalErrorMessage(error) {
   return 'No address found with that postcode';
 }
 
-function postPostcodeLookupErrorHandler(error, req, res) {
+function postcodeLookupErrorHandler(error, req, res) {
   const traceID = requestHelper.getTraceID(error);
   const input = postcodeLookupObject.formatter(req.body);
   const lookupUri = postcodeLookupApiUri + input.postcode;
@@ -61,7 +67,7 @@ function postPostcodeLookup(req, res) {
       dataStore.save(req, 'postcode', details);
       res.redirect('/changes-and-enquiries/address/select');
     }).catch((err) => {
-      postPostcodeLookupErrorHandler(err, req, res);
+      postcodeLookupErrorHandler(err, req, res);
     });
   } else {
     res.render('pages/changes-enquiries/address/index', {
@@ -85,7 +91,7 @@ function getSelectAddress(req, res) {
   }
 }
 
-function selectAddressGlobalErrorMessage(error) {
+function saveAddressGlobalErrorMessage(error) {
   if (error.statusCode === httpStatus.BAD_REQUEST) {
     return 'Error - connection refused.';
   }
@@ -95,12 +101,13 @@ function selectAddressGlobalErrorMessage(error) {
   return 'Error - could not save data.';
 }
 
-function postSelectAddressErrorHandler(error, req, res) {
-  const traceID = requestHelper.getTraceID(error);
-  requestHelper.loggingHelper(error, awardDetailsUpdateApiUri, traceID, res.locals.logger);
-  res.render('pages/changes-enquiries/address/select', {
+function saveAddressErrorHandler(err, page, req, res, uri) {
+  const traceID = requestHelper.getTraceID(err);
+  requestHelper.loggingHelper(err, uri, traceID, res.locals.logger);
+  res.render(`pages/changes-enquiries/address/${page}`, {
+    backHref: '/address',
     details: req.body,
-    globalError: selectAddressGlobalErrorMessage(error),
+    globalError: saveAddressGlobalErrorMessage(err),
   });
 }
 
@@ -109,17 +116,12 @@ function postSelectAddress(req, res) {
   const errors = formValidator.addressDetails(details);
   if (Object.keys(errors).length === 0) {
     const addressDetails = addressDetailsObject.formatter(req.body, req.session.awardDetails.nino, req.session.addressLookup);
-    const putAddressDetailCall = requestHelper.generatePutCall(
-      res.locals.agentGateway + awardDetailsUpdateApiUri,
-      addressDetails,
-      'batch',
-      req.user,
-    );
+    const putAddressDetailCall = requestHelper.generatePutCall(res.locals.agentGateway + updateAddressDetailsApiUri, addressDetails, 'batch', req.user);
     request(putAddressDetailCall).then(() => {
       deleteSession.deleteChangeAddress(req);
       redirectHelper.successAlertAndRedirect(req, res, 'address:success-message', '/changes-and-enquiries/contact');
     }).catch((err) => {
-      postSelectAddressErrorHandler(err, req, res);
+      saveAddressErrorHandler(err, 'select', req, res, updateAddressDetailsApiUri);
     });
   } else {
     const addressList = postcodeLookupObject.addressList(req.session.addressLookup);
@@ -132,7 +134,41 @@ function postSelectAddress(req, res) {
   }
 }
 
+function getInternationalAddress(req, res) {
+  const countryList = getCountryList(req.body.country);
+  res.render('pages/changes-enquiries/address/international-address', {
+    backHref: '/address',
+    countryList,
+  });
+}
+
+async function postInternationalAddress(req, res) {
+  const { nino } = dataStore.get(req, 'awardDetails');
+  const details = req.body;
+  const errors = validator.internationalAddressValidation(details);
+  if (Object.keys(errors).length === 0) {
+    const internationalAddress = internationalAddressObject.formatter(nino, details);
+    const putCall = requestHelper.generatePutCall(res.locals.agentGateway + updateOverseasAddressApiUri, internationalAddress, 'award', req.user);
+    try {
+      await request(putCall);
+      redirectHelper.successAlertAndRedirect(req, res, 'address:success-message', '/changes-and-enquiries/contact');
+    } catch (err) {
+      saveAddressErrorHandler(err, 'international-address', req, res, updateOverseasAddressApiUri);
+    }
+  } else {
+    const countryList = getCountryList(req.body.country);
+    res.render('pages/changes-enquiries/address/international-address', {
+      backHref: '/address',
+      countryList,
+      details,
+      errors,
+    });
+  }
+}
+
 module.exports.getPostcodeLookup = getPostcodeLookup;
 module.exports.postPostcodeLookup = postPostcodeLookup;
 module.exports.getSelectAddress = getSelectAddress;
 module.exports.postSelectAddress = postSelectAddress;
+module.exports.getInternationalAddress = getInternationalAddress;
+module.exports.postInternationalAddress = postInternationalAddress;

@@ -1,0 +1,87 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from 'govuk/components/fieldset/macro.njk' import govukFieldset %}
+{% from 'govuk/components/input/macro.njk' import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from 'govuk/components/button/macro.njk' import govukButton %}
+
+{% block pageTitle %}{{ t('international:header') }}{{ super() }}{% endblock %}
+
+{% block innerContent %}
+  {% call govukFieldset({
+    legend: {
+      text: t('international:header'),
+      classes: 'govuk-fieldset__legend--l',
+      isPageHeading: true
+    }
+  }) %}
+    <form method="post" action="/changes-and-enquiries/address/international-address" autocomplete="off" novalidate>
+      {{ govukInput({
+        label: {
+          text: t('international:fields.addressLine.label', { number: 1 })
+        },
+        id: 'address-line-1',
+        name: 'address-line-1',
+        value: details['address-line-1'],
+        errorMessage: errors['address-line-1']
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: t('international:fields.addressLine.label', { number: 2 })
+        },
+        id: 'address-line-2',
+        name: 'address-line-2',
+        value: details['address-line-2'],
+        errorMessage: errors['address-line-2']
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: t('international:fields.addressLine.label', { number: 3 })
+        },
+        id: 'address-line-3',
+        name: 'address-line-3',
+        value: details['address-line-3'],
+        errorMessage: errors['address-line-3']
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: t('international:fields.addressLine.label', { number: 4 })
+        },
+        id: 'address-line-4',
+        name: 'address-line-4',
+        value: details['address-line-4'],
+        errorMessage: errors['address-line-4']
+      }) }}
+
+      {{ govukInput({
+        label: {
+          text: t('international:fields.addressLine.label', { number: 5 })
+        },
+        id: 'address-line-5',
+        name: 'address-line-5',
+        value: details['address-line-5'],
+        errorMessage: errors['address-line-5']
+      }) }}
+
+      {{ govukSelect({
+          label: {
+            text: t('international:fields.country.label')
+          },
+          id: 'country',
+          name: 'country',
+          items: countryList,
+          classes: 'gysp-autocomplete govuk-!-width-two-thirds',
+          errorMessage: errors.country
+        }) }}
+
+      {{ govukButton({
+        text: t('app:button.save')
+      }) }}
+    </form>
+    
+  {% endcall %}
+  
+{% endblock %}

@@ -18,6 +18,9 @@
   "button": {
     "find": "Find address"
   },
+  "link": {
+    "international": "Enter an international address"
+  },
   "timeline": {
     "header": "Contact changes",
     "empty": "No changes made",

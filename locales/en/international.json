@@ -1,0 +1,19 @@
+{
+ "header": "International Address",
+ "fields": {
+   "addressLine": {
+     "label": "Address line {{number}}",
+     "errors": {
+       "required-1": "Enter the first line of the address",
+       "required-2": "Enter the second line of the address",
+       "length": "Address line {{number}} must be 35 characters or less"
+     }
+   },
+   "country": {
+     "label": "Country",
+     "errors": {
+       "required": "Enter a country name"
+     }
+   }
+ }
+}

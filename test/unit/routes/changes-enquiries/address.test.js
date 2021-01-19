@@ -1,13 +1,11 @@
 const { assert } = require('chai');
+
 const nock = require('nock');
 const httpStatus = require('http-status-codes');
 
 const i18next = require('i18next');
 const i18nextFsBackend = require('i18next-fs-backend');
-
 const i18nextConfig = require('../../../../config/i18next');
-
-nock.disableNetConnect();
 
 const addressController = require('../../../../app/routes/changes-enquiries/address/functions');
 
@@ -16,23 +14,46 @@ const claimData = require('../../../lib/claimData');
 const addressData = require('../../../lib/addressData');
 const { promiseWait } = require('../../../lib/unitHelper');
 
-let testPromise;
-let genericResponse = {};
+nock.disableNetConnect();
 
-// Mocks
-const flash = { type: '', message: '' };
+let genericResponse = {};
+let testPromise;
+let flash = { type: '', message: '' };
+
 const flashMock = (type, message) => {
   flash.type = type;
   flash.message = message;
 };
 
-const validRequest = { session: { awardDetails: claimData.validClaim() } };
-const postcodeValidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: 'W1J 7NT' } };
-const postcodeInvalidPost = { session: { awardDetails: claimData.validClaim() }, body: { postcode: '' } };
+const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT';
+const updateAddressDetailsApiUri = '/api/award/updateaddressdetails';
+const updateOverseasAddressApiUri = '/api/award/update-overseas-address';
 
-const validSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } } };
-const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
-const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
+const awardDetails = { session: { awardDetails: claimData.validClaim() } };
+
+const validRequest = {
+  ...awardDetails,
+  body: { },
+};
+const postcodeValidPost = {
+  session: { awardDetails: claimData.validClaim() },
+  body: { postcode: 'W1J 7NT' },
+};
+const postcodeInvalidPost = {
+  session: { awardDetails: claimData.validClaim() },
+  body: { postcode: '' },
+};
+
+const validSelectRequest = {
+  session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } },
+};
+const noAddressLookupSelectRequest = {
+  session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } },
+};
+const noPostcodeSelectRequest = {
+  session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() },
+};
 
 const validSelectPostRequest = {
   user: { cis: { surname: 'User', givenname: 'Test' } },
@@ -40,7 +61,29 @@ const validSelectPostRequest = {
   body: { address: '10091853817' },
   flash: flashMock,
 };
-const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } }, body: { address: '' } };
+const invalidSelectPostRequest = {
+  session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } },
+  body: { address: '' },
+};
+
+const postRequestEmpty = {
+  ...awardDetails,
+  body: {},
+};
+
+const postRequestInternationalAddress = {
+  ...awardDetails,
+  body: {
+    'address-line-1': '1675',
+    'address-line-2': 'Benik Road',
+    'address-line-3': 'La Habra Heights',
+    'address-line-4': 'California',
+    'address-line-5': '90631',
+    country: 'USA:United States of America',
+  },
+  user: { cis: { surname: 'User', givenname: 'Test' } },
+  flash: flashMock,
+};
 
 const notFoundResponse = {
   data: [],
@@ -56,11 +99,6 @@ const updateErrorMessages = {
   404: 'Error - award not found.',
   500: 'Error - could not save data.',
 };
-
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
-
-const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT';
-const awardDetailsUpdateApiUri = '/api/award/updateaddressdetails';
 
 describe('Change address controller ', () => {
   before(async () => {
@@ -88,6 +126,8 @@ describe('Change address controller ', () => {
     };
 
     testPromise = promiseWait();
+
+    flash = { type: '', message: '' };
   });
 
   afterEach(() => {
@@ -173,12 +213,6 @@ describe('Change address controller ', () => {
   });
 
   describe('getSelectAddress function (GET /changes-enquiries/address/select)', () => {
-    it('should return change address select page', (done) => {
-      addressController.getSelectAddress(validSelectRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/select');
-      done();
-    });
-
     it('should return error page when addressLookup not in session', (done) => {
       addressController.getSelectAddress(noAddressLookupSelectRequest, genericResponse);
       assert.equal(genericResponse.data.status, '- Issue getting address data.');
@@ -213,7 +247,7 @@ describe('Change address controller ', () => {
     });
 
     it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(awardDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+      nock('http://test-url/', reqHeaders).put(updateAddressDetailsApiUri).reply(httpStatus.BAD_REQUEST, {});
       addressController.postSelectAddress(validSelectPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/updateaddressdetails');
@@ -223,7 +257,7 @@ describe('Change address controller ', () => {
     });
 
     it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(awardDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
+      nock('http://test-url/', reqHeaders).put(updateAddressDetailsApiUri).reply(httpStatus.NOT_FOUND, {});
       addressController.postSelectAddress(validSelectPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/updateaddressdetails');
@@ -233,7 +267,7 @@ describe('Change address controller ', () => {
     });
 
     it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(awardDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      nock('http://test-url/', reqHeaders).put(updateAddressDetailsApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       addressController.postSelectAddress(validSelectPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/updateaddressdetails');
@@ -243,11 +277,72 @@ describe('Change address controller ', () => {
     });
 
     it('should return a redirect to contact and clear relevant session data when API returns 200', () => {
-      nock('http://test-url/', reqHeaders).put(awardDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', reqHeaders).put(updateAddressDetailsApiUri).reply(httpStatus.OK, {});
       addressController.postSelectAddress(validSelectPostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(validSelectPostRequest.session.addressLookup, undefined);
         assert.equal(validSelectPostRequest.session.postcode, undefined);
+        assert.equal(flash.type, 'success');
+        assert.equal(flash.message, 'Address changed');
+        assert.equal(genericResponse.address, '/changes-and-enquiries/contact');
+      });
+    });
+  });
+
+  describe('getInternationalAddress function (GET /changes-enquiries/address/international-address', () => {
+    it('should display the /international-addresspage when requested', (done) => {
+      addressController.getInternationalAddress(validRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/international-address');
+      done();
+    });
+  });
+
+  describe('postInternationalAddress function (POST /changes-enquiries/address/international-address', () => {
+    it('should display the /international-addresspage, with errors, when requested with an empty form', () => {
+      addressController.postInternationalAddress(postRequestEmpty, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(Object.keys(genericResponse.data.errors).length, 3);
+        assert.equal(genericResponse.data.errors['address-line-1'].text, 'Enter the first line of the address');
+        assert.equal(genericResponse.data.errors['address-line-2'].text, 'Enter the second line of the address');
+        assert.equal(genericResponse.data.errors.country.text, 'Enter a country name');
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/international-address');
+      });
+    });
+
+    it('should display the /international-addresspage, with an error, when the API returns a 400 state', () => {
+      nock('http://test-url/', reqHeaders).put(updateOverseasAddressApiUri).reply(httpStatus.BAD_REQUEST, {});
+      addressController.postInternationalAddress(postRequestInternationalAddress, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on api/award/update-overseas-address');
+        assert.equal(genericResponse.data.globalError, updateErrorMessages[400]);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/international-address');
+      });
+    });
+
+    it('should display the /international-addresspage, with an error, when the API returns a 404 state', () => {
+      nock('http://test-url/', reqHeaders).put(updateOverseasAddressApiUri).reply(httpStatus.NOT_FOUND, {});
+      addressController.postInternationalAddress(postRequestInternationalAddress, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on api/award/update-overseas-address');
+        assert.equal(genericResponse.data.globalError, updateErrorMessages[404]);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/international-address');
+      });
+    });
+
+    it('should display the /international-addresspage, with an error, when the API returns a 500 state', () => {
+      nock('http://test-url/', reqHeaders).put(updateOverseasAddressApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      addressController.postInternationalAddress(postRequestInternationalAddress, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on api/award/update-overseas-address');
+        assert.equal(genericResponse.data.globalError, updateErrorMessages[500]);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/address/international-address');
+      });
+    });
+
+    it('should display the /contact page when the API returns a 200 state', () => {
+      nock('http://test-url/', reqHeaders).put(updateOverseasAddressApiUri).reply(httpStatus.OK, {});
+      addressController.postInternationalAddress(postRequestInternationalAddress, genericResponse);
+      return testPromise.then(() => {
         assert.equal(flash.type, 'success');
         assert.equal(flash.message, 'Address changed');
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact');

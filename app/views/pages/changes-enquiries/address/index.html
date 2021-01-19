@@ -1,18 +1,8 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
-{% block pageTitle %}{{ t("address:header")}} - Changes and enquiries{% endblock %}
-
-{% block sectionBackLink %}
-  {{ govukBackLink({
-    text: t("app:link.back"),
-    href: "/changes-and-enquiries/contact",
-    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
-  }) }}
-{% endblock %}
+{% block pageTitle %}{{ t("address:header")}}{{ super() }}{% endblock %}
 
 {% block innerContent %}
   <h1 class="govuk-heading-l">{{ t("address:header") }}</h1>
@@ -33,4 +23,8 @@
       text: t("address:button.find")
     }) }}
   </form>
+
+  <p class="govuk-body">
+    <a href="/changes-and-enquiries/address/international-address" class="govuk-link govuk-link--no-visited-state">{{ t("address:link.international") }}</a>
+  </p>
 {% endblock %}
