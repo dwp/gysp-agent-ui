@@ -17,7 +17,7 @@ module.exports = (app) => {
       directives: {
         defaultSrc: ['\'self\''],
         scriptSrc: ['\'self\'', '\'unsafe-inline\'', 'www.google-analytics.com'],
-        imgSrc: ['\'self\'', 'www.google-analytics.com'],
+        imgSrc: ['\'self\'', 'data: image', 'www.google-analytics.com'],
         fontSrc: ['\'self\'', 'data: blob:'],
       },
       reportOnly: false,

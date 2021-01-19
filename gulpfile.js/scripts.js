@@ -7,7 +7,9 @@ function scripts() {
     'node_modules/jquery/dist/jquery.js',
     'node_modules/jquery-autotab/js/jquery.autotab.js',
     'node_modules/govuk-frontend/govuk/all.js',
-    'node_modules/accessible-autocomplete/dist/accessible-autocomplete.min.js',
+    'app/assets/javascripts/vendor/selectToAutocomplete/jquery-ui.min.js',
+    'app/assets/javascripts/vendor/selectToAutocomplete/jquery.select-to-autocomplete.js',
+    'app/assets/javascripts/country-select.js',
     'app/assets/javascripts/application.js',
   ])
     .pipe(concat('app.js'))

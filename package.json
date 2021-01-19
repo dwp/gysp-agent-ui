@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "0.2.1",
-    "accessible-autocomplete": "2.0.3",
     "body-parser": "1.19.0",
     "bunyan": "1.8.15",
     "compression": "1.7.4",

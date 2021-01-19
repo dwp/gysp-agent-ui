@@ -1,13 +1,34 @@
-@import '../../../node_modules/accessible-autocomplete/src/autocomplete.css';
+@import '/app/assets/javascripts/vendor/selectToAutocomplete/jquery-ui.css';
 
-.autocomplete__input {
-  width: 100%;
-}
+$hoverstate: #0097cf;
 
-.gysp-autocomplete,
-.autocomplete__wrapper {
-  width: 100%;
-  @include govuk-media-query($from: tablet) {
-    width: 66.66%;
-  }
+.ui-autocomplete {
+    max-height: 350px;
+    padding: 0;
+    overflow-x: hidden;
+    border: 2px solid govuk-colour('dark-grey') !important;
+    background-color: govuk-colour('white');
+    list-style: none;
+
+    .ui-menu-item {
+        border-top: 2px solid $govuk-border-colour;
+
+        &:first-child {
+            border-top: 0;
+        }
+    }
+
+    .ui-menu-item-wrapper {
+        @include govuk-font(19, $weight: bold);
+        display: block;
+        padding: 8px;
+        color: $govuk-text-colour;
+        cursor: pointer;
+
+        &.ui-state-active {
+            border: 0;
+            background-color: $hoverstate;
+            color: govuk-colour('white');
+        }
+    }
 }
