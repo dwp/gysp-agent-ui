@@ -1,5 +1,5 @@
 {
- "header": "International Address",
+ "header": "International address",
  "fields": {
    "addressLine": {
      "label": "Address line {{number}}",
