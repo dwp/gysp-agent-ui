@@ -498,4 +498,38 @@ describe('death helper', () => {
       });
     });
   });
+
+  describe('isDeathOverpaymentPeriods', () => {
+    it('should be defined', () => {
+      assert.isDefined(helper.isDeathOverpaymentPeriods);
+    });
+
+    it('should be a function', () => {
+      assert.isFunction(helper.isDeathOverpaymentPeriods);
+    });
+
+    it('should return false when periods is undefined', () => {
+      assert.isFalse(helper.isDeathOverpaymentPeriods(undefined));
+    });
+
+    it('should return false when periods is null', () => {
+      assert.isFalse(helper.isDeathOverpaymentPeriods(null));
+    });
+
+    it('should return false when periods is object', () => {
+      assert.isFalse(helper.isDeathOverpaymentPeriods({}));
+    });
+
+    it('should return false when periods is string', () => {
+      assert.isFalse(helper.isDeathOverpaymentPeriods('string'));
+    });
+
+    it('should return false when periods is blank array', () => {
+      assert.isFalse(helper.isDeathOverpaymentPeriods([]));
+    });
+
+    it('should return true when periods is a populated array', () => {
+      assert.isTrue(helper.isDeathOverpaymentPeriods([{ foo: 'bar' }]));
+    });
+  });
 });

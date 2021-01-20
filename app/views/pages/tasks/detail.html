@@ -2,6 +2,7 @@
 {% from 'helpers/form.html' import globalError as error %}
 {% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ header }}{% endblock %}
@@ -17,7 +18,9 @@
     {% if summary.header %}
       <h2 class="govuk-heading-m">{{ summary.header }}</h2>
     {% endif %}
-    {% if summary.rows %}
+    {% if summary.head %}
+      {{ govukTable(summary) }}
+    {% elif summary.rows %}
       {{ govukSummaryList(summary) }}
     {% elif summary.empty %}
       <p class="govuk-body govuk-!-margin-bottom-7">{{ summary.empty }}</p>

@@ -32,19 +32,38 @@ describe('taskDeathOverPaymentDetailObject', () => {
       assert.equal(formatted.buttonHref, '/tasks/task/complete');
     });
 
-    it('should return have 5 summary lists when amount overpaid is greater than £25', () => {
-      const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-25.01), workItemReason);
-      assert.lengthOf(formatted.summaryList, 5);
+    context('without award periods', () => {
+      it('should return have 5 summary lists when amount overpaid is greater than £25', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-25.01), workItemReason);
+        assert.lengthOf(formatted.summaryList, 5);
+      });
+
+      it('should return have 2 summary lists when amount overpaid is £25', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-25), workItemReason);
+        assert.lengthOf(formatted.summaryList, 2);
+      });
+
+      it('should return have 2 summary lists when amount overpaid less than £25', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-24.99), workItemReason);
+        assert.lengthOf(formatted.summaryList, 2);
+      });
     });
 
-    it('should return have 2 summary lists when amount overpaid is £25', () => {
-      const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-25), workItemReason);
-      assert.lengthOf(formatted.summaryList, 2);
-    });
+    context('with award periods', () => {
+      it('should return have 6 summary lists when amount overpaid is greater than £25 and has award periods', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDuePeriods(-25.01), workItemReason);
+        assert.lengthOf(formatted.summaryList, 6);
+      });
 
-    it('should return have 2 summary lists when amount overpaid less than £25', () => {
-      const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDue(-24.99), workItemReason);
-      assert.lengthOf(formatted.summaryList, 2);
+      it('should return have 3 summary lists when amount overpaid is £25', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDuePeriods(-25), workItemReason);
+        assert.lengthOf(formatted.summaryList, 3);
+      });
+
+      it('should return have 3 summary lists when amount overpaid less than £25', () => {
+        const formatted = taskDeathOverPaymentDetailObject.formatter(claimData.validClaimWithDeathOverPaymentDuePeriods(-24.99), workItemReason);
+        assert.lengthOf(formatted.summaryList, 3);
+      });
     });
   });
 });

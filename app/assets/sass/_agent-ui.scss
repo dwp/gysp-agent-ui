@@ -308,7 +308,7 @@
     }
 }
 
-.gysp-summary-list-one-half {
+.gysp-list-one-half {
     .govuk-summary-list {
         &__key {
             @include govuk-media-query($from: tablet) {
@@ -317,6 +317,14 @@
         }
 
         &__value {
+            @include govuk-media-query($from: tablet) {
+                width: 50%;
+            }
+        }
+    }
+
+    .govuk-table {
+        &__header {
             @include govuk-media-query($from: tablet) {
                 width: 50%;
             }

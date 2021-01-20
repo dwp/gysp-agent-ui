@@ -25,6 +25,13 @@ module.exports = {
       ...base, ...this.validDeathVerifiedOverPaymentWithPayeeDetails(amount), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
     };
   },
+  validClaimWithDeathOverPaymentDuePeriods(amount) {
+    const base = { ...this.validBase() };
+    base.awardStatus = 'DEAD';
+    return {
+      ...base, ...this.validDeathVerifiedOverPaymentWithPayeeDetailsAndPeriods(amount), ...this.validUkAddress(), ...this.validContact(), ...this.validAccountDetails(), ...this.validAwardAmountDetails(), ...this.validAccountDetails(), ...this.validMaritalSingle(),
+    };
+  },
   validClaimWithDeathOverpayment() {
     const base = { ...this.validBase() };
     base.awardStatus = 'DEAD';
@@ -207,6 +214,45 @@ module.exports = {
           endDate: 1549843200000,
           amount,
         },
+        payeeDetails: {
+          fullName: 'Adam Dennis',
+          phoneNumber: '0234 1234567',
+          payeeAddress: {
+            buildingName: null,
+            buildingNumber: '2',
+            dependentLocality: null,
+            dependentThoroughfareName: null,
+            postCode: 'LO1 1TY',
+            postTown: 'LONDON',
+            subBuildingName: null,
+            thoroughfareName: 'TEST WAY',
+            uprn: '1230004234234',
+          },
+          accountDetail: null,
+        },
+      },
+    };
+  },
+  validDeathVerifiedOverPaymentWithPayeeDetailsAndPeriods(amount) {
+    return {
+      deathDetail: {
+        dateOfDeath: 1526191200000,
+        notificationDate: null,
+        dateOfDeathVerification: 'V',
+        amountDetails: {
+          startDate: 1547251200000,
+          endDate: 1549843200000,
+          amount,
+        },
+        awardAmountPeriods: [{
+          startDate: 1547251200000,
+          endDate: 1549843200000,
+          totalAmount: 125.01,
+        }, {
+          startDate: 1578700800000,
+          endDate: 1581379200000,
+          totalAmount: 111.78,
+        }],
         payeeDetails: {
           fullName: 'Adam Dennis',
           phoneNumber: '0234 1234567',
