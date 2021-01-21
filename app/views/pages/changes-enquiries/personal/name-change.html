@@ -1,41 +1,48 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "components/input-group/macro.njk" import gyspInputGroup %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block pageTitle %}{{ t("name-change:header") }}{{ super() }}{% endblock %}
 
+{% set inputHtml %}
+  {{ govukInput({
+    label: {
+      text: t("name-change:fields.firstName.label")
+    },
+    id: "firstName",
+    name: "firstName",
+    value: details.firstName,
+    errorMessage: errors.firstName
+  }) }}
+
+  {{ govukInput({
+    label: {
+      text: t("name-change:fields.lastName.label")
+    },
+    id: "lastName",
+    name: "lastName",
+    value: details.lastName,
+    errorMessage: errors.lastName
+  }) }}
+{% endset %}
+
 {% block innerContent %}
   <form method="post" action="/changes-and-enquiries/personal/name-change" autocomplete="off" novalidate>
-    {% call govukFieldset({
-      legend: {
-        text: t("name-change:header"),
-        classes: "govuk-fieldset__legend--l",
-        isPageHeading: true
-      }
-    }) %}
-
-      {{ govukInput({
-        label: {
-          text: t("name-change:fields.firstName.label")
-        },
-        id: "firstName",
-        name: "firstName",
-        value: details.firstName,
-        errorMessage: errors.firstName
-      }) }}
-
-      {{ govukInput({
-        label: {
-          text: t("name-change:fields.lastName.label")
-        },
-        id: "lastName",
-        name: "lastName",
-        value: details.lastName,
-        errorMessage: errors.lastName
-      }) }}
-
-    {% endcall %}
+    {{ gyspInputGroup({
+      name: "both",
+      fieldset: {
+        legend: {
+          text: t("name-change:header"),
+          classes: "govuk-fieldset__legend--l",
+          isPageHeading: true
+        }
+      },
+      html: inputHtml,
+      errorMessage: errors.both
+    }) }}
 
     {{ govukButton({
       text: t("app:button.save")

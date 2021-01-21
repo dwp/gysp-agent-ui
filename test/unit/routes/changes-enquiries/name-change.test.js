@@ -81,7 +81,7 @@ describe('Name Change Controller', () => {
     it('should display the /name-change page, with errors, when requested with an empty form', () => {
       controller.postNameChange(postRequestEmpty, genericResponse);
       return testPromise.then(() => {
-        assert.equal(Object.keys(genericResponse.data.errors).length, 2);
+        assert.equal(Object.keys(genericResponse.data.errors).length, 1);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/personal/name-change');
       });
     });

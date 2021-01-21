@@ -15,34 +15,44 @@ describe('Validation: name change', () => {
 
   it('should return errors when firstName and lastName are undefined', () => {
     const errors = validator.nameChangeValidation({});
-    assert.equal(Object.keys(errors).length, 2);
-    assert.equal(errors.firstName.text, 'Enter a first name');
-    assert.equal(errors.lastName.text, 'Enter a last name');
+    assert.equal(Object.keys(errors).length, 1);
+    assert.equal(errors.both.text, 'Enter a new first or last name');
   });
 
   it('should return errors when firstName and lastName are empty', () => {
-    const errors = validator.nameChangeValidation({ firstName: '', lastName: '' });
-    assert.equal(Object.keys(errors).length, 2);
-    assert.equal(errors.firstName.text, 'Enter a first name');
-    assert.equal(errors.lastName.text, 'Enter a last name');
+    const errors = validator.nameChangeValidation({
+      firstName: '',
+      lastName: '',
+    });
+    assert.equal(Object.keys(errors).length, 1);
+    assert.equal(errors.both.text, 'Enter a new first or last name');
   });
 
   it('should return errors when firstName and lastName contain invalid characters', () => {
-    const errors = validator.nameChangeValidation({ firstName: 'Rick!', lastName: 'Sanchez!' });
+    const errors = validator.nameChangeValidation({
+      firstName: 'Rick!',
+      lastName: 'Sanchez!',
+    });
     assert.equal(Object.keys(errors).length, 2);
-    assert.equal(errors.firstName.text, 'First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands');
-    assert.equal(errors.lastName.text, 'Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops, spaces and ampersands');
+    assert.equal(errors.firstName.text, 'First name must start with a letter and only contain letters, apostrophes, hyphens, full stops or spaces');
+    assert.equal(errors.lastName.text, 'Last name must start with a letter and only contain letters, apostrophes, hyphens, full stops or spaces');
   });
 
-  it('should return errors when firstName and lastName are longer than 35 characters', () => {
-    const errors = validator.nameChangeValidation({ firstName: 'RickRickRickRickRickRickRickRickRick', lastName: 'SanchezSanchezSanchezSanchezSanchezSanchez' });
+  it('should return errors when firstName and lastName are longer than 70 characters', () => {
+    const errors = validator.nameChangeValidation({
+      firstName: 'RickRickRickRickRickRickRickRickRickRickRickRickRickRickRickRickRickRick',
+      lastName: 'SanchezSanchezSanchezSanchezSanchezSanchezSanchezSanchezSanchezSanchezSanchezSanchez',
+    });
     assert.equal(Object.keys(errors).length, 2);
-    assert.equal(errors.firstName.text, 'First name must have 35 characters or less');
-    assert.equal(errors.lastName.text, 'Last name must have 35 characters or less');
+    assert.equal(errors.firstName.text, 'First name must be 70 characters or less');
+    assert.equal(errors.lastName.text, 'Last name must be 70 characters or less');
   });
 
   it('should return no errors when firstName and lastName are valid', () => {
-    const errors = validator.nameChangeValidation({ firstName: 'Rick', lastName: 'Sanchez' });
+    const errors = validator.nameChangeValidation({
+      firstName: 'Rick',
+      lastName: 'Sanchez',
+    });
     assert.equal(Object.keys(errors).length, 0);
   });
 });

@@ -94,6 +94,7 @@ describe('General Helper ', () => {
       }
     }
   });
+
   describe('removeNullFromArray', () => {
     it('should return array with nulls removed then nulls are present', () => {
       assert.deepEqual(helper.removeNullFromArray(['test', 'test', null, 'test', null]), ['test', 'test', 'test']);
@@ -304,6 +305,200 @@ describe('General Helper ', () => {
 
     it('should formatted frequency string for 13 weeks', () => {
       assert.equal(helper.formatPaymentFrequency('13W'), `13 ${weeklyString}`);
+    });
+  });
+
+  describe('checkFirstNameCharacters', () => {
+    context('valid', () => {
+      it('should return true when contains one valid character', () => {
+        assert.isTrue(helper.checkFirstNameCharacters('T'));
+      });
+
+      it('should return true when contains valid characters with a space', () => {
+        assert.isTrue(helper.checkFirstNameCharacters('Test tester'));
+      });
+
+      it('should return true when contains valid characters with a full stop', () => {
+        assert.isTrue(helper.checkFirstNameCharacters('Test.tester'));
+      });
+
+      it('should return true when contains valid characters with a dash', () => {
+        assert.isTrue(helper.checkFirstNameCharacters('Test-tester'));
+      });
+
+      it('should return true when contains valid characters with all', () => {
+        assert.isTrue(helper.checkFirstNameCharacters('Joe Test-tester.The First'));
+      });
+    });
+
+    context('invalid', () => {
+      it('should return false when blank', () => {
+        assert.isFalse(helper.checkFirstNameCharacters(''));
+      });
+
+      it('should return false when contains an invalid character', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test!tester'));
+      });
+
+      it('should return false when starts with a space', () => {
+        assert.isFalse(helper.checkFirstNameCharacters(' Test'));
+      });
+
+      it('should return false when starts with a full stop', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('.Test'));
+      });
+
+      it('should return false when starts with a dash', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('-Test'));
+      });
+
+      it('should return false when starts with a apostrophe', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('\'Test'));
+      });
+
+      it('should return false when ends with a space', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test '));
+      });
+
+      it('should return false when ends with a full stop', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test.'));
+      });
+
+      it('should return false when ends with a dash', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test-'));
+      });
+
+      it('should return false when ends with a apostrophe', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test\''));
+      });
+
+      it('should return false when contains valid characters double spaces', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test  tester'));
+      });
+
+      it('should return false when contains valid characters double full stops', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test..tester'));
+      });
+
+      it('should return false when contains valid characters double dashes', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test--tester'));
+      });
+
+      it('should return false when contains valid characters double apostrophes', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test\'\'tester'));
+      });
+
+      it('should return false when contains valid characters consecutive punctuation', () => {
+        assert.isFalse(helper.checkFirstNameCharacters('Test -tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test- tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test .tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test. tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test \'tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test\' tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test.-tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test-.tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test.\'tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test\'.tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test-\'tester'));
+        assert.isFalse(helper.checkFirstNameCharacters('Test\'-tester'));
+      });
+    });
+  });
+
+  describe('checkLastNameCharacters', () => {
+    context('valid', () => {
+      it('should return true when contains valid characters with a space', () => {
+        assert.isTrue(helper.checkLastNameCharacters('Test tester'));
+      });
+
+      it('should return true when contains valid characters with a full stop', () => {
+        assert.isTrue(helper.checkLastNameCharacters('Test.tester'));
+      });
+
+      it('should return true when contains valid characters with a dash', () => {
+        assert.isTrue(helper.checkLastNameCharacters('Test-tester'));
+      });
+
+      it('should return true when contains valid characters with all', () => {
+        assert.isTrue(helper.checkLastNameCharacters('Joe Test-tester.The First'));
+      });
+    });
+
+    context('invalid', () => {
+      it('should return false when blank', () => {
+        assert.isFalse(helper.checkLastNameCharacters(''));
+      });
+
+      it('should return true when contains one valid character', () => {
+        assert.isFalse(helper.checkLastNameCharacters('T'));
+      });
+
+      it('should return false when contains an invalid character', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test!tester'));
+      });
+
+      it('should return false when starts with a space', () => {
+        assert.isFalse(helper.checkLastNameCharacters(' Test'));
+      });
+
+      it('should return false when starts with a full stop', () => {
+        assert.isFalse(helper.checkLastNameCharacters('.Test'));
+      });
+
+      it('should return false when starts with a dash', () => {
+        assert.isFalse(helper.checkLastNameCharacters('-Test'));
+      });
+
+      it('should return false when starts with a apostrophe', () => {
+        assert.isFalse(helper.checkLastNameCharacters('\'Test'));
+      });
+
+      it('should return false when ends with a space', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test '));
+      });
+
+      it('should return false when ends with a full stop', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test.'));
+      });
+
+      it('should return false when ends with a dash', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test-'));
+      });
+
+      it('should return false when ends with a apostrophe', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test\''));
+      });
+
+      it('should return false when contains valid characters double spaces', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test  tester'));
+      });
+
+      it('should return false when contains valid characters double full stops', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test..tester'));
+      });
+
+      it('should return false when contains valid characters double dashes', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test--tester'));
+      });
+
+      it('should return false when contains valid characters double apostrophes', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test\'\'tester'));
+      });
+
+      it('should return false when contains valid characters consecutive punctuation', () => {
+        assert.isFalse(helper.checkLastNameCharacters('Test -tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test- tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test .tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test. tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test \'tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test\' tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test.-tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test-.tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test.\'tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test\'.tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test-\'tester'));
+        assert.isFalse(helper.checkLastNameCharacters('Test\'-tester'));
+      });
     });
   });
 });

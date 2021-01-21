@@ -13,7 +13,7 @@ const nameChangeObjectFormatted = {
 describe('nameChangeObject', () => {
   describe('formatter', () => {
     it('should return formatted name change object', () => {
-      assert.deepEqual(nameChangeObject.formatter('AA111111A', { firstName: 'Rick', lastName: 'Sanchez' }), nameChangeObjectFormatted);
+      assert.deepEqual(nameChangeObject.formatter('AA111111A', 'Morty', 'Smith', { firstName: 'Rick', lastName: 'Sanchez' }), nameChangeObjectFormatted);
     });
   });
 });

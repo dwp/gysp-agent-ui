@@ -36,11 +36,11 @@ function nameChangeErrorHandler(err, req, res) {
 }
 
 async function postNameChange(req, res) {
-  const { nino } = dataStore.get(req, 'awardDetails');
+  const { nino, firstName, surname } = dataStore.get(req, 'awardDetails');
   const details = req.body;
   const errors = validator.nameChangeValidation(details);
   if (Object.keys(errors).length === 0) {
-    const nameChange = nameChangeObject.formatter(nino, details);
+    const nameChange = nameChangeObject.formatter(nino, firstName, surname, details);
     const putCall = requestHelper.generatePutCall(res.locals.agentGateway + nameChangeApiUri, nameChange, 'award', req.user);
     try {
       await request(putCall);
