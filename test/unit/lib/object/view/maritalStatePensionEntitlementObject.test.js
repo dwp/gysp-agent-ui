@@ -4,6 +4,7 @@ const i18next = require('i18next');
 const i18nextFsBackend = require('i18next-fs-backend');
 
 const i18nextConfig = require('../../../../../config/i18next');
+const { cloneObject } = require('../../../../lib/unitHelper');
 
 const maritalStatePensionEntitlementObject = require('../../../../../lib/objects/view/maritalStatePensionEntitlementObject');
 
@@ -108,6 +109,41 @@ const mandatoryPartnerDetailsFormatted = {
   },
 };
 
+const mandatoryPartnerDetailsWithOverseas = {
+  ...cloneObject(mandatoryPartnerDetails),
+  residentialAddress: null,
+  overseasAddress: {
+    line1: '1 Test Spain',
+    line2: 'Test Town',
+    line3: null,
+    line4: null,
+    line5: null,
+    country: 'Spain',
+  },
+};
+const mandatoryPartnerDetailsFormattedWithOverseas = {
+  partnerSummary: {
+    header: "Late spouse's details",
+    rows: [{
+      key: { text: 'First name' },
+      value: { text: 'Joe' },
+    }, {
+      key: { text: 'Last name' },
+      value: { text: 'Bloggs' },
+    }],
+  },
+  otherDetailsSummary: {
+    header: 'Other details to help find spouse',
+    rows: [{
+      key: { text: 'Date of marriage' },
+      value: { html: '1 January 2000 <span class="govuk-!-font-weight-bold govuk-!-padding-left-5 govuk-!-padding-right-2 gysp-secondary-text-colour gysp-status gysp-status--active">\n      Verified\n  </span>', classes: 'govuk-!-padding-right-0' },
+    }, {
+      key: { text: "Claimant's address" },
+      value: { html: '1 Test Spain<br />Test Town<br />Spain' },
+    }],
+  },
+};
+
 describe('maritalStatePensionEntitlementObject ', () => {
   before(async () => {
     await i18next
@@ -130,6 +166,10 @@ describe('maritalStatePensionEntitlementObject ', () => {
 
     it('should return object with only mandatory details', () => {
       assert.deepEqual(maritalStatePensionEntitlementObject.formatter(mandatoryPartnerDetails), mandatoryPartnerDetailsFormatted);
+    });
+
+    it('should return object with only mandatory details and overseas address', () => {
+      assert.deepEqual(maritalStatePensionEntitlementObject.formatter(mandatoryPartnerDetailsWithOverseas), mandatoryPartnerDetailsFormattedWithOverseas);
     });
   });
 });
