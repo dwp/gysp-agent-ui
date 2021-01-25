@@ -1,3 +1,14 @@
+# [8.1.0](https://github.com/dwp/gysp-agent-ui/compare/8.0.0...8.1.0) (2021-01-25)
+
+
+### Features
+
+* **death-overpayment:** display award periods ([e43ddf5](https://github.com/dwp/gysp-agent-ui/commit/e43ddf505a4a7c0c21104b5e4037abe727407aa3))
+* **international-address:** add feature to add an international address ([b56df10](https://github.com/dwp/gysp-agent-ui/commit/b56df100a0e985afc21c8a136da31c5e6ed52f6c))
+* **name-change:** add feature to change claimants name ([5cc5575](https://github.com/dwp/gysp-agent-ui/commit/5cc55756fcfb707e4de8adc8a5cd21c4919e468c))
+
+
+
 # [8.0.0](https://github.com/dwp/gysp-agent-ui/compare/7.1.0...8.0.0) (2021-01-08)
 
 
