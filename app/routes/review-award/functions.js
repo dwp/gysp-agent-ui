@@ -7,7 +7,7 @@ const dateHelper = require('../../../lib/dateHelper');
 const deleteSession = require('../../../lib/deleteSession');
 const formValidator = require('../../../lib/formValidator');
 const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
-const paymentObject = require('../../../lib/objects/processClaimPaymentObject');
+const reviewAwardScheduleObject = require('../../../lib/objects/view/reviewAwardScheduleObject');
 const redirectHelper = require('../../../lib/helpers/redirectHelper');
 const requestHelper = require('../../../lib/requestHelper');
 const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAwardObject');
@@ -85,7 +85,7 @@ function formatEntitlementDate(entitlementDate, reviewAwardDate) {
   return dateHelper.timestampToDateDash(entitlementDate);
 }
 
-function srbPaymentBreakdownURL(res, inviteKey, reviewAward, reviewAwardDate) {
+function srbPaymentBreakdownRequest(res, inviteKey, reviewAward, reviewAwardDate) {
   const { newStatePensionAmount, protectedPaymentAmount, entitlementDate } = reviewAward;
   const query = querystring.stringify({
     inviteKey,
@@ -93,7 +93,8 @@ function srbPaymentBreakdownURL(res, inviteKey, reviewAward, reviewAwardDate) {
     protectedAmount: protectedPaymentAmount,
     entitlementDate: formatEntitlementDate(entitlementDate, reviewAwardDate),
   });
-  return `${res.locals.agentGateway}api/award/srbpaymentbreakdown?${query}`;
+  const paymentScheduleCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/srbpaymentbreakdown?${query}`, {}, 'award');
+  return request(paymentScheduleCall);
 }
 
 function getPaymentScheduleErrorHandler(err, req, res) {
@@ -112,11 +113,8 @@ async function getPaymentSchedule(req, res) {
   const reviewAward = dataStore.get(req, 'review-award');
   const reviewAwardDate = dataStore.get(req, 'review-award-date');
   try {
-    const breakDownUrl = srbPaymentBreakdownURL(res, award.inviteKey, reviewAward, reviewAwardDate);
-    const paymentScheduleCall = requestHelper.generateGetCall(breakDownUrl, {}, 'award');
-    const body = await request(paymentScheduleCall);
-    dataStore.save(req, 'srb-breakdown', body);
-    const details = paymentObject.formatter(body);
+    const srbPaymentBreakdown = await srbPaymentBreakdownRequest(res, award.inviteKey, reviewAward, reviewAwardDate);
+    const details = reviewAwardScheduleObject.formatter(srbPaymentBreakdown, reviewAward.entitlementDate);
     const keyDetails = keyDetailsHelper.formatter(award);
     const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
     res.render('pages/review-award/breakdown', {
@@ -156,17 +154,10 @@ async function postPaymentSchedule(req, res) {
     const srbAmountPutCall = requestHelper.generatePutCall(`${res.locals.agentGateway}api/award/srbamountsupdate`, putSrbAmountObject, 'award', req.user);
     await request(srbAmountPutCall);
     processSessionAndDeleteReviewAward(req);
-    res.redirect('/review-award/complete');
+    res.redirect('/review-award');
   } catch (err) {
     postPaymentScheduleErrorHandler(err, req, res);
   }
-}
-
-function getComplete(req, res) {
-  const award = dataStore.get(req, 'award');
-  const { arrearsPayment } = dataStore.get(req, 'srb-breakdown');
-  const keyDetails = keyDetailsHelper.formatter(award);
-  res.render('pages/review-award/complete', { keyDetails, arrearsPayment });
 }
 
 function getNewEntitlementDate(req, res) {
@@ -200,6 +191,5 @@ module.exports.getReviewReason = getReviewReason;
 module.exports.getNewAward = getNewAward;
 module.exports.getPaymentSchedule = getPaymentSchedule;
 module.exports.postPaymentSchedule = postPaymentSchedule;
-module.exports.getComplete = getComplete;
 module.exports.getNewEntitlementDate = getNewEntitlementDate;
 module.exports.postNewEntitlementDate = postNewEntitlementDate;

@@ -2,12 +2,10 @@
 {% from 'helpers/form.html' import globalError as error %}
 {% from 'helpers/key-details.html' import keyDetailsSlimSection %}
 {% from 'govuk/components/button/macro.njk' import govukButton %}
-{% from 'govuk/components/table/macro.njk' import govukTable %}
 {% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% block pageTitle %}New payment amounts{% endblock %}
+{% block pageTitle %}{{ t('review-award-complete:header') }}{% endblock %}
 
 {% block content %}
 
@@ -32,39 +30,20 @@
         {{ error(messages.error) }}
     {% endif %}
 
-    <h1 class="govuk-heading-xl">New payment amounts</h1>
-    {% if details %}
-      {% if details.firstPayment %}
-        <h3 class="govuk-heading-m">{{ details.firstPayment.title }}</h3>
-        {{ govukSummaryList({
-          classes: 'gysp-payment-details-summary',
-          attributes: {
-            id: 'first-payment-details'
-          },
-          rows: details.firstPayment.rows
-        }) }}
-      {% endif %}
+    <h1 class="govuk-heading-xl">{{ t('review-award-complete:header') }}</h1>
 
-      <h3 class="govuk-heading-m">{{ details.regularPayment.title }}</h3>
-      {{ govukSummaryList({
-        classes: 'gysp-payment-details-summary',
+    {% for paragraph in details.paragraphs %}
+      <p class="govuk-body">{{ paragraph | safe }}</p>
+    {% endfor %}
+
+    <form method="post" action="/review-award/schedule" id="form__end-task" autocomplete="off" novalidate>
+      {{ govukButton({
+        text: t('review-award-complete:button'),
         attributes: {
-          id: 'regular-payment-details'
-        },
-        rows: details.regularPayment.rows
+          id: 'end-task'
+        }
       }) }}
-
-      <form method="post" action="/review-award/schedule" id="form__create-letter" autocomplete="off" novalidate>
-        {{ govukButton({
-          text: details.button,
-          attributes: {
-            id: 'create-letter'
-          }
-        }) }}
-      </form>
-    {% else %}
-      <h2>Sorry, no payment breakdown found.</h2>
-    {% endif %}
+    </form>
   </div>
 </div>
 

@@ -26,7 +26,7 @@ const flashMock = (type, message) => {
 };
 
 const claimData = require('../../lib/claimData');
-const dataObjects = require('../../lib/formDataObjects');
+const dataObjects = require('../../lib/reviewDataObjects');
 const responseHelper = require('../../lib/responseHelper');
 const { promiseWait } = require('../../lib/unitHelper');
 
@@ -272,19 +272,7 @@ describe('Review award controller', () => {
       await controller.postPaymentSchedule(validPostRequest, genericResponse);
       assert.isUndefined(validPostRequest.session['review-award']);
       assert.isTrue(validPostRequest.session.awardReviewUserHasCompleted);
-      assert.equal(genericResponse.address, '/review-award/complete');
-    });
-  });
-
-  describe('getComplete function (POST /review-award/complete)', () => {
-    it('should return view with key details and success panel when called', () => {
-      const validReviewAwardRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
-      const keyDetailsResponse = {
-        fullName: 'Joe Bloggs', nino: 'AA 37 07 73 A', status: { text: 'RECEIVING STATE PENSION', class: 'active' }, dateOfBirth: null,
-      };
-      controller.getComplete(validReviewAwardRequest, genericResponse);
-      assert.equal(genericResponse.viewName, 'pages/review-award/complete');
-      assert.deepEqual(genericResponse.data.keyDetails, keyDetailsResponse);
+      assert.equal(genericResponse.address, '/review-award');
     });
   });
 

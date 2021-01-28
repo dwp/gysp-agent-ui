@@ -9,7 +9,6 @@ router.get('/new-award', functions.getNewAward);
 router.route('/schedule')
   .get(functions.getPaymentSchedule)
   .post(functions.postPaymentSchedule);
-router.get('/complete', functions.getComplete);
 
 router.route('/entitlement-date')
   .get(functions.getNewEntitlementDate)

@@ -1,0 +1,11 @@
+{
+  "header": "Complete Task",
+  "change": {
+    "increase": "up",
+    "decrease": "down"
+  },
+  "p-1": "The weekly State Pension amount will go {{CHANGE}} from <strong>{{FROM}}</strong> to <strong>{{TO}}</strong> from <strong>{{DATE}}</strong>.",
+  "p-2": "A new award letter will be sent to the claimant.",
+  "p-arrears": "An arrears payment of <strong>{{AMOUNT}}</strong> will be made for the period {{FROM}} to {{TO}}.",
+  "button": "End Task"
+}
