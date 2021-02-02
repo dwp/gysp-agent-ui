@@ -169,7 +169,7 @@ describe('Review award controller', () => {
     const validReviewAwardRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
     const validReviewAwardWithAssetedEntitlementDateRequest = dataObjects.validReviewAwardPaymentScheduleAssetedEntitlementDateRequest();
 
-    it('should return view with data when a 200 reponse from the API is received', async () => {
+    it('should return view with data when a 200 response from the API is received', async () => {
       nock('http://test-url/').get(awardReviewBreakdownUri)
         .query({
           inviteKey: validReviewAwardRequest.session.award.inviteKey,
@@ -184,7 +184,7 @@ describe('Review award controller', () => {
       assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
     });
 
-    it('should return view with data when a 200 reponse from the API is received with assserted entitlement date', async () => {
+    it('should return view with data when a 200 response from the API is received with asserted entitlement date', async () => {
       nock('http://test-url/').get(awardReviewBreakdownUri)
         .query({
           inviteKey: validReviewAwardRequest.session.award.inviteKey,
@@ -196,7 +196,7 @@ describe('Review award controller', () => {
 
       await controller.getPaymentSchedule(validReviewAwardWithAssetedEntitlementDateRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/breakdown');
-      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
+      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObjectAssertedEntitlementDate()));
     });
 
     it('should return error view when no invite key exists in the session', async () => {

@@ -186,6 +186,15 @@ module.exports = {
       ],
     };
   },
+  validPaymentFormattedObjectAssertedEntitlementDate() {
+    return {
+      paragraphs: [
+        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>9 November 2020</strong>.',
+        'An arrears payment of <strong>£150.00</strong> will be made for the period 10 December 2018 to 31 December 2018.',
+        'A new award letter will be sent to the claimant.',
+      ],
+    };
+  },
   validPaymentFormattedObjectWithoutReferenceNumber() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
     object.bankDetails.rows.splice(3, 1);
