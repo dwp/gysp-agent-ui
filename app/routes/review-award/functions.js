@@ -114,7 +114,7 @@ async function getPaymentSchedule(req, res) {
   const reviewAwardDate = dataStore.get(req, 'review-award-date');
   try {
     const srbPaymentBreakdown = await srbPaymentBreakdownRequest(res, award.inviteKey, reviewAward, reviewAwardDate);
-    const details = reviewAwardScheduleObject.formatter(srbPaymentBreakdown, reviewAward.entitlementDate, reviewAwardDate);
+    const details = reviewAwardScheduleObject.formatter(srbPaymentBreakdown);
     const keyDetails = keyDetailsHelper.formatter(award);
     const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
     res.render('pages/review-award/breakdown', {

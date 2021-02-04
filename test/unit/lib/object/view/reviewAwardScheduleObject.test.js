@@ -24,18 +24,6 @@ describe('reviewAwardScheduleObject', () => {
     assert.isFunction(object.formatter);
   });
 
-  it('should throw type error when entitlement date is undefined', () => {
-    assert.throw(() => {
-      object.formatter({}, undefined);
-    }, TypeError, 'Expected date time got undefined: undefined');
-  });
-
-  it('should throw type error when entitlement date is invalid', () => {
-    assert.throw(() => {
-      object.formatter({}, 'invalid');
-    }, TypeError, 'Expected date time got string: invalid');
-  });
-
   it('should return valid json when object is called with full object', (done) => {
     const json = object.formatter(dataObjects.validPaymentApiResponse(), entitlementDate);
     assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObject()));

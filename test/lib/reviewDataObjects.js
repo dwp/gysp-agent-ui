@@ -26,6 +26,7 @@ module.exports = {
       },
       currentAwardAmount: 168.60,
       updatedAwardAmount: 180.60,
+      entitlementDate: '2020-01-01T06:00:00.000Z',
     };
   },
 
@@ -180,7 +181,7 @@ module.exports = {
   validPaymentFormattedObject() {
     return {
       paragraphs: [
-        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>9 November 2018</strong>.',
+        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>1 January 2020</strong>.',
         'An arrears payment of <strong>£150.00</strong> will be made for the period 10 December 2018 to 31 December 2018.',
         'A new award letter will be sent to the claimant.',
       ],
@@ -189,7 +190,7 @@ module.exports = {
   validPaymentFormattedObjectAssertedEntitlementDate() {
     return {
       paragraphs: [
-        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>9 November 2020</strong>.',
+        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>1 January 2020</strong>.',
         'An arrears payment of <strong>£150.00</strong> will be made for the period 10 December 2018 to 31 December 2018.',
         'A new award letter will be sent to the claimant.',
       ],
@@ -202,7 +203,7 @@ module.exports = {
   },
   validPaymentFormattedObjectAwardIncreaseWithArrears() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    object.paragraphs[0] = 'The weekly State Pension amount will go up from <strong>£100.00</strong> to <strong>£200.00</strong> from <strong>9 November 2018</strong>.';
+    object.paragraphs[0] = 'The weekly State Pension amount will go up from <strong>£100.00</strong> to <strong>£200.00</strong> from <strong>1 January 2020</strong>.';
     return object;
   },
   validPaymentFormattedObjectAwardIncreaseWithoutArrears() {
@@ -212,7 +213,7 @@ module.exports = {
   },
   validPaymentFormattedObjectAwardDecrease() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
-    object.paragraphs[0] = 'The weekly State Pension amount will go down from <strong>£200.00</strong> to <strong>£100.00</strong> from <strong>9 November 2018</strong>.';
+    object.paragraphs[0] = 'The weekly State Pension amount will go down from <strong>£200.00</strong> to <strong>£100.00</strong> from <strong>1 January 2020</strong>.';
     object.paragraphs.splice(1, 1);
     return object;
   },
