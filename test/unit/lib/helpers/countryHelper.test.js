@@ -31,8 +31,8 @@ describe('country helper', () => {
       assert.isArray(helper.getCountryList('ESP:Spain', 'country:placeholder'));
     });
 
-    it('should return 31 countries options with 1 blank option', () => {
-      assert.lengthOf(helper.getCountryList(), 32);
+    it('should return 32 countries options with 1 blank option', () => {
+      assert.lengthOf(helper.getCountryList(), 33);
     });
 
     it('should return options with portugal selected', () => {
