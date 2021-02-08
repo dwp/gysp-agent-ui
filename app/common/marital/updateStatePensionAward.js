@@ -1,3 +1,4 @@
+const moment = require('moment');
 const request = require('request-promise');
 const dataStore = require('../../../lib/dataStore');
 const errorHelper = require('../../../lib/helpers/errorHelper');
@@ -5,9 +6,8 @@ const requestHelper = require('../../../lib/requestHelper');
 const requestFilterHelper = require('../../../lib/helpers/requestFilterHelper');
 const dateHelper = require('../../../lib/dateHelper');
 const stringHelper = require('../../../lib/stringHelper');
-
+const maritalStatusHelper = require('../../../lib/helpers/maritalStatusHelper');
 const maritalValidation = require('../../../lib/validation/maritalValidation');
-
 const maritalUpdateStatePensionAwardObject = require('../../../lib/objects/view/maritalUpdateStatePensionAwardObject');
 
 const getEntitlementDateApiUri = (entitleDate, claimFromDate, ninoDigits) => `api/award/entitlement-date?entitlementDate=${entitleDate}&claimFromDate=${claimFromDate}&ninoDigits=${ninoDigits}`;
@@ -25,12 +25,37 @@ function buildEntitlementDateApiUri(req) {
   };
 }
 
+function buildEventEntitlementDateApiUri(eventDate, claimFromDate, nino) {
+  const eventDateString = eventDate.format('YYYY-MM-DD');
+  const claimFromDateString = claimFromDate.format('YYYY-MM-DD');
+  const lastTwoNinoDigits = stringHelper.extractNumbers(nino).slice(-2);
+  return {
+    url: getEntitlementDateApiUri(eventDateString, claimFromDateString, stringHelper.extractNumbers(nino).slice(-2)),
+    cacheKey: `${eventDateString}:${claimFromDateString}:${lastTwoNinoDigits}`,
+  };
+}
+
 function getEntitlementDate(req, res) {
   const { url, cacheKey } = buildEntitlementDateApiUri(req);
   return dataStore.cacheRetrieveAndStore(req, 'marital', cacheKey, () => {
     const awardCall = requestHelper.generateGetCall(res.locals.agentGateway + url, {}, 'award');
     return request(awardCall) || Object.create(null);
   });
+}
+
+function getEventEntitlementDate(eventDate, claimDate, nino, cacheSection, req, res) {
+  const { url, cacheKey } = buildEventEntitlementDateApiUri(eventDate, claimDate, nino);
+  return dataStore.cacheRetrieveAndStore(req, cacheSection, cacheKey, () => {
+    const awardCall = requestHelper.generateGetCall(res.locals.agentGateway + url, {}, 'award');
+    return request(awardCall) || Object.create(null);
+  });
+}
+
+function getWidowedEntitlementDate(maritalSession, req, res) {
+  const dte = moment(`${maritalSession.date.dateYear}-${maritalSession.date.dateMonth}-${maritalSession.date.dateDay}`);
+  const { claimFromDate: cfd, statePensionDate: spd, nino } = dataStore.get(req, 'awardDetails') || Object.create(null);
+  const claimFromDate = moment(dateHelper.timestampToDateDash(cfd || spd));
+  return getEventEntitlementDate(dte, claimFromDate, nino, 'marital', req, res);
 }
 
 async function getUpdateStatePensionAward(req, res, data) {
@@ -41,6 +66,11 @@ async function getUpdateStatePensionAward(req, res, data) {
     const { entitlementDate } = await getEntitlementDate(req, res);
     const { awardAmounts } = dataStore.get(req, 'awardDetails') || Object.create(null);
     const maritalSession = dataStore.get(req, 'marital');
+    if (maritalStatusHelper.isWidowed(maritalSession.maritalStatus)) {
+      const response = await getWidowedEntitlementDate(maritalSession, req, res);
+      maritalSession.widowedEntitlementDate = response.entitlementDate;
+      dataStore.save(req, 'marital', maritalSession);
+    }
     const details = maritalUpdateStatePensionAwardObject.formatter(awardAmounts, entitlementDate, maritalSession);
     res.render('common/marital/update-state-pension-award', {
       template,
