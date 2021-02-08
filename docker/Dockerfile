@@ -12,7 +12,7 @@ ARG HARDEN_FOLDER=/opt/harden/
 # Need to use internal package repository for apks
 RUN sed -i "s|http://dl-cdn.alpinelinux.org|https://nexus.nonprod.dwpcloud.uk/repository|" /etc/apk/repositories
 
-RUN apk add --no-cache tzdata=2020f-r0 curl=7.67.0-r3
+RUN apk add --no-cache tzdata=2021a-r0 curl=7.67.0-r3
 
 # Default ENV
 ENV TZ=Europe/London
