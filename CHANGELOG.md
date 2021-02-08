@@ -1,3 +1,7 @@
+# [8.2.0](https://github.com/dwp/gysp-agent-ui/compare/8.1.0...8.2.0) (2021-02-08)
+
+
+
 # [8.1.0](https://github.com/dwp/gysp-agent-ui/compare/8.0.0...8.1.0) (2021-01-25)
 
 
