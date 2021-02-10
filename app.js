@@ -46,7 +46,7 @@ sessionMiddleware(app, log, config.application);
 
 pageMiddleware(app);
 
-const i18next = i18nMiddleware(app, i18nextConfig);
+const i18next = i18nMiddleware(app, i18nextConfig, log);
 
 app.use((req, res, next) => {
   // Send assetPath to all views

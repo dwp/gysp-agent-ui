@@ -1,4 +1,12 @@
-module.exports = (req, res, next) => {
+module.exports = (log) => (req, res, next) => {
+  if (!req.i18n) {
+    req.i18n = {
+      changeLanguage() {
+        log.debug('i18n not registered on req; changeLanguage() mocked');
+      },
+    };
+  }
+
   if (req.session) {
     req.session.lang = req.session.lang || 'en-GB';
     req.i18n.changeLanguage(req.session.lang);
