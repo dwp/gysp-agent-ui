@@ -83,7 +83,25 @@ const civilToWidowedVerifiedFormatted = {
 };
 const civilToWidowedNonVerifiedFormatted = Object.assign(JSON.parse(JSON.stringify(civilToWidowedVerifiedFormatted)), { maritalStatusVerified: false });
 
-const ninoAddFormatted = {
+const firstNameAddFormatted = {
+  nino: 'AA370773A',
+  eventCategory: 'PERSONAL',
+  eventType: 'ADD',
+  eventName: 'personal:timeline.marital-partner.married',
+  maritalStatus: 'Married',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Bryan',
+    surname: 'Bloggs',
+    allOtherNames: 'Middle',
+    dob: '1952-03-19T00:00:00.000Z',
+    dobVerified: false,
+    marriageDate: '2000-03-19T00:00:00.000Z',
+  },
+};
+const firstNameChangeFormatted = Object.assign(JSON.parse(JSON.stringify(firstNameAddFormatted)), { eventType: 'CHANGE' });
+
+const lastNameAddFormatted = {
   nino: 'AA370773A',
   eventCategory: 'PERSONAL',
   eventType: 'ADD',
@@ -92,15 +110,14 @@ const ninoAddFormatted = {
   maritalStatusVerified: true,
   partnerDetail: {
     firstName: 'Jane',
-    surname: 'Bloggs',
+    surname: 'Lee O\'Malley',
     allOtherNames: 'Middle',
     dob: '1952-03-19T00:00:00.000Z',
     dobVerified: false,
     marriageDate: '2000-03-19T00:00:00.000Z',
-    partnerNino: 'AA123456A',
   },
 };
-const ninoChangeFormatted = Object.assign(JSON.parse(JSON.stringify(ninoAddFormatted)), { eventType: 'CHANGE' });
+const lastNameChangeFormatted = Object.assign(JSON.parse(JSON.stringify(lastNameAddFormatted)), { eventType: 'CHANGE' });
 
 const dobAddFormatted = {
   nino: 'AA370773A',
@@ -119,6 +136,25 @@ const dobAddFormatted = {
   },
 };
 const dobChangeFormatted = Object.assign(JSON.parse(JSON.stringify(dobAddFormatted)), { eventType: 'CHANGE' });
+
+const ninoAddFormatted = {
+  nino: 'AA370773A',
+  eventCategory: 'PERSONAL',
+  eventType: 'ADD',
+  eventName: 'personal:timeline.marital-partner.married',
+  maritalStatus: 'Married',
+  maritalStatusVerified: true,
+  partnerDetail: {
+    firstName: 'Jane',
+    surname: 'Bloggs',
+    allOtherNames: 'Middle',
+    dob: '1952-03-19T00:00:00.000Z',
+    dobVerified: false,
+    marriageDate: '2000-03-19T00:00:00.000Z',
+    partnerNino: 'AA123456A',
+  },
+};
+const ninoChangeFormatted = Object.assign(JSON.parse(JSON.stringify(ninoAddFormatted)), { eventType: 'CHANGE' });
 
 const fullMaritalStatusAllDataChangeFormattedVerified = {
   nino: 'AA370773A',
@@ -236,11 +272,19 @@ const dateDetailsNotVerified = {
   dateYear: '2020', dateMonth: '3', dateDay: '1', verification: 'NV',
 };
 
-const partnerNinoDetails = { partnerNino: 'AA123456A' };
+const firstNameDetails = {
+  firstName: 'Bryan',
+};
+
+const lastNameDetails = {
+  lastName: 'Lee O\'Malley',
+};
 
 const partnerDobDetails = {
   dobYear: '1952', dobMonth: '03', dobDay: '19', dobVerified: 'V',
 };
+
+const partnerNinoDetails = { partnerNino: 'AA123456A' };
 
 const partnerAllDetails = {
   firstName: 'Jane',
@@ -334,15 +378,31 @@ describe('maritalDetailsObject', () => {
   });
 
   describe('partnerDetailByItemFormatter', () => {
-    describe('nino', () => {
-      it('should return formatted add object with nino updated when nino supplied but not complete in partner details', () => {
-        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', claimData.validClaimMarriedVerified()), ninoAddFormatted);
+    describe('firstName', () => {
+      it('should return formatted add object with firstName updated when firstName supplied and complete in partner details', () => {
+        const award = claimData.validClaimMarriedVerified();
+        award.partnerDetail.firstName = null;
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(firstNameDetails, 'married', award), firstNameAddFormatted);
       });
 
-      it('should return formatted change object with nino updated when nino supplied and complete in partner details', () => {
+      it('should return formatted change object with firstName updated when firstName supplied and complete in partner details', () => {
         const award = claimData.validClaimMarriedVerified();
-        award.partnerDetail.partnerNino = 'AA654321C';
-        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', award), ninoChangeFormatted);
+        award.partnerDetail.firstName = 'Agnes';
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(firstNameDetails, 'married', award), firstNameChangeFormatted);
+      });
+    });
+
+    describe('lastName', () => {
+      it('should return formatted add object with surname updated when lastName supplied and complete in partner details', () => {
+        const award = claimData.validClaimMarriedVerified();
+        award.partnerDetail.surname = null;
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(lastNameDetails, 'married', award), lastNameAddFormatted);
+      });
+
+      it('should return formatted change object with surname updated when lastName supplied and complete in partner details', () => {
+        const award = claimData.validClaimMarriedVerified();
+        award.partnerDetail.surname = 'Parker';
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(lastNameDetails, 'married', award), lastNameChangeFormatted);
       });
     });
 
@@ -357,6 +417,18 @@ describe('maritalDetailsObject', () => {
         const award = claimData.validClaimMarriedVerified();
         award.partnerDetail.dob = '1960-01-01T00:00:00.000Z';
         assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerDobDetails, 'married', award), dobChangeFormatted);
+      });
+    });
+
+    describe('nino', () => {
+      it('should return formatted add object with nino updated when nino supplied but not complete in partner details', () => {
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', claimData.validClaimMarriedVerified()), ninoAddFormatted);
+      });
+
+      it('should return formatted change object with nino updated when nino supplied and complete in partner details', () => {
+        const award = claimData.validClaimMarriedVerified();
+        award.partnerDetail.partnerNino = 'AA654321C';
+        assert.deepEqual(maritalDetailsObject.partnerDetailByItemFormatter(partnerNinoDetails, 'married', award), ninoChangeFormatted);
       });
     });
   });

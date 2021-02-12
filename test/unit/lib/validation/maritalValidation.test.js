@@ -10,6 +10,8 @@ const validator = require('../../../../lib/validation/maritalValidation');
 const emptyPostRequest = {};
 const validPostRequest = { firstName: 'Joe', lastName: 'Bloggs' };
 
+const thirtySixCharacters = 'qwertyuiopasdfghjklzxcvbnmqwertyuiop';
+
 const maritalStatus = ['married', 'civil', 'divorced', 'widowed', 'dissolved'];
 
 const apiValidationValidCallback = () => ({ valid: true, validation: { max: 0 } });
@@ -20,6 +22,164 @@ describe('marital validator', () => {
     await i18next
       .use(i18nextFsBackend)
       .init(i18nextConfig);
+  });
+
+  describe('nameValidator', () => {
+    it('should return error when formField is null - first-name/married', () => {
+      const errors = validator.nameValidator(null, 'married', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'Enter the spouse\'s first name');
+    });
+
+    it('should return error when formField is null - married/last-name', () => {
+      const errors = validator.nameValidator(null, 'married', 'last-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['last-name'].text, 'Enter the spouse\'s last name');
+    });
+
+    it('should return error when formField is null - civil/first-name', () => {
+      const errors = validator.nameValidator(null, 'civil', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'Enter the partner\'s first name');
+    });
+
+    it('should return error when formField is null - divorced/first-name', () => {
+      const errors = validator.nameValidator(null, 'divorced', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'Enter the ex-spouse\'s first name');
+    });
+
+    it('should return error when formField is null - widowed/first-name', () => {
+      const errors = validator.nameValidator(null, 'widowed', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'Enter the late spouse or partner\'s first name');
+    });
+
+    it('should return error when formField is null - dissolved/first-name', () => {
+      const errors = validator.nameValidator(null, 'dissolved', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'Enter the ex-partner\'s first name');
+    });
+
+    it('should return error when formField is invalid - married/first-name', () => {
+      const errors = validator.nameValidator('A$AP', 'married', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces');
+    });
+
+    it('should return error when formField is invalid - married/last-name (too short)', () => {
+      const errors = validator.nameValidator('A', 'married', 'last-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['last-name'].text, 'Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces');
+    });
+
+    it('should return error when formField is longer than 35 characters - married/first-name', () => {
+      const errors = validator.nameValidator(thirtySixCharacters, 'married', 'first-name');
+      assert.equal(Object.keys(errors).length, 1);
+      assert.equal(errors['first-name'].text, 'First name must have 35 characters or less');
+    });
+  });
+
+  describe('partnerDobValidator', () => {
+    maritalStatus.forEach((status) => {
+      it(`should return no error when valid data is supplied - ${status} status`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2019', dobMonth: '01', dobDay: '01', dobVerified: 'V',
+        });
+        assert.equal(Object.keys(errors).length, 0);
+      });
+
+      it(`should return all errors when empty - ${status} status`, () => {
+        const errors = validator.partnerDobValidator({ }, status);
+        assert.equal(Object.keys(errors).length, 5);
+      });
+
+      it(`should return all errors when blank - ${status}`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '', dobMonth: '', dobDay: '', dobVerified: '',
+        }, status);
+        assert.equal(Object.keys(errors).length, 5);
+      });
+
+      it(`should return error when date in the future - ${status}`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2099', dobMonth: '01', dobDay: '01', dobVerified: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.dob.text, i18next.t(`marital-detail:${status}.fields.dob.errors.future`));
+      });
+
+      it(`should return error when year is invalid - ${status}`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '20', dobMonth: '01', dobDay: '01', dobVerified: 'NV',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
+      });
+
+      it(`should return error when month is invalid - ${status}`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2018', dobMonth: '20', dobDay: '01', dobVerified: 'V',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
+      });
+
+      it(`should return error when day is invalid - ${status}`, () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2018', dobMonth: '01', dobDay: '40', dobVerified: 'NV',
+        }, status);
+        assert.equal(Object.keys(errors).length, 2);
+        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
+      });
+
+      it('should return error when dobVerified is not specified', () => {
+        const errors = validator.partnerDobValidator({
+          dobYear: '2018', dobMonth: '01', dobDay: '01', dobVerified: 'X',
+        }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.dobVerified.text, 'Select whether the date of birth is verified or not verified');
+      });
+    });
+  });
+
+  describe('maritalPartnerNino validator', () => {
+    maritalStatus.forEach((status) => {
+      it(`should return error when data is undefined - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
+      });
+
+      it(`should return error when partnerNino is blank - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: '' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
+      });
+
+      it(`should return error when partnerNino is invalid - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'ZZ123456C' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, 'Enter a National Insurance number in the correct format, like QQ123456C');
+      });
+
+      it(`should return error when partnerNino length is 7 - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, 'National Insurance number must be 9 characters or less');
+      });
+
+      it(`should return error when partnerNino length is 10 - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA12345678' }, status);
+        assert.equal(Object.keys(errors).length, 1);
+        assert.equal(errors.partnerNino.text, 'National Insurance number must be 9 characters or less');
+      });
+
+      it(`should return no errors when partnerNino valid - ${status}`, () => {
+        const errors = validator.maritalPartnerNino({ partnerNino: 'AA123456C' }, status);
+        assert.equal(Object.keys(errors).length, 0);
+      });
+    });
   });
 
   describe('partnerValidator', () => {
@@ -104,7 +264,7 @@ describe('marital validator', () => {
       });
 
       it('should return error when firstName greater than 35', () => {
-        const errors = validator.partnerValidator({ ...validPostRequest, firstName: 'qwertyuiopasdfghjklzxcvbnmqwertyuiop' });
+        const errors = validator.partnerValidator({ ...validPostRequest, firstName: thirtySixCharacters });
         assert.equal(Object.keys(errors).length, 1);
         assert.equal(errors.firstName.text, 'First name must have 35 characters or less');
       });
@@ -147,7 +307,7 @@ describe('marital validator', () => {
       });
 
       it('should return error when lastName greater than 35', () => {
-        const errors = validator.partnerValidator({ ...validPostRequest, lastName: 'qwertyuiopasdfghjklzxcvbnmqwertyuiop' });
+        const errors = validator.partnerValidator({ ...validPostRequest, lastName: thirtySixCharacters });
         assert.equal(Object.keys(errors).length, 1);
         assert.equal(errors.lastName.text, 'Last name must have 35 characters or less');
       });
@@ -176,7 +336,7 @@ describe('marital validator', () => {
       });
 
       it('should return error when otherName greater than 35', () => {
-        const errors = validator.partnerValidator({ ...validPostRequest, otherName: 'qwertyuiopasdfghjklzxcvbnmqwertyuiop' });
+        const errors = validator.partnerValidator({ ...validPostRequest, otherName: thirtySixCharacters });
         assert.equal(Object.keys(errors).length, 1);
         assert.equal(errors.otherName.text, 'Other names must have 35 characters or less');
       });
@@ -271,69 +431,6 @@ describe('marital validator', () => {
     });
   });
 
-  describe('partnerDobValidator', () => {
-    maritalStatus.forEach((status) => {
-      it(`should return no error when valid data is supplied - ${status} status`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '2019', dobMonth: '01', dobDay: '01', dobVerified: 'V',
-        });
-        assert.equal(Object.keys(errors).length, 0);
-      });
-
-      it(`should return all errors when empty - ${status} status`, () => {
-        const errors = validator.partnerDobValidator({ }, status);
-        assert.equal(Object.keys(errors).length, 5);
-      });
-
-      it(`should return all errors when blank - ${status}`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '', dobMonth: '', dobDay: '', dobVerified: '',
-        }, status);
-        assert.equal(Object.keys(errors).length, 5);
-      });
-
-      it(`should return error when date in the future - ${status}`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '2099', dobMonth: '01', dobDay: '01', dobVerified: 'V',
-        }, status);
-        assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.dob.text, i18next.t(`marital-detail:${status}.fields.dob.errors.future`));
-      });
-
-      it(`should return error when year is invalid - ${status}`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '20', dobMonth: '01', dobDay: '01', dobVerified: 'NV',
-        }, status);
-        assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
-      });
-
-      it(`should return error when month is invalid - ${status}`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '2018', dobMonth: '20', dobDay: '01', dobVerified: 'V',
-        }, status);
-        assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
-      });
-
-      it(`should return error when day is invalid - ${status}`, () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '2018', dobMonth: '01', dobDay: '40', dobVerified: 'NV',
-        }, status);
-        assert.equal(Object.keys(errors).length, 2);
-        assert.equal(errors.dob.text, 'Enter a real date, like 12 4 1993');
-      });
-
-      it('should return error when dobVerified is not specified', () => {
-        const errors = validator.partnerDobValidator({
-          dobYear: '2018', dobMonth: '01', dobDay: '01', dobVerified: 'X',
-        }, status);
-        assert.equal(Object.keys(errors).length, 1);
-        assert.equal(errors.dobVerified.text, 'Select whether the date of birth is verified or not verified');
-      });
-    });
-  });
-
   describe('checkForInheritableStatePensionValidator', () => {
     it('should return errors when with empty post', () => {
       const errors = validator.checkForInheritableStatePensionValidator(emptyPostRequest);
@@ -373,6 +470,7 @@ describe('marital validator', () => {
       assert.equal(errors.entitledInheritableStatePension.text, "Select 'Yes' if the claimant is entitled to any inherited State Pension");
     });
   });
+
   describe('updateStatePensionAwardValidator', () => {
     it('should return error when session is empty', async () => {
       const errors = await validator.updateStatePensionAwardValidator({});
@@ -418,6 +516,7 @@ describe('marital validator', () => {
       assert.isUndefined(errors.statePensionComponents);
     });
   });
+
   describe('relevantInheritedAmountsValidator', () => {
     it('should return error when with empty post', () => {
       const errors = validator.relevantInheritedAmountsValidator(emptyPostRequest);

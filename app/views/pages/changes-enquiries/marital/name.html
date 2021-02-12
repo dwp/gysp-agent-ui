@@ -1,0 +1,30 @@
+{% extends 'pages/changes-enquiries/layout.html' %}
+
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block pageTitle %}{{ t("marital-detail:" + maritalStatus + ".fields." + name + ".label") }}{{ super() }}{% endblock %}
+
+{% block innerContent %}
+  <form method="post" action="/changes-and-enquiries/marital-details/{{ name }}" autocomplete="off" novalidate>
+    {{ govukInput({
+      id: name,
+      name: name,
+      type: "text",
+      label: {
+        text: t("marital-detail:" + maritalStatus + ".fields." + name + ".label"),
+        attributes: {
+          id: "name-label"
+        },
+        isPageHeading: true,
+        classes: "govuk-fieldset__legend--l"
+      },
+      value: details[name],
+      errorMessage: errors[name]
+    }) }}
+
+    {{ govukButton({
+      text: t("app:button.save")
+    }) }}
+  </form>
+{% endblock %}

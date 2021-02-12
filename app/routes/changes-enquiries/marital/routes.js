@@ -13,13 +13,21 @@ router.route('/marital-details/date')
   .get(functions.getChangeMaritalDate)
   .post(functions.postChangeMaritalDate);
 
-router.route('/marital-details/nino')
-  .get(functions.getChangePartnerNino)
-  .post(functions.postChangePartnerNino);
+router.route('/marital-details/first-name')
+  .get(functions.getChangeName('first-name'))
+  .post(functions.postChangeName('first-name'));
+
+router.route('/marital-details/last-name')
+  .get(functions.getChangeName('last-name'))
+  .post(functions.postChangeName('last-name'));
 
 router.route('/marital-details/date-of-birth')
   .get(functions.getPartnerDateOfBirth)
   .post(functions.postPartnerDateOfBirth);
+
+router.route('/marital-details/nino')
+  .get(functions.getChangePartnerNino)
+  .post(functions.postChangePartnerNino);
 
 router.route(/\/marital-details\/(spouse|partner)-details/)
   .get(functions.getPartnerDetails)

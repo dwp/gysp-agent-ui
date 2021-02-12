@@ -1,11 +1,21 @@
 {
   "married": {
     "fields": {
-      "nino": {
-        "label": "Spouse's National Insurance number",
+      "first-name": {
+        "label": "Spouse's first name",
         "errors": {
-          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
-          "length": "National Insurance number must be 9 characters or less"
+          "required": "Enter the spouse's first name",
+          "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "First name must have 35 characters or less"
+        },
+        "success-message": "Spouse details updated"
+      },
+      "last-name": {
+        "label": "Spouse's last name",
+        "errors": {
+          "required": "Enter the spouse's last name",
+          "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "Last name must have 35 characters or less"
         },
         "success-message": "Spouse details updated"
       },
@@ -27,16 +37,34 @@
         "errors": {
           "required": "Select whether the date of birth is verified or not verified"
         }
+      },
+      "nino": {
+        "label": "Spouse's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Spouse details updated"
       }
     }
   },
   "civil": {
     "fields": {
-      "nino": {
-        "label": "Partner's National Insurance number",
+      "first-name": {
+        "label": "Partner's first name",
         "errors": {
-          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
-          "length": "National Insurance number must be 9 characters or less"
+          "required": "Enter the partner's first name",
+          "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "First name must have 35 characters or less"
+        },
+        "success-message": "Partner details updated"
+      },
+      "last-name": {
+        "label": "Partner's last name",
+        "errors": {
+          "required": "Enter the partner's last name",
+          "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "Last name must have 35 characters or less"
         },
         "success-message": "Partner details updated"
       },
@@ -58,16 +86,34 @@
         "errors": {
           "required": "Select whether the date of birth is verified or not verified"
         }
+      },
+      "nino": {
+        "label": "Partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Partner details updated"
       }
     }
   },
   "divorced": {
     "fields": {
-      "nino": {
-        "label": "Ex-spouse's National Insurance number",
+      "first-name": {
+        "label": "Ex-spouse's first name",
         "errors": {
-          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
-          "length": "National Insurance number must be 9 characters or less"
+          "required": "Enter the ex-spouse's first name",
+          "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "First name must have 35 characters or less"
+        },
+        "success-message": "Ex-spouse details updated"
+      },
+      "last-name": {
+        "label": "Ex-spouse's last name",
+        "errors": {
+          "required": "Enter the ex-spouse's last name",
+          "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "Last name must have 35 characters or less"
         },
         "success-message": "Ex-spouse details updated"
       },
@@ -89,16 +135,34 @@
         "errors": {
           "required": "Select whether the date of birth is verified or not verified"
         }
+      },
+      "nino": {
+        "label": "Ex-spouse's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Ex-spouse details updated"
       }
     }
   },
   "dissolved": {
     "fields": {
-      "nino": {
-        "label": "Ex-partner's National Insurance number",
+      "first-name": {
+        "label": "Ex-partner's first name",
         "errors": {
-          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
-          "length": "National Insurance number must be 9 characters or less"
+          "required": "Enter the ex-partner's first name",
+          "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "First name must have 35 characters or less"
+        },
+        "success-message": "Ex-partner details updated"
+      },
+      "last-name": {
+        "label": "Ex-partner's last name",
+        "errors": {
+          "required": "Enter the ex-partner's last name",
+          "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "Last name must have 35 characters or less"
         },
         "success-message": "Ex-partner details updated"
       },
@@ -120,16 +184,34 @@
         "errors": {
           "required": "Select whether the date of birth is verified or not verified"
         }
+      },
+      "nino": {
+        "label": "Ex-partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Ex-partner details updated"
       }
     }
   },
   "widowed": {
     "fields": {
-      "nino": {
-        "label": "Late spouse or partner's National Insurance number",
+      "first-name": {
+        "label": "Late spouse or partner's first name",
         "errors": {
-          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
-          "length": "National Insurance number must be 9 characters or less"
+          "required": "Enter the late spouse or partner's first name",
+          "format": "First name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "First name must have 35 characters or less"
+        },
+        "success-message": "Late spouse or partner details updated"
+      },
+      "last-name": {
+        "label": "Late spouse or partner's last name",
+        "errors": {
+          "required": "Enter the late spouse or partner's last name",
+          "format": "Last name must start with a letter and only include letters a to z, hyphens, apostrophes, full stops and spaces",
+          "length": "Last name must have 35 characters or less"
         },
         "success-message": "Late spouse or partner details updated"
       },
@@ -151,6 +233,14 @@
         "errors": {
           "required": "Select whether the date of birth is verified or not verified"
         }
+      },
+      "nino": {
+        "label": "Late spouse or partner's National Insurance number",
+        "errors": {
+          "invalid": "Enter a National Insurance number in the correct format, like QQ123456C",
+          "length": "National Insurance number must be 9 characters or less"
+        },
+        "success-message": "Late spouse or partner details updated"
       }
     }
   }

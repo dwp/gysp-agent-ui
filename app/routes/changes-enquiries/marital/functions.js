@@ -173,37 +173,49 @@ async function postChangeMaritalDate(req, res) {
   }
 }
 
-function getChangePartnerNino(req, res) {
-  const award = dataStore.get(req, 'awardDetails');
-  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
-  res.render('pages/changes-enquiries/marital/nino', {
-    maritalStatus,
-  });
+function getChangeName(name) {
+  return function handler(req, res) {
+    const award = dataStore.get(req, 'awardDetails');
+    const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+    res.render('pages/changes-enquiries/marital/name', {
+      backHref: '/marital-details',
+      maritalStatus,
+      name,
+    });
+  };
 }
 
-async function postChangePartnerNino(req, res) {
-  const details = req.body;
-  const award = dataStore.get(req, 'awardDetails');
-  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
-  const errors = formValidator.maritalPartnerNino(details, maritalStatus);
-  if (Object.keys(errors).length === 0) {
-    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerNino(), details);
-    const maritalDetails = maritalDetailsApiObject.partnerDetailByItemFormatter(filteredRequest, maritalStatus, award);
-    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
-    try {
-      await request(putMaritalDetailsCall);
-      req.flash('success', i18n.t(`marital-detail:${maritalStatus}.fields.nino.success-message`));
-      res.redirect('/changes-and-enquiries/personal');
-    } catch (err) {
-      errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/nino');
-    }
-  } else {
-    res.render('pages/changes-enquiries/marital/nino', {
-      maritalStatus,
-      details,
-      errors,
-    });
+async function changeMaritalDetails(award, field, filteredRequest, maritalStatus, redirect, req, res) {
+  const maritalDetails = maritalDetailsApiObject.partnerDetailByItemFormatter(filteredRequest, maritalStatus, award);
+  const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
+  try {
+    await request(putMaritalDetailsCall);
+    req.flash('success', i18n.t(`marital-detail:${maritalStatus}.fields.${field}.success-message`));
+    res.redirect('/changes-and-enquiries/personal');
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', `/changes-and-enquiries/marital-details/${redirect}`);
   }
+}
+
+function postChangeName(name) {
+  return async function handler(req, res) {
+    const details = req.body;
+    const award = dataStore.get(req, 'awardDetails');
+    const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+    const errors = maritalValidation.nameValidator(details[name], maritalStatus, name);
+    if (Object.keys(errors).length === 0) {
+      const filteredRequest = requestFilterHelper.name(details[name], name);
+      await changeMaritalDetails(award, name, filteredRequest, maritalStatus, name, req, res);
+    } else {
+      res.render('pages/changes-enquiries/marital/name', {
+        backHref: '/marital-details',
+        details,
+        errors,
+        maritalStatus,
+        name,
+      });
+    }
+  };
 }
 
 function getPartnerDateOfBirth(req, res) {
@@ -227,17 +239,34 @@ async function postPartnerDateOfBirth(req, res) {
   const errors = maritalValidation.partnerDobValidator(details, maritalStatus);
   if (Object.keys(errors).length === 0) {
     const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerDob(), details);
-    const maritalDetails = maritalDetailsApiObject.partnerDetailByItemFormatter(filteredRequest, maritalStatus, award);
-    const putMaritalDetailsCall = requestHelper.generatePutCall(res.locals.agentGateway + putMaritalDetailsApiUri, maritalDetails, 'award', req.user);
-    try {
-      await request(putMaritalDetailsCall);
-      req.flash('success', i18n.t(`marital-detail:${maritalStatus}.fields.dob.success-message`));
-      res.redirect('/changes-and-enquiries/personal');
-    } catch (err) {
-      errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/changes-and-enquiries/marital-details/date-of-birth');
-    }
+    await changeMaritalDetails(award, 'dob', filteredRequest, maritalStatus, 'date-of-birth', req, res);
   } else {
     res.render('pages/changes-enquiries/marital/dob', {
+      maritalStatus,
+      details,
+      errors,
+    });
+  }
+}
+
+function getChangePartnerNino(req, res) {
+  const award = dataStore.get(req, 'awardDetails');
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  res.render('pages/changes-enquiries/marital/nino', {
+    maritalStatus,
+  });
+}
+
+async function postChangePartnerNino(req, res) {
+  const details = req.body;
+  const award = dataStore.get(req, 'awardDetails');
+  const maritalStatus = maritalStatusHelper.transformToShortStatus(award.maritalStatus);
+  const errors = maritalValidation.maritalPartnerNino(details, maritalStatus);
+  if (Object.keys(errors).length === 0) {
+    const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.partnerNino(), details);
+    await changeMaritalDetails(award, 'nino', filteredRequest, maritalStatus, 'nino', req, res);
+  } else {
+    res.render('pages/changes-enquiries/marital/nino', {
       maritalStatus,
       details,
       errors,
@@ -438,31 +467,35 @@ async function postSendLetter(req, res) {
   }
 }
 
-module.exports.getMaritalDetails = getMaritalDetails;
-module.exports.getChangeMaritalStatus = getChangeMaritalStatus;
-module.exports.postChangeMaritalStatus = postChangeMaritalStatus;
-module.exports.getChangeMaritalDate = getChangeMaritalDate;
-module.exports.postChangeMaritalDate = postChangeMaritalDate;
-module.exports.getChangePartnerNino = getChangePartnerNino;
-module.exports.postChangePartnerNino = postChangePartnerNino;
-module.exports.getPartnerDateOfBirth = getPartnerDateOfBirth;
-module.exports.postPartnerDateOfBirth = postPartnerDateOfBirth;
-module.exports.getPartnerDetails = getPartnerDetails;
-module.exports.postPartnerDetails = postPartnerDetails;
-module.exports.getCheckForInheritableStatePension = getCheckForInheritableStatePension;
-module.exports.postCheckForInheritableStatePension = postCheckForInheritableStatePension;
-module.exports.getSaveMaritalDetails = getSaveMaritalDetails;
-module.exports.postSaveMaritalDetails = postSaveMaritalDetails;
-module.exports.getConsiderStatePensionEntitlement = getConsiderStatePensionEntitlement;
-module.exports.getEntitledToInheritedStatePension = getEntitledToInheritedStatePension;
-module.exports.postEntitledToInheritedStatePension = postEntitledToInheritedStatePension;
-module.exports.getSendLetter = getSendLetter;
-module.exports.postSendLetter = postSendLetter;
-module.exports.getRelevantInheritedAmounts = getRelevantInheritedAmounts;
-module.exports.postRelevantInheritedAmounts = postRelevantInheritedAmounts;
-module.exports.getUpdateStatePensionAward = getUpdateStatePensionAward;
-module.exports.postUpdateStatePensionAward = postUpdateStatePensionAward;
-module.exports.getUpdateStatePensionAwardAmount = getUpdateStatePensionAwardAmount;
-module.exports.postUpdateStatePensionAwardAmount = postUpdateStatePensionAwardAmount;
-module.exports.getUpdateAndSendLetter = getUpdateAndSendLetter;
-module.exports.postUpdateAndSendLetter = postUpdateAndSendLetter;
+module.exports = {
+  getMaritalDetails,
+  getChangeMaritalStatus,
+  postChangeMaritalStatus,
+  getChangeMaritalDate,
+  postChangeMaritalDate,
+  getChangeName,
+  postChangeName,
+  getPartnerDateOfBirth,
+  postPartnerDateOfBirth,
+  getChangePartnerNino,
+  postChangePartnerNino,
+  getPartnerDetails,
+  postPartnerDetails,
+  getCheckForInheritableStatePension,
+  postCheckForInheritableStatePension,
+  getSaveMaritalDetails,
+  postSaveMaritalDetails,
+  getConsiderStatePensionEntitlement,
+  getEntitledToInheritedStatePension,
+  postEntitledToInheritedStatePension,
+  getSendLetter,
+  postSendLetter,
+  getRelevantInheritedAmounts,
+  postRelevantInheritedAmounts,
+  getUpdateStatePensionAward,
+  postUpdateStatePensionAward,
+  getUpdateStatePensionAwardAmount,
+  postUpdateStatePensionAwardAmount,
+  getUpdateAndSendLetter,
+  postUpdateAndSendLetter,
+};

@@ -47,12 +47,22 @@
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.first-name') }}</dt>
       <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.firstName }}</dd>
-      <span class="govuk-summary-list__actions gysp-summary-list__actions"></span>
+      <dd class="govuk-summary-list__actions gysp-summary-list__actions">
+        <a class="govuk-link govuk-link--no-visited-state" href="/changes-and-enquiries/marital-details/first-name">
+          {{ t('app:link.change') }}
+          <span class="govuk-visually-hidden"> {{ t('marital-details:partner-details.summary-keys.first-name') | lower }}</span>
+        </a>
+      </dd>
     </div>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.surname') }}</dt>
       <dd class="govuk-summary-list__value">{{ maritalDetails.partnerDetail.surname }}</dd>
-      <span class="govuk-summary-list__actions gysp-summary-list__actions"></span>
+            <dd class="govuk-summary-list__actions gysp-summary-list__actions">
+        <a class="govuk-link govuk-link--no-visited-state" href="/changes-and-enquiries/marital-details/last-name">
+          {{ t('app:link.change') }}
+          <span class="govuk-visually-hidden"> {{ t('marital-details:partner-details.summary-keys.last-name') | lower }}</span>
+        </a>
+      </dd>
     </div>
     <div class="govuk-summary-list__row">
       <dt class="govuk-summary-list__key gysp-col-1">{{ t('marital-details:partner-details.summary-keys.other-names') }}</dt>
