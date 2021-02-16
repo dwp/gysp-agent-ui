@@ -302,10 +302,6 @@ describe('General Helper ', () => {
     it('should formatted frequency string for 4 weeks', () => {
       assert.equal(helper.formatPaymentFrequency('4W'), `4 ${weeklyString}`);
     });
-
-    it('should formatted frequency string for 13 weeks', () => {
-      assert.equal(helper.formatPaymentFrequency('13W'), `13 ${weeklyString}`);
-    });
   });
 
   describe('checkFirstNameCharacters', () => {

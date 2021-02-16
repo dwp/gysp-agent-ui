@@ -1,13 +1,12 @@
 {
-  "header": "Change payment frequency",
+  "header": "Payment frequency",
   "fields": {
     "frequency": {
       "legend": "Select new payment frequency",
       "options": {
-        "one_week": "Weekly",
+        "one_week": "Every week",
         "two_week": "Every 2 weeks",
-        "four_week": "Every 4 weeks",
-        "thirteen_week": "Every 13 weeks"
+        "four_week": "Every 4 weeks"
       },
       "errors": {
         "required": "Select a new payment frequency"

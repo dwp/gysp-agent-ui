@@ -636,11 +636,6 @@ describe('Form validation', () => {
       const errors = validator.paymentFrequency({ frequency: '4W' });
       assert.equal(Object.keys(errors).length, 0);
     });
-
-    it('should return no error when valid frequency is supplied - 13W', () => {
-      const errors = validator.paymentFrequency({ frequency: '13W' });
-      assert.equal(Object.keys(errors).length, 0);
-    });
   });
 
   describe('dateOfDeath validator', () => {
