@@ -60,7 +60,7 @@
     "mockdate": "3.0.2",
     "moment": "2.29.1",
     "nocache": "2.1.0",
-    "nunjucks": "3.2.2",
+    "nunjucks": "3.2.3",
     "prom-client": "13.1.0",
     "redis": "3.0.2",
     "request-promise": "4.2.6",
