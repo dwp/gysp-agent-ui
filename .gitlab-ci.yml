@@ -17,7 +17,7 @@ stages:
   - post deploy
 
 default:
-  image: node:12.20.0-alpine3.11@sha256:a9ee412baa5c130dea5f8483e95890f8d7e499dda196973f4397189b0bb98244
+  image: node:12.20.2-alpine3.11@sha256:32f2e647f53c116e826178649098cfc09dbd3cb0eb1b95206eb83dcad374e7c1
 
 # ---------------------------------------------------------------------- prepare
 
