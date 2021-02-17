@@ -18,6 +18,7 @@ const paymentViewDataWithReference = {
   referenceNumber: '231231232',
   frequency: '4',
   frequencyPeriod: 'weeks',
+  showChangeFrequency: true,
 };
 
 const paymentSummaryViewDataFirstPaymentPaid = {

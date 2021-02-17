@@ -9,8 +9,14 @@ const overpaymentSummary = require('../../../../../../lib/objects/view/summary-o
 const awardObjectBase = (amount) => ({
   awardAmounts: [{
     totalAmount: 110.0,
-    fromDate: 1551830400000,
-    toDate: 1561830400000,
+    fromDate: 1551830400000, // 06/03/2019
+    toDate: 1561830400000, // 29/06/2019
+    inPayment: false,
+  }, {
+    totalAmount: 120.0,
+    fromDate: 1579272908000, // 17/01/2021
+    toDate: 1581951308000, // 17/02/2021
+    inPayment: true,
   }],
   deathDetail: {
     amountDetails: {
@@ -31,7 +37,7 @@ const summaryObject = {
     value: { text: '12 Jan 2019 to 11 Feb 2019' },
   }, {
     key: { text: 'Weekly amount' },
-    value: { text: '£110.00' },
+    value: { text: '£120.00' },
   }, {
     key: { text: 'Total overpayment' },
     value: { text: '£16.45' },

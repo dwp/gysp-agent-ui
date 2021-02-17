@@ -105,9 +105,11 @@
                 Every {{ details.frequency }} {{ details.frequencyPeriod }}
               {% endif %}
             </td>
-            <td class="govuk-table__cell govuk-table__cell--numeric">
-              <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
-            </td>
+              {% if details.showChangeFrequency %}
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                  <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+                </td>
+              {% endif %}
         {% endif %}
       </tr>
     </tbody>
