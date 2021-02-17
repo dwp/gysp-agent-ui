@@ -35,11 +35,12 @@
   {% else %}
     <p class="govuk-body">Sorry, no payment details found.</p>
   {% endif %}
-  {% if recentPaymentsTable %}
-    <table id="payment-details-table" class="govuk-table">
-      <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">{{ t('payment:payment_table.caption') }}</caption>
-      <tbody class="govuk-table__body">
-        <tr class="govuk-table__row">
+
+  <table id="payment-details-table" class="govuk-table">
+    <caption class="govuk-table__caption govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">{{ t('payment:payment_table.caption') }}</caption>
+    <tbody class="govuk-table__body">
+      <tr class="govuk-table__row">
+        {% if paymentSummary %}
           {% if paymentSummary.paymentOne %}
                   <th class="govuk-table__header gysp-payment-tab-table" scope="col">{{ t('payment:payment_table.sequence') }}</th>
                   <th class="govuk-table__header" scope="col">{{ t('payment:payment_table.date') }}</th>
@@ -50,13 +51,13 @@
                   <td class="govuk-table__cell">{{ paymentSummary.paymentOne.creditDate }}</td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentOne.amount }}</td>
                 </tr>
-                {% if paymentSummary.paymentTwo %}
-                  <tr class="govuk-table__row">
-                    <td class="govuk-table__cell gysp-payment-tab-table">{{ t('payment:payment_table.next_payment') }}</td>
-                    <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentTwo.amount }}</td>
-                  </tr>
-                {% endif %}
+                  {% if paymentSummary.paymentTwo %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell gysp-payment-tab-table">{{ t('payment:payment_table.next_payment') }}</td>
+                      <td class="govuk-table__cell">{{ paymentSummary.paymentTwo.creditDate }}</td>
+                      <td class="govuk-table__cell govuk-table__cell--numeric">{{ paymentSummary.paymentTwo.amount }}</td>
+                    </tr>
+                  {% endif %}
               </tbody>
             </table>
 
@@ -65,55 +66,52 @@
                 <tr class="govuk-table__row">
                   <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
                   <td class="govuk-table__cell">
-                  {% if details.frequency == 1 %}
-                    Weekly
-                  {% else %}
-                    Every {{ details.frequency }} {{ details.frequencyPeriod }}
-                  {% endif %}
+                    {% if details.frequency == 1 %}
+                      Weekly
+                    {% else %}
+                      Every {{ details.frequency }} {{ details.frequencyPeriod }}
+                    {% endif %}
                   </td>
                   <td class="govuk-table__cell govuk-table__cell--numeric">
                     <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
                   </td>
           {% elif paymentSummary.paymentTwo %}
-                  <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
-                  <td class="govuk-table__cell">
-                    {% if details.frequency == 1 %}
-                      Weekly
-                    {% else %}
-                      Every {{ details.frequency }} {{ details.frequencyPeriod }}
-                    {% endif %}
-                  </td>
-                  <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
-                  </td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.next_payment_date') }}</th>
-                  <td class="govuk-table__cell" colspan="2">{{ paymentSummary.paymentTwo.creditDate }}</td>
-                </tr>
-                <tr class="govuk-table__row">
-                  <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.next_payment_amount') }}</th>
-                  <td class="govuk-table__cell" colspan="2">{{ paymentSummary.paymentTwo.amount }}</td>
-          {% else %}
-                  <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
-                  <td class="govuk-table__cell">
-                    {% if details.frequency == 1 %}
-                      Weekly
-                    {% else %}
-                      Every {{ details.frequency }} {{ details.frequencyPeriod }}
-                    {% endif %}
-                  </td>
-                  <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
-                  </td>
+              <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
+              <td class="govuk-table__cell">
+                {% if details.frequency == 1 %}
+                  Weekly
+                {% else %}
+                  Every {{ details.frequency }} {{ details.frequencyPeriod }}
+                {% endif %}
+              </td>
+              <td class="govuk-table__cell govuk-table__cell--numeric">
+                <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+              </td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.next_payment_date') }}</th>
+              <td class="govuk-table__cell" colspan="2">{{ paymentSummary.paymentTwo.creditDate }}</td>
+            </tr>
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.next_payment_amount') }}</th>
+              <td class="govuk-table__cell" colspan="2">{{ paymentSummary.paymentTwo.amount }}</td>
           {% endif %}
-        </tr>
-      </tbody>
-    </table>
-  {% else %}
-    <h2 class="govuk-heading-m govuk-!-margin-top-2 govuk-!-margin-bottom-6">{{ t('payment:payment_table.caption') }}</h2>
-    <p class="govuk-body">No payments have been made.</p>
-  {% endif %}
+        {% else %}
+          <th class="govuk-table__header gysp-payment-tab-table" scope="row">{{ t('payment:payment_table.payment_frequency') }}</th>
+            <td class="govuk-table__cell">
+              {% if details.frequency == 1 %}
+                Weekly
+              {% else %}
+                Every {{ details.frequency }} {{ details.frequencyPeriod }}
+              {% endif %}
+            </td>
+            <td class="govuk-table__cell govuk-table__cell--numeric">
+              <a id="change-payment-frequency-link" href="/changes-and-enquiries/payment/frequency" class="govuk-link govuk-link--no-visited-state">Change<span class="govuk-visually-hidden"> payment frequency</span></a>
+            </td>
+        {% endif %}
+      </tr>
+    </tbody>
+  </table>
 {% endblock %}
 
 {% block outerContent %}
