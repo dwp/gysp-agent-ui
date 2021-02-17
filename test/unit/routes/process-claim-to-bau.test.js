@@ -9,6 +9,7 @@ nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-to-bau/functions');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
 
 let testPromise;
 let genericResponse;
@@ -31,12 +32,7 @@ const flashMock = (type, message) => {
 
 const validAllBAURequest = {
   flash: flashMock,
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
 };
 
 const validSingleBAURequest = {
@@ -46,22 +42,12 @@ const validSingleBAURequest = {
       claimDetail: { inviteKey: 'BLOGGS1234' },
     },
   },
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
 };
 
 const invalidSingleBAURequest = {
   session: {},
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
 };
 
 describe('Process claim send to BAU controller', () => {

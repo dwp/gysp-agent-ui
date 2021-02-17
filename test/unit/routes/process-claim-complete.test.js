@@ -21,12 +21,6 @@ const validRequest = {
   session: {
     processClaim: { userHasCompleted: true },
   },
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
 };
 
 describe('Process claim controller', () => {

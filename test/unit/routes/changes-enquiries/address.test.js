@@ -13,6 +13,8 @@ const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const addressData = require('../../../lib/addressData');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 nock.disableNetConnect();
 
@@ -25,7 +27,7 @@ const flashMock = (type, message) => {
   flash.message = message;
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 const postcodeLookupApiUri = '/address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT';
 const updateAddressDetailsApiUri = '/api/award/updateaddressdetails';
 const updateOverseasAddressApiUri = '/api/award/update-overseas-address';
@@ -56,7 +58,7 @@ const noPostcodeSelectRequest = {
 };
 
 const validSelectPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses(), postcode: { postcode: 'W1J 7NT' } },
   body: { address: '10091853817' },
   flash: flashMock,
@@ -81,7 +83,7 @@ const postRequestInternationalAddress = {
     'address-line-5': '90631',
     country: 'USA:United States of America',
   },
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   flash: flashMock,
 };
 

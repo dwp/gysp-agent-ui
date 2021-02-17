@@ -9,6 +9,7 @@ nock.disableNetConnect();
 
 const dropOutClaimController = require('../../../app/routes/drop-out-claim/functions');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
 
 let testPromise;
 let genericResponse;
@@ -42,9 +43,9 @@ const validDropoutDetailsResponse = {
   invitationCode: 'GYSP0123',
 };
 
-const validClaimPDFPost = { body: { inviteKey: 'Bloggs123' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
-const validQueueStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'queue' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
-const validFixedStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'fixed' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
+const validClaimPDFPost = { body: { inviteKey: 'Bloggs123' }, ...kongData() };
+const validQueueStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'queue' }, ...kongData() };
+const validFixedStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'fixed' }, ...kongData() };
 
 const errorDropOutStatus = '- Issue getting drop out total.';
 const errorDropOutDetailsStatus = '- Cannot get drop out.';

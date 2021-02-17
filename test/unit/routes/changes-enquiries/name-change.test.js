@@ -12,12 +12,14 @@ const controller = require('../../../../app/routes/changes-enquiries/name-change
 const claimData = require('../../../lib/claimData');
 const responseHelper = require('../../../lib/responseHelper');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 let genericResponse;
 let testPromise;
 let flash = { type: '', message: '' };
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 const changeNameApiUri = '/api/award/update-name-details';
 
 const awardDetails = { session: { awardDetails: claimData.validClaim() } };
@@ -32,7 +34,7 @@ const postRequestEmpty = {
 const postRequestNameChange = {
   ...awardDetails,
   body: { firstName: 'Rick', lastName: 'Sanchez' },
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   flash: (type, message) => {
     flash.type = type;
     flash.message = message;

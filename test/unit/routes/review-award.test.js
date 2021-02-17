@@ -29,6 +29,8 @@ const claimData = require('../../lib/claimData');
 const dataObjects = require('../../lib/reviewDataObjects');
 const responseHelper = require('../../lib/responseHelper');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
+const requestKongHeaderData = require('../../lib/requestKongHeaderData');
 
 const awardAmountUpdateUri = '/api/award/srbamountsupdate';
 const awardReviewBreakdownUri = '/api/award/srbpaymentbreakdown';
@@ -48,18 +50,14 @@ const validNextSrb = {
 };
 
 // Headers
-const reqHeaders = { reqheaders: { agentRef: 'Test User', location: '123456', staffId: '12345678' } };
+const reqHeaders = requestKongHeaderData();
 
 // Request Headers
-const user = {
-  cis: {
-    givenname: 'Test', surname: 'User', SLOC: '123456', dwp_staffid: '12345678',
-  },
-};
+const user = kongData();
 
 // Requests
-let validRequest = { session: {}, user: { ...user } };
-const invalidRequest = { session: { }, user: { ...user } };
+let validRequest = { session: {}, ...user };
+const invalidRequest = { session: { }, ...user };
 
 const emptyPostNewEntitlementDateRequest = { session: { award: claimData.validClaim() }, body: {} };
 const validPostNewEntitlementDateRequest = {
@@ -107,7 +105,7 @@ describe('Review award controller', () => {
 
   describe('getReviewReason function (GET /review-award/reason)', () => {
     beforeEach(() => {
-      validRequest = { session: {}, user: { ...user } };
+      validRequest = { session: {}, ...user };
     });
 
     it('should return view with reason when receive 500 response from award api and 500 from award review', async () => {
@@ -150,7 +148,7 @@ describe('Review award controller', () => {
 
   describe('getNewAward function (GET /review-award/new-award)', () => {
     beforeEach(() => {
-      validRequest = { session: { 'review-award': validNextSrb, award: claimData.validClaim() }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: { 'review-award': validNextSrb, award: claimData.validClaim() }, ...user };
     });
 
     it('should return view with new award when all session data present', () => {
@@ -278,7 +276,7 @@ describe('Review award controller', () => {
 
   describe('getNewEntitlementDate function (GET /review-award/entitlement-date)', () => {
     beforeEach(() => {
-      validRequest = { session: { award: claimData.validClaim() }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: { award: claimData.validClaim() }, ...user };
     });
 
     it('should display form when page when requested', () => {

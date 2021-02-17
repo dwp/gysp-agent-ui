@@ -1,4 +1,5 @@
 const claimData = require('./claimData');
+const kongData = require('./kongData');
 
 module.exports = {
   validPaymentApiResponse() {
@@ -126,13 +127,13 @@ module.exports = {
           },
         },
       },
-      user: { cis: { surname: 'User', givenname: 'Test' } },
+      ...kongData(),
     };
   },
   invalidSessionPaymentRequest() {
     return {
       session: {},
-      user: { cis: { surname: 'User', givenname: 'Test' } },
+      ...kongData(),
     };
   },
   validReviewAwardPaymentScheduleRequest() {
@@ -151,7 +152,7 @@ module.exports = {
           arrearsPayment: false,
         },
       },
-      user: { cis: { surname: 'User', givenname: 'Test' } },
+      ...kongData(),
     };
   },
   validReviewAwardPaymentScheduleAssetedEntitlementDateRequest() {
@@ -175,7 +176,7 @@ module.exports = {
           dateDay: '09',
         },
       },
-      user: { cis: { surname: 'User', givenname: 'Test' } },
+      ...kongData(),
     };
   },
   validPaymentFormattedObject() {

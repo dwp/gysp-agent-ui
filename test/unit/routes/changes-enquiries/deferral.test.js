@@ -12,6 +12,8 @@ const controller = require('../../../../app/routes/changes-enquiries/deferral/fu
 const claimData = require('../../../lib/claimData');
 const responseHelper = require('../../../lib/responseHelper');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 const awardDetails = { session: { awardDetails: claimData.validClaim() } };
 
@@ -52,7 +54,7 @@ const getConfirmResponse = {
   fromDate: '1 January 2000',
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 
 const recordDeferralApiUri = '/api/award/record-deferral';
 
@@ -65,7 +67,7 @@ const getUpdateRequest = {
       'date-request-received': { year: '2020', month: '1', day: '1' },
     },
   },
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   flash: (type, message) => {
     flash.type = type;
     flash.message = message;

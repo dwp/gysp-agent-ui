@@ -11,6 +11,8 @@ const claimData = require('../../../lib/claimData');
 const i18nextConfig = require('../../../../config/i18next');
 const responseHelper = require('../../../lib/responseHelper');
 const manualPaymentData = require('../../../lib/manualPaymentData');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 const session = () => ({
   session: {
@@ -42,11 +44,7 @@ const flashMock = (type, message) => {
 const manualPaymentCalculationApiUri = '/api/payment/manual-payment-calculation';
 const manualPaymentApiUri = '/api/payment/manual-payment';
 
-const reqHeaders = {
-  reqheaders: {
-    agentRef: 'Test User',
-  },
-};
+const reqHeaders = requestKongHeaderData();
 
 const tableData = {
   protectedPaymentAmount: '£10.00',
@@ -92,12 +90,7 @@ const getConfirmResponse = {
 const getUpdateRequest = {
   flash: flashMock,
   ...session(),
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
 };
 
 describe('Manual Payment controller', () => {

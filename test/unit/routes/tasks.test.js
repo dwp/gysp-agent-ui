@@ -15,6 +15,8 @@ const controller = require('../../../app/routes/tasks/functions');
 
 const responseHelper = require('../../lib/responseHelper');
 const errorHelper = require('../../lib/errorHelper');
+const kongData = require('../../lib/kongData');
+const requestKongHeaderData = require('../../lib/requestKongHeaderData');
 
 let genericResponse;
 
@@ -41,25 +43,21 @@ const flashMock = (type, message) => {
 };
 
 // Request Headers
-const user = {
-  cis: {
-    givenname: 'Test', surname: 'User', SLOC: '123456', dwp_staffid: '12345678',
-  },
-};
+const user = kongData();
 
 // Requests
-const emptyRequest = { session: {}, user: { ...user }, flash: flashMock };
+const emptyRequest = { session: {}, ...user, flash: flashMock };
 const dirtyTasksRequest = {
   session: {
     tasks: { foo: 'bar' }, 'updated-entitlement-details': { foo: 'bar' }, marital: { foo: 'bar' }, awardDetails: { foo: 'bar' },
   },
   flash: flashMock,
-  user: { ...user },
+  ...user,
 };
-const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock, user: { ...user } };
+const tasksRequest = { session: { tasks: marriedWorkItem }, flash: flashMock, ...user };
 
 // Headers
-const reqHeaders = { reqheaders: { agentRef: 'Test User', location: '123456', staffId: '12345678' } };
+const reqHeaders = requestKongHeaderData();
 
 const updatedMaritalDetails = {
   'partner-nino': { partnerNino: 'AA654321C' },

@@ -15,6 +15,7 @@ const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const addressData = require('../../../lib/addressData');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
 
 let genericResponse = {};
 
@@ -110,7 +111,7 @@ const payArrearsWithUpdatedContactDetailsRequest = {
 };
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
-const validBankPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim() }, body: accountDetails };
+const validBankPostRequest = { ...kongData(), session: { awardDetails: claimData.validClaim() }, body: accountDetails };
 
 const dapGetNameRequest = { session: { awardDetails: claimData.validClaim(), death: { } } };
 const dapGetNamePopulatedRequest = { session: { awardDetails: claimData.validClaim(), death: { 'dap-name': { name: 'Margret Meldrew' } } } };
@@ -134,7 +135,7 @@ const validSelectRequest = { session: { awardDetails: claimData.validClaim(), de
 const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
-const validSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
+const validSelectPostRequest = { ...kongData(), session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '' } };
 const validSelectPostSession = { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' }, 'dap-address': { address: '10091853817' } };
 

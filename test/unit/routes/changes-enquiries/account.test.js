@@ -14,6 +14,8 @@ const changeAccountDetailsController = require('../../../../app/routes/changes-e
 const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 let testPromise;
 let genericResponse = {};
@@ -30,12 +32,7 @@ const accountChangeRequest = { session: { awardDetails: claimData.validClaim() }
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
 
 const validBankPostRequest = {
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
   },
@@ -48,12 +45,7 @@ const validBankPostRequest = {
 };
 
 const validBuildingSocietyPostRequest = {
-  user: {
-    cis: {
-      surname: 'User',
-      givenname: 'Test',
-    },
-  },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
   },
@@ -66,7 +58,7 @@ const validBuildingSocietyPostRequest = {
   flash: flashMock,
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 
 const paymentDetailsUpdateApiUri = '/api/award/payee';
 

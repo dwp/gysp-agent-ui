@@ -9,6 +9,7 @@ nock.disableNetConnect();
 
 const overseasCompletedClaimController = require('../../../app/routes/overseas-completed-claim/functions');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
 
 let testPromise;
 let genericResponse;
@@ -42,9 +43,9 @@ const validJSONOverseasCompletedClaimDetailsResponse = {
   inviteKey: 'BLOG123',
 };
 
-const validClaimPDFPost = { body: { inviteKey: 'Bloggs123' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
-const validCreatedStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'CREATED' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
-const validCompleteStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'COMPLETE' }, user: { cis: { dwp_staffid: 'test@test.com' } } };
+const validClaimPDFPost = { body: { inviteKey: 'Bloggs123' }, ...kongData() };
+const validCreatedStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'CREATED' }, ...kongData() };
+const validCompleteStatusUpdatePost = { body: { inviteKey: 'Bloggs123', status: 'COMPLETE' }, ...kongData() };
 
 const errorOverseasCompletedClaimStatus = '- Issue getting overseas completed claim total.';
 const errorOverseasCompletedClaimDetailsStatus = '- Cannot get overseas completed claim.';

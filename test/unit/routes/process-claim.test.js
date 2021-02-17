@@ -9,6 +9,7 @@ nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim/functions');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
 
 let testPromise;
 let genericResponse;
@@ -21,8 +22,8 @@ const awardTotalUri = '/api/award/count/daily-awards';
 
 const awardTotalResponse = 50;
 
-const validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
-const validWithDetailRequest = { session: { processClaim: { foo: 'bar' } }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+const validRequest = { session: {}, ...kongData() };
+const validWithDetailRequest = { session: { processClaim: { foo: 'bar' } }, ...kongData() };
 
 describe('Process claim controller', () => {
   describe('getProcessClaim function (GET /process-claim)', () => {

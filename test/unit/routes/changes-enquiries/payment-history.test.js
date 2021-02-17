@@ -25,6 +25,7 @@ const { assert } = chai;
 
 const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
+const kongData = require('../../../lib/kongData');
 
 const paymentUri = '/api/payment';
 const returnPaymentUri = '/api/payment/return-payment';
@@ -216,22 +217,22 @@ const reissuePaymentDetailsFormatted = {
 };
 
 const baseRequest = {
-  session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, body: {},
+  session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData(), body: {},
 };
 
-let validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
-let validPaymentStatusRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
-const validPaymentStatusRequest2 = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
-const validPaymentStatusRequestSent = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
-const validPaymentStatusRequestRecalling = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+let validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData() };
+let validPaymentStatusRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData() };
+const validPaymentStatusRequest2 = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData() };
+const validPaymentStatusRequestSent = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData() };
+const validPaymentStatusRequestRecalling = { session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData() };
 let validReissueRequest = { };
 
 const validReissueDeathRequest = {
-  session: { awardDetails: claimData.validClaimWithDeathVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+  session: { awardDetails: claimData.validClaimWithDeathVerified() }, params: { id: 123 }, ...kongData(), flash: flashMock,
 };
 
 const validReissueDeathNotVerifiedRequest = {
-  session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+  session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, params: { id: 123 }, ...kongData(), flash: flashMock,
 };
 
 const emptyPostRequest = Object.assign(JSON.parse(JSON.stringify(baseRequest)), { body: {} });
@@ -294,7 +295,7 @@ describe('Payment history controller', () => {
 
     it('should return view with roll number when receive 200 response from API', async () => {
       nock('http://test-url/').get(`${paymentUri}/321`).reply(httpStatus.OK, paymentDetailWithReferenceNumber);
-      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 321 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 321 }, ...kongData() };
       await controller.getPaymentHistoryDetail(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/detail');
       assert.deepEqual(genericResponse.data.paymentHistoryDetail, paymentDetailWithReferenceNumberFormatted);
@@ -310,7 +311,7 @@ describe('Payment history controller', () => {
       nock('http://test-url/').get(`${paymentUri}/1234`).reply(httpStatus.OK, paymentDetailWithReferenceNumber);
       paymentDetailWithReferenceNumberFormattedNotPaid.id = 1234;
       paymentDetailWithReferenceNumberFormattedNotPaid.detailsSummaryRows[2].actions.items[0].href = '/changes-and-enquiries/payment-history/1234/status-update';
-      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 1234 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 1234 }, ...kongData() };
       await controller.getPaymentHistoryDetail(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/detail');
       assert.deepEqual(genericResponse.data.paymentHistoryDetail, paymentDetailWithReferenceNumberFormattedNotPaid);
@@ -319,7 +320,7 @@ describe('Payment history controller', () => {
     it('should return view with no link to change payment status when credit data is greater than 14 days ago', async () => {
       paymentDetailPaid.creditDate = creditDate15DaysAgo;
       nock('http://test-url/').get(`${paymentUri}/12345`).reply(httpStatus.OK, paymentDetailPaid);
-      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 12345 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 12345 }, ...kongData() };
       await controller.getPaymentHistoryDetail(validRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/payment-history/detail');
       assert.deepEqual(genericResponse.data.paymentHistoryDetail, paymentDetailPaidFormattedAfter14Days);
@@ -375,7 +376,7 @@ describe('Payment history controller', () => {
 
     it('should return redirect and display alert when payment status is not updatable - STATUS', async () => {
       nock('http://test-url/').get(`${paymentUri}/12345678`).reply(httpStatus.OK, paymentDetailReturned);
-      validPaymentStatusRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 12345678 }, user: { cis: { surname: 'User', givenname: 'Test' } } };
+      validPaymentStatusRequest = { session: { awardDetails: claimData.validClaim() }, params: { id: 12345678 }, ...kongData() };
       validPaymentStatusRequest.flash = flashMock;
       await controller.getStatusUpdate(validPaymentStatusRequest, genericResponse);
       assert.equal(flash.type, 'error');
@@ -632,7 +633,7 @@ describe('Payment history controller', () => {
       genericResponse = responseHelper.genericResponse();
       genericResponse.locals = responseHelper.localResponse(genericResponse);
       validReissueRequest = {
-        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData(), flash: flashMock,
       };
     });
 
@@ -698,7 +699,7 @@ describe('Payment history controller', () => {
       genericResponse = responseHelper.genericResponse();
       genericResponse.locals = responseHelper.localResponse(genericResponse);
       validReissueRequest = {
-        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, user: { cis: { surname: 'User', givenname: 'Test' } }, flash: flashMock,
+        session: { awardDetails: claimData.validClaim() }, params: { id: 123 }, ...kongData(), flash: flashMock,
       };
     });
 

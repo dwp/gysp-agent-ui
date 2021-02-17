@@ -14,6 +14,8 @@ const changeContactDetailsController = require('../../../../app/routes/changes-e
 const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 let testPromise;
 let genericResponse = {};
@@ -83,45 +85,45 @@ const emailRemoveViewData = {
 
 const emptyHomePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '' } };
 const validHomePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' }, flash: flashMock,
+  ...kongData(), params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { homePhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
 const validAddHomePostRequest = { ...validHomePostRequest, session: { awardDetails: claimData.validClaimContactNull('home') } };
 
 const emptyWorkPostRequest = { params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '' } };
 const validWorkPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' }, flash: flashMock,
+  ...kongData(), params: { type: 'work' }, session: { awardDetails: claimData.validClaim() }, body: { workPhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
 const validAddWorkPostRequest = { ...validWorkPostRequest, session: { awardDetails: claimData.validClaimContactNull('work') } };
 
 const emptyMobilePostRequest = { params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '' } };
 const validMobilePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' }, flash: flashMock,
+  ...kongData(), params: { type: 'mobile' }, session: { awardDetails: claimData.validClaim() }, body: { mobilePhoneNumber: '0000 000 0000' }, flash: flashMock,
 };
 const validAddMobilePostRequest = { ...validMobilePostRequest, session: { awardDetails: claimData.validClaimContactNull('mobile') } };
 
 const emptyEmailPostRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { email: '' } };
 const validEmailPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { email: 'a@b.com' }, flash: flashMock,
+  ...kongData(), params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { email: 'a@b.com' }, flash: flashMock,
 };
 const validAddEmailPostRequest = { ...validEmailPostRequest, session: { awardDetails: claimData.validClaimContactNull('email') } };
 
 const emptyHomeRemovePostRequest = { params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: '' } };
 const validYesHomeRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' }, flash: flashMock,
+  ...kongData(), params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'yes' }, flash: flashMock,
 };
 const validNoHomeRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'no' },
+  ...kongData(), params: { type: 'home' }, session: { awardDetails: claimData.validClaim() }, body: { removeContactNumber: 'no' },
 };
 
 const emptyEmailRemovePostRequest = { params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: '' } };
 const validYesEmailRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' }, flash: flashMock,
+  ...kongData(), params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'yes' }, flash: flashMock,
 };
 const validNoEmailRemovePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } }, params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'no' },
+  ...kongData(), params: { type: 'email' }, session: { awardDetails: claimData.validClaim() }, body: { removeContact: 'no' },
 };
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 
 const contactDetailsUri = '/api/award';
 const contactDetailsUpdateUri = '/api/award/updatecontactdetails';
@@ -534,7 +536,7 @@ describe('Change circumstances contact controller', () => {
     });
 
     it('should return a redirect to change when answer is no and API returns 200 state', () => {
-      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri, { reqheaders: { agentRef: 'Test User' } }).reply(httpStatus.OK, {});
+      nock('http://test-url/', reqHeaders).put(contactDetailsUpdateUri).reply(httpStatus.OK, {});
       changeContactDetailsController.postRemoveContactDetails(validNoHomeRemovePostRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(genericResponse.address, '/changes-and-enquiries/contact/home');

@@ -15,6 +15,8 @@ const controller = require('../../../../app/routes/changes-enquiries/payment-fre
 const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const { promiseWait } = require('../../../lib/unitHelper');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 
 let testPromise;
 let genericResponse = {};
@@ -35,7 +37,7 @@ const validPostSameFrequencyRequest = { session: { awardDetails: claimData.valid
 
 const putChangePaymentFrequencyApiUri = '/api/award/frequencychangeupdate';
 
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
+const reqHeaders = requestKongHeaderData();
 
 const errorMessage = {
   notFound: 'There has been a problem - award not found. This has been logged.',
@@ -53,7 +55,7 @@ const flashMock = (type, message) => {
 };
 
 const paymentSchedulePostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     searchedNino: 'AA370773A',

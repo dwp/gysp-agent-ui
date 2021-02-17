@@ -9,6 +9,7 @@ nock.disableNetConnect();
 
 const controller = require('../../../app/routes/process-claim-detail/functions');
 const { promiseWait } = require('../../lib/unitHelper');
+const kongData = require('../../lib/kongData');
 
 let testPromise;
 let genericResponse;
@@ -31,7 +32,7 @@ const awardDetailViewDetails = {
   dob: '15/01/1953',
 };
 
-const validRequest = { session: {}, user: { cis: { surname: 'User', givenname: 'Test' } } };
+const validRequest = { session: {}, ...kongData() };
 
 describe('Process claim detail controller', () => {
   describe('getProcessClaimDetailsCache function (GET /process-claim/detail)', () => {

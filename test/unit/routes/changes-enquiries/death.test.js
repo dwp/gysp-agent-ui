@@ -14,6 +14,8 @@ const controller = require('../../../../app/routes/changes-enquiries/death/funct
 const responseHelper = require('../../../lib/responseHelper');
 const claimData = require('../../../lib/claimData');
 const addressData = require('../../../lib/addressData');
+const kongData = require('../../../lib/kongData');
+const requestKongHeaderData = require('../../../lib/requestKongHeaderData');
 const { promiseWait } = require('../../../lib/unitHelper');
 
 let testPromise;
@@ -81,8 +83,8 @@ const validSelectEditRequest = { session: { awardDetails: claimData.validClaim()
 const noAddressLookupSelectRequest = { session: { awardDetails: claimData.validClaim(), postcode: { postcode: 'W1J 7NT' } } };
 const noPostcodeSelectRequest = { session: { awardDetails: claimData.validClaim(), addressLookup: addressData.multipleAddresses() } };
 
-const validVSelectPostRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), death: { 'date-of-death': { verification: 'V' }, 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
-const validVSelectPostEditRequest = { user: { cis: { surname: 'User', givenname: 'Test' } }, session: { awardDetails: claimData.validClaim(), editSection: 'dap-address', death: { 'date-of-death': { verification: 'V' }, 'address-lookup__edit': addressData.multipleAddresses(), 'dap-postcode__edit': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
+const validVSelectPostRequest = { ...kongData(), session: { awardDetails: claimData.validClaim(), death: { 'date-of-death': { verification: 'V' }, 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
+const validVSelectPostEditRequest = { ...kongData(), session: { awardDetails: claimData.validClaim(), editSection: 'dap-address', death: { 'date-of-death': { verification: 'V' }, 'address-lookup__edit': addressData.multipleAddresses(), 'dap-postcode__edit': { postcode: 'W1J 7NT' } } }, body: { address: '10091853817' } };
 const invalidSelectPostRequest = { session: { awardDetails: claimData.validClaim(), death: { 'address-lookup': addressData.multipleAddresses(), 'dap-postcode': { postcode: 'W1J 7NT' } } }, body: { address: '' } };
 
 const notFoundResponse = {
@@ -108,7 +110,7 @@ const verifiedResponse = {
 
 const emptyPostRequest = { session: { awardDetails: claimData.validClaim() }, body: {} };
 const validVPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaim() },
   body: {
     dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'V',
@@ -117,7 +119,7 @@ const validVPostRequest = {
 };
 
 const validNVPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaim() },
   body: {
     dateDay: '01', dateMonth: '01', dateYear: '2019', verification: 'NV',
@@ -126,7 +128,7 @@ const validNVPostRequest = {
 };
 
 const validYesPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaimWithDeathNotVerified() },
   body: {
     verify: 'yes',
@@ -134,7 +136,7 @@ const validYesPostRequest = {
 };
 
 const validNoPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaimWithDeathNotVerified() },
   body: {
     verify: 'no',
@@ -142,7 +144,7 @@ const validNoPostRequest = {
 };
 
 const paymentRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -166,7 +168,7 @@ const paymentRequest = {
 };
 
 const paymentRequestWithOutDateOfDeath = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaimWithDeathVerified(),
     death: {
@@ -181,7 +183,7 @@ const paymentRequestWithOutDateOfDeath = {
 };
 
 const paymentRequestDeathNotVerified = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -202,7 +204,7 @@ const paymentRequestDeathNotVerified = {
 };
 
 const paymentRequestNotVerified = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -223,7 +225,7 @@ const paymentRequestNotVerified = {
 };
 
 const paymentRequestVerifiedArrears = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -247,7 +249,7 @@ const paymentRequestVerifiedArrears = {
 };
 
 const paymentRequestVerifiedOverpayment = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -271,7 +273,7 @@ const paymentRequestVerifiedOverpayment = {
 };
 
 const paymentRequestVerifiedNothingOwed = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -295,7 +297,7 @@ const paymentRequestVerifiedNothingOwed = {
 };
 
 const paymentRequestEdit = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -320,7 +322,7 @@ const paymentRequestEdit = {
 };
 
 const retryCalculationRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaimWithDeathVerified(),
   },
@@ -328,7 +330,7 @@ const retryCalculationRequest = {
 };
 
 const recordDeathRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     death: {
@@ -354,7 +356,7 @@ const recordDeathRequest = {
 };
 
 const updateDeathRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     'death-payment-details': {
@@ -367,7 +369,7 @@ const updateDeathRequest = {
 };
 
 const updateDeathOverpaymentRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     'death-payment-details': {
@@ -380,7 +382,7 @@ const updateDeathOverpaymentRequest = {
 };
 
 const updateDeathOverpaymentRetryCalRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     'death-payment-details': {
@@ -396,7 +398,7 @@ const updateDeathOverpaymentRetryCalRequest = {
 };
 
 const updateDeathNothingOwnedRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     'death-payment-details': {
@@ -412,7 +414,7 @@ const updateDeathNothingOwnedRequest = {
 };
 
 const updateDeathNullPaymentRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: {
     awardDetails: claimData.validClaim(),
     'death-payment-details': {
@@ -426,7 +428,7 @@ const updateDeathNullPaymentRequest = {
 
 const emptyAddVerifiedDeathPostRequest = { session: { awardDetails: claimData.validClaimWithDeathNotVerified() }, body: {} };
 const validAddVerifiedDeathPostRequest = {
-  user: { cis: { surname: 'User', givenname: 'Test' } },
+  ...kongData(),
   session: { awardDetails: claimData.validClaimWithDeathNotVerified() },
   body: {
     dateDay: '01', dateMonth: '01', dateYear: '2019',
@@ -558,8 +560,6 @@ const reviewPayeeRetryValidPageData = {
     buttonText: 'Send letter',
   },
 };
-
-const reqHeaders = { reqheaders: { agentRef: 'Test User' } };
 
 const deathDetailsUpdateApiUri = '/api/award/record-death';
 const deathArrearsApiUri = '/api/payment/death-arrears';
@@ -1339,7 +1339,7 @@ describe('Change circumstances date of death controller ', () => {
 
   describe('getRecordDeath function (GET /changes-and-enquiries/personal/death/record)', () => {
     it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
       controller.getRecordDeath(recordDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1349,7 +1349,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
       controller.getRecordDeath(recordDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1359,7 +1359,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       controller.getRecordDeath(recordDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1369,7 +1369,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with verified success message', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1379,7 +1379,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with not verified success message', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequestNotVerified, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1389,7 +1389,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with arrears success message', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequestVerifiedArrears, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1399,7 +1399,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with overpayment success message', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequestVerifiedOverpayment, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1409,7 +1409,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with nothing owed success message', () => {
-      nock('http://test-url/', reqHeaders).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathDetailsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getRecordDeath(paymentRequestVerifiedNothingOwed, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1507,7 +1507,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view with error when API returns 400 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.BAD_REQUEST, {});
       controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1517,7 +1517,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view with error when API returns 404 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.NOT_FOUND, {});
       controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1527,7 +1527,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return view with error when API returns 500 state', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
       controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'error');
@@ -1537,7 +1537,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with arrears success', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getUpdateDeath(updateDeathRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1547,7 +1547,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with overpayment success', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getUpdateDeath(updateDeathOverpaymentRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1557,7 +1557,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with retryCal overpayment success', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getUpdateDeath(updateDeathOverpaymentRetryCalRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
@@ -1567,7 +1567,7 @@ describe('Change circumstances date of death controller ', () => {
     });
 
     it('should return a redirect when API returns 200 with nothing owed success', () => {
-      nock('http://test-url/', reqHeaders).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
+      nock('http://test-url/', requestKongHeaderData()).put(deathArrearsUpdateApiUri).reply(httpStatus.OK, {});
       controller.getUpdateDeath(updateDeathNothingOwnedRequest, genericResponse);
       return testPromise.then(() => {
         assert.equal(flash.type, 'success');
