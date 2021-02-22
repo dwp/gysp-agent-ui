@@ -1,3 +1,20 @@
+# [8.3.0](https://github.com/dwp/gysp-agent-ui/compare/8.2.0...8.3.0) (2021-02-22)
+
+
+### Bug Fixes
+
+* **i18n:** mock changeLanguage on requests were i18n has not been registered ([3667251](https://github.com/dwp/gysp-agent-ui/commit/3667251a160168b1942b1b6ae9a93a789184e06f))
+* **overpayment-task:** display correct award inpayment total ([bb76f13](https://github.com/dwp/gysp-agent-ui/commit/bb76f13bc751f520d07d2d2af14b0f546670c7c6))
+* **payment-details:** continue to display frequency if payments already made ([9ba6945](https://github.com/dwp/gysp-agent-ui/commit/9ba6945062501a3f6d6452d966defccfa6361720))
+
+
+### Features
+
+* display award that was inpayment on date of widowhood ([f2519d6](https://github.com/dwp/gysp-agent-ui/commit/f2519d66aff46fffe289cde13cd3e15372b3cb24))
+* **change-spouse-name:** add features to change spouse's first and last name ([12e95eb](https://github.com/dwp/gysp-agent-ui/commit/12e95ebc609015be95fc9a597835aaea0bcc38e1))
+
+
+
 # [8.2.0](https://github.com/dwp/gysp-agent-ui/compare/8.1.0...8.2.0) (2021-02-08)
 
 
