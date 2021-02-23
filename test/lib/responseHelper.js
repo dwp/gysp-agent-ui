@@ -39,11 +39,16 @@ module.exports = {
     return {
       traceID: '',
       logMessage: '',
+      infoLogMessage: '',
       agentGateway: 'http://test-url/',
       logger: {
-        error(traceID, errorTxt) {
+        error(traceID, message) {
           response.locals.traceID = traceID;
-          response.locals.logMessage = errorTxt;
+          response.locals.logMessage = message;
+        },
+        info(traceID, message) {
+          response.locals.traceID = traceID;
+          response.locals.infoLogMessage = message;
         },
       },
     };

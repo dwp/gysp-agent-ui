@@ -8,12 +8,12 @@ const dataStore = require('../../../../lib/dataStore');
 const deleteSession = require('../../../../lib/deleteSession');
 const validator = require('../../../../lib/validation/internationalAddressValidation');
 const { getCountryList } = require('../../../../lib/helpers/countryHelper');
+const { getPostCodeAddressLookup } = require('../../../../lib/helpers/locationServiceHelper');
 
 const postcodeLookupObject = require('../../../../lib/objects/postcodeLookupObject');
 const addressDetailsObject = require('../../../../lib/objects/addressDetailsObject');
 const internationalAddressObject = require('../../../../lib/objects/api/internationalAddressObject');
 
-const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
 const updateAddressDetailsApiUri = 'api/award/updateaddressdetails';
 const updateOverseasAddressApiUri = 'api/award/update-overseas-address';
 
@@ -40,11 +40,6 @@ function postcodeLookupGlobalErrorMessage(error) {
 }
 
 function postcodeLookupErrorHandler(error, req, res) {
-  const traceID = requestHelper.getTraceID(error);
-  const input = postcodeLookupObject.formatter(req.body);
-  const lookupUri = postcodeLookupApiUri + input.postcode;
-  const type = error.statusCode === 404 ? 'info' : 'error';
-  requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger, type);
   res.render('pages/changes-enquiries/address/index', {
     details: req.body,
     globalError: postcodeLookupGlobalErrorMessage(error),
@@ -55,14 +50,8 @@ function postPostcodeLookup(req, res) {
   const details = req.body;
   const errors = formValidator.addressPostcodeDetails(details);
   if (Object.keys(errors).length === 0) {
-    const input = postcodeLookupObject.formatter(details);
-    const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
-    const getPostcodeLookupCall = requestHelper.generateGetCallWithFullResponse(apiUri, {}, 'address');
-    request(getPostcodeLookupCall).then((response) => {
-      if (response.statusCode !== httpStatus.OK || (response.body.data !== undefined && response.body.data.length === 0)) {
-        throw response;
-      }
-      const { body } = response;
+    const { postcode } = postcodeLookupObject.formatter(details);
+    getPostCodeAddressLookup(res, postcode).then((body) => {
       req.session.addressLookup = body;
       dataStore.save(req, 'postcode', details);
       res.redirect('/changes-and-enquiries/address/select');

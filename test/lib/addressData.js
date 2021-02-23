@@ -1,4 +1,7 @@
 module.exports = {
+  emptyAddresses() {
+    return { data: [] };
+  },
   multipleAddresses() {
     return { ...this.addressBase() };
   },

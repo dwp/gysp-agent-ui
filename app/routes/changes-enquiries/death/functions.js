@@ -15,6 +15,7 @@ const checkChangeHelper = require('../../../../lib/helpers/checkChangeHelper');
 const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
 const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
+const { getPostCodeAddressLookup } = require('../../../../lib/helpers/locationServiceHelper');
 
 const deathObject = require('../../../../lib/objects/deathObject');
 const deathUpdateObject = require('../../../../lib/objects/api/deathUpdateObject');
@@ -26,7 +27,6 @@ const deathReviewPayeeDetailsObject = require('../../../../lib/objects/view/deat
 const deathDetailsUpdateApiUri = 'api/award/record-death';
 const deathArrearsApiUri = 'api/payment/death-arrears';
 const deathArrearsUpdateApiUri = 'api/award/update-death-calculation';
-const postcodeLookupApiUri = 'address?excludeBusiness=true&showSourceData=true&postcode=';
 
 const [CANNOT_CALCULATE, OVERPAYMENT, ARREARS, NOTHING_OWED, DEATH_NOT_VERIFIED] = ['CANNOT_CALCULATE', 'OVERPAYMENT', 'ARREARS', 'NOTHING_OWED', 'DEATH_NOT_VERIFIED'];
 
@@ -201,11 +201,6 @@ function postDapPostcodeLookupErrorHandler(error, req, res) {
   const details = req.body;
   const awardDetails = dataStore.get(req, 'awardDetails');
   const keyDetails = keyDetailsHelper.formatter(awardDetails);
-  const traceID = requestHelper.getTraceID(error);
-  const input = postcodeLookupObject.formatter(req.body);
-  const lookupUri = postcodeLookupApiUri + input.postcode;
-  const type = error.statusCode === 404 ? 'info' : 'error';
-  requestHelper.loggingHelper(error, lookupUri, traceID, res.locals.logger, type);
   res.render('pages/changes-enquiries/death/dap/postcode', {
     keyDetails,
     awardDetails,
@@ -221,14 +216,8 @@ function postDapPostcodeLookup(req, res) {
   const errors = formValidator.addressPostcodeDetails(details);
   const editMode = checkChangeHelper.isEditMode(req, 'dap-address');
   if (Object.keys(errors).length === 0) {
-    const input = postcodeLookupObject.formatter(details);
-    const apiUri = res.locals.agentGateway + postcodeLookupApiUri + input.postcode;
-    const getPostcodeLookupCall = requestHelper.generateGetCallWithFullResponse(apiUri, {}, 'address');
-    request(getPostcodeLookupCall).then((response) => {
-      if (response.statusCode !== httpStatus.OK || (response.body.data !== undefined && response.body.data.length === 0)) {
-        throw response;
-      }
-      const { body } = response;
+    const { postcode } = postcodeLookupObject.formatter(details);
+    getPostCodeAddressLookup(res, postcode).then((body) => {
       const redirectUrl = redirectHelper.redirectBasedOnPageAndEditMode('dap-postcode', editMode);
       const filteredRequest = requestFilterHelper.requestFilter(requestFilterHelper.deathDapPostcode(), details);
       if (editMode) {

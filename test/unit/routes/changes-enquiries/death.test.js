@@ -582,21 +582,7 @@ describe('Change circumstances date of death controller ', () => {
 
   beforeEach(() => {
     genericResponse = responseHelper.genericResponse();
-    genericResponse.locals = {
-      traceID: '',
-      logMessage: '',
-      agentGateway: 'http://test-url/',
-      logger: {
-        info(traceID, infoTxt) {
-          genericResponse.locals.traceID = traceID;
-          genericResponse.locals.logMessage = infoTxt;
-        },
-        error(traceID, errorTxt) {
-          genericResponse.locals.traceID = traceID;
-          genericResponse.locals.logMessage = errorTxt;
-        },
-      },
-    };
+    genericResponse.locals = responseHelper.localResponse(genericResponse);
 
     testPromise = promiseWait();
 
@@ -894,7 +880,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '401 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '401 - 401 - {} - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -904,7 +890,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '403 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '403 - 403 - {} - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -914,7 +900,7 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.other);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '400 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
+        assert.equal(genericResponse.locals.logMessage, '400 - 400 - {} - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
@@ -924,7 +910,17 @@ describe('Change circumstances date of death controller ', () => {
       return testPromise.then(() => {
         assert.equal(genericResponse.data.globalError, errorMessage.notFound);
         assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
-        assert.equal(genericResponse.locals.logMessage, '404 - undefined - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
+        assert.equal(genericResponse.locals.infoLogMessage, '404 - 404 - {} - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
+      });
+    });
+
+    it('should return error when postcode lookup returns OK but data is empty', () => {
+      nock('http://test-url/').get(postcodeLookupApiUri).reply(httpStatus.OK, addressData.emptyAddresses());
+      controller.postDapPostcodeLookup(postcodeValidPost, genericResponse);
+      return testPromise.then(() => {
+        assert.equal(genericResponse.data.globalError, errorMessage.notFound);
+        assert.equal(genericResponse.viewName, 'pages/changes-enquiries/death/dap/postcode');
+        assert.equal(genericResponse.locals.infoLogMessage, '404 - address data not supplied - Requested on address?excludeBusiness=true&showSourceData=true&postcode=W1J7NT');
       });
     });
 
