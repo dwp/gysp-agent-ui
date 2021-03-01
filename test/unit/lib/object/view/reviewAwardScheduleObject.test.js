@@ -47,4 +47,10 @@ describe('reviewAwardScheduleObject', () => {
     assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardDecrease()));
     done();
   });
+
+  it('should return valid award decrease json when review spans uprating', (done) => {
+    const json = object.formatter(dataObjects.validPaymentApiResponseAwardDecreaseSpansUprating(), entitlementDate);
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardDecreaseSpansUprating()));
+    done();
+  });
 });

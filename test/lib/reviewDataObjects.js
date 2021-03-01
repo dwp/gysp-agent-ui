@@ -30,7 +30,6 @@ module.exports = {
       entitlementDate: '2020-01-01T06:00:00.000Z',
     };
   },
-
   validPaymentApiResponseWithAdditionalPayment() {
     return {
       arrearsPayment: false,
@@ -55,7 +54,6 @@ module.exports = {
       },
     };
   },
-
   validPaymentApiResponseWithoutReferenceNumber() {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponse()));
     delete object.bankDetails.referenceNumber;
@@ -116,6 +114,12 @@ module.exports = {
   },
   validPaymentApiResponseWithAdditionalRegularPayment() {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponseWithAdditionalPayment()));
+    return object;
+  },
+  validPaymentApiResponseAwardDecreaseSpansUprating() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentApiResponseAwardDecrease()));
+    object.updatedUpratingAwardAmount = 150.00;
+    object.upratingDate = '2020-04-20T06:00:00.000Z';
     return object;
   },
   validProcessClaimPaymentRequest() {
@@ -245,5 +249,10 @@ module.exports = {
     return {
       session: { searchedNino: 'AA123456C' },
     };
+  },
+  validPaymentFormattedObjectAwardDecreaseSpansUprating() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectAwardDecrease()));
+    object.paragraphs.splice(1, 0, 'From <strong>20 April 2020</strong> the award changes to <strong>£150.00</strong> due to annual uprating.');
+    return object;
   },
 };
