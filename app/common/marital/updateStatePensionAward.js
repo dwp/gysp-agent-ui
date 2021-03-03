@@ -1,46 +1,27 @@
 const moment = require('moment');
 const request = require('request-promise');
+
+const awardHelper = require('../../../lib/helpers/awardHelper');
 const dataStore = require('../../../lib/dataStore');
-const errorHelper = require('../../../lib/helpers/errorHelper');
-const requestHelper = require('../../../lib/requestHelper');
-const requestFilterHelper = require('../../../lib/helpers/requestFilterHelper');
 const dateHelper = require('../../../lib/dateHelper');
-const stringHelper = require('../../../lib/stringHelper');
+const errorHelper = require('../../../lib/helpers/errorHelper');
 const maritalStatusHelper = require('../../../lib/helpers/maritalStatusHelper');
-const maritalValidation = require('../../../lib/validation/maritalValidation');
 const maritalUpdateStatePensionAwardObject = require('../../../lib/objects/view/maritalUpdateStatePensionAwardObject');
+const maritalValidation = require('../../../lib/validation/maritalValidation');
+const requestFilterHelper = require('../../../lib/helpers/requestFilterHelper');
+const requestHelper = require('../../../lib/requestHelper');
+const stringHelper = require('../../../lib/stringHelper');
 
-const getEntitlementDateApiUri = (entitleDate, claimFromDate, ninoDigits) => `api/award/entitlement-date?entitlementDate=${entitleDate}&claimFromDate=${claimFromDate}&ninoDigits=${ninoDigits}`;
 const getValidateNspApiUri = (entitleDate, amount) => `api/paymentcalc/validatensp?entitlement-date=${entitleDate}&amount=${amount}`;
-
-function buildEntitlementDateApiUri(req) {
-  const { claimFromDate: cfd, statePensionDate: spd, nino } = dataStore.get(req, 'awardDetails') || Object.create(null);
-  const { dateYear, dateMonth, dateDay } = dataStore.get(req, 'date', 'marital') || Object.create(null);
-  const claimFromDate = dateHelper.timestampToDateDash(cfd || spd);
-  const entitlementDate = dateHelper.dateDash(`${dateYear}-${dateMonth}-${dateDay}`);
-  const lastTwoNinoDigits = stringHelper.extractNumbers(nino).slice(-2);
-  return {
-    url: getEntitlementDateApiUri(entitlementDate, claimFromDate, lastTwoNinoDigits),
-    cacheKey: `${entitlementDate}:${claimFromDate}:${lastTwoNinoDigits}`,
-  };
-}
 
 function buildEventEntitlementDateApiUri(eventDate, claimFromDate, nino) {
   const eventDateString = eventDate.format('YYYY-MM-DD');
   const claimFromDateString = claimFromDate.format('YYYY-MM-DD');
   const lastTwoNinoDigits = stringHelper.extractNumbers(nino).slice(-2);
   return {
-    url: getEntitlementDateApiUri(eventDateString, claimFromDateString, stringHelper.extractNumbers(nino).slice(-2)),
+    url: awardHelper.getEntitlementDateApiUri(eventDateString, claimFromDateString, stringHelper.extractNumbers(nino).slice(-2)),
     cacheKey: `${eventDateString}:${claimFromDateString}:${lastTwoNinoDigits}`,
   };
-}
-
-function getEntitlementDate(req, res) {
-  const { url, cacheKey } = buildEntitlementDateApiUri(req);
-  return dataStore.cacheRetrieveAndStore(req, 'marital', cacheKey, () => {
-    const awardCall = requestHelper.generateGetCall(res.locals.agentGateway + url, {}, 'award');
-    return request(awardCall) || Object.create(null);
-  });
 }
 
 function getEventEntitlementDate(eventDate, claimDate, nino, cacheSection, req, res) {
@@ -63,7 +44,8 @@ async function getUpdateStatePensionAward(req, res, data) {
     template, backHref, errorRedirect, errors,
   } = data;
   try {
-    const { entitlementDate } = await getEntitlementDate(req, res);
+    const { entitlementDate } = await awardHelper.getEntitlementDate(req, res);
+    dataStore.save(req, 'update-state-pension-award', { entitlementDate }, 'marital');
     const { awardAmounts } = dataStore.get(req, 'awardDetails') || Object.create(null);
     const maritalSession = dataStore.get(req, 'marital');
     if (maritalStatusHelper.isWidowed(maritalSession.maritalStatus)) {
@@ -129,7 +111,7 @@ async function postUpdateStatePensionAwardAmount(req, res, data) {
     const { type } = req.params;
     const details = req.body;
     const errors = await maritalValidation.updateStatePensionAwardAmountValidator(details, type, (amount) => {
-      const { cacheKey } = buildEntitlementDateApiUri(req);
+      const { cacheKey } = awardHelper.buildEntitlementDateApiUri(req);
       const { entitlementDate: epoch } = dataStore.get(req, cacheKey, 'marital');
       const entitlementDate = dateHelper.timestampToDateDash(epoch);
       const getValidate = requestHelper.generateGetCall(res.locals.agentGateway + getValidateNspApiUri(entitlementDate, amount), {}, 'payment');

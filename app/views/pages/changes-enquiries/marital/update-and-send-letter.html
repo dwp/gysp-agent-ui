@@ -1,30 +1,21 @@
 {% extends 'pages/changes-enquiries/layout.html' %}
+
 {% from "moj/components/currency-input/macro.njk" import mojCurrencyInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
-{% block pageTitle %}{{ t('marital-update-and-send-letter:header') }} - {{ t('app:title.changes-enquiries') }}{% endblock %}
-
-{% block sectionBackLink %}
-  {{ govukBackLink({
-    text: t("app:link.back"),
-    href: '/changes-and-enquiries' + backHref,
-    classes: "govuk-!-margin-top-0 govuk-!-margin-bottom-5"
-  }) }}
-{% endblock %}
+{% block pageTitle %}{{ t('marital-update-and-send-letter:header') }}{{ super() }}{% endblock %}
 
 {% block innerContent %}
   <form method="post" action="{{ formUrl }}" autocomplete="off" novalidate>
     <h1 class="govuk-heading-l">{{ t('marital-update-and-send-letter:header') }}</h1>
 
-    <p class="govuk-body">{{ t('marital-update-and-send-letter:p') }}</p>
-    <ul class="govuk-list govuk-list--bullet">
-      <li>{{ t('marital-update-and-send-letter:bullets.one') }}</li>
-      <li>{{ t('marital-update-and-send-letter:bullets.two') }}</li>
-    </ul>
+    {% for paragraph in details.paragraphs %}
+      <p class="govuk-body">{{ paragraph | safe }}</p>
+    {% endfor %}
 
     {{ govukButton({
-      text: t("app:button.save")
+      text: t("marital-update-and-send-letter:button")
     }) }}
   </form>
 {% endblock %}

@@ -1,19 +1,24 @@
-const request = require('request-promise');
+const httpStatus = require('http-status-codes');
 const i18n = require('i18next');
-const requestHelper = require('../../../../lib/requestHelper');
+const querystring = require('querystring');
+const request = require('request-promise');
+
+const awardHelper = require('../../../../lib/helpers/awardHelper');
 const dataStore = require('../../../../lib/dataStore');
-const generalHelper = require('../../../../lib/helpers/general');
 const dateHelper = require('../../../../lib/dateHelper');
-const maritalStatusHelper = require('../../../../lib/helpers/maritalStatusHelper');
-const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
 const errorHelper = require('../../../../lib/helpers/errorHelper');
-const redirectHelper = require('../../../../lib/helpers/redirectHelper');
 const formValidator = require('../../../../lib/formValidator');
+const generalHelper = require('../../../../lib/helpers/general');
+const maritalStatusHelper = require('../../../../lib/helpers/maritalStatusHelper');
 const maritalValidation = require('../../../../lib/validation/maritalValidation');
+const redirectHelper = require('../../../../lib/helpers/redirectHelper');
+const requestFilterHelper = require('../../../../lib/helpers/requestFilterHelper');
+const requestHelper = require('../../../../lib/requestHelper');
 
 // View objects
 const maritalDetailsObject = require('../../../../lib/objects/view/maritalDetailsObject');
 const maritalStatePensionEntitlementObject = require('../../../../lib/objects/view/maritalStatePensionEntitlementObject');
+const maritalUpdateAndSendLetterObject = require('../../../../lib/objects/view/maritalUpdateAndSendLetterObject');
 
 // API objects
 const maritalDetailsApiObject = require('../../../../lib/objects/api/maritalDetailsObject');
@@ -425,11 +430,46 @@ async function postSaveMaritalDetails(req, res) {
   }
 }
 
-function getUpdateAndSendLetter(req, res) {
-  res.render('pages/changes-enquiries/marital/update-and-send-letter', {
-    formUrl: req.fullUrl,
-    backHref: '/marital-details/update-state-pension-award',
+function srbPaymentBreakdownRequest(res, amounts, entitlementDate, inviteKey) {
+  const query = querystring.stringify({
+    inviteKey,
+    spAmount: amounts.weeklyStatePensionAmount,
+    protectedAmount: amounts.weeklyProtectedPaymentAmount,
+    inheritedExtraSpAmount: amounts.weeklyInheritedExtraStatePensionAmount,
+    entitlementDate: dateHelper.timestampToDateDash(entitlementDate),
   });
+  const paymentScheduleCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/srbpaymentbreakdown?${query}`, {}, 'award');
+  return request(paymentScheduleCall);
+}
+
+function getUpdateAndSendLetterErrorHandler(err, req, res) {
+  const traceID = requestHelper.getTraceID(err);
+  const getPath = requestHelper.getPath(err);
+  requestHelper.loggingHelper(err, getPath, traceID, res.locals.logger);
+  if (err.statusCode === httpStatus.NOT_FOUND) {
+    res.render('pages/error', { status: '- Payment breakdown not found.' });
+  } else {
+    res.render('pages/error', { status: '- Issue getting payment breakdown.' });
+  }
+}
+
+async function getUpdateAndSendLetter(req, res) {
+  const { entitlementDate } = dataStore.get(req, 'update-state-pension-award', 'marital');
+  const { awardAmounts, inviteKey } = dataStore.get(req, 'awardDetails');
+  const maritalSession = dataStore.get(req, 'marital');
+  const activeAward = awardHelper.activeAward(awardAmounts, maritalSession);
+  const currentAwardOrSession = awardHelper.currentAwardOrSession(activeAward, maritalSession);
+  try {
+    const srbPaymentBreakdown = await srbPaymentBreakdownRequest(res, currentAwardOrSession, entitlementDate, inviteKey);
+    const details = maritalUpdateAndSendLetterObject.formatter(srbPaymentBreakdown);
+    res.render('pages/changes-enquiries/marital/update-and-send-letter', {
+      backHref: '/marital-details/update-state-pension-award',
+      details,
+      formUrl: req.fullUrl,
+    });
+  } catch (err) {
+    getUpdateAndSendLetterErrorHandler(err, req, res);
+  }
 }
 
 async function saveUpdateAwardAndRedirect(req, res, award, suffix) {

@@ -14,6 +14,7 @@ const controller = require('../../../../app/routes/changes-enquiries/marital/fun
 const responseHelper = require('../../../lib/responseHelper');
 const errorHelper = require('../../../lib/errorHelper');
 const claimData = require('../../../lib/claimData');
+const dataObjects = require('../../../lib/reviewDataObjects');
 
 let genericResponse = {};
 
@@ -237,7 +238,16 @@ const emptyUpdateStatePensionAwardAmountPostRequest = (type) => ({
 });
 
 // UpdateAndSendLetter requests
-const updateAndSendLetterRequest = { session: { searchedNino: 'AA370773A', awardDetails: claimData.validClaimMarried(), marital: { } }, fullUrl: '/test-url' };
+const updateAndSendLetterRequest = {
+  session: {
+    searchedNino: 'AA370773A',
+    awardDetails: claimData.validClaimMarried(),
+    marital: {
+      'update-state-pension-award': { entitlementDate: 1580968800000 },
+    },
+  },
+  fullUrl: '/test-url',
+};
 const updateAndSendLetterPostRequest = {
   session: {
     searchedNino: 'AA370773A',
@@ -275,6 +285,7 @@ const sendLetterPostRequest = {
 };
 
 // API Endpoints
+const awardReviewBreakdownUri = '/api/award/srbpaymentbreakdown';
 const changeCircumstancesDetailsUri = '/api/award';
 const putMaritalDetailsApiUri = '/api/award/update-marital-details';
 const putUpdateWidowDetails = '/api/award/update-widow-details';
@@ -1004,11 +1015,40 @@ describe('Change circumstances - marital controller', () => {
   });
 
   describe('getUpdateAndSendLetter function (GET /changes-enquiries/marital-details/update-and-send-letter)', () => {
-    it('should return view when requested with details', () => {
-      controller.getUpdateAndSendLetter(updateAndSendLetterRequest, genericResponse);
+    const query = {
+      inviteKey: 'BLOG123456',
+      spAmount: 100,
+      protectedAmount: 10,
+      inheritedExtraSpAmount: 0,
+      entitlementDate: '2020-02-06',
+    };
+
+    it('should return view with data when a 200 response from the API is received', async () => {
+      nock('http://test-url').get(awardReviewBreakdownUri).query(query).reply(200, dataObjects.validPaymentApiResponse());
+
+      await controller.getUpdateAndSendLetter(updateAndSendLetterRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/changes-enquiries/marital/update-and-send-letter');
       assert.equal(genericResponse.data.backHref, '/marital-details/update-state-pension-award');
+      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
       assert.equal(genericResponse.data.formUrl, '/test-url');
+    });
+
+    it('should return error view when API returns 404 state', async () => {
+      nock('http://test-url').get(awardReviewBreakdownUri).query(query).reply(httpStatus.NOT_FOUND, {});
+
+      await controller.getUpdateAndSendLetter(updateAndSendLetterRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- Payment breakdown not found.');
+      assert.equal(genericResponse.locals.logMessage, '404 - 404 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=10&inheritedExtraSpAmount=0&entitlementDate=2020-02-06');
+    });
+
+    it('should return error view when API returns 500 state', async () => {
+      nock('http://test-url').get(awardReviewBreakdownUri).query(query).reply(httpStatus.INTERNAL_SERVER_ERROR, {});
+
+      await controller.getUpdateAndSendLetter(updateAndSendLetterRequest, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/error');
+      assert.equal(genericResponse.data.status, '- Issue getting payment breakdown.');
+      assert.equal(genericResponse.locals.logMessage, '500 - 500 - {} - Requested on /api/award/srbpaymentbreakdown?inviteKey=BLOG123456&spAmount=100&protectedAmount=10&inheritedExtraSpAmount=0&entitlementDate=2020-02-06');
     });
   });
 

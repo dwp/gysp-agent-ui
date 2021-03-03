@@ -1,8 +1,11 @@
 {
     "header": "Update award and send letter",
-    "p": "A letter will be sent to the claimant telling them that:",
-    "bullets": {
-      "one": "we have updated their marital status",
-      "two": "their State Pension has increased based on this change"
-    }
+    "change": {
+      "increase": "up",
+      "decrease": "down"
+    },
+    "p-1": "The weekly State Pension amount will go {{CHANGE}} from <strong>{{FROM}}</strong> to <strong>{{TO}}</strong> from <strong>{{DATE}}</strong>.",
+    "p-2": "A new award letter will be sent to the claimant.",
+    "p-arrears": "An arrears payment of <strong>{{AMOUNT}}</strong> will be made for the period {{FROM}} to {{TO}}.",
+    "button": "Update award"
 }
