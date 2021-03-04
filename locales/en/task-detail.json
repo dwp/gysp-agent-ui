@@ -5,12 +5,14 @@
     "widowed": "Consider State Pension entitlement",
     "deatharrears": "Send BR330 form to the person dealing with the estate",
     "deathoverpayment": "Overpayment referral details",
-    "deathoverpaymentemail": "Details to send to the debt management service"
+    "deathoverpaymentemail": "Details to send to the debt management service",
+    "srboverpayment": "Refer the overpayment to the debt management service"
   },
   "hint": {
     "widowed": "Check the record of the late spouse or partner to see if any State Pension can be inherited.",
     "deathoverpayment": "Use these details to refer the overpayment to the debt management service through the e-referral tool.",
-    "deathoverpaymentemail": "Email the following details to the debt management service so that they can be added to a previously completed overpayment referral."
+    "deathoverpaymentemail": "Email the following details to the debt management service so that they can be added to a previously completed overpayment referral.",
+    "srboverpayment": "Use these details to refer the overpayment to the debt management service through the e-referral tool."
   },
   "partner-details": {
     "header": {
@@ -75,6 +77,20 @@
         "account-number": "Account number",
         "sort-code": "Sort code",
         "reference-number": "Roll or reference number"
+      }
+    }
+  },
+  "srb": {
+    "overpayment": {
+      "header": "Overpayment details",
+      "summary-keys": {
+        "period": "Period",
+        "incorrect-weekly-amount": "Incorrect weekly amount",
+        "correct-weekly-amount": "Correct weekly amount",
+        "total": "Total overpayment"
+      },
+      "summary-values": {
+        "period": "{{startDate}} to {{endDate}}"
       }
     }
   }

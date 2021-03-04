@@ -10,18 +10,11 @@ const keyDetailsHelper = require('../../../lib/keyDetailsHelper');
 const reviewAwardScheduleObject = require('../../../lib/objects/view/reviewAwardScheduleObject');
 const redirectHelper = require('../../../lib/helpers/redirectHelper');
 const requestHelper = require('../../../lib/requestHelper');
+const taskHelper = require('../../../lib/helpers/taskHelper');
+const errorHelper = require('../../../lib/helpers/errorHelper');
 const reviewAwardNewAwardObject = require('../../../lib/objects/reviewAwardNewAwardObject');
 const reviewAwardReasonObject = require('../../../lib/objects/reviewAwardReasonObject');
 const srbAmountUpdateObject = require('../../../lib/objects/srbAmountUpdateObject');
-
-async function cacheRetrieveAndStore(req, key, apiCall) {
-  if (dataStore.get(req, key)) {
-    return dataStore.get(req, key);
-  }
-  const data = await apiCall();
-  dataStore.save(req, key, data);
-  return data;
-}
 
 function getReviewAward(req, res) {
   deleteSession.deleteReviewAward(req, 'all');
@@ -39,12 +32,12 @@ function getReviewAward(req, res) {
 
 async function getReviewReason(req, res) {
   try {
-    const reviewAward = await cacheRetrieveAndStore(req, 'review-award', () => {
+    const reviewAward = await dataStore.cacheRetrieveAndStore(req, null, 'review-award', () => {
       const reviewAwardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/hmrccalc/next-srb`, {}, 'hmrc-calculation', req.user);
       return request(reviewAwardCall);
     });
 
-    const award = await cacheRetrieveAndStore(req, 'award', () => {
+    const award = await dataStore.cacheRetrieveAndStore(req, null, 'award', () => {
       const awardCall = requestHelper.generateGetCall(`${res.locals.agentGateway}api/award/${reviewAward.nino}`, {}, 'batch');
       return request(awardCall);
     });
@@ -114,6 +107,7 @@ async function getPaymentSchedule(req, res) {
   const reviewAwardDate = dataStore.get(req, 'review-award-date');
   try {
     const srbPaymentBreakdown = await srbPaymentBreakdownRequest(res, award.inviteKey, reviewAward, reviewAwardDate);
+    dataStore.save(req, 'srb-payment-breakdown', srbPaymentBreakdown);
     const details = reviewAwardScheduleObject.formatter(srbPaymentBreakdown);
     const keyDetails = keyDetailsHelper.formatter(award);
     const spDate = reviewAwardNewAwardObject.spDateFormatter(award.statePensionDate);
@@ -145,18 +139,58 @@ function processSessionAndDeleteReviewAward(req) {
   req.session.awardReviewUserHasCompleted = true;
 }
 
-async function postPaymentSchedule(req, res) {
+function updateSrbRequest(req, res) {
   const { inviteKey } = dataStore.get(req, 'award');
   const reviewAward = dataStore.get(req, 'review-award');
   const reviewAwardDate = dataStore.get(req, 'review-award-date');
+  const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, reviewAward, reviewAwardDate);
+  const srbAmountPutCall = requestHelper.generatePutCall(`${res.locals.agentGateway}api/award/srbamountsupdate`, putSrbAmountObject, 'award', req.user);
+  return request(srbAmountPutCall);
+}
+
+async function postPaymentSchedule(req, res) {
   try {
-    const putSrbAmountObject = srbAmountUpdateObject.putObject(inviteKey, reviewAward, reviewAwardDate);
-    const srbAmountPutCall = requestHelper.generatePutCall(`${res.locals.agentGateway}api/award/srbamountsupdate`, putSrbAmountObject, 'award', req.user);
-    await request(srbAmountPutCall);
+    const srbPaymentBreakdown = dataStore.get(req, 'srb-payment-breakdown');
+    if (srbPaymentBreakdown && taskHelper.isAwardOverpayment(srbPaymentBreakdown.totalOverpayment)) {
+      res.redirect('/review-award/refer-overpayment');
+    } else {
+      await updateSrbRequest(req, res);
+      processSessionAndDeleteReviewAward(req);
+      res.redirect('/review-award');
+    }
+  } catch (err) {
+    postPaymentScheduleErrorHandler(err, req, res);
+  }
+}
+
+function getReferOverPayment(req, res) {
+  try {
+    const award = dataStore.get(req, 'award');
+    const srbPaymentBreakdown = dataStore.get(req, 'srb-payment-breakdown');
+    const { view, data } = taskHelper.taskDetail(req, 'SRBOVERPAYMENT', { award, srbPaymentBreakdown });
+    res.render(`pages/tasks/${view}`, data);
+  } catch (err) {
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/review-award/refer-overpayment');
+  }
+}
+
+function getTaskComplete(req, res) {
+  res.render('pages/tasks/complete-overpayment', {
+    backHref: '/review-award/refer-overpayment',
+    buttonHref: '/review-award/end',
+    details: {
+      reason: 'srboverpayment',
+    },
+  });
+}
+
+async function getEndTask(req, res) {
+  try {
+    await updateSrbRequest(req, res);
     processSessionAndDeleteReviewAward(req);
     res.redirect('/review-award');
   } catch (err) {
-    postPaymentScheduleErrorHandler(err, req, res);
+    errorHelper.flashErrorAndRedirect(req, res, err, 'award', '/review-award/complete');
   }
 }
 
@@ -186,10 +220,15 @@ function postNewEntitlementDate(req, res) {
   }
 }
 
-module.exports.getReviewAward = getReviewAward;
-module.exports.getReviewReason = getReviewReason;
-module.exports.getNewAward = getNewAward;
-module.exports.getPaymentSchedule = getPaymentSchedule;
-module.exports.postPaymentSchedule = postPaymentSchedule;
-module.exports.getNewEntitlementDate = getNewEntitlementDate;
-module.exports.postNewEntitlementDate = postNewEntitlementDate;
+module.exports = {
+  getReviewAward,
+  getReviewReason,
+  getNewAward,
+  getPaymentSchedule,
+  postPaymentSchedule,
+  getNewEntitlementDate,
+  postNewEntitlementDate,
+  getReferOverPayment,
+  getTaskComplete,
+  getEndTask,
+};

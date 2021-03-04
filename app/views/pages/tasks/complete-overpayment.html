@@ -4,6 +4,18 @@
 
 {% block pageTitle %}{{ t('task-complete:header') }}{% endblock %}
 
+{% block backLink %}
+    {% if backHref %}
+        <div class="govuk-width-container">
+            {{ govukBackLink({
+                text: t("app:link.back"),
+                href: backHref,
+                classes: "govuk-!-margin-top-8 govuk-!-margin-bottom-0"
+            }) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block innerContent %}
   <h1 class="govuk-heading-xl">{{ t('task-complete:header') }}</h1>
   {{ t('task-complete:content.' + details.reason) | safe }}

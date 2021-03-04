@@ -15,6 +15,7 @@ const helper = require('../../../../lib/helpers/taskHelper');
 const responseHelper = require('../../../lib/responseHelper');
 
 const claimData = require('../../../lib/claimData');
+const reviewDataObjects = require('../../../lib/reviewDataObjects');
 
 let genericResponse = {};
 
@@ -106,6 +107,12 @@ describe('task helper', () => {
       assert.equal(task.view, 'detail');
       assert.isObject(task.data);
     });
+
+    it('should return a SRBOVERPAYMENT detail page', () => {
+      const task = helper.taskDetail(blankSession, 'SRBOVERPAYMENT', { award: claimData.validClaimWidowed(), srbPaymentBreakdown: reviewDataObjects.validOverPaymentApiResponse() });
+      assert.equal(task.view, 'overpayment');
+      assert.isObject(task.data);
+    });
   });
 
   describe('taskComplete', () => {
@@ -153,6 +160,7 @@ describe('task helper', () => {
       assert.isObject(task.details);
     });
   });
+
   describe('taskEnd', () => {
     it('should throw error when work reason is not valid', async () => {
       await assert.isRejected(helper.taskEnd(blankSession, genericResponse, 'INVALID'), Error, 'Invalid workItemReason, got INVALID');
@@ -224,6 +232,20 @@ describe('task helper', () => {
         const taskEnd = await helper.taskEnd(taskRequest('DEATHOVERPAYMENTEMAIL'), genericResponse, 'DEATHOVERPAYMENTEMAIL');
         assert.deepEqual(taskEnd, ['tasks', 'awardDetails']);
       });
+    });
+  });
+
+  describe('isAwardOverpayment', () => {
+    it('should return true when total is a negative', async () => {
+      assert.isTrue(helper.isAwardOverpayment(-100));
+    });
+
+    it('should return false when total is a positive', async () => {
+      assert.isFalse(helper.isAwardOverpayment(100));
+    });
+
+    it('should return false when total is zero', async () => {
+      assert.isFalse(helper.isAwardOverpayment(0));
     });
   });
 });

@@ -179,7 +179,7 @@ describe('Review award controller', () => {
 
       await controller.getPaymentSchedule(validReviewAwardRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/breakdown');
-      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObject()));
+      assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObjectEndTask()));
     });
 
     it('should return view with data when a 200 response from the API is received with asserted entitlement date', async () => {
@@ -194,6 +194,7 @@ describe('Review award controller', () => {
 
       await controller.getPaymentSchedule(validReviewAwardWithAssetedEntitlementDateRequest, genericResponse);
       assert.equal(genericResponse.viewName, 'pages/review-award/breakdown');
+      assert.deepEqual(validReviewAwardWithAssetedEntitlementDateRequest.session['srb-payment-breakdown'], dataObjects.validPaymentApiResponse());
       assert.equal(JSON.stringify(genericResponse.data.details), JSON.stringify(dataObjects.validPaymentFormattedObjectAssertedEntitlementDate()));
     });
 
@@ -235,41 +236,122 @@ describe('Review award controller', () => {
   });
 
   describe('postPaymentSchedule function (POST /review-award/schedule)', () => {
+    context('overpayment srb', () => {
+      const validPostRequest = dataObjects.validReviewAwardOverPaymentPaymentScheduleRequest();
+
+      it('should return redirect when srb is an overpayment', async () => {
+        await controller.postPaymentSchedule(validPostRequest, genericResponse);
+        assert.equal(genericResponse.address, '/review-award/refer-overpayment');
+      });
+    });
+
+    context('default', () => {
+      const validPostRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
+      validPostRequest.flash = flashMock;
+
+      it(`should return redirect with error when API returns ${httpStatus.BAD_REQUEST} state`, async () => {
+        nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.BAD_REQUEST);
+        await controller.postPaymentSchedule(validPostRequest, genericResponse);
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, 'There has been a problem with the service, please go back and try again. This has been logged.');
+        assert.equal(genericResponse.address, '/review-award/schedule');
+        assert.equal(genericResponse.locals.logMessage, `${httpStatus.BAD_REQUEST} - ${httpStatus.BAD_REQUEST} - undefined - Requested on /api/award/srbamountsupdate`);
+      });
+
+      it(`should return redirect with error when API returns ${httpStatus.NOT_FOUND} state`, async () => {
+        nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.NOT_FOUND);
+        await controller.postPaymentSchedule(validPostRequest, genericResponse);
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, 'There has been a problem - award not found. This has been logged.');
+        assert.equal(genericResponse.address, '/review-award/schedule');
+        assert.equal(genericResponse.locals.logMessage, `${httpStatus.NOT_FOUND} - ${httpStatus.NOT_FOUND} - undefined - Requested on /api/award/srbamountsupdate`);
+      });
+
+      it(`should return redirect with error when API returns ${httpStatus.INTERNAL_SERVER_ERROR} state`, async () => {
+        nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
+        await controller.postPaymentSchedule(validPostRequest, genericResponse);
+        assert.equal(flash.type, 'error');
+        assert.equal(flash.message, 'There is a problem with the service. This has been logged. Please try again later.');
+        assert.equal(genericResponse.address, '/review-award/schedule');
+        assert.equal(genericResponse.locals.logMessage, `${httpStatus.INTERNAL_SERVER_ERROR} - ${httpStatus.INTERNAL_SERVER_ERROR} - undefined - Requested on /api/award/srbamountsupdate`);
+      });
+
+      it(`should return redirect and session processed when API returns ${httpStatus.OK} state`, async () => {
+        nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.OK);
+        await controller.postPaymentSchedule(validPostRequest, genericResponse);
+        assert.isUndefined(validPostRequest.session['review-award']);
+        assert.isTrue(validPostRequest.session.awardReviewUserHasCompleted);
+        assert.equal(genericResponse.address, '/review-award');
+      });
+    });
+  });
+
+  describe('getReferOverPayment function (GET /review-award/refer-overpayment)', () => {
+    it('should display overpayment details with one payment when payment do not span uprating', () => {
+      controller.getReferOverPayment({ ...dataObjects.validReviewAwardOverPaymentPaymentScheduleRequest(), flash: flashMock }, genericResponse);
+      assert.equal(genericResponse.viewName, 'pages/tasks/overpayment');
+    });
+
+    it('should redirect when data is not present', () => {
+      controller.getReferOverPayment({ session: {}, flash: flashMock }, genericResponse);
+      assert.equal(flash.type, 'error');
+      assert.equal(flash.message, 'There is a problem with the service. This has been logged. Please try again later.');
+      assert.equal(genericResponse.locals.logMessage, 'Other - Cannot read property \'nino\' of undefined - Requested on no path');
+      assert.equal(genericResponse.address, '/review-award/refer-overpayment');
+    });
+  });
+
+  describe('getTaskComplete function (GET /review-award/complete)', () => {
+    it('should display task complete page', () => {
+      controller.getTaskComplete({ ...dataObjects.validReviewAwardOverPaymentPaymentScheduleRequest() }, genericResponse);
+      assert.deepEqual(genericResponse.data, {
+        backHref: '/review-award/refer-overpayment',
+        buttonHref: '/review-award/end',
+        details: {
+          reason: 'srboverpayment',
+        },
+      });
+    });
+  });
+
+  describe('getEndTask function (GET /review-award/end)', () => {
     const validPostRequest = dataObjects.validReviewAwardPaymentScheduleRequest();
     validPostRequest.flash = flashMock;
 
     it(`should return redirect with error when API returns ${httpStatus.BAD_REQUEST} state`, async () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.BAD_REQUEST);
-      await controller.postPaymentSchedule(validPostRequest, genericResponse);
+      await controller.getEndTask(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'There has been a problem with the service, please go back and try again. This has been logged.');
-      assert.equal(genericResponse.address, '/review-award/schedule');
+      assert.equal(genericResponse.address, '/review-award/complete');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.BAD_REQUEST} - ${httpStatus.BAD_REQUEST} - undefined - Requested on /api/award/srbamountsupdate`);
     });
 
     it(`should return redirect with error when API returns ${httpStatus.NOT_FOUND} state`, async () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.NOT_FOUND);
-      await controller.postPaymentSchedule(validPostRequest, genericResponse);
+      await controller.getEndTask(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
       assert.equal(flash.message, 'There has been a problem - award not found. This has been logged.');
-      assert.equal(genericResponse.address, '/review-award/schedule');
+      assert.equal(genericResponse.address, '/review-award/complete');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.NOT_FOUND} - ${httpStatus.NOT_FOUND} - undefined - Requested on /api/award/srbamountsupdate`);
     });
 
     it(`should return redirect with error when API returns ${httpStatus.INTERNAL_SERVER_ERROR} state`, async () => {
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.INTERNAL_SERVER_ERROR);
-      await controller.postPaymentSchedule(validPostRequest, genericResponse);
+      await controller.getEndTask(validPostRequest, genericResponse);
       assert.equal(flash.type, 'error');
-      assert.equal(flash.message, 'There is a problem with the service. This has been logged. Please try again later.');
-      assert.equal(genericResponse.address, '/review-award/schedule');
+      assert.equal(flash.message, 'There has been a problem with the service, please try again. This has been logged.');
+      assert.equal(genericResponse.address, '/review-award/complete');
       assert.equal(genericResponse.locals.logMessage, `${httpStatus.INTERNAL_SERVER_ERROR} - ${httpStatus.INTERNAL_SERVER_ERROR} - undefined - Requested on /api/award/srbamountsupdate`);
     });
 
     it(`should return redirect and session processed when API returns ${httpStatus.OK} state`, async () => {
+      const validGetRequest = { ...dataObjects.validReviewAwardOverPaymentPaymentScheduleRequest() };
       nock('http://test-url/').put(awardAmountUpdateUri).reply(httpStatus.OK);
-      await controller.postPaymentSchedule(validPostRequest, genericResponse);
-      assert.isUndefined(validPostRequest.session['review-award']);
-      assert.isTrue(validPostRequest.session.awardReviewUserHasCompleted);
+      await controller.getEndTask(validGetRequest, genericResponse);
+      assert.isUndefined(validGetRequest.session['review-award']);
+      assert.isUndefined(validGetRequest.session['srb-payment-breakdown']);
+      assert.isTrue(validGetRequest.session.awardReviewUserHasCompleted);
       assert.equal(genericResponse.address, '/review-award');
     });
   });

@@ -116,6 +116,45 @@ module.exports = {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponseWithAdditionalPayment()));
     return object;
   },
+  validOverPaymentApiResponse() {
+    return {
+      paymentsAlreadyMade: true,
+      firstPayment: null,
+      regularPayment: {
+        startDate: 1602133200000,
+        endDate: 1604469600000,
+        paymentCalculation: {
+          statePensionAmount: '571.60',
+          protectedPaymentAmount: '29.20',
+          inheritedExtraStatePensionAmount: '0.00',
+          extraStatePensionAmount: '0.00',
+          totalAmount: '600.80',
+        },
+      },
+      currentAwardAmount: 173.9,
+      updatedAwardAmount: 150.2,
+      entitlementDate: 1599346800000,
+      overpaymentPeriods: [{
+        totalAmount: -108.34,
+        fromDate: 1599346800000,
+        toDate: 1602025200000,
+        oldAmount: 173.9,
+      }],
+      totalOverpayment: -108.34,
+      upratingDate: null,
+      updatedUpratingAwardAmount: null,
+    };
+  },
+  validOverPaymentApiResponseSpanUprating() {
+    const object = JSON.parse(JSON.stringify(this.validOverPaymentApiResponse()));
+    object.overpaymentPeriods.push({
+      totalAmount: -50.34,
+      fromDate: 1609778225000,
+      toDate: 1612456625000,
+      oldAmount: 43.9,
+    });
+    return object;
+  },
   validPaymentApiResponseAwardDecreaseSpansUprating() {
     const object = JSON.parse(JSON.stringify(this.validPaymentApiResponseAwardDecrease()));
     object.updatedUpratingAwardAmount = 150.00;
@@ -159,6 +198,49 @@ module.exports = {
       ...kongData(),
     };
   },
+  validReviewAwardOverPaymentPaymentScheduleRequest() {
+    return {
+      session: {
+        award: claimData.validClaim(),
+        'review-award': {
+          nino: 'AA370773A',
+          reasonForChange: 'REVISION OF ENTITLEMENT DUE TO CHANGE IN CONT/CREDIT POSITION',
+          entitlementDate: '2018-11-09T12:27:48.795Z',
+          newStatePensionAmount: 100.0,
+          protectedPaymentAmount: 200.0,
+          totalAmount: 300.0,
+        },
+        'srb-payment-breakdown': {
+          paymentsAlreadyMade: true,
+          firstPayment: null,
+          regularPayment: {
+            startDate: 1602133200000,
+            endDate: 1604469600000,
+            paymentCalculation: {
+              statePensionAmount: '571.60',
+              protectedPaymentAmount: '29.20',
+              inheritedExtraStatePensionAmount: '0.00',
+              extraStatePensionAmount: '0.00',
+              totalAmount: '600.80',
+            },
+          },
+          currentAwardAmount: 173.9,
+          updatedAwardAmount: 150.2,
+          entitlementDate: 1599346800000,
+          overpaymentPeriods: [{
+            totalAmount: -108.34,
+            fromDate: 1599346800000,
+            toDate: 1602025200000,
+            oldAmount: 173.9,
+          }],
+          totalOverpayment: -108.34,
+          upratingDate: null,
+          updatedUpratingAwardAmount: null,
+        },
+      },
+      ...kongData(),
+    };
+  },
   validReviewAwardPaymentScheduleAssetedEntitlementDateRequest() {
     return {
       session: {
@@ -192,13 +274,26 @@ module.exports = {
       ],
     };
   },
-  validPaymentFormattedObjectAssertedEntitlementDate() {
+  validPaymentFormattedObjectEndTask() {
     return {
+      header: 'Complete Task',
       paragraphs: [
         'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>1 January 2020</strong>.',
         'An arrears payment of <strong>£150.00</strong> will be made for the period 10 December 2018 to 31 December 2018.',
         'A new award letter will be sent to the claimant.',
       ],
+      button: 'End Task',
+    };
+  },
+  validPaymentFormattedObjectAssertedEntitlementDate() {
+    return {
+      header: 'Complete Task',
+      paragraphs: [
+        'The weekly State Pension amount will go up from <strong>£168.60</strong> to <strong>£180.60</strong> from <strong>1 January 2020</strong>.',
+        'An arrears payment of <strong>£150.00</strong> will be made for the period 10 December 2018 to 31 December 2018.',
+        'A new award letter will be sent to the claimant.',
+      ],
+      button: 'End Task',
     };
   },
   validPaymentFormattedObjectWithoutReferenceNumber() {
@@ -211,13 +306,29 @@ module.exports = {
     object.paragraphs[0] = 'The weekly State Pension amount will go up from <strong>£100.00</strong> to <strong>£200.00</strong> from <strong>1 January 2020</strong>.';
     return object;
   },
+  validPaymentFormattedObjectAwardIncreaseWithArrearsTask() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectEndTask()));
+    object.paragraphs[0] = 'The weekly State Pension amount will go up from <strong>£100.00</strong> to <strong>£200.00</strong> from <strong>1 January 2020</strong>.';
+    return object;
+  },
   validPaymentFormattedObjectAwardIncreaseWithoutArrears() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectAwardIncreaseWithArrears()));
     object.paragraphs.splice(1, 1);
     return object;
   },
+  validPaymentFormattedObjectAwardIncreaseWithoutArrearsTask() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectAwardIncreaseWithArrearsTask()));
+    object.paragraphs.splice(1, 1);
+    return object;
+  },
   validPaymentFormattedObjectAwardDecrease() {
     const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObject()));
+    object.paragraphs[0] = 'The weekly State Pension amount will go down from <strong>£200.00</strong> to <strong>£100.00</strong> from <strong>1 January 2020</strong>.';
+    object.paragraphs.splice(1, 1);
+    return object;
+  },
+  validPaymentFormattedObjectAwardDecreaseTask() {
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectEndTask()));
     object.paragraphs[0] = 'The weekly State Pension amount will go down from <strong>£200.00</strong> to <strong>£100.00</strong> from <strong>1 January 2020</strong>.';
     object.paragraphs.splice(1, 1);
     return object;
@@ -251,7 +362,7 @@ module.exports = {
     };
   },
   validPaymentFormattedObjectAwardDecreaseSpansUprating() {
-    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectAwardDecrease()));
+    const object = JSON.parse(JSON.stringify(this.validPaymentFormattedObjectAwardDecreaseTask()));
     object.paragraphs.splice(1, 0, 'From <strong>20 April 2020</strong> the award changes to <strong>£150.00</strong> due to annual uprating.');
     return object;
   },

@@ -26,25 +26,25 @@ describe('reviewAwardScheduleObject', () => {
 
   it('should return valid json when object is called with full object', (done) => {
     const json = object.formatter(dataObjects.validPaymentApiResponse(), entitlementDate);
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObject()));
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectEndTask()));
     done();
   });
 
   it('should return valid award increase json when updated award is more than current award', (done) => {
     const json = object.formatter(dataObjects.validPaymentApiResponseAwardIncreaseWithoutArrears(), entitlementDate);
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardIncreaseWithoutArrears()));
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardIncreaseWithoutArrearsTask()));
     done();
   });
 
   it('should return valid award increase with arrears json when updated award is more than current award', (done) => {
     const json = object.formatter(dataObjects.validPaymentApiResponseAwardIncreaseWithArrears(), entitlementDate);
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardIncreaseWithArrears()));
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardIncreaseWithArrearsTask()));
     done();
   });
 
   it('should return valid award decrease json when updated award is less than current award', (done) => {
     const json = object.formatter(dataObjects.validPaymentApiResponseAwardDecrease(), entitlementDate);
-    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardDecrease()));
+    assert.equal(JSON.stringify(json), JSON.stringify(dataObjects.validPaymentFormattedObjectAwardDecreaseTask()));
     done();
   });
 

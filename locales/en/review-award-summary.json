@@ -1,5 +1,8 @@
 {
-  "header": "Complete Task",
+  "header": {
+    "arrears": "Complete Task",
+    "overpayment": "Update award"
+  },
   "change": {
     "increase": "up",
     "decrease": "down"
@@ -8,5 +11,8 @@
   "p-2": "A new award letter will be sent to the claimant.",
   "p-arrears": "An arrears payment of <strong>{{AMOUNT}}</strong> will be made for the period {{FROM}} to {{TO}}.",
   "p-uprating": "From <strong>{{DATE}}</strong> the award changes to <strong>{{AMOUNT}}</strong> due to annual uprating.",
-  "button": "End Task"
+  "button": {
+    "arrears": "End Task",
+    "overpayment": "Continue"
+  }
 }

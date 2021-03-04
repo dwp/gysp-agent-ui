@@ -10,6 +10,13 @@ router.route('/schedule')
   .get(functions.getPaymentSchedule)
   .post(functions.postPaymentSchedule);
 
+router.route('/refer-overpayment')
+  .get(functions.getReferOverPayment)
+  .post(functions.postPaymentSchedule);
+
+router.get('/complete', functions.getTaskComplete);
+router.get('/end', functions.getEndTask);
+
 router.route('/entitlement-date')
   .get(functions.getNewEntitlementDate)
   .post(functions.postNewEntitlementDate);

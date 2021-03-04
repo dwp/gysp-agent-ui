@@ -5,7 +5,7 @@
 {% from 'govuk/components/back-link/macro.njk' import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% block pageTitle %}{{ t('review-award-complete:header') }}{% endblock %}
+{% block pageTitle %}{{ details.header }}{% endblock %}
 
 {% block content %}
 
@@ -18,7 +18,7 @@
 </div>
 
 {{ govukBackLink({
-  text: 'Back',
+  text: t('app:link.back'),
   href: '/review-award/new-award',
   classes: 'govuk-!-margin-bottom-8'
 }) }}
@@ -30,15 +30,15 @@
         {{ error(messages.error) }}
     {% endif %}
 
-    <h1 class="govuk-heading-xl">{{ t('review-award-complete:header') }}</h1>
+    <h1 class="govuk-heading-xl">{{ details.header }}</h1>
 
     {% for paragraph in details.paragraphs %}
       <p class="govuk-body">{{ paragraph | safe }}</p>
     {% endfor %}
 
-    <form method="post" action="/review-award/schedule" id="form__end-task" autocomplete="off" novalidate>
+    <form method="post" action="/review-award/schedule" id="form__end-task" autoupdate="off" novalidate>
       {{ govukButton({
-        text: t('review-award-complete:button'),
+        text: t('app:button.continue'),
         attributes: {
           id: 'end-task'
         }
