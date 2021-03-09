@@ -1,14 +1,3 @@
-# [8.4.0](https://github.com/dwp/gysp-agent-ui/compare/8.3.0...8.4.0) (2021-03-09)
-
-
-### Features
-
-* **srb-overpayment:** add srb overpayment task/review ([7deb406](https://github.com/dwp/gysp-agent-ui/commit/7deb40607c362228e254ebed376ed941caba65e5))
-* **update-award:** display award change values before update ([daf3eac](https://github.com/dwp/gysp-agent-ui/commit/daf3eaced3d8002c2913a0e10686c720cd380705))
-* **update-award:** display paragraph when review spans upgrating ([f030b1b](https://github.com/dwp/gysp-agent-ui/commit/f030b1bd303afa855c5017cf3c685c5aea846f31))
-
-
-
 # [8.3.0](https://github.com/dwp/gysp-agent-ui/compare/8.2.0...8.3.0) (2021-02-22)
 
 
